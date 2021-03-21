@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ingswAM2021-Canali-Campana-Cordioli" />
+        <module name="AM9" />
       </profile>
     </annotationProcessing>
   </component>
