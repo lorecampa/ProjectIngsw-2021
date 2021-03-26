@@ -5,7 +5,6 @@ public class Resource {
     private int value;
     private ResourceType type;
 
-
     public Resource( ResourceType type, int value) {
         this.value = value;
         this.type = type;
