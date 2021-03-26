@@ -1,2 +1,5 @@
-package it.polimi.ingsw.model;public class GameMaster {
+package it.polimi.ingsw.model;
+
+public class GameMaster {
+
 }
