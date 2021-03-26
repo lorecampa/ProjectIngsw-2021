@@ -3,10 +3,10 @@ package it.polimi.ingsw.model.resource;
 //first class written <3
 public class Resource {
     private int value;
-    private String type;
+    private ResourceType type;
 
 
-    public Resource( String type, int value) {
+    public Resource( ResourceType type, int value) {
         this.value = value;
         this.type = type;
     }
@@ -22,11 +22,8 @@ public class Resource {
 
 
     //manage type
-    public String getType() {
+    public ResourceType getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 }

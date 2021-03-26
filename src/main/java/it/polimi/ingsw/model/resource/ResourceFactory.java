@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class ResourceFactory {
 
-    public static Resource createResource(String type, int value){
+    public static Resource createResource(ResourceType type, int value){
         return new Resource(type, value);
     }
 
-    public static ArrayList<Resource> createAllResource(){
+    public static ArrayList<Resource> createAllConcreteResource(){
         ArrayList<Resource> resources = new ArrayList<>();
-        resources.add(new Resource("Coin", 0));
-        resources.add(new Resource("Shield", 0));
-        resources.add(new Resource("Servant", 0));
-        resources.add(new Resource("Stone", 0));
+        resources.add(new Resource(ResourceType.COIN, 0));
+        resources.add(new Resource(ResourceType.SHIELD, 0));
+        resources.add(new Resource(ResourceType.SERVANT, 0));
+        resources.add(new Resource(ResourceType.STONE, 0));
         return resources;
     }
 
