@@ -21,12 +21,6 @@ class ResourceTest {
     }
 
     @Test
-    void setValue() {
-        resourceCoin.setValue(70);
-        assertEquals(70, resourceCoin.getValue());
-    }
-
-    @Test
     void getType() {
         assertEquals(ResourceType.COIN, resourceCoin.getType());
         assertEquals(ResourceType.STONE, resourceStone.getType());
