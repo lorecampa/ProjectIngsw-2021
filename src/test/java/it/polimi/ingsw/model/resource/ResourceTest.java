@@ -20,6 +20,7 @@ class ResourceTest {
         assertEquals(5, resourceCoin.getValue());
     }
 
+
     @Test
     void getType() {
         assertEquals(ResourceType.COIN, resourceCoin.getType());
