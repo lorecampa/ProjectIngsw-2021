@@ -8,7 +8,7 @@ public class RedMarble implements Marble{
     }
 
     @Override
-    public void marbleAction() {
+    public void doMarbleAction() {
 
     }
 }
