@@ -1,14 +1,18 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
+import it.polimi.ingsw.exception.NegativeResourceException;
+import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.model.resource.ResourceType;
+
 public class RedMarble implements Marble{
-    private Market market;
+    private final Market market;
 
     public RedMarble(Market market) {
         this.market = market;
     }
 
     @Override
-    public void doMarbleAction() {
-
+    public void doMarbleAction() throws NegativeResourceException {
+        market.addInResourcesToSend(ResourceFactory.createResource(ResourceType.FAITH,1));
     }
 }

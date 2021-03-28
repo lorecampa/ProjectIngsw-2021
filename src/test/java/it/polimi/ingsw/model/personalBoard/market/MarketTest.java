@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
+import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.model.resource.Resource;
@@ -18,7 +19,7 @@ class MarketTest {
     Market market;
     @BeforeEach
     void init() throws WrongMarketDimensionException, WrongMarblesNumberException {
-        market = new Market(4,3,2,2,2,1,4,2);
+        market = new Market(3,4,2,2,2,1,4,2);
     }
 
     @Test
@@ -29,24 +30,48 @@ class MarketTest {
 
         assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,4,2,2,2,2,2));
         assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,1,2,2,2,2,2));
+
+        assertDoesNotThrow(() -> new Market(4,3,2,2,2,1,4,2));
     }
 
-    @Test
-    void testAddInResourcesToSend(){
-        Resource res = ResourceFactory.createResource(ResourceType.COIN,3);
-    }
 
     @Test
-    void getWhiteMarbleDrew() {
+    void testGetWhiteMarbleDrew() {
         assertEquals(0, market.getWhiteMarbleDrew());
     }
 
     @Test
-    void increaseWhiteMarbleDrew() {
+    void testIncreaseWhiteMarbleDrew() {
         assertEquals(0, market.getWhiteMarbleDrew());
         market.increaseWhiteMarbleDrew();
         assertEquals(1, market.getWhiteMarbleDrew());
     }
 
 
+    @Test
+    void testInsertMarbleInRow(){
+        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInRow(4));
+        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInRow(-1));
+
+        assertDoesNotThrow(() -> market.insertMarbleInRow(2));
+
+        assertNotEquals(0,market.getResourceToSend().size());
+    }
+
+    @Test
+    void testInsertMarbleInCol(){
+        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInCol(4));
+        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInCol(-1));
+
+        assertDoesNotThrow(() -> market.insertMarbleInRow(2));
+
+        assertNotEquals(0,market.getResourceToSend().size());
+    }
+
+    @Test
+    void testGetResourceToSend() throws NegativeResourceException {
+        assertEquals(0,market.getResourceToSend().size());
+        market.insertMarbleInRow(0);
+        assertNotEquals(0,market.getResourceToSend().size());
+    }
 }

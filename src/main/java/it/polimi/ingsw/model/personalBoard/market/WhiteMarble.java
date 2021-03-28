@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
 public class WhiteMarble implements Marble{
-    private Market market;
+    private final Market market;
 
     public WhiteMarble(Market market) {
         this.market = market;
@@ -9,6 +9,6 @@ public class WhiteMarble implements Marble{
 
     @Override
     public void doMarbleAction() {
-
+        market.increaseWhiteMarbleDrew();
     }
 }

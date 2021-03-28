@@ -4,10 +4,15 @@ import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class that will manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
@@ -15,16 +20,9 @@ import java.util.Collections;
 public class Market {
     private final int numCol;
     private final int numRow;
-    private final int numBlueMarble;
-    private final int numGreyMarble;
-    private final int numPurpleMarble;
-    private final int numRedMarble;
-    private final int numWhiteMarble;
-    private final int numYellowMarble;
 
 
-
-    private ArrayList<ArrayList<Marble>> marketTray;
+    private final ArrayList<ArrayList<Marble>> marketTray;
     private Marble marbleToInsert;
     private int numOfWhiteMarbleDrew = 0;
     private final ArrayList<Resource> resourcesToSend = new ArrayList<>();
@@ -41,18 +39,12 @@ public class Market {
      * @param numWhiteMarble is the number of white marbles
      * @param numYellowMarble is the number of yellow marbles
      */
-    public Market(int numCol, int numRow, int numBlueMarble, int numGreyMarble, int numPurpleMarble,
+    public Market(int numRow, int numCol,  int numBlueMarble, int numGreyMarble, int numPurpleMarble,
                   int numRedMarble, int numWhiteMarble, int numYellowMarble)
             throws WrongMarketDimensionException, WrongMarblesNumberException {
 
         this.numCol = numCol;
         this.numRow = numRow;
-        this.numBlueMarble = numBlueMarble;
-        this.numGreyMarble = numGreyMarble;
-        this.numPurpleMarble = numPurpleMarble;
-        this.numRedMarble = numRedMarble;
-        this.numWhiteMarble = numWhiteMarble;
-        this.numYellowMarble = numYellowMarble;
 
         // check if it's possible to create the market
         if (numCol <= 0 || numRow <= 0)
@@ -93,10 +85,10 @@ public class Market {
         // setup of the market tray using the shuffled array of marble
         this.marketTray = new ArrayList<>();
 
-        for (int i = 0; i < numCol; i++) {
+        for (int i = 0; i < numRow; i++) {
             ArrayList<Marble> marketCol = new ArrayList<>();
-            for (int j = 0; j < numRow; j++) {
-                marketCol.add(allMarbles.get(i*numRow + j));
+            for (int j = 0; j < numCol; j++) {
+                marketCol.add(allMarbles.get(i*numCol + j));
             }
             marketTray.add(marketCol);
         }
@@ -131,6 +123,65 @@ public class Market {
      */
     public int getWhiteMarbleDrew(){
         return numOfWhiteMarbleDrew;
+    }
+
+    /**
+     * Method to insert the extra marble in a specific row of the market tray and call the action of every marble
+     * in that row.
+     * @param row is the row in which the marble will be insert
+     * @throws NegativeResourceException if the marble tried to decrement below 0 the value of the resource in the
+     *                                   resourceToSend array
+     */
+    public void insertMarbleInRow(int row) throws NegativeResourceException, IndexOutOfBoundsException{
+        if (row < 0 || row >= numRow)
+            throw new IndexOutOfBoundsException("Selected a not existing row");
+
+        for (Marble marble : marketTray.get(row)) {
+            marble.doMarbleAction();
+        }
+
+        Marble tempMarble = marketTray.get(row).get(0);
+        marketTray.get(row).remove(0);
+        marketTray.get(row).add(numCol - 1 , marbleToInsert);
+        marbleToInsert = tempMarble;
+    }
+
+
+    /**
+     * Method to insert the extra marble in a specific column of the market tray and call the action of every marble
+     * in that column.
+     * @param col is the column in which the marble will be insert
+     * @throws NegativeResourceException if the marble tried to decrement below 0 the value of the resource in the
+     *                                   resourceToSend array
+     */
+    public void insertMarbleInCol(int col) throws NegativeResourceException {
+        if (col < 0 || col >= numCol ) {
+            throw new IndexOutOfBoundsException("Selected a not existing column");
+        }
+
+        for (int i = 0; i < numRow; i++) {
+            marketTray.get(i).get(col).doMarbleAction();
+        }
+
+        Marble tempMarble = marketTray.get(0).get(col);
+        for (int i = 0; i < numRow - 1; i++) {
+            marketTray.get(i).remove(col);
+            marketTray.get(i).add(col,marketTray.get(i+1).get(col));
+        }
+        marketTray.get(numRow - 1).remove(col);
+        marketTray.get(numRow - 1).add(marbleToInsert);
+        marbleToInsert = tempMarble;
+    }
+
+
+    /**
+     * Method to get a copy of the resources got from market
+     * @return is the array in which the resources are stored
+     */
+    public ArrayList<Resource> getResourceToSend(){
+        return resourcesToSend.stream()
+                .map(Res -> ResourceFactory.createResource(Res.getType(), Res.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }
