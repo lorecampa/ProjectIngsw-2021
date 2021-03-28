@@ -5,13 +5,10 @@ import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -182,6 +179,14 @@ public class Market {
         return resourcesToSend.stream()
                 .map(Res -> ResourceFactory.createResource(Res.getType(), Res.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Method to reset the market after it's been used
+     */
+    public void reset(){
+        numOfWhiteMarbleDrew = 0;
+        resourcesToSend.clear();
     }
 
 }
