@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 
@@ -19,18 +21,32 @@ class MarketTest {
     Market market;
     @BeforeEach
     void init() throws WrongMarketDimensionException, WrongMarblesNumberException {
+        assertDoesNotThrow(() -> new Market(3,4,2,2,2,1,4,2));
         market = new Market(3,4,2,2,2,1,4,2);
     }
 
     @Test
-    void testMarketCreation(){
+    void testMarketCreation_WrongDim(){
+        //wrong row
         assertThrows(WrongMarketDimensionException.class,() -> new Market(0,1,1,2,2,1,1,1));
+        //both wrong
         assertThrows(WrongMarketDimensionException.class,() -> new Market(0,0,1,2,2,1,1,1));
+        //row wrong
         assertThrows(WrongMarketDimensionException.class,() -> new Market(1,0,1,2,2,1,1,1));
 
-        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,4,2,2,2,2,2));
-        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,1,2,2,2,2,2));
+    }
 
+    @Test
+    void testMarketCreation_WrongMarble(){
+        // too much marbles
+        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,4,2,2,2,2,2));
+        // too few marbles
+        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,1,2,2,2,2,2));
+    }
+
+    @Test
+    void testMarketCreation(){
+        // right creation
         assertDoesNotThrow(() -> new Market(4,3,2,2,2,1,4,2));
     }
 
@@ -49,21 +65,29 @@ class MarketTest {
 
 
     @Test
-    void testInsertMarbleInRow(){
-        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInRow(4));
+    void testInsertMarbleInRow_WrongIndex(){
+        assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInRow(3));
         assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInRow(-1));
+    }
 
-        assertDoesNotThrow(() -> market.insertMarbleInRow(2));
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,2})
+    void testInsertMarbleInRow(int index){
+        assertDoesNotThrow(() -> market.insertMarbleInRow(index));
 
         assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test
-    void testInsertMarbleInCol(){
+    void testInsertMarbleInCol_WrongIndex(){
         assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInCol(4));
         assertThrows(IndexOutOfBoundsException.class , () -> market.insertMarbleInCol(-1));
+    }
 
-        assertDoesNotThrow(() -> market.insertMarbleInRow(2));
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,2,3})
+    void testInsertMarbleInCol(int index){
+        assertDoesNotThrow(() -> market.insertMarbleInCol(index));
 
         assertNotEquals(0,market.getResourceToSend().size());
     }
