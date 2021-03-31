@@ -1,3 +1,625 @@
-{
+[
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 2,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "GREEN",
+        "level": 1,
+        "numRequired": 1
+      },
+      {
+        "@class" : "CardReq",
+        "color": "YELLOW",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "DiscountEffect",
+        "discounts": [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
 
-}
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 2,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "BLUE",
+        "level": 1,
+        "numRequired": 1
+      },
+      {
+        "@class" : "CardReq",
+        "color": "PURPLE",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "DiscountEffect",
+        "discounts": [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 2,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "GREEN",
+        "level": 1,
+        "numRequired": 1
+      },
+      {
+        "@class" : "CardReq",
+        "color": "BLUE",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "DiscountEffect",
+        "discounts": [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 2,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "YELLOW",
+        "level": 1,
+        "numRequired": 1
+      },
+      {
+        "@class" : "CardReq",
+        "color": "PURPLE",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "DiscountEffect",
+        "discounts": [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 3,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "COIN",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "WarehouseEffect",
+        "depots": [
+          {
+            "type": "STONE",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 3,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "STONE",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "WarehouseEffect",
+        "depots": [
+          {
+            "type": "SERVANT",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 3,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "WarehouseEffect",
+        "depots": [
+          {
+            "type": "SHIELD",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 3,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SHIELD",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": null,
+    "onCreationEffects":[
+      {
+        "@class" : "WarehouseEffect",
+        "depots": [
+          {
+            "type": "COIN",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "YELLOW",
+        "level": 1,
+        "numRequired": 2
+      },
+      {
+        "@class" : "CardReq",
+        "color": "BLUE",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "GREEN",
+        "level": 1,
+        "numRequired": 2
+      },
+      {
+        "@class" : "CardReq",
+        "color": "PURPLE",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "BLUE",
+        "level": 1,
+        "numRequired": 2
+      },
+      {
+        "@class" : "CardReq",
+        "color": "YELLOW",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "PURPLE",
+        "level": 1,
+        "numRequired": 2
+      },
+      {
+        "@class" : "CardReq",
+        "color": "GREEN",
+        "level": 1,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 4,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "YELLOW",
+        "level": 2,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "ANY",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 4,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "BLUE",
+        "level": 2,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "ANY",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 4,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "PURPLE",
+        "level": 2,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "ANY",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  },
+
+
+  {
+    "@class" : "Leader",
+    "victoryPoints" : 4,
+    "requirements":[
+      {
+        "@class" : "CardReq",
+        "color": "GREEN",
+        "level": 2,
+        "numRequired": 1
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost" : [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "ANY",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": null
+  }
+
+]

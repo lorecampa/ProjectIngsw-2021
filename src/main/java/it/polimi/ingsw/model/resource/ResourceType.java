@@ -1,14 +1,22 @@
 package it.polimi.ingsw.model.resource;
-/**
- * Hy javadoc!
- * I'm matteo, learning javadocs :)
- * Where can i see you?
- * */
+
+
 public enum ResourceType {
-    COIN,
-    SHIELD,
-    STONE,
-    SERVANT,
-    FAITH,
-    ANY
+    COIN("Coin"),
+    SHIELD("Shield"),
+    STONE("Stone"),
+    SERVANT("Servant"),
+    FAITH("Faith"),
+    ANY("Any");
+
+    private String displayName;
+
+    ResourceType(String displayName) {
+        this.displayName = displayName;
+    }
+
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

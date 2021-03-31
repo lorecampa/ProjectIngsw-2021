@@ -22,7 +22,8 @@ class MarbleTest {
 
     @BeforeEach
     void init() throws WrongMarketDimensionException, WrongMarblesNumberException {
-        market = new Market(3,4,2,2,2,1,4,2);
+        market = new Market(3,4,2,2,
+                2,1,4,2);
         blueMarble = new BlueMarble(market);
         greyMarble = new GreyMarble(market);
         purpleMarble = new PurpleMarble(market);

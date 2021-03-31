@@ -1,15 +1,18 @@
 package it.polimi.ingsw.model.resource;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.NegativeResourceException;
 
 import java.util.ArrayList;
 
-//first class written <3
 public class Resource {
-    private int value;
     private ResourceType type;
+    private int value;
 
-    public Resource( ResourceType type, int value) {
+    @JsonCreator
+    public Resource(@JsonProperty("type") ResourceType type,
+                    @JsonProperty("value") int value) {
         this.value = value;
         this.type = type;
     }
@@ -25,7 +28,7 @@ public class Resource {
     */
     public void addValue(int value) throws NegativeResourceException{
         if(this.value+value<0)
-            throw new NegativeResourceException("Trying to understimate resource value");
+            throw new NegativeResourceException("Trying to underestimate resource value");
         this.value+=value;
     }
 

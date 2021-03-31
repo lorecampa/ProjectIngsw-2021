@@ -1,24 +1,26 @@
 package it.polimi.ingsw.model.card.activationEffect;
 
+import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
-
+import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
 
 public class MarbleEffect implements OnActivationEffect{
-    private Market market;
     private ArrayList<Resource> transformIn;
+    private Market market = null;
 
-    public MarbleEffect(ArrayList<Resource> transformIn) {
-        this.market = null;
-        this.transformIn = transformIn;
-    }
 
     @Override
-    public void doActivationEffect() {
-        //TODO
-        // going ot add resources to resourcesToSend in market
+    public void doActivationEffect() throws NegativeResourceException {
+        //value of the new resource
+        int whiteMarble = market.getWhiteMarbleDrew();
+        //add resource in market
+        for (Resource res: transformIn){
+            market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
+
+        }
     }
 
     @Override
@@ -27,7 +29,5 @@ public class MarbleEffect implements OnActivationEffect{
     }
 
     @Override
-    public void attachResourceManager(ResourceManager resourceManager) {
-
-    }
+    public void attachResourceManager(ResourceManager resourceManager) {}
 }

@@ -1,27 +1,16 @@
 package it.polimi.ingsw.model.card;
 
-import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
+import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.creationEffect.OnCreationEffect;
-import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
-
 import java.util.ArrayList;
 
 public class Leader extends Card{
     private ArrayList<OnCreationEffect> onCreationEffects;
-    private boolean isActive;
+    private boolean active = false;
 
-    public Leader(int victoryPoints, int owner,
-                  ArrayList<Requirement> requirements,
-                  ArrayList<OnActivationEffect> onActivationEffects,
-                  ArrayList<OnCreationEffect> onCreationEffects, boolean isActive) {
-
-        super(victoryPoints, owner, requirements, onActivationEffects);
-        this.onCreationEffects = onCreationEffects;
-        this.isActive = isActive;
-    }
-
-
+    //set the resource manager in the OnActivationEffects(super) and in the
+    //onCreationEffects
     @Override
     public void setResourceManager(ResourceManager resourceManager) {
         super.setResourceManager(resourceManager);
@@ -31,12 +20,22 @@ public class Leader extends Card{
     }
 
 
-    public void doOnCreationEffects(ResourceManager resourceManager){
+    @Override
+    public void doEffects() throws NegativeResourceException {
+        super.doEffects();
         for(OnCreationEffect effect: onCreationEffects){
-            effect.doCreationEffect(resourceManager);
+            if (!effect.isUsed()){
+                effect.doCreationEffect();
+            }
         }
     }
 
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
 }
