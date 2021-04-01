@@ -1,13 +1,16 @@
 package it.polimi.ingsw.model.personalBoard.faithTrack;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PopeSpaceCell implements Cell{
 
-    private final FaithTrack faithTrack;
     private final int victoryPoints;
     private final int idVaticanReport;
 
-    public PopeSpaceCell(FaithTrack faithTrack, int victoryPoints, int idVaticanReport) {
-        this.faithTrack = faithTrack;
+    @JsonCreator
+    public PopeSpaceCell(@JsonProperty("victoryPoints") int victoryPoints,
+                         @JsonProperty("idVaticanReport") int idVaticanReport) {
         this.victoryPoints = victoryPoints;
         this.idVaticanReport = idVaticanReport;
     }
@@ -17,8 +20,9 @@ public class PopeSpaceCell implements Cell{
      * call the method that manage the activation of a Vatican Report
      */
     @Override
-    public void doAction() {
-
+    public void doAction(FaithTrack faithTrack) {
+        if (victoryPoints != -1)
+            faithTrack.setVictoryPoints(victoryPoints);
     }
 
     /**

@@ -1,0 +1,118 @@
+{
+  "victoryPoints" : 0,
+  "popeFavorVP" : 0,
+  "currentPositionOnTrack" : 0,
+  "popeFavor" : [2,3,4],
+  "track" : [
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 1,
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 0
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 2,
+      "idVaticanReport" : 0
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 0
+    },
+    {
+      "@class" : "pope",
+      "victoryPoints" : -1,
+      "idVaticanReport" : 0
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 4,
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 6,
+      "idVaticanReport" : 1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 1
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 9,
+      "idVaticanReport" : 1
+    },
+    {
+      "@class" : "pope",
+      "victoryPoints" : -1,
+      "idVaticanReport" : 1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 12,
+      "idVaticanReport" : -1
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 2
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 2
+    },
+    {
+      "@class" : "victory",
+      "victoryPoints" : 16,
+      "idVaticanReport" : 2
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 2
+    },
+    {
+      "@class" : "normal",
+      "idVaticanReport" : 2
+    },
+    {
+      "@class" : "pope",
+      "victoryPoints" : 20,
+      "idVaticanReport" : 2
+    }
+  ]
+}

@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model.personalBoard.faithTrack;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NormalCell implements Cell{
 
-    private final FaithTrack faithTrack;
     private final int idVaticanReport;
 
-    public NormalCell(FaithTrack faithTrack, int idVaticanReport) {
-        this.faithTrack = faithTrack;
+    @JsonCreator
+    public NormalCell(@JsonProperty("idVaticanReport") int idVaticanReport) {
         this.idVaticanReport = idVaticanReport;
     }
 
@@ -14,7 +16,7 @@ public class NormalCell implements Cell{
      * Method that does nothing since a normal cell hasn't any effect
      */
     @Override
-    public void doAction() {}
+    public void doAction(FaithTrack faithTrack) {}
 
     /**
      * Method to get if the cell is in a particular Vatican Report space

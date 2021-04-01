@@ -1,13 +1,16 @@
 package it.polimi.ingsw.model.personalBoard.faithTrack;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class VictoryCell implements Cell{
 
-    private final FaithTrack faithTrack;
     private final int victoryPoints;
     private final int idVaticanReport;
 
-    public VictoryCell(FaithTrack faithTrack, int victoryPoints, int idVaticanReport) {
-        this.faithTrack = faithTrack;
+    @JsonCreator
+    public VictoryCell(@JsonProperty("victoryPoints") int victoryPoints,
+                       @JsonProperty("idVaticanReport") int idVaticanReport) {
         this.victoryPoints = victoryPoints;
         this.idVaticanReport = idVaticanReport;
     }
@@ -16,8 +19,8 @@ public class VictoryCell implements Cell{
      * Method that set the victory points of player's faith track to the cell's victory points
      */
     @Override
-    public void doAction() {
-
+    public void doAction(FaithTrack faithTrack) {
+            faithTrack.setVictoryPoints(victoryPoints);
     }
 
     /**
