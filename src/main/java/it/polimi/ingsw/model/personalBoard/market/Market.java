@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
@@ -29,15 +31,12 @@ public class Market {
      * type of marble.
      * @param numCol is the number of columns
      * @param numRow is the number of rows
-     * @param numBlueMarble is the number of blue marbles
-     * @param numGreyMarble is the number of grey marbles
-     * @param numPurpleMarble is the number of purple marbles
-     * @param numRedMarble is the number of red marbles
-     * @param numWhiteMarble is the number of white marbles
-     * @param numYellowMarble is the number of yellow marbles
+     * @param allMarbles is the array that contains all the marbles of the market
      */
-    public Market(int numRow, int numCol,  int numBlueMarble, int numGreyMarble, int numPurpleMarble,
-                  int numRedMarble, int numWhiteMarble, int numYellowMarble)
+    @JsonCreator
+    public Market(@JsonProperty("numRow") int numRow,
+                  @JsonProperty("numCol") int numCol,
+                  @JsonProperty("allMarbles") ArrayList<Marble> allMarbles)
             throws WrongMarketDimensionException, WrongMarblesNumberException {
 
         this.numCol = numCol;
@@ -47,34 +46,10 @@ public class Market {
         if (numCol <= 0 || numRow <= 0)
             throw new WrongMarketDimensionException("Number of rows/columns negative or zero");
 
-        int numOfMarbles = numBlueMarble + numPurpleMarble + numGreyMarble +
-                           numRedMarble + numWhiteMarble + numYellowMarble;
+        int numOfMarbles = allMarbles.size();
 
         if (numOfMarbles != (numCol * numRow) + 1)
             throw new WrongMarblesNumberException("Number of marbles does not match the dimension of the market");
-
-        // array in which will be stored all marbles to insert in the market tray
-        ArrayList<Marble> allMarbles = new ArrayList<>();
-
-        // creation of all marbles
-        for (int i = 0; i < numBlueMarble; i++) {
-            allMarbles.add(new BlueMarble(this));
-        }
-        for (int i = 0; i < numYellowMarble; i++) {
-            allMarbles.add(new YellowMarble(this));
-        }
-        for (int i = 0; i < numGreyMarble; i++) {
-            allMarbles.add(new GreyMarble(this));
-        }
-        for (int i = 0; i < numPurpleMarble; i++) {
-            allMarbles.add(new PurpleMarble(this));
-        }
-        for (int i = 0; i < numRedMarble; i++) {
-            allMarbles.add(new RedMarble(this));
-        }
-        for (int i = 0; i < numWhiteMarble; i++) {
-            allMarbles.add(new WhiteMarble(this));
-        }
 
         // shuffle the marbles
         Collections.shuffle(allMarbles);
@@ -134,7 +109,7 @@ public class Market {
             throw new IndexOutOfBoundsException("Selected a not existing row");
 
         for (Marble marble : marketTray.get(row)) {
-            marble.doMarbleAction();
+            marble.doMarbleAction(this);
         }
 
         Marble tempMarble = marketTray.get(row).get(0);
@@ -157,7 +132,7 @@ public class Market {
         }
 
         for (int i = 0; i < numRow; i++) {
-            marketTray.get(i).get(col).doMarbleAction();
+            marketTray.get(i).get(col).doMarbleAction(this);
         }
 
         Marble tempMarble = marketTray.get(0).get(col);

@@ -1,17 +1,18 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
-import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceFactory;
-import it.polimi.ingsw.model.resource.ResourceType;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,34 +21,47 @@ class MarketTest {
 
     Market market;
     @BeforeEach
-    void init() throws WrongMarketDimensionException, WrongMarblesNumberException {
-        assertDoesNotThrow(() -> new Market(3,4,2,2,2,1,4,2));
-        market = new Market(3,4,2,2,2,1,4,2);
+    void init(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        assertDoesNotThrow(() -> market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class));
     }
 
     @Test
     void testMarketCreation_WrongDim(){
         //wrong row
-        assertThrows(WrongMarketDimensionException.class,() -> new Market(0,1,1,2,2,1,1,1));
+        assertThrows(WrongMarketDimensionException.class,() -> new Market(0,1,null));
         //both wrong
-        assertThrows(WrongMarketDimensionException.class,() -> new Market(0,0,1,2,2,1,1,1));
+        assertThrows(WrongMarketDimensionException.class,() -> new Market(0,0,null));
         //row wrong
-        assertThrows(WrongMarketDimensionException.class,() -> new Market(1,0,1,2,2,1,1,1));
+        assertThrows(WrongMarketDimensionException.class,() -> new Market(1,0,null));
 
     }
 
     @Test
     void testMarketCreation_WrongMarble(){
+        ArrayList<Marble> tooManyMarbles = new ArrayList<>();
+        tooManyMarbles.add(new YellowMarble());
+        tooManyMarbles.add(new GreyMarble());
+        tooManyMarbles.add(new WhiteMarble());
+        tooManyMarbles.add(new RedMarble());
+        tooManyMarbles.add(new BlueMarble());
+        tooManyMarbles.add(new PurpleMarble());
+
+        ArrayList<Marble> tooFewMarbles = new ArrayList<>();
+        tooFewMarbles.add(new WhiteMarble());
+
         // too much marbles
-        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,4,2,2,2,2,2));
+        assertThrows(WrongMarblesNumberException.class, () -> new Market(2,2,tooManyMarbles));
         // too few marbles
-        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,1,2,2,2,2,2));
+        assertThrows(WrongMarblesNumberException.class, () -> new Market(3,4,tooFewMarbles));
     }
 
     @Test
     void testMarketCreation(){
-        // right creation
-        assertDoesNotThrow(() -> new Market(4,3,2,2,2,1,4,2));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        assertDoesNotThrow(() -> market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class));
     }
 
 

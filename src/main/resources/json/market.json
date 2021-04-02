@@ -1,0 +1,45 @@
+{
+  "numRow" : 3,
+  "numCol" : 4,
+  "allMarbles" : [
+    {
+      "@class" : "red"
+    },
+    {
+      "@class" : "white"
+    },
+    {
+      "@class" : "white"
+    },
+    {
+      "@class" : "white"
+    },
+    {
+      "@class" : "white"
+    },
+    {
+      "@class" : "blue"
+    },
+    {
+      "@class" : "blue"
+    },
+    {
+      "@class" : "grey"
+    },
+    {
+      "@class" : "grey"
+    },
+    {
+      "@class" : "yellow"
+    },
+    {
+      "@class" : "yellow"
+    },
+    {
+      "@class" : "purple"
+    },
+    {
+      "@class" : "purple"
+    }
+  ]
+}

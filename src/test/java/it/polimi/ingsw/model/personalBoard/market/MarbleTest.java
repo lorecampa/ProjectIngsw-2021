@@ -1,11 +1,14 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.NegativeResourceException;
-import it.polimi.ingsw.exception.WrongMarblesNumberException;
-import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,20 +24,21 @@ class MarbleTest {
 
 
     @BeforeEach
-    void init() throws WrongMarketDimensionException, WrongMarblesNumberException {
-        market = new Market(3,4,2,2,
-                2,1,4,2);
-        blueMarble = new BlueMarble(market);
-        greyMarble = new GreyMarble(market);
-        purpleMarble = new PurpleMarble(market);
-        redMarble = new RedMarble(market);
-        whiteMarble = new WhiteMarble(market);
-        yellowMarble = new YellowMarble(market);
+    void init() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        assertDoesNotThrow(() -> market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class));
+        blueMarble = new BlueMarble();
+        greyMarble = new GreyMarble();
+        purpleMarble = new PurpleMarble();
+        redMarble = new RedMarble();
+        whiteMarble = new WhiteMarble();
+        yellowMarble = new YellowMarble();
     }
 
     @Test
     void doMarbleAction_Blue() throws NegativeResourceException {
-        blueMarble.doMarbleAction();
+        blueMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.SHIELD, market.getResourceToSend().get(0).getType());
@@ -42,7 +46,7 @@ class MarbleTest {
 
     @Test
     void doMarbleAction_Grey() throws NegativeResourceException {
-        greyMarble.doMarbleAction();
+        greyMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.STONE, market.getResourceToSend().get(0).getType());
@@ -50,7 +54,7 @@ class MarbleTest {
 
     @Test
     void doMarbleAction_Purple() throws NegativeResourceException {
-        purpleMarble.doMarbleAction();
+        purpleMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.SERVANT, market.getResourceToSend().get(0).getType());
@@ -58,7 +62,7 @@ class MarbleTest {
 
     @Test
     void doMarbleAction_Red() throws NegativeResourceException {
-        redMarble.doMarbleAction();
+        redMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.FAITH, market.getResourceToSend().get(0).getType());
@@ -66,13 +70,13 @@ class MarbleTest {
 
     @Test
     void doMarbleAction_White() throws NegativeResourceException {
-        whiteMarble.doMarbleAction();
+        whiteMarble.doMarbleAction(market);
         assertEquals(1, market.getWhiteMarbleDrew());
     }
 
     @Test
     void doMarbleAction_Yellow() throws NegativeResourceException {
-        yellowMarble.doMarbleAction();
+        yellowMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.COIN, market.getResourceToSend().get(0).getType());
