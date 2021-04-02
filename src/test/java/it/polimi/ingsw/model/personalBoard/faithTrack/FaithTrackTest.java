@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.io.IOException;
 
 class FaithTrackTest {
 
@@ -52,6 +51,29 @@ class FaithTrackTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {0,3,6,8,9,12,15,16,18,21,24})
+    void testDoCurrentCellAction(int positions){
+        for (int i = 0; i < positions; i++) {
+            faithTrack.increasePlayerPosition();
+        }
+        faithTrack.doCurrentCellAction();
+        switch (positions){
+            case 0:
+            case 8:
+            case 16:
+                assertEquals(0,faithTrack.getVictoryPoints());break;
+            case 3: assertEquals(1,faithTrack.getVictoryPoints());break;
+            case 6: assertEquals(2,faithTrack.getVictoryPoints());break;
+            case 9: assertEquals(4,faithTrack.getVictoryPoints());break;
+            case 12: assertEquals(6,faithTrack.getVictoryPoints());break;
+            case 15: assertEquals(9,faithTrack.getVictoryPoints());break;
+            case 18: assertEquals(12,faithTrack.getVictoryPoints());break;
+            case 21: assertEquals(16,faithTrack.getVictoryPoints());break;
+            case 24: assertEquals(20,faithTrack.getVictoryPoints());break;
+        }
+    }
+
     @Test
     void testIncreasePlayerPosition(){
         assertEquals(0,faithTrack.getCurrentPositionOnTrack());
@@ -60,14 +82,21 @@ class FaithTrackTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0,1,2})
-    void testAddVPForPopeFavor(int popeFavorNum){
-        faithTrack.addVPForPopeFavor(popeFavorNum);
-        switch (popeFavorNum){
-            case 0: assertEquals(2, faithTrack.getPopeFavorVP());break;
-            case 1: assertEquals(3,faithTrack.getPopeFavorVP());break;
-            case 2: assertEquals(4,faithTrack.getPopeFavorVP());break;
+    @ValueSource(ints = {0,5,10,14,17,20})
+    void testPopeFavorActivated(int positions) {
+        faithTrack.movePlayer(positions);
+        faithTrack.popeFavorActivated(0);
+        faithTrack.popeFavorActivated(1);
+        faithTrack.popeFavorActivated(2);
+
+        switch (positions){
+            case 0:
+            case 10:
+            case 17:
+                assertEquals(0,faithTrack.getPopeFavorVP()); break;
+            case 5: assertEquals(2,faithTrack.getPopeFavorVP()); break;
+            case 14: assertEquals(3,faithTrack.getPopeFavorVP()); break;
+            case 20: assertEquals(4,faithTrack.getPopeFavorVP()); break;
         }
     }
-
 }

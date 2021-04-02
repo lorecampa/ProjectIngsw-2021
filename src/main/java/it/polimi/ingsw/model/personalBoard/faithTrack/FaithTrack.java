@@ -2,15 +2,22 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.commonInterfaces.Observable;
+import it.polimi.ingsw.commonInterfaces.Observer;
 
 import java.util.ArrayList;
 
-public class FaithTrack {
+/**
+ * Class that manage the Faith Track of a player
+ */
+public class FaithTrack implements Observable {
     private int victoryPoints;
     private int popeFavorVP;
     private int currentPositionOnTrack;
     private final ArrayList<Integer> popeFavor;
     private final ArrayList<Cell> track;
+
+    private final ArrayList<Observer> observers = new ArrayList<>();
 
     @JsonCreator
     public FaithTrack(@JsonProperty("victoryPoints") int victoryPoints,
@@ -25,18 +32,39 @@ public class FaithTrack {
         this.track = track;
     }
 
+
+    /**
+     * Method to get the number of victory points acquired from the track
+     * @return is the number of victory points
+     */
     public int getVictoryPoints() {
         return victoryPoints;
     }
 
+    /**
+     * Method to get the number of victory points acquired from pope favors
+     * @return is the number of victory points
+     */
     public int getPopeFavorVP(){return popeFavorVP;}
 
+    /**
+     * Method to set the victory points acquired from the track
+     * @param victoryPoints is the number of victory points to set
+     */
     public void setVictoryPoints(int victoryPoints) {
         this.victoryPoints = victoryPoints;
     }
 
+    /**
+     * Method to get the current position of the player
+     * @return is the current position of the player
+     */
     public int getCurrentPositionOnTrack() { return currentPositionOnTrack; }
 
+    /**
+     * Method to move the player on the track and activate the effect of every cell
+     * @param positions is the number of moves on track of the player
+     */
     public void movePlayer(int positions){
         for (int i = 0; i < positions; i++) {
             currentPositionOnTrack++;
@@ -44,7 +72,43 @@ public class FaithTrack {
         }
     }
 
-    public void addVPForPopeFavor(int popeFavorNum){ popeFavorVP += popeFavor.get(popeFavorNum); }
-
+    /**
+     * Method to increase the player's position on track
+     */
     public void increasePlayerPosition(){ currentPositionOnTrack++;}
+
+    /**
+     * Method to activate the effect of the current cell
+     */
+    public void doCurrentCellAction(){
+        track.get(currentPositionOnTrack).doAction(this);
+    }
+
+    /**
+     * Method to increase the victory points of the player if it's in a Vatican Report
+     * @param idVaticanReport is the id of the Vatican Report activated
+     */
+    public void popeFavorActivated(int idVaticanReport){
+        if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport))
+            popeFavorVP += popeFavor.get(idVaticanReport);
+    }
+
+    /**
+     * Method to add an observer to the faith track
+     * @param observer is the reference to the observer
+     */
+    @Override
+    public void attachObserver(Observer observer) {
+        if (!observers.contains(observer))
+            observers.add(observer);
+    }
+
+    /**
+     * Method to call the update method of every observer
+     */
+    @Override
+    public void notifyAllObservers() {
+        for (Observer obs : observers)
+            obs.updateFromFaithTrack();
+    }
 }

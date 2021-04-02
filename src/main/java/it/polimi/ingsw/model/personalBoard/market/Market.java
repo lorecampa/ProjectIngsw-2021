@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
- * Class that will manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
+ * Class that manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
  */
 public class Market {
     private final int numCol;
