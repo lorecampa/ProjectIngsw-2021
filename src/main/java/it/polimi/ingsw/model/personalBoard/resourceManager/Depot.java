@@ -4,6 +4,7 @@ import it.polimi.ingsw.exception.CantModifyDepotException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -13,10 +14,22 @@ public class Depot {
     private final boolean lockDepot;
     private final int maxStorable;
 
+    public Resource getResource() {
+        return resource;
+    }
+
+    public boolean isLockDepot() {
+        return lockDepot;
+    }
+
+    public int getMaxStorable() {
+        return maxStorable;
+    }
+
     /**
     *Main constructor of Depot with all the attributes
     */
-    public Depot(Resource resource, int maxStorable, boolean lockDepot) {
+    public Depot(Resource resource, boolean lockDepot, int maxStorable) {
         this.resource = resource;
         this.maxStorable = maxStorable;
         this.lockDepot = lockDepot;
@@ -28,6 +41,9 @@ public class Depot {
     public Depot(boolean lockDepot, int maxStorable) {
         this.lockDepot = lockDepot;
         this.maxStorable = maxStorable;
+        if(!lockDepot){
+            this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
+        }
     }
 
     /**
@@ -41,6 +57,10 @@ public class Depot {
             throw new TooMuchResourceDepotException("You tried to put more res then possible");
         }
         this.resource = resource;
+    }
+
+    public void setEmptyResource(){
+        this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
     }
 
     /**
@@ -60,23 +80,22 @@ public class Depot {
     /**
      *return the "free" spaces available in this depot
      */
-    public int howMuchResCanIStoreIn(){
-        return maxStorable-resource.getValue();
+    public int howMuchResCanIStillStoreIn(){
+        return Math.max(maxStorable - resource.getValue(), 0);
     }
 
-    /**
+    /**       
      *add a value (with sign) to the value of my resource
      */
-    public void addValueResource(int value) throws TooMuchResourceDepotException{
+    public void addValueResource(int value) throws TooMuchResourceDepotException, NegativeResourceException{
         if(value+resource.getValue()>maxStorable){
             throw new TooMuchResourceDepotException("Adding too much res in this depot");
         }
-        try{
-            resource.addValue(value);
-        }
-        catch (NegativeResourceException e){
-            e.printStackTrace();
-        }
+        resource.addValue(value);
     }
 
+    @Override
+    public String toString() {
+        return resource.getType()+" ("+resource.getValue()+"/"+maxStorable+")";
+    }
 }
