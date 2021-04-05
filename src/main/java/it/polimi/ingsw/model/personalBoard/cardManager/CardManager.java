@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import it.polimi.ingsw.exception.CantMakeProduction;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.Color;
@@ -47,8 +48,10 @@ public class CardManager {
     /**
      * Acrivate a leader card u own
      * @param leader u want to activate
-     * @throws NegativeResourceException is a resource obj value goes under 0*/
-    public void activateLeader(Leader leader) throws NegativeResourceException {
+     * @throws NegativeResourceException is a resource obj value goes under 0
+     * @throws CantMakeProduction
+     * */
+    public void activateLeader(Leader leader) throws NegativeResourceException, CantMakeProduction {
         if(leaders.contains(leader)){
             if(!leaders.get(leaders.indexOf(leader)).isActive()){
                 leaders.get(leaders.indexOf(leader)).doEffects();
@@ -70,7 +73,7 @@ public class CardManager {
      * Select one card to add to the selected card
      * @param lvCard the level of the card u choose
      * @param indexCardSlot from you want to select*/
-    public void selectCardToProduce(int  lvCard, int indexCardSlot){
+    public void selectCardToProduce(int  lvCard, int indexCardSlot) throws NegativeResourceException {
         if(cardSlots.get(indexCardSlot).getCardOfLv(lvCard).checkRequirements()){
             productionSelected.add(cardSlots.get(indexCardSlot).getCardOfLv(lvCard));
         }
@@ -78,7 +81,7 @@ public class CardManager {
 
     /**
      * Add the base production to the production selected*/
-    public void addBaseProduction(){
+    public void addBaseProduction() throws NegativeResourceException {
         if(baseProduction.checkRequirements()){
             productionSelected.add(baseProduction);
         }
@@ -86,8 +89,10 @@ public class CardManager {
 
     /**
      * Activate the production of all the selected dev card
-     * @throws  NegativeResourceException*/
-    public void developmentProduce() throws NegativeResourceException {
+     * @throws  NegativeResourceException
+     * @throws  CantMakeProduction
+     * */
+    public void developmentProduce() throws NegativeResourceException, CantMakeProduction {
         for(Development dev: productionSelected){
             dev.doEffects();
         }

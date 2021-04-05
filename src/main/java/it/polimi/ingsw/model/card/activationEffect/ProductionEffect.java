@@ -1,32 +1,102 @@
 package it.polimi.ingsw.model.card.activationEffect;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.exception.CantMakeProduction;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
-
+import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
+
+/**
+ * ProductionEffect class represent the effect of production
+ */
 public class ProductionEffect implements OnActivationEffect{
-    private ArrayList<Resource> resourceCost;
-    private ArrayList<Resource> resourceAcquired;
+
+    private final ArrayList<Resource>  resourceCost;
+    private final ArrayList<Resource> resourceAcquired;
     private ResourceManager resourceManager = null;
 
-
-    @Override
-    public void doActivationEffect() throws NegativeResourceException {
-        //TODO
-        //going to add resources to strongbox and it will handle the user interaction
+    /**
+     * Constructor ProductionEffect creates a new ProductionEffect instance
+     * @param resourceCost of type ArrayList - the resources required for the production
+     * @param resourceAcquired of type ArrayList - the resources that the player will gain
+     */
+    @JsonCreator
+    public ProductionEffect(@JsonProperty("resourceCost") ArrayList<Resource> resourceCost,
+                            @JsonProperty("resourceAcquired") ArrayList<Resource> resourceAcquired) {
+        this.resourceCost = resourceCost;
+        this.resourceAcquired = resourceAcquired;
     }
 
+
+    /**
+     * Method doActivationEffect checks if the player has enough resource for the production and
+     * then pass all the resource that he will gain to the resource manager and it will handle those
+     * putting them to the strongbox
+     * @throws NegativeResourceException when the resources in resourceCost or resourceAcquired
+     * contain negative values
+     * @throws CantMakeProduction when the player can't afford the production cost
+     */
     @Override
-    public void attachMarket(Market market) {
+    public void doActivationEffect() throws NegativeResourceException, CantMakeProduction {
+
+        ArrayList<Resource> resourceCostCopy = resourceCost.stream()
+                .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        //probabilmente sarebbe meglio fare il clone solo se effettivamente il giocatore si
+        //potrà permettere di fare l'acquisto
+
+        if (resourceManager.canIAfford(resourceCostCopy, false)){
+            ArrayList<Resource> resourceAcquiredCopy = resourceAcquired.stream()
+                    .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            //TODO
+            //and then
+            //add to arraylist in resource manager a copy of resource acquired
+
+        }else{
+            //trows exception that we can't afford the production
+            throw new CantMakeProduction("Can't afford resource cost production");
+        }
+
 
     }
 
+    /**
+     * Method attachMarket does nothing because the production effect doesn't need it
+     * @param market of type Market is the instance of the market of the game
+     */
+    @Override
+    public void attachMarket(Market market) {}
+
+
+    /**
+     * Method attachResourceManager attach the resource manager in order to use it
+     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
+    }
+
+    @Override
+    public String toString() {
+        String x = "\nresourceCost= ";
+        for(Resource res: resourceCost){
+            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+        }
+        x+= "\nresourceAcquired= ";
+        for(Resource res: resourceAcquired){
+            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+        }
+        return  x;
+
     }
 }
