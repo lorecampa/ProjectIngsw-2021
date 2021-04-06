@@ -14,4 +14,5 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 public interface Cell {
     void doAction(FaithTrack faithTrack);
     boolean isInVaticanReport(int idVR);
+    int getIdVaticanReport();
 }

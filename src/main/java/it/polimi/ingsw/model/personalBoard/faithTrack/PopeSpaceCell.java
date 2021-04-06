@@ -35,4 +35,9 @@ public class PopeSpaceCell implements Cell{
     public boolean isInVaticanReport(int idVR) {
         return idVaticanReport == idVR;
     }
+
+    @Override
+    public int getIdVaticanReport() {
+        return idVaticanReport;
+    }
 }

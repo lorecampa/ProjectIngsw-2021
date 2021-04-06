@@ -109,6 +109,6 @@ public class FaithTrack implements Observable {
     @Override
     public void notifyAllObservers() {
         for (Observer obs : observers)
-            obs.updateFromFaithTrack();
+            obs.updateFromFaithTrack(track.get(currentPositionOnTrack).getIdVaticanReport());
     }
 }

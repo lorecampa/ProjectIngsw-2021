@@ -1,5 +1,7 @@
 package it.polimi.ingsw.commonInterfaces;
 
 public interface Observer {
-    void updateFromFaithTrack();
+    void updateFromFaithTrack(int idVR);
+    void updateFromResourceManager(int positions);
+    void updateFromCardManager();
 }
