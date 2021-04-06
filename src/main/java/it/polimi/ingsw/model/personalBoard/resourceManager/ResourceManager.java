@@ -9,22 +9,19 @@ import java.util.ArrayList;
 
 public class ResourceManager {
     private Warehouse currWarehouse;
-    private Warehouse lastWarehouse;
     private Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer=new ArrayList<>();
     private ArrayList<Resource> discounts=new ArrayList<>();
+    private ArrayList<Resource> resourcesToProduce=new ArrayList<>();
     private Resource supportResource; //support perchè sarebbe una "variabile d'appoggio"
     private int faithPoint=0;
     private int anyResource=0;
-    private boolean warehouseEditMode;
 
     public ResourceManager(){
         currWarehouse =new Warehouse();
         strongbox=new Strongbox();
         resourcesBuffer=null;
-        warehouseEditMode=false;
     }
-
 
     //set up per il prossimo turno
     /**
@@ -33,9 +30,7 @@ public class ResourceManager {
         anyResource=0;
         faithPoint=0;
         resourcesBuffer.clear();
-        warehouseEditMode=false;
     }
-
 
     //Metodi specifici azione 3 produzione mercato (player preme su azione 3 va al mercato mi ritorna un vettore da mettere nella warehouse)
 
@@ -56,7 +51,6 @@ public class ResourceManager {
             faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
             resourcesSent.remove(resourcesSent.indexOf(resourceFaith));
         }
-
         return resourcesSent;
     }
 
@@ -85,17 +79,15 @@ public class ResourceManager {
         }
     }
 
-
     //Metodi specifici azione 2 produzione carte dev (player preme su azione 2 va al cardMNG e per ogni carta che preme la aggiunge alle carte da produrre
     //io controllo se la posso poi effettivamente comprare, se posso aggiungo il costo al mio buffer, quando submitta quelle produzioni tolgo effettivamente le risorse da dove mi dice il
     //player e mi ritorna il vettore di risorse prodotte
 
-
     /**
-     * Get the resources produced from production and store in the strongbox according to the rules
-     * @param resources i produced*/
-    public void resourceFromProduction(ArrayList<Resource> resources){
-        for(Resource res:resources){
+     * Add all the resource store in resourcesToProduce to the stronbox
+    */
+    public void doProduction(){
+        for(Resource res:resourcesToProduce){
             addToStrongbox(res);
         }
     }
@@ -132,8 +124,6 @@ public class ResourceManager {
         strongbox.changeResourceValueOf(ResourceFactory.createResource(resource.getType(), -resource.getValue()));
     }
 
-
-
     /**
      * Convert one ANY to a specific resource
      * @param type of resource i want to have
@@ -144,8 +134,6 @@ public class ResourceManager {
         }
         return ResourceFactory.createResource(type, 1);
     }
-
-
 
     /**
      * Used to add a resource value or the resource itself in the buffer
@@ -171,18 +159,41 @@ public class ResourceManager {
     }
 
     /**
+     * Used to add a resource value or the resource itself in the resource to produce
+     * @param resource I want to add
+     * @throws NegativeResourceException if resource'll go under value 0*/
+    public void addToResourcesToProduce(Resource resource) throws NegativeResourceException {
+        if(resourcesToProduce.contains(resource)){
+            resourcesToProduce.get(resourcesToProduce.indexOf(resource)).addValue(resource.getValue());
+        }
+        else{
+            resourcesToProduce.add(resource);
+        }
+    }
+
+    /**
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
      * @return true if u can false if u can't*/
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount) throws NegativeResourceException {
-        int sum=0;
+        int sum;
         for(Resource res : resources){
+            if(resourcesBuffer.contains(res)){
+                sum=-resourcesBuffer.get(resourcesBuffer.indexOf(res)).getValue();
+            }
+            else{
+                sum=0;
+            }
             sum+= currWarehouse.howManyDoIHave(res.getType());
             sum+= strongbox.howManyDoIHave(res.getType());
             if(discounts.contains(res) && checkDiscount){
-                sum-=discounts.get(discounts.indexOf(res)).getValue();
+                try{
+                    res.addValue(-discounts.get(discounts.indexOf(res)).getValue());
+                }catch(NegativeResourceException e){
+                    res.addValue(-res.getValue());
+                }
             }
-            if(sum<=res.getValue() && res.getType() != ResourceType.ANY)
+            if(sum<=(res.getValue()) && res.getType() != ResourceType.ANY)
                 return false;
         }
         for(Resource res : resources){
@@ -191,51 +202,21 @@ public class ResourceManager {
         return true;
     }
 
-    //copio la currWarehouse in lastWarehouse
-    /**
-     * Clone the currWarehouse so u can modify these and be able to undo*/
-    private void saveWarehouse(){
-        lastWarehouse=new Warehouse(currWarehouse.copyDepots(), currWarehouse.copyDepotsLeader());
-    }
-
-    /**
-     * Set the para warehouseEditMode
-     * @param active the actual state of editMode*/
-    public void setWarehouseEditMode(boolean active){
-        warehouseEditMode=active;
-        if(warehouseEditMode){
-            saveWarehouse();
-        }
-    }
-
-    /**
-     * Get if we are in edit mode or not*/
-    public boolean getWarehouseEditMode(){
-        return warehouseEditMode;
-    }
-
-    /**
-     * Reloading the last valid copy of warehouse*/
-    private void resetWarehouse(){
-        currWarehouse=new Warehouse(lastWarehouse.copyDepots(), lastWarehouse.copyDepotsLeader());
-    }
-
-    /**
-     * Empty the depot and store that resource inside the resourceManager
-     * @param index of the depot to empty*/
-    public void emptyDepot(int index){
-        supportResource = currWarehouse.removeResourceAt(index);
-    }
-
-    /**
-     * Fill the depot with the resource inside the resourceManager
-     * @param index of the depot to fill
-     * @throws CantModifyDepotException if u try to modify a leaderDepot
-     * @throws  TooMuchResourceDepotException if u try to store more resource than possible
-     * @throws InvalidOrganizationWarehouseException  if there's already a depot with that resource*/
-    public void fillDepot(int index) throws CantModifyDepotException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-        currWarehouse.setResourceDepotAt(index, supportResource);
-    }
+   /**
+    * switch the resource from fromDepot and toDepot
+    * @param fromDepot the first depot
+    * @param toDepot the second depot
+    * */
+   public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws CantModifyDepotException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+       supportResource = currWarehouse.removeResourceAt(fromDepot);
+       try{
+           currWarehouse.setResourceDepotAt(toDepot, supportResource);
+       }
+       catch(CantModifyDepotException | TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
+           currWarehouse.setResourceDepotAt(fromDepot, supportResource);
+           throw e;
+       }
+   }
 
     /**
      * Discard resource
@@ -250,6 +231,7 @@ public class ResourceManager {
     public void addLeaderDepot(Depot depot){
         currWarehouse.addDepotLeader(depot);
     }
+
     /**
      * Add resource to the list of discount i have
      * @param resource that i have "discount"*/
