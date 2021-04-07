@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ResourceManager {
     private Warehouse currWarehouse;
     private Strongbox strongbox;
-    private ArrayList<Resource> resourcesBuffer=new ArrayList<>();
+    private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private ArrayList<Resource> discounts=new ArrayList<>();
     private ArrayList<Resource> resourcesToProduce=new ArrayList<>();
     private Resource supportResource; //support perchè sarebbe una "variabile d'appoggio"
@@ -196,6 +196,7 @@ public class ResourceManager {
             if(sum<=(res.getValue()) && res.getType() != ResourceType.ANY)
                 return false;
         }
+
         for(Resource res : resources){
             addToBuffer(res);
         }

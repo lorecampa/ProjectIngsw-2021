@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.CantMakeProduction;
+import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
 import it.polimi.ingsw.model.card.creationEffect.OnCreationEffect;
@@ -39,10 +39,10 @@ public class Leader extends Card{
      * Method doEffects defines a method that redefines the father method calling the doEffect of
      * the onCreationEffects as well if they are not already used
      * @throws NegativeResourceException when the resources in onCreationEffect contain negative values
-     * @throws CantMakeProduction when the player can't afford the production cost
+     * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
-    public void doEffects() throws NegativeResourceException, CantMakeProduction {
+    public void doEffects() throws NegativeResourceException, CantMakeProductionException {
         super.doEffects();
         for(OnCreationEffect effect: onCreationEffects){
             if (!effect.isUsed()){

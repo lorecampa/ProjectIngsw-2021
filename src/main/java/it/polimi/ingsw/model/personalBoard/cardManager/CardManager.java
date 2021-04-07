@@ -1,12 +1,17 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
-import it.polimi.ingsw.exception.CantMakeProduction;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CardManager {
@@ -15,9 +20,14 @@ public class CardManager {
     private Development baseProduction;
     private ArrayList<Development> productionSelected=new ArrayList<>();
 
+    public ArrayList<Leader> getLeaders() {
+        return leaders;
+    }
 
-    public CardManager(Development baseProduction) {
-        this.baseProduction = baseProduction;
+    public CardManager() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        this.baseProduction = mapper.readValue(new File("src/main/resources/json/baseProduction.json"), Development.class);
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
@@ -49,9 +59,9 @@ public class CardManager {
      * Acrivate a leader card u own
      * @param leader u want to activate
      * @throws NegativeResourceException is a resource obj value goes under 0
-     * @throws CantMakeProduction
+     * @throws CantMakeProductionException
      * */
-    public void activateLeader(Leader leader) throws NegativeResourceException, CantMakeProduction {
+    public void activateLeader(Leader leader) throws NegativeResourceException, CantMakeProductionException {
         if(leaders.contains(leader)){
             if(!leaders.get(leaders.indexOf(leader)).isActive()){
                 leaders.get(leaders.indexOf(leader)).doEffects();
@@ -90,9 +100,9 @@ public class CardManager {
     /**
      * Activate the production of all the selected dev card
      * @throws  NegativeResourceException
-     * @throws  CantMakeProduction
+     * @throws CantMakeProductionException
      * */
-    public void developmentProduce() throws NegativeResourceException, CantMakeProduction {
+    public void developmentProduce() throws NegativeResourceException, CantMakeProductionException {
         for(Development dev: productionSelected){
             dev.doEffects();
         }

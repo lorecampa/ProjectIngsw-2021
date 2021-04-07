@@ -34,7 +34,6 @@ public class WarehouseEffect  implements OnCreationEffect {
         for (Resource depot: depots){
             //clone with value = 0
             Resource res = ResourceFactory.createResource(depot.getType(), 0);
-            //serve mandare eccezzioni se presenti depot con value negativi? per me no
             resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));
         }
         this.used = true;

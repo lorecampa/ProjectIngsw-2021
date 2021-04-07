@@ -5,9 +5,10 @@ package it.polimi.ingsw.model.card;
  */
 public enum Color {
     GREEN("Green"),
+    PURPLE("Purple"),
     BLUE("Blue"),
     YELLOW("Yellow"),
-    PURPLE("Purple");
+    ANY("Any");
 
     private final String displayName;
 
@@ -25,5 +26,13 @@ public enum Color {
      */
     public String getDisplayName() {
         return displayName;
+    }
+
+
+    public int getColumnDeckDevelopment(){
+        if (this.getDisplayName().equals(Color.GREEN.getDisplayName())) return 0;
+        else if(this.getDisplayName().equals(Color.PURPLE.getDisplayName())) return 1;
+        else if(this.getDisplayName().equals(Color.BLUE.getDisplayName())) return 2;
+        else return 3;
     }
 }

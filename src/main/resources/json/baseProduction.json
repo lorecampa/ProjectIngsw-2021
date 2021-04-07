@@ -1,0 +1,24 @@
+{
+  "@class": "Development",
+  "victoryPoints": 0,
+  "requirements": [],
+  "onActivationEffects": [
+    {
+      "@class" : "ProductionEffect",
+      "resourceCost": [
+        {
+          "type" : "ANY",
+          "value": 2
+        }
+      ],
+      "resourceAcquired" : [
+        {
+          "type": "ANY",
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "level" : 0,
+  "color": "ANY"
+}

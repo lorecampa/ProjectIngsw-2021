@@ -31,6 +31,8 @@ public class ResourceReq implements Requirement {
      */
     @Override
     public boolean checkRequirement() throws NegativeResourceException {
+        //TODO
+        //matteo deve cambiarlo e mettere un parametro boolean per dire che sono un Leader
         return resourceManager.canIAfford(resourceReq, true);
     }
 

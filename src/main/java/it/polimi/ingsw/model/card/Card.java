@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import it.polimi.ingsw.exception.CantMakeProduction;
+import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
@@ -57,7 +57,7 @@ public  abstract class Card {
      * Method doEffects does all the effect of type activation
      * @throws NegativeResourceException when the resources in onActivationEffects contain negative values
      */
-    public  void doEffects() throws NegativeResourceException, CantMakeProduction {
+    public  void doEffects() throws NegativeResourceException, CantMakeProductionException {
         for (OnActivationEffect effect: onActivationEffects ){
             effect.doActivationEffect();
         }

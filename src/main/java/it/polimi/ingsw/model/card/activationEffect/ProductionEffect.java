@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card.activationEffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.CantMakeProduction;
+import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -41,33 +41,31 @@ public class ProductionEffect implements OnActivationEffect{
      * putting them to the strongbox
      * @throws NegativeResourceException when the resources in resourceCost or resourceAcquired
      * contain negative values
-     * @throws CantMakeProduction when the player can't afford the production cost
+     * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
-    public void doActivationEffect() throws NegativeResourceException, CantMakeProduction {
-
+    public void doActivationEffect() throws NegativeResourceException, CantMakeProductionException {
         ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                 .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        //probabilmente sarebbe meglio fare il clone solo se effettivamente il giocatore si
-        //potrà permettere di fare l'acquisto
 
         if (resourceManager.canIAfford(resourceCostCopy, false)){
             ArrayList<Resource> resourceAcquiredCopy = resourceAcquired.stream()
                     .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new));
+
             //TODO
-            //and then
-            //add to arraylist in resource manager a copy of resource acquired
+            //mothod of resource manager to add resource Acquired copy
 
         }else{
             //trows exception that we can't afford the production
-            throw new CantMakeProduction("Can't afford resource cost production");
+            throw new CantMakeProductionException("Can't afford resource cost production");
         }
 
 
     }
+
 
     /**
      * Method attachMarket does nothing because the production effect doesn't need it

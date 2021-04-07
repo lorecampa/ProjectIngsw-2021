@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -36,12 +37,12 @@ public class Development extends  Card{
         this.color = color;
     }
 
-    public void buyCard(){
-        //TODO
-        //vedere come volerlo implementare ci sono vari metodi
-        //1- lascio gestire l'interazione con l'utente alla carta
-        //2- semplicemente faccio checkRequirements
+    public int getLevel() {
+        return level;
+    }
 
+    public Color getColor() {
+        return color;
     }
 
     /**

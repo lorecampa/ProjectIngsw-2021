@@ -27,8 +27,8 @@ public class Resource {
     }
     */
     public void addValue(int value) throws NegativeResourceException{
-        if(this.value+value<0)
-            throw new NegativeResourceException("Trying to underestimate resource value");
+        if(this.value+value<0){
+            throw new NegativeResourceException("Trying to underestimate resource value");}
         this.value+=value;
     }
 
