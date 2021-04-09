@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.card.activationEffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -29,10 +28,9 @@ public class MarbleEffect implements OnActivationEffect{
     /**
      * Method doActivationEffect is in charge of pass all the resources to
      * the market based on how many white marble the user haw drawn
-     * @throws NegativeResourceException when the resources to transform the white marble are negative
      */
     @Override
-    public void doActivationEffect() throws NegativeResourceException {
+    public void doActivationEffect() {
         int whiteMarble = market.getWhiteMarbleDrew();
         //add resource in market
         for (Resource res: transformIn){

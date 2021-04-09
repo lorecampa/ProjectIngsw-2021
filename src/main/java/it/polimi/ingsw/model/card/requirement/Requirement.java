@@ -23,9 +23,8 @@ public interface Requirement {
     /**
      * Method checkRequirement control if the player can afford it
      * @return boolean - true if he can afford it, otherwise false
-     * @throws NegativeResourceException when the resources contain negative values
      */
-    boolean checkRequirement() throws NegativeResourceException;
+    boolean checkRequirement();
 
     /**
      * Method attachResourceManager attach the resource manager

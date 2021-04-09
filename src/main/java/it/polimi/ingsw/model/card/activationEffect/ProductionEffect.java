@@ -4,7 +4,6 @@ package it.polimi.ingsw.model.card.activationEffect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.CantMakeProductionException;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -39,24 +38,22 @@ public class ProductionEffect implements OnActivationEffect{
      * Method doActivationEffect checks if the player has enough resource for the production and
      * then pass all the resource that he will gain to the resource manager and it will handle those
      * putting them to the strongbox
-     * @throws NegativeResourceException when the resources in resourceCost or resourceAcquired
-     * contain negative values
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
-    public void doActivationEffect() throws NegativeResourceException, CantMakeProductionException {
+    public void doActivationEffect() throws  CantMakeProductionException {
         ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                 .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
 
         if (resourceManager.canIAfford(resourceCostCopy, false)){
-            ArrayList<Resource> resourceAcquiredCopy = resourceAcquired.stream()
-                    .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
-                    .collect(Collectors.toCollection(ArrayList::new));
 
-            //TODO
-            //mothod of resource manager to add resource Acquired copy
+            //add resource to resourceManger buffer
+            for (Resource res: resourceAcquired){
+                Resource resCopy = ResourceFactory.createResource(res.getType(), res.getValue());
+                resourceManager.addToResourcesToProduce(resCopy);
+            }
 
         }else{
             //trows exception that we can't afford the production

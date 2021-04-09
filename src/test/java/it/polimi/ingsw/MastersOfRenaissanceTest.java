@@ -26,6 +26,10 @@ public class MastersOfRenaissanceTest
      */
     @Test
     public void shouldAnswerWithTrue() throws IOException {
+        String x = "";
+        String path = "Cioa";
+        System.out.println(path + x + "bella");
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 

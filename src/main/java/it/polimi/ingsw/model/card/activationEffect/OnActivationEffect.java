@@ -20,10 +20,9 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 public interface OnActivationEffect {
     /**
      * Method doActivationEffect is responsible of doing the effect
-     * @throws NegativeResourceException when the resources contain negative values
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    void doActivationEffect() throws NegativeResourceException, CantMakeProductionException;
+    void doActivationEffect() throws  CantMakeProductionException;
 
     /**
      * Method attachMarket attach the market

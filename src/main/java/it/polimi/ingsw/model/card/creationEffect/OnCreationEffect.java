@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.card.creationEffect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
 /**
@@ -18,9 +17,8 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 public interface OnCreationEffect {
     /**
      * Method doCreationEffect is responsible of doing the effect
-     * @throws NegativeResourceException when the resources contain negative values
      */
-    void doCreationEffect() throws NegativeResourceException;
+    void doCreationEffect();
 
     /**
      * Method attachResourceManager attach the resource manager

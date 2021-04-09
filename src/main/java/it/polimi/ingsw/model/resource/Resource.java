@@ -21,15 +21,23 @@ public class Resource {
     public int getValue() {
         return value;
     }
-    /*
-    public void setValue(int value) {
-        this.value = value;
+
+    public void setValueToZero() {
+        this.value = 0;
     }
-    */
-    public void addValue(int value) throws NegativeResourceException{
-        if(this.value+value<0){
-            throw new NegativeResourceException("Trying to underestimate resource value");}
-        this.value+=value;
+
+    public void subValue(int value) throws NegativeResourceException {
+        int valueAbs = Math.abs(value);
+        if (this.value - valueAbs < 0){
+            throw new NegativeResourceException("Trying to underestimate resource value");
+        }
+        this.value -= valueAbs;
+
+    }
+
+
+    public void addValue(int value){
+        this.value += Math.abs(value);
     }
 
     //manage type

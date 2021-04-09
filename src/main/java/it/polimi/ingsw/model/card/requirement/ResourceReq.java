@@ -27,12 +27,9 @@ public class ResourceReq implements Requirement {
     /**
      * Method checkRequirement control if the player has enough resources
      * @return boolean - true if he has them,  false if he hasn't
-     * @throws NegativeResourceException when the resources in resourceReq contain negative values
      */
     @Override
-    public boolean checkRequirement() throws NegativeResourceException {
-        //TODO
-        //matteo deve cambiarlo e mettere un parametro boolean per dire che sono un Leader
+    public boolean checkRequirement(){
         return resourceManager.canIAfford(resourceReq, true);
     }
 

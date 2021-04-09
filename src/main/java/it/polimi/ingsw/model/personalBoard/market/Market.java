@@ -72,9 +72,8 @@ public class Market {
     /**
      * Method to add a resource in the array that will be send to the resource manager.
      * @param resource is the resource that need to be added.
-     * @throws NegativeResourceException if the resource saved in the array will have a negative value
      */
-    public void addInResourcesToSend(Resource resource) throws NegativeResourceException {
+    public void addInResourcesToSend(Resource resource) {
         if(resourcesToSend.contains(resource)){
             resourcesToSend.get(resourcesToSend.indexOf(resource)).addValue(resource.getValue());
         }else {

@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 
-public class ResourceManager implements Observable {
+public class ResourceManager{
     private Warehouse currWarehouse;
     private Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
@@ -248,7 +248,7 @@ public class ResourceManager implements Observable {
     /**
      * Discard res*/
     public void discardResources(){
-        notifyAllObservers();
+        //notifyAllObservers();
         resourcesBuffer.clear();
     }
 

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.exception.CantMakeProductionException;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -44,9 +43,8 @@ public  abstract class Card {
     /**
      * Method checkRequirements checks if all requirement of the card are satisfied
      * @return boolean - true if all requirements are satisfied, otherwise false
-     * @throws NegativeResourceException when the resources in requirements contain negative values
      */
-    public boolean checkRequirements() throws NegativeResourceException {
+    public boolean checkRequirements(){
         for(Requirement req: requirements){
             if (!req.checkRequirement()) return false;
         }
@@ -55,9 +53,9 @@ public  abstract class Card {
 
     /**
      * Method doEffects does all the effect of type activation
-     * @throws NegativeResourceException when the resources in onActivationEffects contain negative values
+     * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    public  void doEffects() throws NegativeResourceException, CantMakeProductionException {
+    public  void doEffects() throws  CantMakeProductionException {
         for (OnActivationEffect effect: onActivationEffects ){
             effect.doActivationEffect();
         }

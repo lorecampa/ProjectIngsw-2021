@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.card.creationEffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -28,10 +27,9 @@ public class DiscountEffect implements OnCreationEffect {
     /**
      * Method doCreationEffect is responsible to pass all the discounts to the resource manager and
      * then to change the value of used from false to true
-     * @throws NegativeResourceException when resources in discounts contain negative values
      */
     @Override
-    public void doCreationEffect() throws NegativeResourceException {
+    public void doCreationEffect() {
         for(Resource res: discounts){
             //clone the res and then add to it
             resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));

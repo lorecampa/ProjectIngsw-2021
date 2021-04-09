@@ -238,16 +238,16 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
      * Method drawToken draws the token from the deckToken on the top,
      * puts it back in the bottom and then  applies its effect
      */
+
     public void drawToken() {
         //forse devo restituire il token per farlo vedere a schermo? bho
         Token token = deckToken.poll();
-        //giusto per togliere il warning -- sentire con gli altri
-        if (token == null) return;
-
         deckToken.offer(token);
+
+        if(token == null) return;
         try{
             token.doActionToken();
-        } catch (DeckDevelopmentCardException e) {
+        } catch (DeckDevelopmentCardException  e) {
             //its all okay, just there is no more to delete
             //with the cardToken effect from the deck of development cards
         }
