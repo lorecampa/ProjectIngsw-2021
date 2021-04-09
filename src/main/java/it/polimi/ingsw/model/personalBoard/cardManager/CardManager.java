@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.commonInterfaces.Observable;
+import it.polimi.ingsw.commonInterfaces.Observer;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NegativeResourceException;
@@ -14,15 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CardManager {
-    private ArrayList<CardSlot> cardSlots = new ArrayList<>();
-    private ArrayList<Leader> leaders = new ArrayList<>();
-    private Development baseProduction;
-    private ArrayList<Development> productionSelected=new ArrayList<>();
-
-    public ArrayList<Leader> getLeaders() {
-        return leaders;
-    }
+public class CardManager implements Observable {
+    private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
+    private final ArrayList<Leader> leaders = new ArrayList<>();
+    private final Development baseProduction;
+    private final ArrayList<Development> productionSelected=new ArrayList<>();
+    private final ArrayList<Observer> observers = new ArrayList<>();
 
     public CardManager() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -31,6 +30,10 @@ public class CardManager {
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
+    }
+
+    public ArrayList<Leader> getLeaders() {
+        return leaders;
     }
 
     /**
@@ -48,25 +51,22 @@ public class CardManager {
 
     /**
      * Discard a leader from your hand
-     * @param leader u want to discard*/
-    public void discardLeader(Leader leader){
-        leaders.remove(leader);
-        //read the rules what happen when i discar a leader card?
-        //do i need to throw an exception if the leader is not contained?
+     * @param leaderIndex u want to discard
+     */
+    public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
+        leaders.remove(leaderIndex);
+        notifyAllObservers();
     }
 
     /**
-     * Acrivate a leader card u own
-     * @param leader u want to activate
+     * Activate a leader card u own
+     * @param leaderIndex u want to activate
      * @throws NegativeResourceException is a resource obj value goes under 0
-     * @throws CantMakeProductionException
-     * */
-    public void activateLeader(Leader leader) throws NegativeResourceException, CantMakeProductionException {
-        if(leaders.contains(leader)){
-            if(!leaders.get(leaders.indexOf(leader)).isActive()){
-                leaders.get(leaders.indexOf(leader)).doEffects();
-                leaders.get(leaders.indexOf(leader)).setActive(true);
-            }
+     */
+    public void activateLeader(int leaderIndex) throws NegativeResourceException, IndexOutOfBoundsException {
+        if(!leaders.get(leaderIndex).isActive()){
+            leaders.get(leaderIndex).checkRequirements();
+            leaders.get(leaderIndex).setActive(true);
         }
     }
 
@@ -74,34 +74,37 @@ public class CardManager {
      * Add a development card to a Card Slot
      * @param development card i want to add
      * @param index of card slot where i want to add
-     * @throws CardWithHigherOrSameLevelAlreadyIn*/
-    public void addDevelopmentCardTo(Development development, int index) throws CardWithHigherOrSameLevelAlreadyIn {
+     * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to the level
+     */
+    public void addDevelopmentCardTo(Development development, int index) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException {
         cardSlots.get(index).insertCard(development);
     }
 
     /**
      * Select one card to add to the selected card
      * @param lvCard the level of the card u choose
-     * @param indexCardSlot from you want to select*/
-    public void selectCardToProduce(int  lvCard, int indexCardSlot) throws NegativeResourceException {
-        if(cardSlots.get(indexCardSlot).getCardOfLv(lvCard).checkRequirements()){
+     * @param indexCardSlot from you want to select
+     */
+    public void addCardToProduce(int  lvCard, int indexCardSlot) throws IndexOutOfBoundsException {
             productionSelected.add(cardSlots.get(indexCardSlot).getCardOfLv(lvCard));
-        }
     }
 
     /**
-     * Add the base production to the production selected*/
-    public void addBaseProduction() throws NegativeResourceException {
-        if(baseProduction.checkRequirements()){
+     * Add the base production to the production selected
+     */
+    public void addBaseProduction(){
             productionSelected.add(baseProduction);
-        }
+    }
+
+    public void activateLeaderEffect(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException, NegativeResourceException {
+        leaders.get(leaderIndex).doEffects();
     }
 
     /**
      * Activate the production of all the selected dev card
      * @throws  NegativeResourceException
-     * @throws CantMakeProductionException
-     * */
+     * @throws  CantMakeProductionException
+     */
     public void developmentProduce() throws NegativeResourceException, CantMakeProductionException {
         for(Development dev: productionSelected){
             dev.doEffects();
@@ -134,4 +137,15 @@ public class CardManager {
         return count>=howMany;
     }
 
+    @Override
+    public void attachObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers() {
+        for (Observer observer:observers){
+            observer.updateFromCardManager();
+        }
+    }
 }

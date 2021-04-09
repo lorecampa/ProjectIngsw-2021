@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import it.polimi.ingsw.commonInterfaces.Observable;
+import it.polimi.ingsw.commonInterfaces.Observer;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -7,12 +9,13 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 
-public class ResourceManager{
-    private Warehouse currWarehouse;
-    private Strongbox strongbox;
+public class ResourceManager implements Observable {
+    private final Warehouse currWarehouse;
+    private final Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
-    private ArrayList<Resource> discounts=new ArrayList<>();
-    private ArrayList<Resource> resourcesToProduce=new ArrayList<>();
+    private final ArrayList<Resource> discounts=new ArrayList<>();
+    private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
+    private final ArrayList<Observer> observers = new ArrayList<>();
     private Resource supportResource; //support perchè sarebbe una "variabile d'appoggio"
     private int faithPoint=0;
     private int anyResource=0;
@@ -248,7 +251,7 @@ public class ResourceManager{
     /**
      * Discard res*/
     public void discardResources(){
-        //notifyAllObservers();
+        notifyAllObservers();
         resourcesBuffer.clear();
     }
 
@@ -276,6 +279,18 @@ public class ResourceManager{
     public void clearBuffers(){
         resourcesToProduce.clear();
         resourcesBuffer.clear();
+    }
+
+    @Override
+    public void attachObserver(Observer observer) {
+        if (!observers.contains(observer))
+            observers.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers() {
+        for (Observer obs : observers)
+            obs.updateFromResourceManager(numberOfResourceInBuffer());
     }
 
     //metodo per me

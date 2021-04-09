@@ -15,16 +15,16 @@ class StrongboxTest {
     void init(){
         s=new Strongbox();
         Resource r = ResourceFactory.createResource(ResourceType.SHIELD, 4);
-        s.changeResourceValueOf(r);
+        //s.changeResourceValueOf(r);
         //s.print();
     }
 
     @Test
     void changeResourceOf() {
         Resource r = ResourceFactory.createResource(ResourceType.COIN, 5);
-        s.changeResourceValueOf(r);
+        //s.changeResourceValueOf(r);
         r = ResourceFactory.createResource(ResourceType.SHIELD, 4);
-        s.changeResourceValueOf(r);
+        //s.changeResourceValueOf(r);
         //s.print();
     }
 

@@ -107,14 +107,14 @@ class MarketTest {
     }
 
     @Test
-    void testGetResourceToSend() throws NegativeResourceException {
+    void testGetResourceToSend(){
         assertEquals(0,market.getResourceToSend().size());
         market.insertMarbleInRow(0);
         assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test
-    void testMarketReset() throws NegativeResourceException {
+    void testMarketReset(){
         market.increaseWhiteMarbleDrew();
         market.insertMarbleInRow(0);
         market.reset();

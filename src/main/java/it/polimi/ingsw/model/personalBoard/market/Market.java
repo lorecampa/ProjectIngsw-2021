@@ -100,10 +100,9 @@ public class Market {
      * Method to insert the extra marble in a specific row of the market tray and call the action of every marble
      * in that row.
      * @param row is the row in which the marble will be insert
-     * @throws NegativeResourceException if the marble tried to decrement below 0 the value of the resource in the
-     *                                   resourceToSend array
+     *
      */
-    public void insertMarbleInRow(int row) throws NegativeResourceException, IndexOutOfBoundsException{
+    public void insertMarbleInRow(int row) throws IndexOutOfBoundsException{
         if (row < 0 || row >= numRow)
             throw new IndexOutOfBoundsException("Selected a not existing row");
 
@@ -122,10 +121,9 @@ public class Market {
      * Method to insert the extra marble in a specific column of the market tray and call the action of every marble
      * in that column.
      * @param col is the column in which the marble will be insert
-     * @throws NegativeResourceException if the marble tried to decrement below 0 the value of the resource in the
-     *                                   resourceToSend array
+     *
      */
-    public void insertMarbleInCol(int col) throws NegativeResourceException {
+    public void insertMarbleInCol(int col) throws IndexOutOfBoundsException{
         if (col < 0 || col >= numCol ) {
             throw new IndexOutOfBoundsException("Selected a not existing column");
         }
