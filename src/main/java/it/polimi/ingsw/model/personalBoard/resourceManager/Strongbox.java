@@ -18,13 +18,15 @@ public class Strongbox {
     /**
      * change the resource passed in resources adding the value passed
      * @param resource: the resource to add to the existing one*/
-    public void changeResourceValueOf(Resource resource){
-        try{
-            resources.get(resources.indexOf(resource)).addValue(resource.getValue());
-        }
-        catch(NegativeResourceException e){
-            e.printStackTrace();
-        }
+    public void addResourceValueOf(Resource resource){
+        resources.get(resources.indexOf(resource)).addValue(resource.getValue());
+    }
+
+    /**
+     * change the resource passed in resources subtracting the value passed
+     * @param resource: the resource to add to the existing one*/
+    public void subResourceValueOf(Resource resource) throws NegativeResourceException {
+        resources.get(resources.indexOf(resource)).subValue(resource.getValue());
     }
 
     /**

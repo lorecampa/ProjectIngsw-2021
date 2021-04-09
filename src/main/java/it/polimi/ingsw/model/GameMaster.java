@@ -35,6 +35,7 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     private boolean gameEnded = false;
 
 
+
     /**
      * Constructor GameMaster creates a new game. It creates a new Market, deck of Leader and deck of Development card,
      * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player
@@ -44,7 +45,7 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
      */
     public GameMaster(String usernameCreator, int numberOfPlayer) throws IOException {
         this.numberOfPlayer = numberOfPlayer;
-        playersPersonalBoard.put(usernameCreator, new PersonalBoard());
+        playersPersonalBoard.put(usernameCreator, new PersonalBoard(usernameCreator));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -123,7 +124,17 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         return playersPersonalBoard.size();
     }
 
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
+    }
 
+    public int getNumberOfPlayer() {
+        return numberOfPlayer;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
 
     /**
      * Method getCurrentPlayer
@@ -139,8 +150,7 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
      * @throws IOException when creating the personal board causes problem opening the Json files
      */
     public void addPlayer(String username) throws IOException {
-        playersPersonalBoard.put(username, new PersonalBoard());
-
+        playersPersonalBoard.put(username, new PersonalBoard(username));
     }
 
     /**

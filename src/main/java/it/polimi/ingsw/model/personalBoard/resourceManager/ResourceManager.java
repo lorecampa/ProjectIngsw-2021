@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 
-public class ResourceManager {
+public class ResourceManager implements Observable {
     private Warehouse currWarehouse;
     private Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
@@ -23,13 +23,14 @@ public class ResourceManager {
         resourcesBuffer=null;
     }
 
-    //set up per il prossimo turno
+    //set up per valori il prossimo turno
     /**
      * Set up the resource manager to be ready for the curr turn*/
     public void newTurn(){
         anyResource=0;
         faithPoint=0;
         resourcesBuffer.clear();
+        resourcesToProduce.clear();
     }
 
     //Metodi specifici azione 3 produzione mercato (player preme su azione 3 va al mercato mi ritorna un vettore da mettere nella warehouse)
@@ -37,19 +38,17 @@ public class ResourceManager {
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
      * @param resourcesSent: the original list
-     * @return the arrayList with all the concrete resources*/
+     */
     private ArrayList<Resource> fromResourceToConcreteResource(ArrayList<Resource> resourcesSent){
-        faithPoint=0;
-        anyResource=0;
         Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
         Resource resourceFaith = ResourceFactory.createResource(ResourceType.FAITH, 0);
         while(resourcesSent.contains(resourceAny)){
             anyResource+= resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
-            resourcesSent.remove(resourcesSent.indexOf(resourceAny));
+            resourcesSent.remove(resourceAny);
         }
         while(resourcesSent.contains(resourceFaith)){
             faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
-            resourcesSent.remove(resourcesSent.indexOf(resourceFaith));
+            resourcesSent.remove(resourceFaith);
         }
         return resourcesSent;
     }
@@ -70,18 +69,14 @@ public class ResourceManager {
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
      * @throws CantModifyDepotException
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
-    public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException, NegativeResourceException {
+    public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
         if(normalDepot){
-            currWarehouse.modifyStandardDepotValueAt(index, resource);
+            currWarehouse.addToStandardDepotValueAt(index, resource);
         }
         else{
-            currWarehouse.modifyLeaderDepotValueAt(index, resource);
+            currWarehouse.addToLeaderDepotValueAt(index, resource);
         }
     }
-
-    //Metodi specifici azione 2 produzione carte dev (player preme su azione 2 va al cardMNG e per ogni carta che preme la aggiunge alle carte da produrre
-    //io controllo se la posso poi effettivamente comprare, se posso aggiungo il costo al mio buffer, quando submitta quelle produzioni tolgo effettivamente le risorse da dove mi dice il
-    //player e mi ritorna il vettore di risorse prodotte
 
     /**
      * Add all the resource store in resourcesToProduce to the stronbox
@@ -96,7 +91,7 @@ public class ResourceManager {
      * Add to the strongbox the resource
      * @param resource i want to add */
     public void addToStrongbox(Resource resource){
-        strongbox.changeResourceValueOf(resource);
+        strongbox.addResourceValueOf(resource);
     }
 
     /**
@@ -110,18 +105,18 @@ public class ResourceManager {
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subtractToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException, NegativeResourceException {
         if(normalDepot){
-            currWarehouse.modifyStandardDepotValueAt(index, ResourceFactory.createResource(resource.getType(), -resource.getValue()));
+            currWarehouse.subToStandardDepotValueAt(index, resource);
         }
         else{
-            currWarehouse.modifyLeaderDepotValueAt(index, ResourceFactory.createResource(resource.getType(), -resource.getValue()));
+            currWarehouse.subToLeaderDepotValueAt(index, resource);
         }
     }
 
     /**
      * Subtract to the strongbox the resource
      * @param resource i want to subtract */
-    public void subtractToStrongbox(Resource resource){
-        strongbox.changeResourceValueOf(ResourceFactory.createResource(resource.getType(), -resource.getValue()));
+    public void subtractToStrongbox(Resource resource) throws NegativeResourceException {
+        strongbox.subResourceValueOf(resource);
     }
 
     /**
@@ -129,17 +124,18 @@ public class ResourceManager {
      * @param type of resource i want to have
      * @return the resource i'm asking for*/
     private Resource changeAnyInResource(ResourceType type) throws NoMoreAnyResourceException{
-        if(anyResource<=0){
+        if(anyResource<=0){ //maybe
             throw new NoMoreAnyResourceException("No more 'any' to convert");
         }
+        anyResource--;
         return ResourceFactory.createResource(type, 1);
     }
 
     /**
      * Used to add a resource value or the resource itself in the buffer
      * @param resource I want to add from the buffer
-     * @throws NegativeResourceException if resource'll go under value 0*/
-    public void addToBuffer(Resource resource) throws NegativeResourceException {
+     */
+    public void addToBuffer(Resource resource){
         if(resourcesBuffer.contains(resource)){
             resourcesBuffer.get(resourcesBuffer.indexOf(resource)).addValue(resource.getValue());
         }
@@ -154,15 +150,14 @@ public class ResourceManager {
      * @throws NegativeResourceException if resource'll go under value 0*/
     public void subtractToBuffer(Resource resource) throws NegativeResourceException {
         if(resourcesBuffer.contains(resource)){
-            resourcesBuffer.get(resourcesBuffer.indexOf(resource)).addValue(- resource.getValue());
+            resourcesBuffer.get(resourcesBuffer.indexOf(resource)).subValue(resource.getValue());
         }
     }
 
     /**
      * Used to add a resource value or the resource itself in the resource to produce
-     * @param resource I want to add
-     * @throws NegativeResourceException if resource'll go under value 0*/
-    public void addToResourcesToProduce(Resource resource) throws NegativeResourceException {
+     * @param resource I want to add */
+    public void addToResourcesToProduce(Resource resource) {
         if(resourcesToProduce.contains(resource)){
             resourcesToProduce.get(resourcesToProduce.indexOf(resource)).addValue(resource.getValue());
         }
@@ -174,9 +169,12 @@ public class ResourceManager {
     /**
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
+     * @param checkDiscount if u want you resource to be discounted
      * @return true if u can false if u can't*/
-    public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount) throws NegativeResourceException {
+    public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
         int sum;
+        int extraRes=numberOfResource()-numberOfResourceInBuffer();
+        fromResourceToConcreteResource(resources);
         for(Resource res : resources){
             if(resourcesBuffer.contains(res)){
                 sum=-resourcesBuffer.get(resourcesBuffer.indexOf(res)).getValue();
@@ -188,19 +186,46 @@ public class ResourceManager {
             sum+= strongbox.howManyDoIHave(res.getType());
             if(discounts.contains(res) && checkDiscount){
                 try{
-                    res.addValue(-discounts.get(discounts.indexOf(res)).getValue());
+                    res.subValue(discounts.get(discounts.indexOf(res)).getValue());
                 }catch(NegativeResourceException e){
-                    res.addValue(-res.getValue());
+                    res.setValueToZero();
                 }
             }
-            if(sum<=(res.getValue()) && res.getType() != ResourceType.ANY)
+            if(sum<=(res.getValue()))
                 return false;
+            extraRes-=res.getValue();
         }
+        if(extraRes<anyResource)
+            return false;
 
         for(Resource res : resources){
             addToBuffer(res);
         }
         return true;
+    }
+
+    /**
+     *
+     * @return the value of resources i own*/
+    private int numberOfResource(){
+        int value=0;
+        ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
+        for(Resource res : resources){
+            value+= currWarehouse.howManyDoIHave(res.getType());
+            value+= strongbox.howManyDoIHave(res.getType());
+        }
+        return value;
+    }
+
+    /**
+     *
+     * @return the value of resources i own in resourcesBuffer*/
+    private int numberOfResourceInBuffer(){
+        int value=0;
+        for(Resource res : resourcesBuffer){
+            value+=res.getValue();
+        }
+        return value;
     }
 
    /**
@@ -210,6 +235,7 @@ public class ResourceManager {
     * */
    public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws CantModifyDepotException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
        supportResource = currWarehouse.removeResourceAt(fromDepot);
+       currWarehouse.setResourceDepotAt(fromDepot, currWarehouse.getDepot(toDepot).getResource());
        try{
            currWarehouse.setResourceDepotAt(toDepot, supportResource);
        }
@@ -220,10 +246,10 @@ public class ResourceManager {
    }
 
     /**
-     * Discard resource
-     * @param resource i want to discard*/
-    public void discardResource(Resource resource){
-        //TODO: observer notify how many cell all the other players can move in the fait
+     * Discard res*/
+    public void discardResources(){
+        notifyAllObservers();
+        resourcesBuffer.clear();
     }
 
     //metodi per i leader
@@ -236,13 +262,20 @@ public class ResourceManager {
     /**
      * Add resource to the list of discount i have
      * @param resource that i have "discount"*/
-    public void addDiscount(Resource resource) throws NegativeResourceException {
+    public void addDiscount(Resource resource) {
         if(discounts.contains(resource)){
             discounts.get(discounts.indexOf(resource)).addValue(resource.getValue());
         }
         else{
             discounts.add(resource);
         }
+    }
+
+    /**
+     * Clear all the buffers in the resource manager*/
+    public void clearBuffers(){
+        resourcesToProduce.clear();
+        resourcesBuffer.clear();
     }
 
     //metodo per me

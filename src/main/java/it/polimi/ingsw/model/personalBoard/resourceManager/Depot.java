@@ -85,13 +85,23 @@ public class Depot {
     }
 
     /**       
-     *add a value (with sign) to the value of my resource
+     *Add a value to the value of my resource
      */
-    public void addValueResource(int value) throws TooMuchResourceDepotException, NegativeResourceException{
+    public void addValueResource(int value) throws TooMuchResourceDepotException{
         if(value+resource.getValue()>maxStorable){
             throw new TooMuchResourceDepotException("Adding too much res in this depot");
         }
         resource.addValue(value);
+    }
+
+    /**
+     *Sub a value to the value of my resource
+     */
+    public void subValueResource(int value) throws TooMuchResourceDepotException, NegativeResourceException{
+        if(value+resource.getValue()>maxStorable){
+            throw new TooMuchResourceDepotException("Adding too much res in this depot");
+        }
+        resource.subValue(value);
     }
 
     @Override

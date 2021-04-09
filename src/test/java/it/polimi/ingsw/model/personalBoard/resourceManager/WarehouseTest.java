@@ -48,7 +48,7 @@ class WarehouseTest {
         w.addDepotLeader(new Depot(true, 4));
         assertEquals(1, w.copyDepotsLeader().size());
     }
-
+/*
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void modifyLeaderDepotValueAt(int index){
@@ -93,7 +93,7 @@ class WarehouseTest {
                 break;
         }
     }
-
+*/
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void doIHaveADepotWith(int index) {

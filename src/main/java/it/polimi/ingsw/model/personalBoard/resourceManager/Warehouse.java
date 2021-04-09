@@ -51,24 +51,46 @@ public class Warehouse implements Cloneable{
         depotsLeader.add(depot);
     }
 
-
     /**
      * call the private modifyDepotValue with the leader depots list
-     * @param indexDepot: the index i want to modify in the normal depot list
-     * @param resource: the resource to sum*/
-    public void modifyLeaderDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, TooMuchResourceDepotException{
+     * @param indexDepot the index i want to modify in the normal depot list
+     * @param resource the resource to sum*/
+    public void addToLeaderDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException{
         if(depotsLeader.get(indexDepot).getResourceType()==resource.getType()){
             depotsLeader.get(indexDepot).addValueResource(resource.getValue());
         }
     }
 
     /**
+     * call the private modifyDepotValue with the leader depots list
+     * @param indexDepot the index i want to modify in the normal depot list
+     * @param resource the resource to sub*/
+    public void subToLeaderDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, TooMuchResourceDepotException{
+        if(depotsLeader.get(indexDepot).getResourceType()==resource.getType()){
+            depotsLeader.get(indexDepot).subValueResource(resource.getValue());
+        }
+    }
+
+    /**
      * call the private modifyDepotValue with the standard depots list
-     *@param indexDepot: the index i want to modify in the leader depot list
-     *@param resource: the resource to sum*/
-    public void modifyStandardDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
+     *@param indexDepot the index i want to modify in the leader depot list
+     *@param resource the resource to sum*/
+    public void addToStandardDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
         if(depots.get(indexDepot).getResourceType()==resource.getType()){
             depots.get(indexDepot).addValueResource(resource.getValue());
+        }
+        else{
+            setResourceDepotAt(indexDepot, resource);
+        }
+    }
+
+    /**
+     * call the private modifyDepotValue with the standard depots list
+     *@param indexDepot the index i want to modify in the leader depot list
+     *@param resource the resource to sub*/
+    public void subToStandardDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
+        if(depots.get(indexDepot).getResourceType()==resource.getType()){
+            depots.get(indexDepot).subValueResource(resource.getValue());
         }
         else{
             setResourceDepotAt(indexDepot, resource);
