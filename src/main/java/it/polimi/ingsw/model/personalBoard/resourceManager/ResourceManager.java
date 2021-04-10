@@ -20,10 +20,11 @@ public class ResourceManager implements Observable {
     private int faithPoint=0;
     private int anyResource=0;
 
+    private ArrayList<Resource> myResources = new ArrayList<>();
+
     public ResourceManager(){
         currWarehouse =new Warehouse();
         strongbox=new Strongbox();
-        resourcesBuffer=null;
     }
 
     //set up per valori il prossimo turno
@@ -34,6 +35,7 @@ public class ResourceManager implements Observable {
         faithPoint=0;
         resourcesBuffer.clear();
         resourcesToProduce.clear();
+        allMyResources();
     }
 
     //Metodi specifici azione 3 produzione mercato (player preme su azione 3 va al mercato mi ritorna un vettore da mettere nella warehouse)
@@ -126,13 +128,21 @@ public class ResourceManager implements Observable {
      * Convert one ANY to a specific resource
      * @param type of resource i want to have
      * @return the resource i'm asking for*/
-    private Resource changeAnyInResource(ResourceType type) throws NoMoreAnyResourceException{
-        if(anyResource<=0){ //maybe
-            throw new NoMoreAnyResourceException("No more 'any' to convert");
+    private Resource changeAnyInResource(ResourceType type, boolean isCost) throws NoMoreAnyResourceException, NegativeResourceException {
+        if(anyResource <= 0){ //maybe
+            throw new NoMoreAnyResourceException("don't have enough any");
+        }
+        Resource resource = ResourceFactory.createResource(type,1);
+        if (isCost){
+            if (!myResources.contains(resource))
+                throw new NegativeResourceException("don't have this resource");
+            else
+                myResources.get(myResources.indexOf(resource)).subValue(1);
         }
         anyResource--;
-        return ResourceFactory.createResource(type, 1);
+        return resource;
     }
+
 
     /**
      * Used to add a resource value or the resource itself in the buffer
@@ -169,42 +179,58 @@ public class ResourceManager implements Observable {
         }
     }
 
+    private void discount(Resource res){
+        if(discounts.contains(res)){
+            try{
+                res.subValue(discounts.get(discounts.indexOf(res)).getValue());
+            }catch(NegativeResourceException e){
+                res.setValueToZero();
+            }
+        }
+    }
+
     /**
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
      * @param checkDiscount if u want you resource to be discounted
      * @return true if u can false if u can't*/
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
-        int sum;
-        int extraRes=numberOfResource()-numberOfResourceInBuffer();
+        int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources);
         for(Resource res : resources){
-            if(resourcesBuffer.contains(res)){
-                sum=-resourcesBuffer.get(resourcesBuffer.indexOf(res)).getValue();
-            }
-            else{
-                sum=0;
-            }
-            sum+= currWarehouse.howManyDoIHave(res.getType());
-            sum+= strongbox.howManyDoIHave(res.getType());
-            if(discounts.contains(res) && checkDiscount){
-                try{
-                    res.subValue(discounts.get(discounts.indexOf(res)).getValue());
-                }catch(NegativeResourceException e){
-                    res.setValueToZero();
+            if (myResources.contains(res)){
+                if (checkDiscount)
+                    discount(res);
+                try {
+                    myResources.get(myResources.indexOf(res)).subValue(res.getValue());
+                    extraRes -=  res.getValue();
+                    if(myResources.get(myResources.indexOf(res)).getValue() == 0)
+                        myResources.remove(res);
+                } catch (NegativeResourceException e) {
+                    return false;
                 }
             }
-            if(sum<=(res.getValue()))
+            else
                 return false;
-            extraRes-=res.getValue();
         }
-        if(extraRes<anyResource)
+
+        if(extraRes < anyResource)
             return false;
 
         for(Resource res : resources){
             addToBuffer(res);
         }
         return true;
+    }
+
+    private void allMyResources(){
+        ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
+        for(Resource res : resources){
+            res.addValue(currWarehouse.howManyDoIHave(res.getType()));
+            res.addValue(strongbox.howManyDoIHave(res.getType()));
+            if (res.getValue() != 0)
+                myResources.add(res);
+        }
     }
 
     /**

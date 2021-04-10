@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.commonInterfaces.Observable;
 import it.polimi.ingsw.commonInterfaces.Observer;
 import it.polimi.ingsw.exception.CantMakeProductionException;
+import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.Color;
@@ -18,9 +19,11 @@ import java.util.ArrayList;
 
 public class CardManager implements Observable {
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
+
     private final ArrayList<Leader> leaders = new ArrayList<>();
     private final Development baseProduction;
-    private final ArrayList<Development> productionSelected=new ArrayList<>();
+    private final ArrayList<Development> devCardsUsed = new ArrayList<>();
+
     private final ArrayList<Observer> observers = new ArrayList<>();
 
     public CardManager() throws IOException {
@@ -38,8 +41,8 @@ public class CardManager implements Observable {
 
     /**
      * Set up the card manager to be ready for the curr turn*/
-    public void newTurn(){
-        productionSelected.clear();
+    public void clearUsed(){
+        devCardsUsed.clear();
     }
 
     /**
@@ -61,12 +64,12 @@ public class CardManager implements Observable {
     /**
      * Activate a leader card u own
      * @param leaderIndex u want to activate
-     * @throws NegativeResourceException is a resource obj value goes under 0
      */
-    public void activateLeader(int leaderIndex) throws NegativeResourceException, IndexOutOfBoundsException {
-        if(!leaders.get(leaderIndex).isActive()){
-            leaders.get(leaderIndex).checkRequirements();
-            leaders.get(leaderIndex).setActive(true);
+    public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException {
+        Leader leader = leaders.get(leaderIndex);
+        if(!leader.isActive() && leader.checkRequirements()){
+            leader.doEffects();
+            leader.setActive(true);
         }
     }
 
@@ -80,21 +83,6 @@ public class CardManager implements Observable {
         cardSlots.get(index).insertCard(development);
     }
 
-    /**
-     * Select one card to add to the selected card
-     * @param lvCard the level of the card u choose
-     * @param indexCardSlot from you want to select
-     */
-    public void addCardToProduce(int  lvCard, int indexCardSlot) throws IndexOutOfBoundsException {
-            productionSelected.add(cardSlots.get(indexCardSlot).getCardOfLv(lvCard));
-    }
-
-    /**
-     * Add the base production to the production selected
-     */
-    public void addBaseProduction(){
-            productionSelected.add(baseProduction);
-    }
 
     public void activateLeaderEffect(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException, NegativeResourceException {
         leaders.get(leaderIndex).doEffects();
@@ -105,10 +93,19 @@ public class CardManager implements Observable {
      * @throws  NegativeResourceException
      * @throws  CantMakeProductionException
      */
-    public void developmentProduce() throws NegativeResourceException, CantMakeProductionException {
-        for(Development dev: productionSelected){
-            dev.doEffects();
-        }
+    public void developmentProduce(int  lvCard, int indexCardSlot) throws NegativeResourceException, CantMakeProductionException, CardAlreadyUsed {
+        Development development = cardSlots.get(indexCardSlot).getCardOfLv(lvCard);
+        if (devCardsUsed.contains(development))
+            throw new CardAlreadyUsed("Card already used");
+        devCardsUsed.add(development);
+        development.doEffects();
+    }
+
+    public void baseProductionProduce() throws CardAlreadyUsed, CantMakeProductionException {
+        if (devCardsUsed.contains(baseProduction))
+            throw new CardAlreadyUsed("Base Production already used");
+        devCardsUsed.add(baseProduction);
+        baseProduction.doEffects();
     }
 
     /**
@@ -139,7 +136,8 @@ public class CardManager implements Observable {
 
     @Override
     public void attachObserver(Observer observer) {
-        observers.add(observer);
+        if(!observers.contains(observer))
+            observers.add(observer);
     }
 
     @Override
