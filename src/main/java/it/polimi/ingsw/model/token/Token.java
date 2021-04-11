@@ -15,3 +15,4 @@ public interface Token{
     void doActionToken() throws DeckDevelopmentCardException;
     void attachLorenzoIlMagnifico(LorenzoIlMagnifico lorenzoIlMagnifico);
 }
+

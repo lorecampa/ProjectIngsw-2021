@@ -238,7 +238,6 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
      * Method drawToken draws the token from the deckToken on the top,
      * puts it back in the bottom and then  applies its effect
      */
-
     public void drawToken() {
         //forse devo restituire il token per farlo vedere a schermo? bho
         Token token = deckToken.poll();
@@ -259,9 +258,11 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         return gameEnded;
     }
 
-    public LinkedList<Leader> getDeckLeader() {
-        return deckLeader;
+    public int getSizeDeckLeader() {
+        return deckLeader.size();
     }
+
+    public int getSizeDeckToken() {return (deckToken != null) ? deckToken.size() : 0;}
 
     public ArrayList<ArrayList<ArrayList<Development>>> getDeckDevelopment() {
         return deckDevelopment;
@@ -352,6 +353,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     public void increaseFaithPosition(int pos) {
         this.lorenzoFaithTrack.movePlayer(pos);
     }
+
+
 
 
 

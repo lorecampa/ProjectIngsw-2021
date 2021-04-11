@@ -2,8 +2,10 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.exception.CantMakeProductionException;
-import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
+import it.polimi.ingsw.model.card.Effect.Effect;
+import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.requirement.Requirement;
+import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
@@ -23,20 +25,25 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public  abstract class Card {
     private final int victoryPoints;
     private final ArrayList<Requirement> requirements;
-    private final ArrayList<OnActivationEffect> onActivationEffects;
+    private final ArrayList<Effect> onCreationEffect;
+    private final ArrayList<Effect> onActivationEffects;
     private String owner = null;
 
     /**
      * Constructor Card creates a new Card instance
      * @param victoryPoints of type int - the card victory points
      * @param requirements of type ArrayList - the card requirements
+     * @param onCreationEffect of type ArrayList - the card effects of cration type
      * @param onActivationEffects of type ArrayList - the card effects of activation type
      */
-    public Card(int victoryPoints, ArrayList<Requirement> requirements,
-                ArrayList<OnActivationEffect> onActivationEffects) {
+    public Card(int victoryPoints,
+                ArrayList<Requirement> requirements,
+                ArrayList<Effect> onActivationEffects,
+                ArrayList<Effect> onCreationEffect) {
         this.victoryPoints = victoryPoints;
         this.requirements = requirements;
         this.onActivationEffects = onActivationEffects;
+        this.onCreationEffect = onCreationEffect;
 
     }
 
@@ -44,20 +51,26 @@ public  abstract class Card {
      * Method checkRequirements checks if all requirement of the card are satisfied
      * @return boolean - true if all requirements are satisfied, otherwise false
      */
-    public boolean checkRequirements(){
-        for(Requirement req: requirements){
-            if (!req.checkRequirement()) return false;
+    public boolean checkRequirements(boolean discount){
+        for(Requirement req: requirements) {
+            if (!req.checkRequirement(discount)) return false;
         }
         return true;
+    }
+
+    public void  doCreationEffect() throws CantMakeProductionException {
+        for(Effect effect: onCreationEffect) {
+            effect.doEffect(State.CREATION_STATE);
+        }
     }
 
     /**
      * Method doEffects does all the effect of type activation
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    public  void doEffects() throws  CantMakeProductionException {
-        for (OnActivationEffect effect: onActivationEffects ){
-            effect.doActivationEffect();
+    public  void doEffects(State state) throws  CantMakeProductionException {
+        for (Effect effect: onActivationEffects){
+            effect.doEffect(state);
         }
     }
 
@@ -66,8 +79,20 @@ public  abstract class Card {
      * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
      */
     public void setResourceManager(ResourceManager resourceManager){
-        for (OnActivationEffect effect: onActivationEffects){
+        for (Effect effect: onActivationEffects){
             effect.attachResourceManager(resourceManager);
+        }
+        for (Effect effect: onCreationEffect){
+            effect.attachResourceManager(resourceManager);
+        }
+        for (Requirement requirement: requirements){
+            requirement.attachResourceManager(resourceManager);
+        }
+    }
+
+    public void setCardManager(CardManager cardManager){
+        for(Requirement requirement: requirements){
+            requirement.attachCardManager(cardManager);
         }
     }
 
@@ -76,7 +101,7 @@ public  abstract class Card {
      * @param market of type Market is an instance of the market of the game
      */
     public void setMarket(Market market){
-        for(OnActivationEffect effect: onActivationEffects){
+        for(Effect effect: onActivationEffects){
             effect.attachMarket(market);
         }
     }
@@ -118,9 +143,21 @@ public  abstract class Card {
             x += "\n"+req;
 
         }
-        if(this.onActivationEffects != null){
-            for(OnActivationEffect onActivationEffect: onActivationEffects){
+
+
+        if (!onActivationEffects.isEmpty()){
+            x += "\nOnActivationEffect:";
+            for(Effect onActivationEffect: onActivationEffects){
                 x += onActivationEffect;
+                x += "\n";
+            }
+        }
+
+        if(!onCreationEffect.isEmpty()){
+            if (onActivationEffects.isEmpty()) x+="\n";
+            x += "OnCreationEffect:";
+            for(Effect onCreationEffect: onCreationEffect){
+                x += onCreationEffect;
                 x += "\n";
             }
         }

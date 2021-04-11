@@ -1,7 +1,10 @@
-package it.polimi.ingsw.model.card.creationEffect;
+package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.model.card.Effect.Effect;
+import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -11,10 +14,11 @@ import java.util.ArrayList;
 /**
  * Class WarehouseEffect defines a class for all effect that will modify the warehouse structure
  */
-public class WarehouseEffect  implements OnCreationEffect {
+public class WarehouseEffect  implements Effect {
     private final ArrayList<Resource> depots;
-    private boolean used = false;
     private ResourceManager resourceManager = null;
+
+
 
     /**
      * Constructor WarehouseEffect creates a new WarehouseEffect instance
@@ -30,13 +34,21 @@ public class WarehouseEffect  implements OnCreationEffect {
      * in depots and change the leader status (used = true)
      */
     @Override
-    public void doCreationEffect() {
-        for (Resource depot: depots){
-            //clone with value = 0
-            Resource res = ResourceFactory.createResource(depot.getType(), 0);
-            resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));
+    public void doEffect(State state) {
+        if (state == State.CREATION_STATE){
+            for (Resource depot: depots){
+                //clone with value = 0
+                Resource res = ResourceFactory.createResource(depot.getType(), 0);
+                resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));
+            }
         }
-        this.used = true;
+
+
+
+    }
+    @Override
+    public void attachMarket(Market market) {
+
     }
 
     /**
@@ -49,14 +61,7 @@ public class WarehouseEffect  implements OnCreationEffect {
     }
 
 
-    /**
-     * Method isUsed return the status of the creation effect during the game
-     * @return boolean - true if the card has been used, otherwise false
-     */
-    @Override
-    public boolean isUsed() {
-        return this.used;
-    }
+
 
     @Override
     public String toString() {

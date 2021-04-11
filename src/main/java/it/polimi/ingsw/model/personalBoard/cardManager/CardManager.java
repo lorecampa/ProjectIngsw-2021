@@ -11,6 +11,7 @@ import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
+import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.Leader;
 
 import java.io.File;
@@ -35,9 +36,7 @@ public class CardManager implements Observable {
         }
     }
 
-    public ArrayList<Leader> getLeaders() {
-        return leaders;
-    }
+
 
     /**
      * Set up the card manager to be ready for the curr turn*/
@@ -67,8 +66,8 @@ public class CardManager implements Observable {
      */
     public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException {
         Leader leader = leaders.get(leaderIndex);
-        if(!leader.isActive() && leader.checkRequirements()){
-            leader.doEffects();
+        if(!leader.isActive() && leader.checkRequirements(false)){
+            leader.doCreationEffect();
             leader.setActive(true);
         }
     }
@@ -84,8 +83,8 @@ public class CardManager implements Observable {
     }
 
 
-    public void activateLeaderEffect(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException, NegativeResourceException {
-        leaders.get(leaderIndex).doEffects();
+    public void activateLeaderEffect(int leaderIndex, State state) throws IndexOutOfBoundsException, CantMakeProductionException, NegativeResourceException {
+        leaders.get(leaderIndex).doEffects(state);
     }
 
     /**
@@ -98,14 +97,14 @@ public class CardManager implements Observable {
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
         devCardsUsed.add(development);
-        development.doEffects();
+        development.doEffects(State.PRODUCTION_STATE);
     }
 
     public void baseProductionProduce() throws CardAlreadyUsed, CantMakeProductionException {
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
         devCardsUsed.add(baseProduction);
-        baseProduction.doEffects();
+        baseProduction.doEffects(State.PRODUCTION_STATE);
     }
 
     /**

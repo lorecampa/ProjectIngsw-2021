@@ -35,7 +35,7 @@ public class CardReq implements Requirement {
      * @return boolean - true if he has them, false if he hasn't
      */
     @Override
-    public boolean checkRequirement() {
+    public boolean checkRequirement(boolean discount) {
         return cardManager.doIhaveDevWithColor(numRequired, color);
 
     }

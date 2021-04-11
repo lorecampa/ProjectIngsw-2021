@@ -19,6 +19,7 @@
       ]
     }
   ],
+  "onCreationEffects": [],
   "level" : 0,
   "color": "ANY"
 }

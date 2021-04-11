@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
+import it.polimi.ingsw.model.token.Token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +46,10 @@ class GameMasterTest {
 
     @Test
     void deliverLeaderCard() {
-        assertEquals(16, gm.getDeckLeader().size());
+        assertEquals(16, gm.getSizeDeckLeader());
         assertEquals(4, gm.getNumActivePlayers());
         gm.deliverLeaderCards();
-        assertEquals(0, gm.getDeckLeader().size());
+        assertEquals(0, gm.getSizeDeckLeader());
 
     }
 
@@ -99,8 +100,12 @@ class GameMasterTest {
 
     @Test
     void drawToken() throws IOException {
+        assertEquals(0, gm.getSizeDeckToken());
         GameMaster gmSp = new GameMaster("Single Player", 1);
-        //non so come testarlo ancora
+        int sizeDeckToken = gmSp.getSizeDeckToken();
+        gmSp.drawToken();
+        assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
+
     }
 
     @Test

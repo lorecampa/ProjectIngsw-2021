@@ -1,7 +1,10 @@
-package it.polimi.ingsw.model.card.creationEffect;
+package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.model.card.Effect.Effect;
+import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -10,9 +13,8 @@ import java.util.ArrayList;
 /**
  * Discount class defines represent all effect concerned the discount
  */
-public class DiscountEffect implements OnCreationEffect {
+public class DiscountEffect implements Effect {
     private final ArrayList<Resource> discounts;
-    private  boolean used = false;
     private ResourceManager resourceManager = null;
 
     /**
@@ -29,13 +31,18 @@ public class DiscountEffect implements OnCreationEffect {
      * then to change the value of used from false to true
      */
     @Override
-    public void doCreationEffect() {
-        for(Resource res: discounts){
-            //clone the res and then add to it
-            resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));
+    public void doEffect(State state) {
+        if (state == State.CREATION_STATE){
+            for(Resource res: discounts){
+                //clone the res and then add to it
+                resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));
+            }
         }
-        this.used = true;
+
     }
+
+    @Override
+    public void attachMarket(Market market) {}
 
     /**
      * Method attachResourceManager attach the resource manager in order to use it
@@ -46,14 +53,7 @@ public class DiscountEffect implements OnCreationEffect {
         this.resourceManager = resourceManager;
     }
 
-    /**
-     * Method isUsed return the status of the creation effect during the game
-     * @return boolean - true if the card has been used, otherwise false
-     */
-    @Override
-    public boolean isUsed() {
-        return this.used;
-    }
+
 
 
     @Override

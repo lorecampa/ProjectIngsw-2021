@@ -2,10 +2,8 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.NegativeResourceException;
-import it.polimi.ingsw.model.card.activationEffect.OnActivationEffect;
+import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
-import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
 
 
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 public class Development extends  Card{
     private final int level;
     private final Color color;
-    private ResourceManager resourceManager = null;
 
     /**
      * Constructor Development creates a new Development instance
@@ -29,10 +26,11 @@ public class Development extends  Card{
     @JsonCreator
     public Development(@JsonProperty("victoryPoints") int victoryPoints,
                        @JsonProperty("requirements") ArrayList<Requirement> requirements,
-                       @JsonProperty("onActivationEffects") ArrayList<OnActivationEffect> onActivationEffects,
+                       @JsonProperty("onActivationEffects") ArrayList<Effect> onActivationEffects,
+                       @JsonProperty("onCreationEffects") ArrayList<Effect> onCreationEffects,
                        @JsonProperty("level") int level,
                        @JsonProperty("color") Color color) {
-        super(victoryPoints, requirements, onActivationEffects);
+        super(victoryPoints, requirements, onActivationEffects, onCreationEffects);
         this.level = level;
         this.color = color;
     }
@@ -45,17 +43,6 @@ public class Development extends  Card{
         return color;
     }
 
-    /**
-     * Method setResourceManager calls the setResourceManager of the father  and the then sets
-     * the resource manager to himself
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
-     */
-    @Override
-    public void setResourceManager(ResourceManager resourceManager) {
-        super.setResourceManager(resourceManager);
-        this.resourceManager = resourceManager;
-
-    }
 
     @Override
     public String toString() {

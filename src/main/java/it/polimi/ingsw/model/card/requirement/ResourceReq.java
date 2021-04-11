@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.card.requirement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -29,8 +28,8 @@ public class ResourceReq implements Requirement {
      * @return boolean - true if he has them,  false if he hasn't
      */
     @Override
-    public boolean checkRequirement(){
-        return resourceManager.canIAfford(resourceReq, true);
+    public boolean checkRequirement(boolean discount){
+        return resourceManager.canIAfford(resourceReq, discount);
     }
 
     /**
@@ -44,7 +43,7 @@ public class ResourceReq implements Requirement {
 
     /**
      * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an istance of the card manager of the player
+     * @param cardManager of type CardManager is an instance of the card manager of the player
      */
     @Override
     public void attachCardManager(CardManager cardManager) {}

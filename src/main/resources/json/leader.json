@@ -16,7 +16,7 @@
         "numRequired": 1
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "DiscountEffect",
@@ -48,7 +48,7 @@
         "numRequired": 1
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "DiscountEffect",
@@ -80,7 +80,7 @@
         "numRequired": 1
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "DiscountEffect",
@@ -112,7 +112,7 @@
         "numRequired": 1
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "DiscountEffect",
@@ -178,7 +178,7 @@
         ]
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "WarehouseEffect",
@@ -207,7 +207,7 @@
         ]
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "WarehouseEffect",
@@ -236,7 +236,7 @@
         ]
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "WarehouseEffect",
@@ -265,7 +265,7 @@
         ]
       }
     ],
-    "onActivationEffects": null,
+    "onActivationEffects": [],
     "onCreationEffects":[
       {
         "@class" : "WarehouseEffect",
@@ -350,7 +350,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -383,7 +383,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -415,7 +415,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -447,7 +447,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -509,7 +509,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -546,7 +546,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -583,7 +583,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   },
 
 
@@ -619,7 +619,7 @@
         ]
       }
     ],
-    "onCreationEffects": null
+    "onCreationEffects": []
   }
 
 ]

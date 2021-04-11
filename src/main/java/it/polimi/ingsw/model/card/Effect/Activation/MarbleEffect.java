@@ -1,7 +1,9 @@
-package it.polimi.ingsw.model.card.activationEffect;
+package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.model.card.Effect.Effect;
+import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 /**
  * MarbleEffect class defines the effect that concern the marbles
  */
-public class MarbleEffect implements OnActivationEffect{
+public class MarbleEffect implements Effect {
     private final ArrayList<Resource> transformIn;
     private Market market = null;
 
@@ -30,13 +32,16 @@ public class MarbleEffect implements OnActivationEffect{
      * the market based on how many white marble the user haw drawn
      */
     @Override
-    public void doActivationEffect() {
-        int whiteMarble = market.getWhiteMarbleDrew();
-        //add resource in market
-        for (Resource res: transformIn){
-            market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
+    public void doEffect(State state) {
+        if (state == State.MARKET_STATE){
+            int whiteMarble = market.getWhiteMarbleDrew();
+            //add resource in market
+            for (Resource res: transformIn){
+                market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
 
+            }
         }
+
     }
 
     /**

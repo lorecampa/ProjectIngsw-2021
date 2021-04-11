@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.card.requirement;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
@@ -24,7 +23,7 @@ public interface Requirement {
      * Method checkRequirement control if the player can afford it
      * @return boolean - true if he can afford it, otherwise false
      */
-    boolean checkRequirement();
+    boolean checkRequirement(boolean discount);
 
     /**
      * Method attachResourceManager attach the resource manager
