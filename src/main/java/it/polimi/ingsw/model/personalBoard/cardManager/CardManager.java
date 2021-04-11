@@ -66,7 +66,7 @@ public class CardManager implements Observable {
      */
     public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException {
         Leader leader = leaders.get(leaderIndex);
-        if(!leader.isActive() && leader.checkRequirements(false)){
+        if(!leader.isActive() && leader.checkRequirements()){
             leader.doCreationEffect();
             leader.setActive(true);
         }

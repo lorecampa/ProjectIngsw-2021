@@ -28,8 +28,9 @@ public class MarbleEffect implements Effect {
     }
 
     /**
-     * Method doActivationEffect is in charge of pass all the resources to
+     * Method doEffect is in charge of pass all the resources to
      * the market based on how many white marble the user haw drawn
+     * @param state of type State - defines the state of the turn
      */
     @Override
     public void doEffect(State state) {

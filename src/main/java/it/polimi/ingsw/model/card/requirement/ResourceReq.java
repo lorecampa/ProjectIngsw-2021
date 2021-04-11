@@ -25,6 +25,8 @@ public class ResourceReq implements Requirement {
 
     /**
      * Method checkRequirement control if the player has enough resources
+     * @param discount of type boolean - if you want to consider the leader discount effect then it
+     *                 must be true, otherwise false
      * @return boolean - true if he has them,  false if he hasn't
      */
     @Override

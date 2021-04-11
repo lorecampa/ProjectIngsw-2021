@@ -32,12 +32,12 @@ public class CardReq implements Requirement {
 
     /**
      * Method checkRequirement control if the player has enough cards with a specific color
+     * @param discount of type boolean - doesn't matter if it is true or false
      * @return boolean - true if he has them, false if he hasn't
      */
     @Override
     public boolean checkRequirement(boolean discount) {
         return cardManager.doIhaveDevWithColor(numRequired, color);
-
     }
 
     /**

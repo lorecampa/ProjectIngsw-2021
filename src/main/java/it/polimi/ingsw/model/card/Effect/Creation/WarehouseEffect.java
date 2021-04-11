@@ -22,7 +22,7 @@ public class WarehouseEffect  implements Effect {
 
     /**
      * Constructor WarehouseEffect creates a new WarehouseEffect instance
-     * @param depots of type ArrayList - the amount of resources that will be transformed in depots
+     * @param depots of type ArrayList - the amount of resources that will be transformed in depot
      */
     @JsonCreator
     public WarehouseEffect(@JsonProperty("depots") ArrayList<Resource> depots) {
@@ -30,22 +30,23 @@ public class WarehouseEffect  implements Effect {
     }
 
     /**
-     * Method doCreationEffect creates a new locked depot (lockDepot = true)  for all the resources
-     * in depots and change the leader status (used = true)
+     * Method doEffect creates a new locked depot (lockDepot = true)  for all the resources in depots
+     * @param state of type State - defines the state of the turn
      */
     @Override
     public void doEffect(State state) {
         if (state == State.CREATION_STATE){
             for (Resource depot: depots){
-                //clone with value = 0
                 Resource res = ResourceFactory.createResource(depot.getType(), 0);
                 resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));
             }
         }
-
-
-
     }
+
+    /**
+     * Method attachMarket attach the market
+     * @param market of type Market is the instance of the market of the game
+     */
     @Override
     public void attachMarket(Market market) {
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Leader extends Card{
     private boolean active;
 
+
     /**
      * Constructor Leader creates a new Leader instance
      * @param victoryPoints of type int - the leader victory points
@@ -30,7 +31,17 @@ public class Leader extends Card{
         this.active = false;
     }
 
-
+    /**
+     * Method checkRequirements checks if all requirement of the card are satisfied, leader
+     * discounts are not considered in the counting
+     * @return boolean - true if all requirements are satisfied, otherwise false
+     */
+    public boolean checkRequirements(){
+        for(Requirement req: requirements) {
+            if (!req.checkRequirement(false)) return false;
+        }
+        return true;
+    }
 
     /**
      * Method isActive is a getter method for knowing is the leader card has been already activated

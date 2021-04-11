@@ -24,6 +24,7 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 public interface Effect {
     /**
      * Method doEffect is responsible of doing the effect
+     * @param state of type State - defines the state of the turn
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
     void doEffect(State state) throws  CantMakeProductionException;

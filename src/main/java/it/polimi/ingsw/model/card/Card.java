@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public  abstract class Card {
     private final int victoryPoints;
-    private final ArrayList<Requirement> requirements;
+    final ArrayList<Requirement> requirements;
     private final ArrayList<Effect> onCreationEffect;
     private final ArrayList<Effect> onActivationEffects;
     private String owner = null;
@@ -33,8 +33,8 @@ public  abstract class Card {
      * Constructor Card creates a new Card instance
      * @param victoryPoints of type int - the card victory points
      * @param requirements of type ArrayList - the card requirements
-     * @param onCreationEffect of type ArrayList - the card effects of cration type
-     * @param onActivationEffects of type ArrayList - the card effects of activation type
+     * @param onCreationEffect of type ArrayList - the card effects of type creation
+     * @param onActivationEffects of type ArrayList - the card effects of type activation
      */
     public Card(int victoryPoints,
                 ArrayList<Requirement> requirements,
@@ -51,13 +51,13 @@ public  abstract class Card {
      * Method checkRequirements checks if all requirement of the card are satisfied
      * @return boolean - true if all requirements are satisfied, otherwise false
      */
-    public boolean checkRequirements(boolean discount){
-        for(Requirement req: requirements) {
-            if (!req.checkRequirement(discount)) return false;
-        }
-        return true;
-    }
+    public abstract boolean checkRequirements();
 
+
+    /**
+     * Method doCreationEffect does all effect one time use when you buy the card for the first time
+     * @throws CantMakeProductionException
+     */
     public void  doCreationEffect() throws CantMakeProductionException {
         for(Effect effect: onCreationEffect) {
             effect.doEffect(State.CREATION_STATE);

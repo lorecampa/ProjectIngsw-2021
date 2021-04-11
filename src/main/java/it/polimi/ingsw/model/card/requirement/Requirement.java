@@ -21,6 +21,8 @@ public interface Requirement {
 
     /**
      * Method checkRequirement control if the player can afford it
+     * @param discount of type boolean - if you want to consider the leader discount effect then it
+     *                 must be true, otherwise false
      * @return boolean - true if he can afford it, otherwise false
      */
     boolean checkRequirement(boolean discount);
@@ -33,7 +35,7 @@ public interface Requirement {
 
     /**
      * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an istance of the card manager of the player
+     * @param cardManager of type CardManager is an instance of the card manager of the player
      */
     void attachCardManager(CardManager cardManager);
 

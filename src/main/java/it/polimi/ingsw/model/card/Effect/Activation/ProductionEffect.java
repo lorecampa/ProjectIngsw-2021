@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.card.Effect.Activation;
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.CantMakeProductionException;
@@ -37,9 +36,10 @@ public class ProductionEffect implements Effect {
 
 
     /**
-     * Method doActivationEffect checks if the player has enough resource for the production and
+     * Method doEffect checks if the player has enough resource for the production and
      * then pass all the resource that he will gain to the resource manager and it will handle those
-     * putting them to the strongbox
+     * putting them into the strongbox
+     * @param state of type State - defines the state of the turn
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override

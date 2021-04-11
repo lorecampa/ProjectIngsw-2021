@@ -15,6 +15,7 @@ public class Development extends  Card{
     private final int level;
     private final Color color;
 
+
     /**
      * Constructor Development creates a new Development instance
      * @param victoryPoints of type int - the development card victory points
@@ -43,6 +44,18 @@ public class Development extends  Card{
         return color;
     }
 
+
+    /**
+     * Method checkRequirements checks if all requirement of the card are satisfied, leaders discounts
+     * are considered in the counting
+     * @return boolean - true if all requirements are satisfied, otherwise false
+     */
+    public boolean checkRequirements(){
+        for(Requirement req: requirements) {
+            if (!req.checkRequirement(true)) return false;
+        }
+        return true;
+    }
 
     @Override
     public String toString() {
