@@ -8,11 +8,11 @@ import it.polimi.ingsw.commonInterfaces.Observer;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,7 @@ public class CardManager implements Observable {
     private final ArrayList<Leader> leaders = new ArrayList<>();
     private final Development baseProduction;
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
+    private final ArrayList<Leader> leadersUsed = new ArrayList<>();
 
     private final ArrayList<Observer> observers = new ArrayList<>();
 
@@ -36,12 +37,15 @@ public class CardManager implements Observable {
         }
     }
 
-
-
     /**
      * Set up the card manager to be ready for the curr turn*/
     public void clearUsed(){
         devCardsUsed.clear();
+        leadersUsed.clear();
+    }
+
+    public void setUpBaseProduction(ResourceManager playerResourceManager){
+        baseProduction.setResourceManager(playerResourceManager);
     }
 
     /**
@@ -83,28 +87,31 @@ public class CardManager implements Observable {
     }
 
 
-    public void activateLeaderEffect(int leaderIndex, State state) throws IndexOutOfBoundsException, CantMakeProductionException, NegativeResourceException {
-        leaders.get(leaderIndex).doEffects(state);
+    public void activateLeaderEffect(int leaderIndex, State state) throws IndexOutOfBoundsException, CantMakeProductionException, CardAlreadyUsed {
+        Leader leader = leaders.get(leaderIndex);
+        if (leadersUsed.contains(leader))
+            throw new CardAlreadyUsed("Leader already used");
+        leader.doEffects(state);
+        leadersUsed.add(leader);
     }
 
     /**
      * Activate the production of all the selected dev card
-     * @throws  NegativeResourceException
      * @throws  CantMakeProductionException
      */
-    public void developmentProduce(int  lvCard, int indexCardSlot) throws NegativeResourceException, CantMakeProductionException, CardAlreadyUsed {
+    public void developmentProduce(int  lvCard, int indexCardSlot) throws CantMakeProductionException, CardAlreadyUsed, IndexOutOfBoundsException {
         Development development = cardSlots.get(indexCardSlot).getCardOfLv(lvCard);
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
-        devCardsUsed.add(development);
         development.doEffects(State.PRODUCTION_STATE);
+        devCardsUsed.add(development);
     }
 
     public void baseProductionProduce() throws CardAlreadyUsed, CantMakeProductionException {
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
-        devCardsUsed.add(baseProduction);
         baseProduction.doEffects(State.PRODUCTION_STATE);
+        devCardsUsed.add(baseProduction);
     }
 
     /**
@@ -115,7 +122,7 @@ public class CardManager implements Observable {
         int count =0;
         for(CardSlot cardSlot: cardSlots){
             if(cardSlot.getLvReached()>=level){
-                count+=cardSlot.getLvReached()-level;
+                count++;
             }
         }
         return count>=howMany;

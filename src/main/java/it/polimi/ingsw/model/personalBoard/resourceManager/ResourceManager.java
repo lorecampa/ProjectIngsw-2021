@@ -303,6 +303,7 @@ public class ResourceManager implements Observable {
     /**
      * Clear all the buffers in the resource manager*/
     public void clearBuffers(){
+        anyResource = 0;
         resourcesToProduce.clear();
         resourcesBuffer.clear();
     }

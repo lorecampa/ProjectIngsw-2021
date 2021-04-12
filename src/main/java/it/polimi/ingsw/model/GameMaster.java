@@ -86,7 +86,6 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         }
 
 
-
         //single player
         if(numberOfPlayer == 1){
             this.lorenzoFaithTrack = mapper.readValue(new File("src/main/resources/json/FaithTrack.json"), FaithTrack.class);

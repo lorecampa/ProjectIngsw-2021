@@ -26,6 +26,8 @@ public class PersonalBoard {
         this.resourceManager = new ResourceManager();
         this.inkwell=false;
         this.nickname=nickname;
+
+        cardManager.setUpBaseProduction(resourceManager);
     }
 
     public FaithTrack getFaithTrack() {

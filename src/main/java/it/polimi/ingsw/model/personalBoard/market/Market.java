@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.personalBoard.market;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
