@@ -35,6 +35,7 @@ public class CardManager implements Observable {
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
+
     }
 
     /**
@@ -71,7 +72,7 @@ public class CardManager implements Observable {
     public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException {
         Leader leader = leaders.get(leaderIndex);
         if(!leader.isActive() && leader.checkRequirements()){
-            leader.doCreationEffect();
+            leader.doCreationEffects();
             leader.setActive(true);
         }
     }

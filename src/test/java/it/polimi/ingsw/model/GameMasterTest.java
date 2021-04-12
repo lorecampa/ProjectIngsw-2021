@@ -39,7 +39,10 @@ class GameMasterTest {
     void nextPlayer() {
         gm.nextPlayer();
         assertEquals("player2", gm.getCurrentPlayer());
-        gm.setCurrentPlayer("player4");
+        gm.nextPlayer();
+        assertEquals("player3", gm.getCurrentPlayer());
+        gm.nextPlayer();
+        assertEquals("player4", gm.getCurrentPlayer());
         gm.nextPlayer();
         assertEquals("player1", gm.getCurrentPlayer());
     }

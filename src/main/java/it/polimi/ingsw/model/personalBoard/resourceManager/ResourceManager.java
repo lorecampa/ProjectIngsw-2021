@@ -68,7 +68,7 @@ public class ResourceManager implements Observable {
     /**
      * Add to the warehouse the resource
      * @param normalDepot true for default false for leaderDepots
-     * @param index of the depot i want to access
+     * @param index of the depot i want to access (0 -> 1 res), (1 -> 2 res), (2 -> 3 res)
      * @param resource i want to add to that specific depot
      * @throws TooMuchResourceDepotException if i'm trying to add too much resource to that depot
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
@@ -198,6 +198,8 @@ public class ResourceManager implements Observable {
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources);
         for(Resource res : resources){
+            //TODO
+            //fix error if we don't have resources but we can buy it for free with discounts
             if (myResources.contains(res)){
                 if (checkDiscount)
                     discount(res);

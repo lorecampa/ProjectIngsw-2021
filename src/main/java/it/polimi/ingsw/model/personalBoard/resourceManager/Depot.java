@@ -97,10 +97,8 @@ public class Depot {
     /**
      *Sub a value to the value of my resource
      */
-    public void subValueResource(int value) throws TooMuchResourceDepotException, NegativeResourceException{
-        if(value+resource.getValue()>maxStorable){
-            throw new TooMuchResourceDepotException("Adding too much res in this depot");
-        }
+    public void subValueResource(int value) throws  NegativeResourceException{
+
         resource.subValue(value);
     }
 

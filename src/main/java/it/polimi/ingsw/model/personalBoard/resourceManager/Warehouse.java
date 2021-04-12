@@ -59,6 +59,9 @@ public class Warehouse implements Cloneable{
         if(depotsLeader.get(indexDepot).getResourceType()==resource.getType()){
             depotsLeader.get(indexDepot).addValueResource(resource.getValue());
         }
+
+        //altrimenti non dovresti lanciare una eccezione? se sto provando ad inserire una risorsa in uno
+        //scaffale che non posso?
     }
 
     /**

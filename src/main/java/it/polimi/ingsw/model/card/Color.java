@@ -33,9 +33,11 @@ public enum Color {
      * @return int - the column of the color in the matrix of development card
      */
     public int getColumnDeckDevelopment(){
-        if (this.getDisplayName().equals(Color.GREEN.getDisplayName())) return 0;
-        else if(this.getDisplayName().equals(Color.PURPLE.getDisplayName())) return 1;
-        else if(this.getDisplayName().equals(Color.BLUE.getDisplayName())) return 2;
-        else return 3;
+        if (this.equals(Color.GREEN)) return 0;
+        else if(this.equals(Color.PURPLE)) return 1;
+        else if(this.equals(Color.BLUE)) return 2;
+        else if(this.equals(Color.YELLOW)) return 3;
+        else return -1;
+
     }
 }
