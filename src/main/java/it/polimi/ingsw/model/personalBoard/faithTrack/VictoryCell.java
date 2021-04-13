@@ -33,6 +33,10 @@ public class VictoryCell implements Cell{
         return idVaticanReport == idVR;
     }
 
+    /**
+     * Method to get the vatican report id
+     * @return is the vatican report id
+     */
     @Override
     public int getIdVaticanReport() {
         return idVaticanReport;
