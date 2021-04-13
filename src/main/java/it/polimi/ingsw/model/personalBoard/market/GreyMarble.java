@@ -5,6 +5,10 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 public class GreyMarble implements Marble{
 
+    /**
+     * Method that will add a stone in market's resource to send array
+     * @param market is the reference to the market of the game
+     */
     @Override
     public void doMarbleAction(Market market){
         market.addInResourcesToSend(ResourceFactory.createResource(ResourceType.STONE,1));

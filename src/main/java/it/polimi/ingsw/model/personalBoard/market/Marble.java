@@ -14,5 +14,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = YellowMarble.class, name = "yellow"),
         @JsonSubTypes.Type(value = PurpleMarble.class, name = "purple") })
 public interface Marble {
+    /**
+     * Method implemented by all marbles that will perform a different effect for each type
+     * @param market is the reference to the market of the game
+     */
     void doMarbleAction(Market market);
 }

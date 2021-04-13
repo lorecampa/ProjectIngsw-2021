@@ -31,6 +31,8 @@ public class Market {
      * @param numCol is the number of columns
      * @param numRow is the number of rows
      * @param allMarbles is the array that contains all the marbles of the market
+     * @throws WrongMarketDimensionException if it's impossible to create a market with that dimensions
+     * @throws WrongMarblesNumberException  if the number of marbles does not match with the dimension of the market
      */
     @JsonCreator
     public Market(@JsonProperty("numRow") int numRow,
@@ -66,6 +68,7 @@ public class Market {
 
         // set the marble to insert with the last marble
         this.marbleToInsert = allMarbles.get(numCol*numRow);
+
     }
 
     /**
@@ -73,6 +76,7 @@ public class Market {
      * @param resource is the resource that need to be added.
      */
     public void addInResourcesToSend(Resource resource) {
+        // check if there's already the resource in the array
         if(resourcesToSend.contains(resource)){
             resourcesToSend.get(resourcesToSend.indexOf(resource)).addValue(resource.getValue());
         }else {
@@ -99,12 +103,9 @@ public class Market {
      * Method to insert the extra marble in a specific row of the market tray and call the action of every marble
      * in that row.
      * @param row is the row in which the marble will be insert
-     *
+     * @throws IndexOutOfBoundsException if the selected row does not exist
      */
     public void insertMarbleInRow(int row) throws IndexOutOfBoundsException{
-        if (row < 0 || row >= numRow)
-            throw new IndexOutOfBoundsException("Selected a not existing row");
-
         for (Marble marble : marketTray.get(row)) {
             marble.doMarbleAction(this);
         }
@@ -120,13 +121,9 @@ public class Market {
      * Method to insert the extra marble in a specific column of the market tray and call the action of every marble
      * in that column.
      * @param col is the column in which the marble will be insert
-     *
+     * @throws IndexOutOfBoundsException if the selected column does not exist
      */
     public void insertMarbleInCol(int col) throws IndexOutOfBoundsException{
-        if (col < 0 || col >= numCol ) {
-            throw new IndexOutOfBoundsException("Selected a not existing column");
-        }
-
         for (int i = 0; i < numRow; i++) {
             marketTray.get(i).get(col).doMarbleAction(this);
         }
@@ -159,5 +156,4 @@ public class Market {
         numOfWhiteMarbleDrew = 0;
         resourcesToSend.clear();
     }
-
 }

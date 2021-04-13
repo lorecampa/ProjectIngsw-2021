@@ -10,15 +10,17 @@ public class CardSlot {
     private final ArrayList<Development> developments = new ArrayList<>();
 
     /**
-     * Get the higher lv present in this slot*/
+     * Method to get the higher lv present in this slot
+     */
     public int getLvReached() {
         return developments.size();
     }
 
     /**
-     * Insert a card in CardSlot
-     * @param newCard the card i want to add
-     * @throws  CardWithHigherOrSameLevelAlreadyIn if the card lv is already in the CardSlot*/
+     * Method to insert a card in CardSlot
+     * @param newCard is the card I want to insert
+     * @throws  CardWithHigherOrSameLevelAlreadyIn if the card lv is already in the CardSlot
+     */
     public void insertCard(Development newCard) throws CardWithHigherOrSameLevelAlreadyIn {
         if(developments.size() + 1 != newCard.getLevel()){
             throw new CardWithHigherOrSameLevelAlreadyIn("This card slot already contain that lv or higher!");
@@ -27,16 +29,19 @@ public class CardSlot {
     }
 
     /**
-     * Get a specific card
+     * Method to get a specific card
      * @param level of the card i want
-     * @return the card i'm asking for*/
+     * @return the card i'm asking for
+     * @throws IndexOutOfBoundsException if the level selected does not exist
+     */
     public Development getCardOfLv(int level) throws IndexOutOfBoundsException{
         return developments.get(level-1);
     }
 
     /**
-     * The amount of card of a specify color
-     * @param color i'm looking for*/
+     * Method to get the amount of card of a specify color
+     * @param color is the color I'm searching
+     */
     public int howManyCardWithColor(Color color){
         int count=0;
         for(Development dev: developments){

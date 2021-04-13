@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.personalBoard.market;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class MarbleTest {
     }
 
     @Test
-    void doMarbleAction_Blue() throws NegativeResourceException {
+    void doMarbleAction_Blue(){
         blueMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
@@ -45,7 +44,7 @@ class MarbleTest {
     }
 
     @Test
-    void doMarbleAction_Grey() throws NegativeResourceException {
+    void doMarbleAction_Grey(){
         greyMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
@@ -53,7 +52,7 @@ class MarbleTest {
     }
 
     @Test
-    void doMarbleAction_Purple() throws NegativeResourceException {
+    void doMarbleAction_Purple(){
         purpleMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
@@ -61,7 +60,7 @@ class MarbleTest {
     }
 
     @Test
-    void doMarbleAction_Red() throws NegativeResourceException {
+    void doMarbleAction_Red(){
         redMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
@@ -69,13 +68,13 @@ class MarbleTest {
     }
 
     @Test
-    void doMarbleAction_White() throws NegativeResourceException {
+    void doMarbleAction_White(){
         whiteMarble.doMarbleAction(market);
         assertEquals(1, market.getWhiteMarbleDrew());
     }
 
     @Test
-    void doMarbleAction_Yellow() throws NegativeResourceException {
+    void doMarbleAction_Yellow(){
         yellowMarble.doMarbleAction(market);
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());

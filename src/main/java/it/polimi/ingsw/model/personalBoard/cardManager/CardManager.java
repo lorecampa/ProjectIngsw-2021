@@ -38,26 +38,33 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Set up the card manager to be ready for the curr turn*/
+     * Method to set up the card manager to be ready for the current turn
+     */
     public void clearUsed(){
         devCardsUsed.clear();
         leadersUsed.clear();
     }
 
+    /**
+     * Method to add the player Resource Manager to the base production of the player board
+     * @param playerResourceManager is the player Resource Manager
+     */
     public void setUpBaseProduction(ResourceManager playerResourceManager){
         baseProduction.setResourceManager(playerResourceManager);
     }
 
     /**
-     * Add a leader to this Card manager
-     * @param leader u want to add*/
+     * Method to add a leader to Card Manager
+     * @param leader is the leader to add
+     */
     public void addLeader(Leader leader){
         leaders.add(leader);
     }
 
     /**
-     * Discard a leader from your hand
-     * @param leaderIndex u want to discard
+     * Method to discard a leader
+     * @param leaderIndex is the index of the leader to discard
+     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
@@ -65,8 +72,10 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Activate a leader card u own
-     * @param leaderIndex u want to activate
+     * Method to activate a leader card
+     * @param leaderIndex is the index of the leader to activate
+     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
+     * @throws CantMakeProductionException if a creation effect of the leader can't be activated
      */
     public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, CantMakeProductionException {
         Leader leader = leaders.get(leaderIndex);
@@ -77,16 +86,25 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Add a development card to a Card Slot
-     * @param development card i want to add
-     * @param index of card slot where i want to add
-     * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to the level
+     * Method to add a development card to a Card Slot
+     * @param development is the card to add
+     * @param index is the index of the card slot to add the card
+     * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to its level
+     * @throws IndexOutOfBoundsException if the card slot selected does not exist
      */
     public void addDevelopmentCardTo(Development development, int index) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException {
         cardSlots.get(index).insertCard(development);
     }
 
 
+    /**
+     * Method to activate a leader effect
+     * @param leaderIndex is the index of the leader
+     * @param state is the current state of the turn
+     * @throws IndexOutOfBoundsException if the leader selected does not exist
+     * @throws CantMakeProductionException if the leader's production effect can't be activated
+     * @throws CardAlreadyUsed if the card has already been used in this turn
+     */
     public void activateLeaderEffect(int leaderIndex, State state) throws IndexOutOfBoundsException, CantMakeProductionException, CardAlreadyUsed {
         Leader leader = leaders.get(leaderIndex);
         if (leadersUsed.contains(leader))
@@ -96,8 +114,12 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Activate the production of all the selected dev card
-     * @throws  CantMakeProductionException
+     * Method to activate the production of a development card
+     * @param lvCard is the level of the card
+     * @param indexCardSlot is the card slot in which the card is in it
+     * @throws CantMakeProductionException if the card's production can't be activated
+     * @throws CardAlreadyUsed if the card has already been used in this turn
+     * @throws IndexOutOfBoundsException if the card slot selected does not exist
      */
     public void developmentProduce(int  lvCard, int indexCardSlot) throws CantMakeProductionException, CardAlreadyUsed, IndexOutOfBoundsException {
         Development development = cardSlots.get(indexCardSlot).getCardOfLv(lvCard);
@@ -107,6 +129,11 @@ public class CardManager implements Observable {
         devCardsUsed.add(development);
     }
 
+    /**
+     * Method to activate the base production of the player board
+     * @throws CardAlreadyUsed if the base production has already been used in this turn
+     * @throws CantMakeProductionException if the base production's production can't be activated
+     */
     public void baseProductionProduce() throws CardAlreadyUsed, CantMakeProductionException {
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
@@ -115,9 +142,10 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Check if i have howMany dev card at least of level in my slots
-     * @param howMany card u are looking for
-     * @param level of the card i'm looking for*/
+     * Method to check if there is at least howMany card with a level equal or above level
+     * @param howMany is the number of card
+     * @param level is the level threshold
+     */
     public boolean doIHaveDevWithLv(int howMany, int level){
         int count =0;
         for(CardSlot cardSlot: cardSlots){
@@ -129,9 +157,10 @@ public class CardManager implements Observable {
     }
 
     /**
-     * Check if i have howMany dev card at least of color in my slots
-     * @param howMany card u are looking for
-     * @param color of the card i'm looking for*/
+     * Method to check if there is at least howMany card with color equal to color
+     * @param howMany is the number of card
+     * @param color is the color
+     */
     public boolean doIhaveDevWithColor(int howMany, Color color){
         int count=0;
         for(CardSlot cardSlot: cardSlots){
