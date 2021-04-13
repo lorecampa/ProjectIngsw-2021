@@ -46,7 +46,7 @@ class DiscountEffectTest {
         costBuyDevelopment.add(res3);
 
         //modify canIAfford
-        //assertTrue(rm.canIAfford(costBuyDevelopment, true));
+        assertTrue(rm.canIAfford(costBuyDevelopment, true));
 
     }
 }

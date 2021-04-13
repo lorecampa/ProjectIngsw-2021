@@ -49,10 +49,7 @@ public class Depot {
     /**
      * set the resource, called the first time i need to put in this depot a new resource
      * */
-    public void setResource(Resource resource) throws TooMuchResourceDepotException, CantModifyDepotException{
-        if(lockDepot){
-            throw new CantModifyDepotException("You can't modify the resource in this depot, it is locked!!!");
-        }
+    public void setResource(Resource resource) throws TooMuchResourceDepotException{
         if(resource.getValue()>maxStorable){
             throw new TooMuchResourceDepotException("You tried to put more res then possible");
         }
@@ -97,9 +94,10 @@ public class Depot {
     /**
      *Sub a value to the value of my resource
      */
-    public void subValueResource(int value) throws  NegativeResourceException{
-
+    public void subValueResource(int value) throws NegativeResourceException{
         resource.subValue(value);
+        if(!lockDepot && value==0)
+            setEmptyResource();
     }
 
     @Override

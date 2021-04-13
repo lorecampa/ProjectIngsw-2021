@@ -16,11 +16,10 @@ public class ResourceManager implements Observable {
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
     private final ArrayList<Observer> observers = new ArrayList<>();
-    private Resource supportResource; //support perchè sarebbe una "variabile d'appoggio"
     private int faithPoint=0;
     private int anyResource=0;
 
-    private ArrayList<Resource> myResources = new ArrayList<>();
+    private final ArrayList<Resource> myResources = new ArrayList<>();
 
     public ResourceManager(){
         currWarehouse =new Warehouse();
@@ -71,9 +70,8 @@ public class ResourceManager implements Observable {
      * @param index of the depot i want to access (0 -> 1 res), (1 -> 2 res), (2 -> 3 res)
      * @param resource i want to add to that specific depot
      * @throws TooMuchResourceDepotException if i'm trying to add too much resource to that depot
-     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
-     * @throws CantModifyDepotException
-     * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
+     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type
+     * @throws CantModifyDepotException */
     public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
         if(normalDepot){
             currWarehouse.addToStandardDepotValueAt(index, resource);
@@ -84,7 +82,7 @@ public class ResourceManager implements Observable {
     }
 
     /**
-     * Add all the resource store in resourcesToProduce to the stronbox
+     * Add all the resource store in resourcesToProduce to the strongbox
     */
     public void doProduction(){
         for(Resource res:resourcesToProduce){
@@ -198,16 +196,12 @@ public class ResourceManager implements Observable {
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources);
         for(Resource res : resources){
-            //TODO
-            //fix error if we don't have resources but we can buy it for free with discounts
             if (myResources.contains(res)){
                 if (checkDiscount)
                     discount(res);
                 try {
                     myResources.get(myResources.indexOf(res)).subValue(res.getValue());
                     extraRes -=  res.getValue();
-                    if(myResources.get(myResources.indexOf(res)).getValue() == 0)
-                        myResources.remove(res);
                 } catch (NegativeResourceException e) {
                     return false;
                 }
@@ -230,8 +224,7 @@ public class ResourceManager implements Observable {
         for(Resource res : resources){
             res.addValue(currWarehouse.howManyDoIHave(res.getType()));
             res.addValue(strongbox.howManyDoIHave(res.getType()));
-            if (res.getValue() != 0)
-                myResources.add(res);
+            myResources.add(res);
         }
     }
 
@@ -260,17 +253,17 @@ public class ResourceManager implements Observable {
     }
 
    /**
-    * switch the resource from fromDepot and toDepot
+    * switch the resource from fromDepot to toDepot
     * @param fromDepot the first depot
     * @param toDepot the second depot
     * */
-   public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws CantModifyDepotException, TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-       supportResource = currWarehouse.removeResourceAt(fromDepot);
+   public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+       Resource supportResource = currWarehouse.removeResourceAt(fromDepot);
        currWarehouse.setResourceDepotAt(fromDepot, currWarehouse.getDepot(toDepot).getResource());
        try{
            currWarehouse.setResourceDepotAt(toDepot, supportResource);
        }
-       catch(CantModifyDepotException | TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
+       catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
            currWarehouse.setResourceDepotAt(fromDepot, supportResource);
            throw e;
        }
