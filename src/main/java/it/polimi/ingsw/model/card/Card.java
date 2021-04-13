@@ -56,9 +56,9 @@ public  abstract class Card {
 
     /**
      * Method doCreationEffect does all effect one time use when you buy the card for the first time
-     * @throws CantMakeProductionException
+     * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    public void  doCreationEffect() throws CantMakeProductionException {
+    public void  doCreationEffects() throws CantMakeProductionException {
         for(Effect effect: onCreationEffect) {
             effect.doEffect(State.CREATION_STATE);
         }
@@ -72,6 +72,12 @@ public  abstract class Card {
         for (Effect effect: onActivationEffects){
             effect.doEffect(state);
         }
+    }
+
+    public void attachAll(ResourceManager resourceManager, CardManager cardManager, Market market){
+        this.setResourceManager(resourceManager);
+        this.setCardManager(cardManager);
+        this.setMarket(market);
     }
 
     /**

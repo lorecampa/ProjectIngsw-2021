@@ -11,7 +11,6 @@ import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
-import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.LorenzoIlMagnifico;
 import it.polimi.ingsw.model.token.Token;
@@ -23,6 +22,7 @@ import java.util.*;
  * GameMaster class
  */
 public class GameMaster implements Observer, LorenzoIlMagnifico {
+    private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
     private final int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
@@ -31,7 +31,6 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     private final Market market;
     private int vaticanReportReached = 0;
     private final LinkedList<Token> deckToken;
-    private final FaithTrack lorenzoFaithTrack;
     private boolean gameEnded = false;
 
 
@@ -85,19 +84,21 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
             deckDevelopment.add(row);
         }
 
-
         //single player
         if(numberOfPlayer == 1){
-            this.lorenzoFaithTrack = mapper.readValue(new File("src/main/resources/json/FaithTrack.json"), FaithTrack.class);
-            this.deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
+            //metto il giocatore singolo come primo giocatore
+            setCurrentPlayer(usernameCreator);
+
+            playersPersonalBoard.put(NAME_LORENZO, new PersonalBoard(NAME_LORENZO));
+
+            deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
                     new TypeReference<LinkedList<Token>>() {});
             for (Token token: deckToken){
                 token.attachLorenzoIlMagnifico(this);
             }
             Collections.shuffle(this.deckToken);
         }else{
-            this.lorenzoFaithTrack = null;
-            this.deckToken = null;
+            this.deckToken = new LinkedList<>();
         }
 
 
@@ -114,6 +115,9 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
             this.currentPlayer = nextPlayer;
         }
     }
+
+
+
 
     /**
      * Method getNumActivePlayers gives the number of players still active in game
@@ -241,15 +245,14 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         //forse devo restituire il token per farlo vedere a schermo? bho
         Token token = deckToken.poll();
         deckToken.offer(token);
-
-        if(token == null) return;
-        try{
-            token.doActionToken();
-        } catch (DeckDevelopmentCardException  e) {
-            //its all okay, just there is no more to delete
-            //with the cardToken effect from the deck of development cards
+        if(token != null){
+            try{
+                token.doActionToken();
+            } catch (DeckDevelopmentCardException  e) {
+                //its all okay, just there is no more to delete
+                //with the cardToken effect from the deck of development cards
+            }
         }
-
 
     }
 
@@ -350,7 +353,7 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
      */
     @Override
     public void increaseFaithPosition(int pos) {
-        this.lorenzoFaithTrack.movePlayer(pos);
+        this.playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().movePlayer(pos);
     }
 
 

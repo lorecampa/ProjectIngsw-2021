@@ -39,10 +39,8 @@ public class MarbleEffect implements Effect {
             //add resource in market
             for (Resource res: transformIn){
                 market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
-
             }
         }
-
     }
 
     /**

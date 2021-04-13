@@ -22,14 +22,9 @@ class WarehouseTest {
     Resource resourceNegative = ResourceFactory.createResource(ResourceType.COIN, -50);
     @BeforeEach
     void init(){
-
-        //lo ho testato prima di usarlo in questa init
-
         assertDoesNotThrow( ()->w.setResourceDepotAt(0, ResourceFactory.createResource(ResourceType.COIN, 1)));
         assertDoesNotThrow( ()->w.setResourceDepotAt(1, ResourceFactory.createResource(ResourceType.SHIELD, 1)));
         assertDoesNotThrow( ()->w.setResourceDepotAt(2, ResourceFactory.createResource(ResourceType.STONE, 1)));
-
-        w.print();
     }
 
     @Test
@@ -40,7 +35,9 @@ class WarehouseTest {
 
     @Test
     void getDepotLeader(){
-
+        Depot leaderDepot=new Depot(true, 4);
+        w.addDepotLeader(leaderDepot);
+        assertEquals(leaderDepot, w.getDepotLeader(0));
     }
 
     @Test
@@ -48,52 +45,75 @@ class WarehouseTest {
         w.addDepotLeader(new Depot(true, 4));
         assertEquals(1, w.copyDepotsLeader().size());
     }
-/*
+
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2})
-    void modifyLeaderDepotValueAt(int index){
+    @ValueSource(ints = {0, 1})
+    void addToLeaderDepotValueAt(int index){
         w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2),true, 4));
         switch(index){
             case 0:
                 //TooMuchResourceDepotException
-                assertThrows(TooMuchResourceDepotException.class, ()->w.modifyLeaderDepotValueAt(0,resourceTooBig));
+                assertThrows(TooMuchResourceDepotException.class, ()->w.addToLeaderDepotValueAt(0,resourceTooBig));
                 break;
             case 1:
-                //NegativeResourceException
-                assertThrows(NegativeResourceException.class, ()->w.modifyLeaderDepotValueAt(0,resourceNegative));
-                break;
-            case 2:
-                assertDoesNotThrow(()->w.modifyLeaderDepotValueAt(0,ResourceFactory.createResource(ResourceType.COIN, 2)));
+                assertDoesNotThrow(()->w.addToLeaderDepotValueAt(0,ResourceFactory.createResource(ResourceType.COIN, 2)));
                 break;
         }
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4})
-    void modifyStandardDepotValueAt(int index){
+    @ValueSource(ints = {0, 1})
+    void subToLeaderDepotValueAt(int index){
+        w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2),true, 4));
         switch(index){
             case 0:
-                //TooMuchResourceDepotException
-                assertThrows(TooMuchResourceDepotException.class, ()->w.modifyStandardDepotValueAt(0,resourceTooBig));
+                //NegativeResourceException
+                assertThrows(NegativeResourceException.class, ()->w.subToLeaderDepotValueAt(0,resourceNegative));
                 break;
             case 1:
-                //NegativeResourceException
-                assertThrows(NegativeResourceException.class, ()->w.modifyStandardDepotValueAt(0,resourceNegative));
-                break;
-            case 2:
-                //InvalidOrganizationWarehouseException
-                assertThrows(InvalidOrganizationWarehouseException.class, ()->w.modifyStandardDepotValueAt(2,ResourceFactory.createResource(ResourceType.COIN, 1)));
-                break;
-            case 3:
-                //CantModifyDepotException
-                //will nevar throws this exce i'm in the standarDepo
-                break;
-            case 4:
-                assertDoesNotThrow(()->w.modifyStandardDepotValueAt(1,ResourceFactory.createResource(ResourceType.SHIELD, 1)));
+                assertDoesNotThrow(()->w.subToLeaderDepotValueAt(0,ResourceFactory.createResource(ResourceType.COIN, 1)));
                 break;
         }
     }
-*/
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3})
+    void addToStandardDepotValueAt(int index){
+        switch(index){
+            case 0:
+                //TooMuchResourceDepotException
+                assertThrows(TooMuchResourceDepotException.class, ()->w.addToStandardDepotValueAt(0,resourceTooBig));
+                break;
+            case 1:
+                //InvalidOrganizationWarehouseException
+                assertThrows(InvalidOrganizationWarehouseException.class, ()->w.addToStandardDepotValueAt(2,ResourceFactory.createResource(ResourceType.COIN, 1)));
+                break;
+            case 2:
+                //CantModifyDepotException
+                //will nevar throws this exce i'm in the standarDepo
+                break;
+            case 3:
+                assertDoesNotThrow(()->w.addToStandardDepotValueAt(1,ResourceFactory.createResource(ResourceType.SHIELD, 1)));
+                break;
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void subToStandardDepotValueAt(int index){
+        switch(index){
+            case 0:
+                //NegativeResourceException
+                assertThrows(NegativeResourceException.class, ()->w.subToStandardDepotValueAt(0,resourceNegative));
+                break;
+            case 1:
+                assertDoesNotThrow(()->w.subToStandardDepotValueAt(1,ResourceFactory.createResource(ResourceType.SHIELD, 1)));
+                w.print();
+                break;
+        }
+
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void doIHaveADepotWith(int index) {
@@ -108,7 +128,7 @@ class WarehouseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3})
+    @ValueSource(ints = {0, 1, 2})
     void setResourceDepotAt(int index){
         switch (index){
             case 0:
@@ -118,13 +138,8 @@ class WarehouseTest {
             case 1:
                 //TooMuchResourceDepotException test
                 assertThrows(TooMuchResourceDepotException.class , ()-> w.setResourceDepotAt(2, ResourceFactory.createResource(ResourceType.SERVANT, 5)));
-
                 break;
             case 2:
-                //CantModifyDepotException test
-                ////will nevar throws this exce i'm in the standarDepo
-                break;
-            case 3:
                 Warehouse w1 = new Warehouse();
                 assertDoesNotThrow( ()->w1.setResourceDepotAt(0, ResourceFactory.createResource(ResourceType.COIN, 1)));
                 assertDoesNotThrow( ()->w1.setResourceDepotAt(1, ResourceFactory.createResource(ResourceType.SHIELD, 1)));
@@ -133,6 +148,13 @@ class WarehouseTest {
                 break;
             default:
         }
+    }
+
+    @Test
+    void removeResourceAt(){
+        Resource r = w.removeResourceAt(0);
+        assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getDepot(0).getResource());
+        assertEquals(ResourceFactory.createResource(ResourceType.COIN, 1), r);
     }
 
     @Test
