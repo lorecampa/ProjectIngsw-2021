@@ -46,7 +46,7 @@ class WarehouseEffectTest {
         assertThrows(TooMuchResourceDepotException.class, ()->rm.addToWarehouse(false, 1, ResourceFactory.createResource(ResourceType.SHIELD, 1)));
         assertThrows(TooMuchResourceDepotException.class, ()->rm.addToWarehouse(false, 2, ResourceFactory.createResource(ResourceType.SERVANT, 1)));
 
-        assertDoesNotThrow(()->rm.subtractToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
+        assertDoesNotThrow(()->rm.subToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
 
 

@@ -26,7 +26,6 @@ public class ResourceManager implements Observable {
         strongbox=new Strongbox();
     }
 
-    //set up per valori il prossimo turno
     /**
      * Set up the resource manager to be ready for the curr turn*/
     public void newTurn(){
@@ -37,11 +36,9 @@ public class ResourceManager implements Observable {
         allMyResources();
     }
 
-    //Metodi specifici azione 3 produzione mercato (player preme su azione 3 va al mercato mi ritorna un vettore da mettere nella warehouse)
-
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
-     * @param resourcesSent: the original list
+     * @param resourcesSent the original list I'll change
      */
     private ArrayList<Resource> fromResourceToConcreteResource(ArrayList<Resource> resourcesSent){
         Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
@@ -70,9 +67,8 @@ public class ResourceManager implements Observable {
      * @param index of the depot i want to access (0 -> 1 res), (1 -> 2 res), (2 -> 3 res)
      * @param resource i want to add to that specific depot
      * @throws TooMuchResourceDepotException if i'm trying to add too much resource to that depot
-     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type
-     * @throws CantModifyDepotException */
-    public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException {
+     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
+    public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         if(normalDepot){
             currWarehouse.addToStandardDepotValueAt(index, resource);
         }
@@ -102,11 +98,9 @@ public class ResourceManager implements Observable {
      * @param normalDepot true for default false for leaderDepots
      * @param index of the depot i want to access
      * @param resource i want to subtract to that specific depot
-     * @throws TooMuchResourceDepotException if i'm trying to add too much resource to that depot
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
-     * @throws CantModifyDepotException
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
-    public void subtractToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException, NegativeResourceException {
+    public void subToWarehouse(boolean normalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         if(normalDepot){
             currWarehouse.subToStandardDepotValueAt(index, resource);
         }
@@ -118,7 +112,7 @@ public class ResourceManager implements Observable {
     /**
      * Subtract to the strongbox the resource
      * @param resource i want to subtract */
-    public void subtractToStrongbox(Resource resource) throws NegativeResourceException {
+    public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResourceValueOf(resource);
     }
 
@@ -177,6 +171,9 @@ public class ResourceManager implements Observable {
         }
     }
 
+    /**
+     * Make the discount calculation based on the resource u are trying to have a discount with
+     * @param res you want to have a discount with*/
     private void discount(Resource res){
         if(discounts.contains(res)){
             try{
@@ -219,6 +216,8 @@ public class ResourceManager implements Observable {
         return true;
     }
 
+    /**
+     * Store all the resource i own (strongbox + warehouse) in myResources arrayList*/
     private void allMyResources(){
         ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
         for(Resource res : resources){
@@ -229,7 +228,7 @@ public class ResourceManager implements Observable {
     }
 
     /**
-     *
+     * Calculate the value of resources I'm storing in my warehouse + strongbox
      * @return the value of resources i own*/
     private int numberOfResource(){
         int value=0;
@@ -242,7 +241,7 @@ public class ResourceManager implements Observable {
     }
 
     /**
-     *
+     * Calculate the value of resources I'm storing in the resourcesBuffer
      * @return the value of resources i own in resourcesBuffer*/
     private int numberOfResourceInBuffer(){
         int value=0;
@@ -253,30 +252,38 @@ public class ResourceManager implements Observable {
     }
 
    /**
-    * switch the resource from fromDepot to toDepot
+    * Switch the resource from fromDepot to toDepot
     * @param fromDepot the first depot
     * @param toDepot the second depot
     * */
    public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-       Resource supportResource = currWarehouse.removeResourceAt(fromDepot);
-       currWarehouse.setResourceDepotAt(fromDepot, currWarehouse.getDepot(toDepot).getResource());
+       Resource fromSupportResource = currWarehouse.removeResourceAt(fromDepot);
+       Resource toSupportResource = currWarehouse.removeResourceAt(toDepot);
        try{
-           currWarehouse.setResourceDepotAt(toDepot, supportResource);
+           currWarehouse.setResourceDepotAt(fromDepot, toSupportResource);
        }
        catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
-           currWarehouse.setResourceDepotAt(fromDepot, supportResource);
+           currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
+           currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
+           throw e;
+       }
+       try{
+           currWarehouse.setResourceDepotAt(toDepot, fromSupportResource);
+       }
+       catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
+           currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
+           currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
            throw e;
        }
    }
 
     /**
-     * Discard res*/
+     * Discard resources*/
     public void discardResources(){
         notifyAllObservers();
         resourcesBuffer.clear();
     }
 
-    //metodi per i leader
     /**Add a depot as a leaderDepot in the wearehouse
      * @param depot i want to add*/
     public void addLeaderDepot(Depot depot){
@@ -296,7 +303,7 @@ public class ResourceManager implements Observable {
     }
 
     /**
-     * Clear all the buffers in the resource manager*/
+     * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
     public void clearBuffers(){
         anyResource = 0;
         resourcesToProduce.clear();
@@ -315,7 +322,6 @@ public class ResourceManager implements Observable {
             obs.updateFromResourceManager(numberOfResourceInBuffer());
     }
 
-    //metodo per me
     public void print(){
         System.out.println("ANY: "+anyResource+"-"+" FAITH: "+faithPoint);
         currWarehouse.print();

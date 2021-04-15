@@ -45,7 +45,7 @@ public class Warehouse implements Cloneable{
 
     /**
      * Method used to add a depot to the leader list when a WarehouseLeader is active
-     * @param depot: the depot i want to add*/
+     * @param depot i want to add*/
     public void addDepotLeader(Depot depot){
         depotsLeader.add(depot);
     }
@@ -76,7 +76,7 @@ public class Warehouse implements Cloneable{
      * call the private modifyDepotValue with the standard depots list
      *@param indexDepot the index i want to modify in the leader depot list
      *@param resource the resource to sum*/
-    public void addToStandardDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, CantModifyDepotException, IndexOutOfBoundsException {
+    public void addToStandardDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, IndexOutOfBoundsException {
         if(depots.get(indexDepot).getResourceType()==ResourceType.ANY){
             setResourceDepotAt(indexDepot, resource);
         }
@@ -117,8 +117,8 @@ public class Warehouse implements Cloneable{
 
     /**
      * used to set a new resource into a chosen depot, used when we have to change resource from one  depot to another
-     * @param indexDepot: the index i'm modifying in the depots arraylist
-     * @param resource: the new resource to set at that index*/
+     * @param indexDepot i'm modifying in the depots arraylist
+     * @param resource to set at indexDepot*/
     public void setResourceDepotAt(int indexDepot, Resource resource) throws InvalidOrganizationWarehouseException, TooMuchResourceDepotException, IndexOutOfBoundsException {
         if(doIHaveADepotWith(resource.getType())){
             throw new InvalidOrganizationWarehouseException(    "You can't put 2 same type of res in 2 different depot! Try a new move!\n" +
@@ -140,7 +140,7 @@ public class Warehouse implements Cloneable{
 
     /**
      * used to know how much resource of a single type i'm storing in the warehouse(Leader + Normal)
-     * @param resourceType: the type of the resource i want to find
+     * @param resourceType i want to find
      * @return the amount value of resourceType i own*/
     public int howManyDoIHave(ResourceType resourceType){
         int num=0;

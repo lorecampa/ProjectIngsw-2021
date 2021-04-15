@@ -1,0 +1,13 @@
+title Communication SD
+
+participant Client
+participant Server
+
+
+Client <- Server: Ping
+Client --> Server: Pong
+Server -> Client: LogIn
+Server -> Client: Insert username and if first numberOfPlayer
+Client -> Server: Username and if true numberOfPlayer
+Server -> Client: Initial board state [default value]
+

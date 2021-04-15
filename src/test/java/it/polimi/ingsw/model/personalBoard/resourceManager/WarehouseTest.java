@@ -77,7 +77,7 @@ class WarehouseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3})
+    @ValueSource(ints = {0, 1, 2})
     void addToStandardDepotValueAt(int index){
         switch(index){
             case 0:
@@ -89,10 +89,6 @@ class WarehouseTest {
                 assertThrows(InvalidOrganizationWarehouseException.class, ()->w.addToStandardDepotValueAt(2,ResourceFactory.createResource(ResourceType.COIN, 1)));
                 break;
             case 2:
-                //CantModifyDepotException
-                //will nevar throws this exce i'm in the standarDepo
-                break;
-            case 3:
                 assertDoesNotThrow(()->w.addToStandardDepotValueAt(1,ResourceFactory.createResource(ResourceType.SHIELD, 1)));
                 break;
         }

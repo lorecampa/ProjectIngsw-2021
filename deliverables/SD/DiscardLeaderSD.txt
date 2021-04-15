@@ -1,0 +1,11 @@
+title Discard Leader
+
+participant Client
+participant Server
+
+
+Client <- Server: Ping
+Client --> Server: Pong
+Server -> Client: Your turn + evryInfoNeeded
+Client -> Server: Discard leader
+Server -> Client: Done + FaithTrack

@@ -17,21 +17,21 @@ public class Strongbox {
 
     /**
      * change the resource passed in resources adding the value passed
-     * @param resource: the resource to add to the existing one*/
+     * @param resource to add to the existing one*/
     public void addResourceValueOf(Resource resource){
         resources.get(resources.indexOf(resource)).addValue(resource.getValue());
     }
 
     /**
      * change the resource passed in resources subtracting the value passed
-     * @param resource: the resource to add to the existing one*/
+     * @param resource to sub to the existing one*/
     public void subResourceValueOf(Resource resource) throws NegativeResourceException {
         resources.get(resources.indexOf(resource)).subValue(resource.getValue());
     }
 
     /**
      * return the value that i own of that specific ResourceType
-     * @param resourceType: the type i want to analyze*/
+     * @param resourceType i want to find*/
     public int howManyDoIHave(ResourceType resourceType){
         return resources.get(resources.indexOf(ResourceFactory.createResource(resourceType, 0))).getValue();
     }

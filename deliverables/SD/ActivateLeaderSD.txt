@@ -1,0 +1,12 @@
+title Activate Leader
+
+participant Client
+participant Server
+
+
+Client <- Server: Ping
+Client --> Server: Pong
+Server -> Client: Your turn + evryInfoNeeded
+Client -> Server: Activate leader
+Server -> Client: Done/Not done 
+

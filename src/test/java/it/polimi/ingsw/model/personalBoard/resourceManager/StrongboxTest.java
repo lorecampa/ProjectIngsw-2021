@@ -46,15 +46,6 @@ class StrongboxTest {
     }
 
     @Test
-    void changeResourceOf() {
-        Resource r = ResourceFactory.createResource(ResourceType.COIN, 5);
-        //s.changeResourceValueOf(r);
-        r = ResourceFactory.createResource(ResourceType.SHIELD, 4);
-        //s.changeResourceValueOf(r);
-        //s.print();
-    }
-
-    @Test
     void howManyDoIHave() {
         assertEquals(4, s.howManyDoIHave(ResourceType.SHIELD));
     }
