@@ -64,6 +64,7 @@ class LeaderTest {
         warehouseLeader = leaders.get(6);
         warehouseLeader.attachAll(rm, cm, mk);
 
+
         //cardReq (blue 2, level 1) (yellow 1, level 1)
         //(stone 1)
         marbleLeader = leaders.get(10);
@@ -95,7 +96,7 @@ class LeaderTest {
         rm.newTurn();
         assertFalse(warehouseLeader.checkRequirements());
         assertTrue(discountLeader.checkRequirements());
-        assertTrue(marbleLeader.checkRequirements());
+        assertFalse(marbleLeader.checkRequirements());
         assertFalse(productionLeader.checkRequirements());
 
     }
