@@ -6,7 +6,6 @@ import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-
 import java.util.ArrayList;
 
 public class ResourceManager implements Observable {
@@ -175,7 +174,9 @@ public class ResourceManager implements Observable {
 
     /**
      * Make the discount calculation based on the resource u are trying to have a discount with
-     * @param res you want to have a discount with*/
+     * @param res you want to have a discount with
+     * @return int - the value discounted
+     * */
     private int discount(Resource res){
         int valueDiscount = 0;
         if(discounts.contains(res)){
@@ -190,6 +191,10 @@ public class ResourceManager implements Observable {
         return valueDiscount;
     }
 
+    /**
+     * Method numOfDiscounts gives the number of discounts activated by a player
+     * @return int - the sum of the value of all discounts
+     */
     public int numOfDiscounts(){
         int value = 0;
         for (Resource discount: discounts){

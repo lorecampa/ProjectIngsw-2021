@@ -162,7 +162,7 @@ public class CardManager implements Observable {
      * Method doIHaveDev checks if we have in our cards slot a specific number of card with a
      * defined color and level
      * @param howMany of type int - number of card with this propriety
-     * @param color of type Color - color of those cards
+     * @param color of type Color - color of those cards, ANY if not specified
      * @param level of type int - level of those cards
      * @return boolean - true if you own them, otherwise false
      */
