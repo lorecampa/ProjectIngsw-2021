@@ -47,6 +47,7 @@ class StrongboxTest {
 
     @Test
     void howManyDoIHave() {
-        assertEquals(4, s.howManyDoIHave(ResourceType.SHIELD));
+        s.addResourceValueOf(ResourceFactory.createResource(ResourceType.SHIELD,  2));
+        assertEquals(2, s.howManyDoIHave(ResourceType.SHIELD));
     }
 }

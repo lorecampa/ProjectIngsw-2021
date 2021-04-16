@@ -155,7 +155,7 @@ class WarehouseTest {
 
     @Test
     void howManyDoIHave(){
-        assertEquals(0, w.howManyDoIHave(ResourceType.SHIELD));
+        assertEquals(1, w.howManyDoIHave(ResourceType.SHIELD));
     }
 
     @Test
