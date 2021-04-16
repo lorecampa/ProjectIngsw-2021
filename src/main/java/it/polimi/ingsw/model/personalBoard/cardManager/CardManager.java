@@ -171,7 +171,7 @@ public class CardManager implements Observable {
         for (CardSlot cardSlot: cardSlots){
             for (int i = 0; i < cardSlot.getLvReached(); i++){
                  Development dev = cardSlot.getCardOfLv(i+1);
-                 if (dev.getLevel() >= level){
+                 if (dev.getLevel() == level){
                      if (color == Color.ANY || dev.getColor() == color) count ++;
                  }
                  if (count >= howMany) return true;

@@ -53,9 +53,9 @@ class CardReqTest {
         req3.attachCardManager(cm);
 
 
-        assertTrue(req1.checkRequirement(false));
+        assertFalse(req1.checkRequirement(false));
         assertTrue(req2.checkRequirement(false));
-        assertTrue(req3.checkRequirement(false));
+        assertFalse(req3.checkRequirement(false));
 
 
     }
