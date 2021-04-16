@@ -31,12 +31,9 @@ class DepotTest {
     void setResource(int index) {
         switch (index){
             case 0:
-                assertThrows(CantModifyDepotException.class,()->d1.setResource(r1));
-                break;
-            case 1:
                 assertThrows(TooMuchResourceDepotException.class , ()->d2.setResource(r2));
                 break;
-            case 2:
+            case 1:
                 //TODO: caso positivo non so come testarlo
                 break;
             default:
@@ -69,16 +66,13 @@ class DepotTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2})
+    @ValueSource(ints = {0, 1})
     void addValueResource(int index) {
         switch (index){
             case 0:
                 assertThrows(TooMuchResourceDepotException.class,()->d3.addValueResource(3));
                 break;
             case 1:
-                assertThrows(NegativeResourceException.class , ()->d3.addValueResource(-3));
-                break;
-            case 2:
                 assertDoesNotThrow(()->d3.addValueResource(1));
                 assertEquals(3, d3.getResourceValue());
                 break;
