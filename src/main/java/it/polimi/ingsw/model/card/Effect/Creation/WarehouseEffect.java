@@ -12,7 +12,7 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
 
 /**
- * Class WarehouseEffect defines a class for all effect that will modify the warehouse structure
+ * Class WarehouseEffect defines a class for all effect that modify the warehouse structure
  */
 public class WarehouseEffect  implements Effect {
     private final ArrayList<Resource> depots;
@@ -31,7 +31,7 @@ public class WarehouseEffect  implements Effect {
 
     /**
      * Method doEffect creates a new locked depot (lockDepot = true)  for all the resources in depots
-     * @param state of type State - defines the state of the turn
+     * @param state of type State - defines the state of the turn, in this case must be of type CREATION_STATE
      */
     @Override
     public void doEffect(State state) {
@@ -44,7 +44,7 @@ public class WarehouseEffect  implements Effect {
     }
 
     /**
-     * Method attachMarket attach the market
+     * Method attachMarket does nothing because the production effect doesn't need it
      * @param market of type Market is the instance of the market of the game
      */
     @Override

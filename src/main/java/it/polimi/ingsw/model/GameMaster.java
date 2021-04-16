@@ -86,9 +86,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
 
         //single player
         if(numberOfPlayer == 1){
-            //metto il giocatore singolo come primo giocatore
+            //set the first player
             setCurrentPlayer(usernameCreator);
-
             playersPersonalBoard.put(NAME_LORENZO, new PersonalBoard(NAME_LORENZO));
 
             deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
@@ -98,7 +97,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
             }
             Collections.shuffle(this.deckToken);
         }else{
-            this.deckToken = new LinkedList<>();
+            //deck token is empty
+            deckToken = new LinkedList<>();
         }
 
 
@@ -235,7 +235,6 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         }
         deckDevelopment.get(row).get(column).add(0, development);
     }
-
 
     /**
      * Method drawToken draws the token from the deckToken on the top,

@@ -6,7 +6,6 @@ import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 

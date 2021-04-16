@@ -7,23 +7,17 @@ import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
-import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
-import it.polimi.ingsw.model.resource.ResourceFactory;
-import it.polimi.ingsw.model.resource.ResourceType;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardReqTest {
 
-    CardManager cm;
-    @BeforeEach
-    void init() throws IOException, CardWithHigherOrSameLevelAlreadyIn {
+    static CardManager cm;
+    @BeforeAll
+    static void  init() throws IOException, CardWithHigherOrSameLevelAlreadyIn {
         cm = new CardManager();
         ObjectMapper mapper = new ObjectMapper();
 
@@ -31,11 +25,14 @@ class CardReqTest {
         Development[] developmentsJson =
                 mapper.readValue(new File("src/main/resources/json/development.json"), Development[].class);
 
-        //level 1 -> (1 Green, 1 Purple, 1 Blue)
-        //level 2 -> (1 Purple, 1 Blue, 1 Yellow)
+        //slot 1 (1: green  level 1 -  2: purple level 2)
+        //slot 2 (1: purple level 1 -  2: blue   level 2)
+        //slot 3 (1: blue   level 1 -  2: yellow level 2)
+
         for (int i = 0; i < 3 ; i++){
             Development dev = developmentsJson[i];
             Development dev2 = developmentsJson[i+17];
+
             cm.addDevelopmentCardTo(dev, i);
             cm.addDevelopmentCardTo(dev2, i);
 
@@ -48,14 +45,18 @@ class CardReqTest {
 
         Requirement req1 = new CardReq(Color.BLUE, 1, 2);
         Requirement req2 = new CardReq(Color.YELLOW, 2, 1);
-        Requirement req3 = new CardReq(Color.YELLOW, 1, 1);
+        Requirement req3 = new CardReq(Color.PURPLE, 1, 2);
 
 
         req1.attachCardManager(cm);
         req2.attachCardManager(cm);
+        req3.attachCardManager(cm);
+
 
         assertTrue(req1.checkRequirement(false));
-        assertTrue(req1.checkRequirement(false));
+        assertTrue(req2.checkRequirement(false));
+        assertTrue(req3.checkRequirement(false));
+
 
     }
 
@@ -63,13 +64,13 @@ class CardReqTest {
     void FalseTest() {
 
         Requirement req1 = new CardReq(Color.GREEN, 2, 1);
-        Requirement req2 = new CardReq(Color.YELLOW, 1, 1);
+        Requirement req2 = new CardReq(Color.YELLOW, 2, 2);
 
         req1.attachCardManager(cm);
         req2.attachCardManager(cm);
 
         assertFalse(req1.checkRequirement(false));
-        assertTrue(req1.checkRequirement(false));
+        assertFalse(req2.checkRequirement(false));
 
     }
 }

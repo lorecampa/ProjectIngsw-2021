@@ -11,7 +11,7 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
 
 /**
- * Discount class defines represent all effect concerned a discount
+ * Discount class defines represent all effect that concern a discount
  */
 public class DiscountEffect implements Effect {
     private final ArrayList<Resource> discounts;
@@ -28,7 +28,7 @@ public class DiscountEffect implements Effect {
 
     /**
      * Method doEffect is responsible to pass all the discounts to the resource manager
-     * @param state of type State - defines the state of the turn
+     * @param state of type State - defines the state of the turn, in this case must be of type CREATION_STATE
      */
     @Override
     public void doEffect(State state) {
@@ -40,6 +40,10 @@ public class DiscountEffect implements Effect {
 
     }
 
+    /**
+     * Method attachMarket does nothing because the production effect doesn't need it
+     * @param market of type Market is the instance of the market of the game
+     */
     @Override
     public void attachMarket(Market market) {}
 

@@ -13,7 +13,7 @@ public enum Color {
     private final String displayName;
 
     /**
-     * Constructor Color create a new Color istance
+     * Constructor Color create a new Color instance
      * @param displayName of type String is the name that will be displayed on screen
      */
     Color(String displayName) {
@@ -30,7 +30,8 @@ public enum Color {
 
     /**
      * Method getColumnDeckDevelopment
-     * @return int - the column of the color in the matrix of development card
+     * @return int - the column of the color in the matrix of development card, if the color has not
+     * a reference to the development matrix then it returns -1 (ANY)
      */
     public int getColumnDeckDevelopment(){
         if (this.equals(Color.GREEN)) return 0;

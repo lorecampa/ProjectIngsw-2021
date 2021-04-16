@@ -96,7 +96,7 @@ public class Depot {
      */
     public void subValueResource(int value) throws NegativeResourceException{
         resource.subValue(value);
-        if(!lockDepot && value==0)
+        if(!lockDepot && resource.getValue()==0)
             setEmptyResource();
     }
 

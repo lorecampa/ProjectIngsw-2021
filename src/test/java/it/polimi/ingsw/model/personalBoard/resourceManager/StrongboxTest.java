@@ -18,9 +18,7 @@ class StrongboxTest {
     @BeforeEach
     void init(){
         s=new Strongbox();
-        //Resource r = ResourceFactory.createResource(ResourceType.SHIELD, 4);
-        //s.changeResourceValueOf(r);
-        //s.print();
+
     }
 
     @ParameterizedTest

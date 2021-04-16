@@ -12,7 +12,6 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-
 /**
  * ProductionEffect class represent the effect of production
  */
@@ -36,29 +35,25 @@ public class ProductionEffect implements Effect {
 
 
     /**
-     * Method doEffect checks if the player has enough resource for the production and
+     * Method doEffect checks if the player has enough resource for the production, if it does
      * then pass all the resource that he will gain to the resource manager and it will handle those
-     * putting them into the strongbox
-     * @param state of type State - defines the state of the turn
+     * putting them into the strongbox, otherwise throws CantMakeProductionException
+     * @param state of type State - defines the state of the turn, in this case must be of type PRODUCTION_STATE
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
     public void doEffect(State state) throws  CantMakeProductionException {
         if (state == State.PRODUCTION_STATE){
-
             ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                     .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new));
 
             if (resourceManager.canIAfford(resourceCostCopy, false)){
-                //add resource to resourceManger buffer
                 for (Resource res: resourceAcquired){
                     Resource resCopy = ResourceFactory.createResource(res.getType(), res.getValue());
                     resourceManager.addToResourcesToProduce(resCopy);
                 }
-
             }else{
-                //trows exception that we can't afford the production
                 throw new CantMakeProductionException("Can't afford resource cost production");
             }
         }

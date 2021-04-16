@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 
 
 /**
- * MarbleEffect class defines the effect that concern the marbles
+ * MarbleEffect class defines the effect that concern marbles
  */
 public class MarbleEffect implements Effect {
     private final ArrayList<Resource> transformIn;
@@ -20,7 +21,7 @@ public class MarbleEffect implements Effect {
 
     /**
      * Constructor MarbleEffect creates a new MarbleEffect instance
-     * @param transformIn of type ArrayList - the resources which we will transform each with marble drew
+     * @param transformIn of type ArrayList - the resources which we will transform each white marble drew
      */
     @JsonCreator
     public MarbleEffect(@JsonProperty("transformIn") ArrayList<Resource> transformIn) {
@@ -30,7 +31,7 @@ public class MarbleEffect implements Effect {
     /**
      * Method doEffect is in charge of pass all the resources to
      * the market based on how many white marble the user haw drawn
-     * @param state of type State - defines the state of the turn
+     * @param state of type State - defines the state of the turn, in this case must be MARKET_STATE
      */
     @Override
     public void doEffect(State state) {
@@ -53,7 +54,7 @@ public class MarbleEffect implements Effect {
     }
 
     /**
-     * Method attachResourceManager does nothing because  MarbleEffect doesn't need
+     * Method attachResourceManager does nothing because MarbleEffect doesn't need
      * any reference to it
      * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
      */

@@ -27,7 +27,8 @@ public class ResourceManager implements Observable {
     }
 
     /**
-     * Set up the resource manager to be ready for the curr turn*/
+     * Set up the resource manager to be ready for the curr turn
+     * */
     public void newTurn(){
         anyResource=0;
         faithPoint=0;
@@ -51,6 +52,7 @@ public class ResourceManager implements Observable {
             faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
             resourcesSent.remove(resourceFaith);
         }
+
         return resourcesSent;
     }
 
@@ -174,28 +176,42 @@ public class ResourceManager implements Observable {
     /**
      * Make the discount calculation based on the resource u are trying to have a discount with
      * @param res you want to have a discount with*/
-    private void discount(Resource res){
+    private int discount(Resource res){
+        int valueDiscount = 0;
         if(discounts.contains(res)){
             try{
-                res.subValue(discounts.get(discounts.indexOf(res)).getValue());
+                valueDiscount = discounts.get(discounts.indexOf(res)).getValue();
+                res.subValue(valueDiscount);
             }catch(NegativeResourceException e){
+                valueDiscount = res.getValue();
                 res.setValueToZero();
             }
         }
+        return valueDiscount;
+    }
+
+    public int numOfDiscounts(){
+        int value = 0;
+        for (Resource discount: discounts){
+            value += discount.getValue();
+        }
+        return value;
     }
 
     /**
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
      * @param checkDiscount if u want you resource to be discounted
-     * @return true if u can false if u can't*/
+     * @return true if u can false if u can't
+     * */
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources);
+        int numOfAllDiscount = numOfDiscounts();
         for(Resource res : resources){
             if (myResources.contains(res)){
                 if (checkDiscount)
-                    discount(res);
+                    numOfAllDiscount -= discount(res);
                 try {
                     myResources.get(myResources.indexOf(res)).subValue(res.getValue());
                     extraRes -=  res.getValue();
@@ -207,8 +223,10 @@ public class ResourceManager implements Observable {
                 return false;
         }
 
-        if(extraRes < anyResource)
+        if((extraRes < anyResource && !checkDiscount) ||
+                (extraRes + numOfAllDiscount < anyResource && checkDiscount))
             return false;
+
 
         for(Resource res : resources){
             addToBuffer(res);
@@ -219,6 +237,7 @@ public class ResourceManager implements Observable {
     /**
      * Store all the resource i own (strongbox + warehouse) in myResources arrayList*/
     private void allMyResources(){
+        myResources.clear();
         ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
         for(Resource res : resources){
             res.addValue(currWarehouse.howManyDoIHave(res.getType()));
@@ -328,4 +347,15 @@ public class ResourceManager implements Observable {
         strongbox.print();
     }
 
+    public int getFaithPoint() {
+        return faithPoint;
+    }
+
+    public int getAnyResource() {
+        return anyResource;
+    }
+
+    public Strongbox getStrongbox() {
+        return strongbox;
+    }
 }

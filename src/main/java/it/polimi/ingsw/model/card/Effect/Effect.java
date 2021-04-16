@@ -7,8 +7,11 @@ import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
 import it.polimi.ingsw.model.card.Effect.Creation.DiscountEffect;
 import it.polimi.ingsw.model.card.Effect.Creation.WarehouseEffect;
+import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
+
+import java.util.ArrayList;
 
 /**
  * Effect class defines an interface for all kind of effects
@@ -23,9 +26,14 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 })
 public interface Effect {
     /**
-     * Method doEffect is responsible of doing the effect
-     * @param state of type State - defines the state of the turn
+     * Method doEffect is responsible of doing the effect itself
+     * @param state of type State - defines the state of the turn, it controls which effect are going to be
+     *              executed as mentioned below.
+     *              (PRODUCTION_STATE -> ProductionEffect)
+     *              (MARKET_STATE -> MarbleEffect)
+     *              (CREATION_STATE -> DiscountEffect and WarehouseEffect)
      * @throws CantMakeProductionException when the player can't afford the production cost
+     * (Throw only in PRODUCTION_STATE)
      */
     void doEffect(State state) throws  CantMakeProductionException;
 

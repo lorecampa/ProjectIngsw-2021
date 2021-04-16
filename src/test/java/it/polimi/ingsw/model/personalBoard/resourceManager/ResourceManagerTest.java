@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.exception.CantModifyDepotException;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;

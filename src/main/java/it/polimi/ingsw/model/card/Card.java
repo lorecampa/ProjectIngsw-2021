@@ -55,8 +55,9 @@ public  abstract class Card {
 
 
     /**
-     * Method doCreationEffect does all effect one time use when you buy the card for the first time
-     * @throws CantMakeProductionException when the player can't afford the production cost
+     * Method doCreationEffect does all effect one time use in onCreationEffect when you buy or activate
+     * the card for the first time
+     * @throws CantMakeProductionException will never be thrown because the effect of type creation
      */
     public void  doCreationEffects() throws CantMakeProductionException {
         for(Effect effect: onCreationEffect) {
@@ -74,6 +75,8 @@ public  abstract class Card {
         }
     }
 
+    //guardare come fare gli attach
+    //si possono fare gli attach dei resource manager anche dentro il check requirements e poi dopo qua il resto
     public void attachAll(ResourceManager resourceManager, CardManager cardManager, Market market){
         this.setResourceManager(resourceManager);
         this.setCardManager(cardManager);

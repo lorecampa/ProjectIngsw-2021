@@ -10,10 +10,8 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +35,8 @@ class LeaderTest {
 
         cm = new CardManager();
 
-        //strongbox (5 coin, 2 shield, 4 servant)
-        //warehouse (0, 2 stone, 0)
+        //strongbox (5 coin, 2 shield, 4 servant, 0 stone)
+        //warehouse (0 -> , 1-> 2 stone, 2-> )
         rm = new ResourceManager();
         Resource res1 = ResourceFactory.createResource(ResourceType.COIN, 5);
         Resource res2 = ResourceFactory.createResource(ResourceType.SHIELD, 2);
@@ -77,15 +75,29 @@ class LeaderTest {
         productionLeader = leaders.get(15);
         productionLeader.attachAll(rm, cm, mk);
 
-
         assertEquals(16, leaders.size());
 
+        ArrayList<Development> developmentsJson =
+                mapper.readValue(new File("src/main/resources/json/development.json"), new TypeReference<ArrayList<Development>>() {});
+
+        //(slot 1) -> 1: green 2: blue
+        assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(0), 0));
+        assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(30), 0));
+        //(slot 2) -> 1: blue
+        assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(10), 1));
+        //(slot 3) -> 1: yellow
+        assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(15), 2));
 
     }
+
     @Test
     void checkRequirements() {
         rm.newTurn();
         assertFalse(warehouseLeader.checkRequirements());
+        assertTrue(discountLeader.checkRequirements());
+        assertTrue(marbleLeader.checkRequirements());
+        assertFalse(productionLeader.checkRequirements());
 
     }
+
 }

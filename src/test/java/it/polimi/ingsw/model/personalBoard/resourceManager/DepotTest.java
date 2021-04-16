@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.exception.CantModifyDepotException;
-import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -10,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepotTest {

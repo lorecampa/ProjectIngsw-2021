@@ -7,46 +7,77 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DiscountEffectTest {
-    ResourceManager rm;
-    ArrayList<Resource> discounts = new ArrayList<>();
+    ResourceManager rm = new ResourceManager();
+    ArrayList<Resource> discounts;
     Effect effect;
+    private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int faith, int any){
+        ArrayList<Resource> production = new ArrayList<>();
+        if (coin > 0){
+            production.add(ResourceFactory.createResource(ResourceType.COIN, coin));
+        }
+        if (shield > 0){
+            production.add(ResourceFactory.createResource(ResourceType.SHIELD, shield));
+        }
+        if (servant > 0){
+            production.add(ResourceFactory.createResource(ResourceType.SERVANT, servant));
+        }
+        if (stone > 0){
+            production.add(ResourceFactory.createResource(ResourceType.STONE, stone));
+        }
+        if (faith > 0){
+            production.add(ResourceFactory.createResource(ResourceType.FAITH, faith));
+        }
+        if (any > 0){
+            production.add(ResourceFactory.createResource(ResourceType.ANY, any));
+        }
+        return production;
+    }
 
     @BeforeEach
     void init(){
-        rm = new ResourceManager();
         rm.newTurn();
-        Resource res1 = ResourceFactory.createResource(ResourceType.COIN, 2);
-        Resource res2 = ResourceFactory.createResource(ResourceType.SHIELD, 3);
-        Resource res3 = ResourceFactory.createResource(ResourceType.SERVANT, 1);
-        discounts.add(res1);
-        discounts.add(res2);
-        discounts.add(res3);
-
-    }
-    @Test
-    void doEffect() {
+        //creates a discounts
+        discounts = resourceArray(2,1,0,0,0,0);
         effect = new DiscountEffect(discounts);
         effect.attachResourceManager(rm);
         assertDoesNotThrow(()->effect.doEffect(State.CREATION_STATE));
+    }
 
-        //create a requirementCost of a development card
-        ArrayList<Resource> costBuyDevelopment = new ArrayList<>();
-        Resource res1 = ResourceFactory.createResource(ResourceType.COIN, 2);
-        Resource res2 = ResourceFactory.createResource(ResourceType.SHIELD, 3);
-        Resource res3 = ResourceFactory.createResource(ResourceType.SERVANT, 1);
-        costBuyDevelopment.add(res1);
-        costBuyDevelopment.add(res2);
-        costBuyDevelopment.add(res3);
 
-        //modify canIAfford
-        assertTrue(rm.canIAfford(costBuyDevelopment, true));
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,2, 3})
+    void discountWithNoResources(int index) {
+        ArrayList<Resource> costBuyDevelopment;
+        switch (index){
+            case 0:
+                //create a requirementCost of a development card
+                costBuyDevelopment = resourceArray(1,0,0,0,0,1);
+                //modify canIAfford
+                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+                break;
+            case 1:
+                costBuyDevelopment = resourceArray(2,0,0,0,0,2);
+                assertFalse(rm.canIAfford(costBuyDevelopment, true));
+                break;
+            case 2:
+                costBuyDevelopment = resourceArray(2,1,0,0,0,0);
+                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+                break;
+            case 3:
+                costBuyDevelopment = new ArrayList<>();
+                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+        }
 
     }
+
+
+
 }

@@ -157,6 +157,29 @@ public class CardManager implements Observable {
         return count>=howMany;
     }
 
+
+    /**
+     * Method doIHaveDev checks if we have in our cards slot a specific number of card with a
+     * defined color and level
+     * @param howMany of type int - number of card with this propriety
+     * @param color of type Color - color of those cards
+     * @param level of type int - level of those cards
+     * @return boolean - true if you own them, otherwise false
+     */
+    public boolean doIHaveDev(int howMany, Color color, int level){
+        int count = 0;
+        for (CardSlot cardSlot: cardSlots){
+            for (int i = 0; i < cardSlot.getLvReached(); i++){
+                 Development dev = cardSlot.getCardOfLv(i+1);
+                 if (dev.getLevel() >= level){
+                     if (color == Color.ANY || dev.getColor() == color) count ++;
+                 }
+                 if (count >= howMany) return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Method to check if there is at least howMany card with color equal to color
      * @param howMany is the number of card

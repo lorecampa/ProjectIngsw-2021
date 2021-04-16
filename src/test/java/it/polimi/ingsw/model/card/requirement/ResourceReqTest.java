@@ -1,15 +1,12 @@
 package it.polimi.ingsw.model.card.requirement;
 
-import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResourceReqTest {
@@ -17,7 +14,7 @@ class ResourceReqTest {
     @BeforeEach
     void init(){
         rm = new ResourceManager();
-        //all resources (7 coin, 2 shield, 3 servant)
+        //(7 coin, 2 shield, 3 servant)
         rm.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 5));
         rm.addToStrongbox(ResourceFactory.createResource(ResourceType.SHIELD, 2));
         assertDoesNotThrow(()->rm.addToWarehouse(true, 1, ResourceFactory.createResource(ResourceType.COIN, 2)));
@@ -63,10 +60,11 @@ class ResourceReqTest {
         Requirement req = new ResourceReq(resourceReq);
         req.attachResourceManager(rm);
         assertTrue(req.checkRequirement(true));
+
     }
 
     @Test
-    void ThreeRequeriment() {
+    void ThreeRequirement() {
         //(3 coin , 3 servant, 2 any) -> true
         ArrayList<Resource> resourceReq1 = new ArrayList<>();
         resourceReq1.add(ResourceFactory.createResource(ResourceType.COIN, 3));
