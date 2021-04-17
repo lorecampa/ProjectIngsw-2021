@@ -35,7 +35,141 @@
     "color": "GREEN"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 4,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 2
+          },
+          {
+            "type" : "COIN",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "GREEN"
+  },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 3,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 1
+          },
+          {
+            "type": "SHIELD",
+            "value": 1
+          },
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "GREEN"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 2,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 1
+          },
+          {
+            "type" : "STONE",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "GREEN"
+  },
 
   {
     "@class": "Development",
@@ -73,7 +207,141 @@
     "color": "PURPLE"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 2,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 1
+          },
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "PURPLE"
+  },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 3,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          },
+          {
+            "type": "SHIELD",
+            "value": 1
+          },
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "PURPLE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 4,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 2
+          },
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "SHIELD",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "PURPLE"
+  },
 
   {
     "@class": "Development",
@@ -111,6 +379,142 @@
     "color": "BLUE"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 2,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "STONE",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 3,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 1
+          },
+          {
+            "type": "SERVANT",
+            "value": 1
+          },
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 4,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 2
+          },
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SHIELD",
+            "value": 1
+          },
+          {
+            "type" : "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 1,
+    "color": "BLUE"
+  },
+
 
   {
     "@class": "Development",
@@ -161,141 +565,6 @@
             "value": 1
           },
           {
-            "type" : "STONE",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "GREEN"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 2,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 1
-          },
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "PURPLE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 2,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "STONE",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "BLUE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 2,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 1
-          },
-          {
             "type" : "COIN",
             "value": 1
           },
@@ -326,144 +595,6 @@
     "onCreationEffects": [],
     "level" : 1,
     "color": "YELLOW"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 3,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 1
-          },
-          {
-            "type": "SHIELD",
-            "value": 1
-          },
-          {
-            "type": "STONE",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "GREEN"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 3,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 1
-          },
-          {
-            "type": "SHIELD",
-            "value": 1
-          },
-          {
-            "type": "STONE",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "PURPLE"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 3,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 1
-          },
-          {
-            "type": "SERVANT",
-            "value": 1
-          },
-          {
-            "type": "SHIELD",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "BLUE"
   },
 
 
@@ -513,152 +644,8 @@
 
 
 
-  {
-    "@class": "Development",
-    "victoryPoints": 4,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 2
-          },
-          {
-            "type" : "COIN",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "GREEN"
-  },
 
 
-
-  {
-    "@class": "Development",
-    "victoryPoints": 4,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 2
-          },
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "SHIELD",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "PURPLE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 4,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 2
-          },
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SHIELD",
-            "value": 1
-          },
-          {
-            "type" : "STONE",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 1,
-    "color": "BLUE"
-  },
 
 
   {
@@ -770,7 +757,133 @@
     "color": "GREEN"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 6,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 3
+          },
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SHIELD",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "GREEN"
+  },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 7,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "GREEN"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 8,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SHIELD",
+            "value": 3
+          },
+          {
+            "type" : "COIN",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "GREEN"
+  },
 
   {
     "@class": "Development",
@@ -808,6 +921,132 @@
     "color": "PURPLE"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 6,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 3
+          },
+          {
+            "type" : "COIN",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "PURPLE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 7,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "PURPLE"
+  },
+  {
+    "@class": "Development",
+    "victoryPoints": 8,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 3
+          },
+          {
+            "type" : "SHIELD",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "PURPLE"
+  },
 
   {
     "@class": "Development",
@@ -845,6 +1084,134 @@
     "color": "BLUE"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 6,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 3
+          },
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 7,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 8,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 3
+          },
+          {
+            "type" : "STONE",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 2
+          },
+          {
+            "type": "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 2,
+    "color": "BLUE"
+  },
+
 
   {
     "@class": "Development",
@@ -883,141 +1250,6 @@
   },
 
 
-  {
-    "@class": "Development",
-    "victoryPoints": 6,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 3
-          },
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SHIELD",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "GREEN"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 6,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 3
-          },
-          {
-            "type" : "COIN",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "PURPLE"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 6,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 3
-          },
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "STONE",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "BLUE"
-  },
-
 
   {
     "@class": "Development",
@@ -1064,133 +1296,6 @@
   },
 
 
-
-  {
-    "@class": "Development",
-    "victoryPoints": 7,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 5
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "GREEN"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 7,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 5
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "PURPLE"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 7,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 5
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "BLUE"
-  },
-
-
-
   {
     "@class": "Development",
     "victoryPoints": 7,
@@ -1230,145 +1335,6 @@
     "level" : 2,
     "color": "YELLOW"
   },
-
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 8,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SHIELD",
-            "value": 3
-          },
-          {
-            "type" : "COIN",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "GREEN"
-  },
-
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 8,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 3
-          },
-          {
-            "type" : "SHIELD",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "PURPLE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 8,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 3
-          },
-          {
-            "type" : "STONE",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 2
-          },
-          {
-            "type": "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 2,
-    "color": "BLUE"
-  },
-
 
 
   {
@@ -1477,130 +1443,6 @@
     "color": "GREEN"
   },
 
-
-  {
-    "@class": "Development",
-    "victoryPoints": 9,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 6
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 3
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "PURPLE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 9,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 6
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 3
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "BLUE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 9,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "STONE",
-            "value": 6
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SHIELD",
-            "value": 2
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 3
-          },
-          {
-            "type": "FAITH",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "YELLOW"
-  },
-
-
   {
     "@class": "Development",
     "victoryPoints": 10,
@@ -1653,165 +1495,6 @@
     "color": "GREEN"
   },
 
-
-  {
-    "@class": "Development",
-    "victoryPoints": 10,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 5
-          },
-          {
-            "type" : "COIN",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          },
-          {
-            "type" : "SHIELD",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 2
-          },
-          {
-            "type": "SERVANT",
-            "value": 2
-          },
-          {
-            "type" : "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "PURPLE"
-  },
-
-  {
-    "@class": "Development",
-    "victoryPoints": 10,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 5
-          },
-          {
-            "type" : "STONE",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          },
-          {
-            "type" : "SHIELD",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 2
-          },
-          {
-            "type": "STONE",
-            "value": 2
-          },
-          {
-            "type" : "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "BLUE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 10,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "STONE",
-            "value": 5
-          },
-          {
-            "type" : "SERVANT",
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          },
-          {
-            "type" : "SERVANT",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "COIN",
-            "value": 2
-          },
-          {
-            "type": "SHIELD",
-            "value": 2
-          },
-          {
-            "type" : "FAITH",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "YELLOW"
-  },
-
-
   {
     "@class": "Development",
     "victoryPoints": 11,
@@ -1851,129 +1534,6 @@
     "level" : 3,
     "color": "GREEN"
   },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 11,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "SERVANT",
-            "value": 7
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "COIN",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "STONE",
-            "value": 1
-          },
-          {
-            "type": "FAITH",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "PURPLE"
-  },
-
-  {
-    "@class": "Development",
-    "victoryPoints": 11,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "COIN",
-            "value": 7
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "STONE",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SHIELD",
-            "value": 1
-          },
-          {
-            "type": "FAITH",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "BLUE"
-  },
-
-
-  {
-    "@class": "Development",
-    "victoryPoints": 11,
-    "requirements": [
-      {
-        "@class": "ResourceReq",
-        "resourceReq": [
-          {
-            "type" : "STONE",
-            "value": 7
-          }
-        ]
-      }
-    ],
-    "onActivationEffects": [
-      {
-        "@class" : "ProductionEffect",
-        "resourceCost": [
-          {
-            "type" : "SHIELD",
-            "value": 1
-          }
-        ],
-        "resourceAcquired" : [
-          {
-            "type": "SERVANT",
-            "value": 1
-          },
-          {
-            "type": "FAITH",
-            "value": 3
-          }
-        ]
-      }
-    ],
-    "onCreationEffects": [],
-    "level" : 3,
-    "color": "YELLOW"
-  },
-
 
   {
     "@class": "Development",
@@ -2019,6 +1579,137 @@
     "color": "GREEN"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 9,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 6
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 3
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "PURPLE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 10,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 5
+          },
+          {
+            "type" : "COIN",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          },
+          {
+            "type" : "SHIELD",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 2
+          },
+          {
+            "type": "SERVANT",
+            "value": 2
+          },
+          {
+            "type" : "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "PURPLE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 11,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "SERVANT",
+            "value": 7
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "STONE",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "PURPLE"
+  },
 
   {
     "@class": "Development",
@@ -2064,6 +1755,137 @@
     "color": "PURPLE"
   },
 
+  {
+    "@class": "Development",
+    "victoryPoints": 9,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 6
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 3
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 10,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 5
+          },
+          {
+            "type" : "STONE",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "COIN",
+            "value": 1
+          },
+          {
+            "type" : "SHIELD",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 2
+          },
+          {
+            "type": "STONE",
+            "value": 2
+          },
+          {
+            "type" : "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "BLUE"
+  },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 11,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "COIN",
+            "value": 7
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "BLUE"
+  },
 
   {
     "@class": "Development",
@@ -2108,6 +1930,142 @@
     "level" : 3,
     "color": "BLUE"
   },
+
+  {
+    "@class": "Development",
+    "victoryPoints": 9,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "STONE",
+            "value": 6
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SHIELD",
+            "value": 2
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 3
+          },
+          {
+            "type": "FAITH",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "YELLOW"
+  },
+
+
+  {
+    "@class": "Development",
+    "victoryPoints": 10,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "STONE",
+            "value": 5
+          },
+          {
+            "type" : "SERVANT",
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "STONE",
+            "value": 1
+          },
+          {
+            "type" : "SERVANT",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "COIN",
+            "value": 2
+          },
+          {
+            "type": "SHIELD",
+            "value": 2
+          },
+          {
+            "type" : "FAITH",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "YELLOW"
+  },
+
+
+  {
+    "@class": "Development",
+    "victoryPoints": 11,
+    "requirements": [
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type" : "STONE",
+            "value": 7
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "ProductionEffect",
+        "resourceCost": [
+          {
+            "type" : "SHIELD",
+            "value": 1
+          }
+        ],
+        "resourceAcquired" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          },
+          {
+            "type": "FAITH",
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": [],
+    "level" : 3,
+    "color": "YELLOW"
+  },
+
+
 
   {
     "@class": "Development",

@@ -34,11 +34,18 @@ public enum Color {
      * a reference to the development matrix then it returns -1 (ANY)
      */
     public int getColumnDeckDevelopment(){
-        if (this.equals(Color.GREEN)) return 0;
-        else if(this.equals(Color.PURPLE)) return 1;
-        else if(this.equals(Color.BLUE)) return 2;
-        else if(this.equals(Color.YELLOW)) return 3;
-        else return -1;
+        switch (this){
+            case GREEN:
+                return 0;
+            case PURPLE:
+                return 1;
+            case BLUE:
+                return 2;
+            case YELLOW:
+                return 3;
+            default:
+                return -1;
+        }
 
     }
 }

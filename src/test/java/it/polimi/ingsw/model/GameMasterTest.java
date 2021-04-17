@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
+import it.polimi.ingsw.exception.JsonFileConfigError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.token.Token;
@@ -17,7 +18,7 @@ class GameMasterTest {
     GameMaster gm;
     int numOfPlayer;
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() throws IOException, JsonFileConfigError {
         numOfPlayer = 4;
         gm = new GameMaster("player1", numOfPlayer);
         gm.setCurrentPlayer("player1");
@@ -108,7 +109,7 @@ class GameMasterTest {
     }
 
     @Test
-    void drawToken() throws IOException {
+    void drawToken() throws IOException, JsonFileConfigError {
         assertEquals(0, gm.getSizeDeckToken());
         GameMaster gmSp = new GameMaster("Single Player", 1);
         int sizeDeckToken = gmSp.getSizeDeckToken();

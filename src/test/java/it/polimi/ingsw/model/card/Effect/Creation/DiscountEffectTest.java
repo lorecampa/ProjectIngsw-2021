@@ -49,7 +49,7 @@ class DiscountEffectTest {
         effect.attachResourceManager(rm);
         assertDoesNotThrow(()->effect.doEffect(State.CREATION_STATE));
 
-        ArrayList<Resource> resStrongbox = resourceArray(2, 1, 0,0,0,0);
+        ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0,0,0,0);
         for (Resource res: resStrongbox){
             rm.addToStrongbox(res);
         }
@@ -60,31 +60,32 @@ class DiscountEffectTest {
 
     @Test
     void strangeTest(){
-        //strongbox (2 coin, 1 shield, 0 stone, 0 servant)
+        //strongbox (2 coin, 0 shield, 0 stone, 0 servant)
         //discounts (3 coin, 2 shield, 0 stone, 0 servant)
 
-        costBuyDevelopment = resourceArray(4,2,0,0,0,2);
+        costBuyDevelopment = resourceArray(4,1,0,0,0,2);
         assertTrue(rm.canIAfford(costBuyDevelopment, true));
+
     }
 
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2, 3})
     void discountWithNoResources(int index) {
-        //strongbox (2 coin, 1 shield, 0 stone, 0 servant)
+        //strongbox (2 coin, 0 shield, 0 stone, 0 servant)
         //discounts (3 coin, 2 shield, 0 stone, 0 servant)
         switch (index){
             case 0:
                 costBuyDevelopment = resourceArray(5,0,0,0,0,3);
-                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+                assertFalse(rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 1:
                 costBuyDevelopment = resourceArray(6,0,0,0,0,0);
                 assertFalse(rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 2:
-                costBuyDevelopment = resourceArray(5,3,0,0,0,1);
-                assertFalse(rm.canIAfford(costBuyDevelopment, true));
+                costBuyDevelopment = resourceArray(2,1,0,0,0,4);
+                assertTrue(rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 3:
                 costBuyDevelopment = new ArrayList<>();
