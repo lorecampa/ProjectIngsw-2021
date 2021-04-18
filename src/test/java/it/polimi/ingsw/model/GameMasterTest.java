@@ -52,7 +52,7 @@ class GameMasterTest {
     void deliverLeaderCard() {
         assertEquals(16, gm.getSizeDeckLeader());
         assertEquals(4, gm.getNumActivePlayers());
-        gm.deliverLeaderCards();
+        assertDoesNotThrow(()->gm.deliverLeaderCards());
         assertEquals(0, gm.getSizeDeckLeader());
 
     }

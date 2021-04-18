@@ -19,6 +19,7 @@ public class ResourceManager implements Observable {
     private int anyResource=0;
 
     private final ArrayList<Resource> myResources = new ArrayList<>();
+    private final ArrayList<Resource> myDiscounts = new ArrayList<>();
 
     public ResourceManager(){
         currWarehouse =new Warehouse();
@@ -34,6 +35,7 @@ public class ResourceManager implements Observable {
         resourcesBuffer.clear();
         resourcesToProduce.clear();
         allMyResources();
+        myDiscounts.clear();
     }
 
     /**
@@ -120,20 +122,21 @@ public class ResourceManager implements Observable {
     /**
      * Convert one ANY to a specific resource
      * @param type of resource i want to have
-     * @return the resource i'm asking for*/
-    private Resource changeAnyInResource(ResourceType type, boolean isCost) throws NoMoreAnyResourceException, NegativeResourceException {
+    */
+    private void changeAnyInResource(ResourceType type, boolean isCost) throws NoMoreAnyResourceException, NegativeResourceException {
         if(anyResource <= 0){ //maybe
             throw new NoMoreAnyResourceException("don't have enough any");
         }
         Resource resource = ResourceFactory.createResource(type,1);
         if (isCost){
-            if (!myResources.contains(resource))
+            if (myResources.get(myResources.indexOf(resource)).getValue() == 0)
                 throw new NegativeResourceException("don't have this resource");
             else
                 myResources.get(myResources.indexOf(resource)).subValue(1);
+        }else{
+            addToResourcesToProduce(resource);
         }
         anyResource--;
-        return resource;
     }
 
 
@@ -177,30 +180,35 @@ public class ResourceManager implements Observable {
      * @param res you want to have a discount with
      * @return int - the value discounted
      * */
-    private int discount(Resource res){
-        int valueDiscount = 0;
-        if(discounts.contains(res)){
+    private void discount(Resource res){
+        int valueDiscount;
+        if(myDiscounts.contains(res)){
             try{
-                valueDiscount = discounts.get(discounts.indexOf(res)).getValue();
+                valueDiscount = myDiscounts.get(myDiscounts.indexOf(res)).getValue();
                 res.subValue(valueDiscount);
+                myDiscounts.remove(res);
             }catch(NegativeResourceException e){
                 valueDiscount = res.getValue();
                 res.setValueToZero();
+                try {
+                    myDiscounts.get(myDiscounts.indexOf(res)).subValue(valueDiscount);
+                } catch (NegativeResourceException negativeResourceException) {
+                    //it will never happen because res.getValue is less than the first valueDiscount
+                }
             }
         }
-        return valueDiscount;
     }
 
     /**
-     * Method numOfDiscounts gives the number of discounts activated by a player
-     * @return int - the sum of the value of all discounts
+     * numOfDiscountNotUsed
+     * @return
      */
-    public int numOfDiscounts(){
-        int value = 0;
-        for (Resource discount: discounts){
-            value += discount.getValue();
+    public int numOfDiscountNotUsed(){
+        int num = 0;
+        for (Resource discount: myDiscounts){
+            num += discount.getValue();
         }
-        return value;
+        return num;
     }
 
     /**
@@ -212,11 +220,13 @@ public class ResourceManager implements Observable {
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources);
-        int numOfAllDiscount = numOfDiscounts();
+
+        if (checkDiscount){
+            allMyDiscounts();
+        }
         for(Resource res : resources){
             if (myResources.contains(res)){
-                if (checkDiscount)
-                    numOfAllDiscount -= discount(res);
+                discount(res);
                 try {
                     myResources.get(myResources.indexOf(res)).subValue(res.getValue());
                     extraRes -=  res.getValue();
@@ -228,10 +238,8 @@ public class ResourceManager implements Observable {
                 return false;
         }
 
-        if((extraRes < anyResource && !checkDiscount) ||
-                (extraRes + numOfAllDiscount < anyResource && checkDiscount))
+        if(extraRes + numOfDiscountNotUsed() < anyResource)
             return false;
-
 
         for(Resource res : resources){
             addToBuffer(res);
@@ -250,6 +258,14 @@ public class ResourceManager implements Observable {
             myResources.add(res);
         }
     }
+
+    private void allMyDiscounts(){
+        for (Resource discount: discounts){
+            Resource discountCopy = ResourceFactory.createResource(discount.getType(), discount.getValue());
+            myDiscounts.add(discountCopy);
+        }
+    }
+
 
     /**
      * Calculate the value of resources I'm storing in my warehouse + strongbox

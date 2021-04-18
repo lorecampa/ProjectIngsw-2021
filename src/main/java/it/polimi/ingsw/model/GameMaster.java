@@ -36,6 +36,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     private static final int ROW_DECK = 3;
     private static final int COLUMN_DECK = 4;
     private static final int DEPTH_DECK = SIZE_DECK / (ROW_DECK * COLUMN_DECK);
+    private static final int SIZE_TOKEN_DECK = 6;
+    private static final int LEADERS_AT_START = 4;
 
 
 
@@ -71,9 +73,12 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
                 .readValue(new File("src/main/resources/json/market.json"), Market.class);
     }
 
-    private void createDeckToken() throws IOException {
+    private void createDeckToken() throws IOException, JsonFileConfigError {
         deckToken = JacksonMapper.getInstance().readValue(new File("src/main/resources/json/token.json"),
                 new TypeReference<LinkedList<Token>>() {});
+        if (deckToken.size() != SIZE_TOKEN_DECK){
+            throw new JsonFileConfigError("Deck token size wrong");
+        }
         for (Token token: deckToken){
             token.attachLorenzoIlMagnifico(this);
         }
@@ -91,8 +96,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     private void createDeckDevelopment() throws IOException, JsonFileConfigError {
         Development[] developmentsJson = JacksonMapper.getInstance()
                 .readValue(new File("src/main/resources/json/development.json"), Development[].class);
-        int deckSize = developmentsJson.length;
-        if (deckSize != SIZE_DECK) {
+
+        if (developmentsJson.length != SIZE_DECK) {
             throw new JsonFileConfigError("Deck Development size is not valid");
         }
 
@@ -113,6 +118,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
             deckDevelopment.add(row);
         }
     }
+
+    //control integrity
 
     /**
      * Method nextPlayer change the current player in the game when a new turn starts
@@ -186,11 +193,13 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     /**
      * Method deliverLeaderCards delivers all the initial four card to all the players in the game
      */
-    public void deliverLeaderCards(){
+    public void deliverLeaderCards() throws JsonFileConfigError {
+        if (LEADERS_AT_START * numberOfPlayer > deckLeader.size()){
+            throw new JsonFileConfigError("Not enough leaders to deliver");
+        }
         for (PersonalBoard personalBoard: playersPersonalBoard.values()){
             CardManager cardManager = personalBoard.getCardManager();
-            //each player obtain four leader card at the beginning of the game
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < LEADERS_AT_START; i++){
                 cardManager.addLeader(deckLeader.poll());
             }
         }
@@ -348,7 +357,8 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
             if (rowReached == ROW_DECK){
                 throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
                         color.getDisplayName() + "cards.\n" +
-                        "No more "+color.getDisplayName()+" to discard");
+                        "There are left " + (num - numDiscarded) + " "
+                        +color.getDisplayName()+" cards to discard");
             }
         }
     }
