@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import it.polimi.ingsw.commonInterfaces.Observer;
+import it.polimi.ingsw.observer.CardManagerObserver;
+import it.polimi.ingsw.observer.FaithTrackObserver;
+import it.polimi.ingsw.observer.ResourceManagerObserver;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.exception.JsonFileConfigError;
 import it.polimi.ingsw.model.card.Color;
@@ -20,7 +22,7 @@ import java.util.*;
 /**
  * GameMaster class
  */
-public class GameMaster implements Observer, LorenzoIlMagnifico {
+public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, CardManagerObserver, LorenzoIlMagnifico {
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
     private final int numberOfPlayer;
@@ -288,11 +290,11 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     }
 
     /**
-     * Method to manage the activation of a popeSpace from a player Faith Track
+     * Method of FaithTrackObserver that manage the activation of a popeSpace from a player Faith Track
      * @param idVR is the id of the popeSpace activated
      */
     @Override
-    public void updateFromFaithTrack(int idVR) {
+    public void vaticanReportReached(int idVR) {
         if(vaticanReportReached == idVR){
             for (PersonalBoard personalBoard : playersPersonalBoard.values()){
                 personalBoard.getFaithTrack().popeFavorActivated(idVR);
@@ -302,12 +304,12 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     }
 
     /**
-     * Method to manage the advancement of player after the current player discarded resources
-     * @param positions is the number of move each player must do
+     * Method of ResourceManagerObserver that manage the advancement of player after the current player discarded resources
+     * @param numResources is the number of move each player must do
      */
     @Override
-    public void updateFromResourceManager(int positions) {
-        for (int i = 0; i < positions; i++) {
+    public void discardResources(int numResources) {
+        for (int i = 0; i < numResources; i++) {
             for (PersonalBoard personalBoard : playersPersonalBoard.values()){
                 if(!personalBoard.equals(playersPersonalBoard.get(currentPlayer))){
                     personalBoard.getFaithTrack().increasePlayerPosition();
@@ -322,10 +324,10 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
     }
 
     /**
-     * Method to move the current player after the discard of a card leader
+     * Method of CardManagerObserver that manage to increase the
+     * current player faith position after a card leader discard
      */
-    @Override
-    public void updateFromCardManager() {
+    public void discardLeader() {
         playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(1);
     }
 

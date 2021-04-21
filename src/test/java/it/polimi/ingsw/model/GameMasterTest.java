@@ -4,12 +4,10 @@ import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.exception.JsonFileConfigError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
-import it.polimi.ingsw.model.token.Token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -147,7 +145,7 @@ class GameMasterTest {
 
     @Test
     void updateFromResourceManager() {
-        gm.updateFromResourceManager(6);
+        gm.discardResources(6);
         assertEquals(0, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
         assertEquals(2, gm.getPlayerPersonalBoard("player2").getFaithTrack().getVictoryPoints());
         assertEquals(2, gm.getPlayerPersonalBoard("player3").getFaithTrack().getVictoryPoints());
@@ -156,10 +154,10 @@ class GameMasterTest {
 
     @Test
     void updateFromCardManager() {
-        gm.updateFromCardManager();
+        gm.discardLeader();
         assertEquals(1, gm.getPlayerPersonalBoard("player1").getFaithTrack().getCurrentPositionOnTrack());
         gm.getPlayerPersonalBoard("player1").getFaithTrack().movePlayer(4);
-        gm.updateFromCardManager();
+        gm.discardLeader();
         assertEquals(2, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
     }
 }

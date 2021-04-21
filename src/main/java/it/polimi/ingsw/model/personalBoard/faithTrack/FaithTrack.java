@@ -2,22 +2,21 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.commonInterfaces.Observable;
-import it.polimi.ingsw.commonInterfaces.Observer;
+import it.polimi.ingsw.observer.FaithTrackObserver;
+import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
 
 /**
  * Class that manage the Faith Track of a player
  */
-public class FaithTrack implements Observable {
+public class FaithTrack extends Observable<FaithTrackObserver> {
     private int victoryPoints;
     private int popeFavorVP;
     private int currentPositionOnTrack;
     private final ArrayList<Integer> popeFavor;
     private final ArrayList<Cell> track;
 
-    private final ArrayList<Observer> observers = new ArrayList<>();
 
     @JsonCreator
     public FaithTrack(@JsonProperty("victoryPoints") int victoryPoints,
@@ -93,22 +92,5 @@ public class FaithTrack implements Observable {
             popeFavorVP += popeFavor.get(idVaticanReport);
     }
 
-    /**
-     * Method to add an observer to the faith track
-     * @param observer is the reference to the observer
-     */
-    @Override
-    public void attachObserver(Observer observer) {
-        if (!observers.contains(observer))
-            observers.add(observer);
-    }
 
-    /**
-     * Method to call the update method of every observer
-     */
-    @Override
-    public void notifyAllObservers() {
-        for (Observer obs : observers)
-            obs.updateFromFaithTrack(track.get(currentPositionOnTrack).getIdVaticanReport());
-    }
 }

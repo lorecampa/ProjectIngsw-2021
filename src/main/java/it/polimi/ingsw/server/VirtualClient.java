@@ -1,6 +1,9 @@
 package it.polimi.ingsw.server;
 
-public class VirtualClient {
+import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.util.GsonUtil;
+
+public class VirtualClient{
     int id;
     String username;
     ClientHandler clientHandler;
@@ -12,7 +15,8 @@ public class VirtualClient {
     }
 
     public void sendMessage(Message message) {
-        clientHandler.writeToStream(message.serialize());
+        String serializedMessage = GsonUtil.serialize(message);
+        clientHandler.writeToStream(serializedMessage);
     }
 
     public int getId() {

@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.commonInterfaces.Observable;
-import it.polimi.ingsw.commonInterfaces.Observer;
+import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
@@ -18,15 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CardManager implements Observable {
+public class CardManager extends Observable<CardManagerObserver> {
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
 
     private final ArrayList<Leader> leaders = new ArrayList<>();
     private final Development baseProduction;
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
     private final ArrayList<Leader> leadersUsed = new ArrayList<>();
-
-    private final ArrayList<Observer> observers = new ArrayList<>();
 
     public CardManager() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -69,7 +67,7 @@ public class CardManager implements Observable {
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
-        notifyAllObservers();
+        notifyAllObservers(CardManagerObserver::discardLeader);
     }
 
     /**
@@ -193,16 +191,4 @@ public class CardManager implements Observable {
         return count>=howMany;
     }
 
-    @Override
-    public void attachObserver(Observer observer) {
-        if(!observers.contains(observer))
-            observers.add(observer);
-    }
-
-    @Override
-    public void notifyAllObservers() {
-        for (Observer observer:observers){
-            observer.updateFromCardManager();
-        }
-    }
 }

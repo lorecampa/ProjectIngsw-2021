@@ -1,5 +1,9 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.message.CommandMessage;
+import it.polimi.ingsw.message.MessageType;
+import it.polimi.ingsw.message.NormalMessage;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +16,7 @@ public class Server {
     int port;
     ExecutorService executorService;
     ServerSocket serverSocket;
-    int numOfPlayer;
+    int numOfActivePlayers;
 
     private Map<String, VirtualClient> userVirtualClientMap;
 
@@ -21,7 +25,7 @@ public class Server {
         port = 2020;
         executorService = Executors.newCachedThreadPool();
         userVirtualClientMap = new HashMap<>();
-        numOfPlayer = 0;
+        numOfActivePlayers = 0;
     }
 
     public void startServer(){
@@ -39,7 +43,7 @@ public class Server {
         while (true){
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("Client-Server socket created");
+                System.out.println("Server Socket has accepted a connection");
                 ClientHandler client = new ClientHandler(socket, this);
                 executorService.submit(client);
 
@@ -50,15 +54,19 @@ public class Server {
     }
 
     public int getNextId(){
-        return  numOfPlayer++;
+        return  numOfActivePlayers++;
     }
 
-    public void addClient(String username, ClientHandler client){
+    public void addClient(String username, ClientHandler clientHandler){
         int id = getNextId();
-        VirtualClient virtualClient = new VirtualClient(id, username, client);
+        VirtualClient virtualClient = new VirtualClient(id, username, clientHandler);
         userVirtualClientMap.put(username, virtualClient);
+        if (id % 2 == 0){
+            virtualClient.sendMessage(new NormalMessage("You are added!"));
+        }else{
+            virtualClient.sendMessage(new CommandMessage(MessageType.BUY_LEADER, 1, 2));
+        }
 
-        virtualClient.sendMessage(new Message("You are added!", 0));
         System.out.println("Added: " + virtualClient);
 
     }

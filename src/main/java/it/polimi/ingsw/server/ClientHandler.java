@@ -1,5 +1,10 @@
 package it.polimi.ingsw.server;
 
+import com.google.gson.Gson;
+import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.NormalMessage;
+import it.polimi.ingsw.util.GsonUtil;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -24,9 +29,17 @@ public class ClientHandler implements Runnable {
         out.flush();
     }
 
+    public String readFromStream(){
+        String serializedMessage = in.nextLine();
+        Message message = GsonUtil.deserialize(serializedMessage);
+        return message.toString();
+    }
+
     public void registerClient(){
-        writeToStream("Insert username: ");
+        writeToStream("Insert Username: ");
+
         String username = in.nextLine();
+        writeToStream("Received: " + username);
         server.addClient(username, this);
     }
 
@@ -34,14 +47,15 @@ public class ClientHandler implements Runnable {
     public void run() {
         registerClient();
         while (true) {
-            String line = in.nextLine();
-            if (line.equals("quit")) {
+            String message = readFromStream();
+            if (message.equals("quit")) {
                 break;
             } else {
-                out.println("Received: " + line);
+                out.println("Received: " + message);
                 out.flush();
             }
         }
+
         // Chiudo gli stream e il socket
         in.close();
         out.close();

@@ -1,20 +1,19 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.commonInterfaces.Observable;
-import it.polimi.ingsw.commonInterfaces.Observer;
+import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ResourceManagerObserver;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
 
-public class ResourceManager implements Observable {
+public class ResourceManager extends Observable<ResourceManagerObserver> {
     private final Warehouse currWarehouse;
     private final Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
-    private final ArrayList<Observer> observers = new ArrayList<>();
     private int faithPoint=0;
     private int anyResource=0;
 
@@ -178,7 +177,6 @@ public class ResourceManager implements Observable {
     /**
      * Make the discount calculation based on the resource u are trying to have a discount with
      * @param res you want to have a discount with
-     * @return int - the value discounted
      * */
     private void discount(Resource res){
         int valueDiscount;
@@ -201,7 +199,7 @@ public class ResourceManager implements Observable {
 
     /**
      * numOfDiscountNotUsed
-     * @return
+     * @return the number of discounts not used
      */
     public int numOfDiscountNotUsed(){
         int num = 0;
@@ -320,7 +318,7 @@ public class ResourceManager implements Observable {
     /**
      * Discard resources*/
     public void discardResources(){
-        notifyAllObservers();
+        notifyAllObservers(x -> x.discardResources(numberOfResourceInBuffer()));
         resourcesBuffer.clear();
     }
 
@@ -350,17 +348,6 @@ public class ResourceManager implements Observable {
         resourcesBuffer.clear();
     }
 
-    @Override
-    public void attachObserver(Observer observer) {
-        if (!observers.contains(observer))
-            observers.add(observer);
-    }
-
-    @Override
-    public void notifyAllObservers() {
-        for (Observer obs : observers)
-            obs.updateFromResourceManager(numberOfResourceInBuffer());
-    }
 
     public void print(){
         System.out.println("ANY: "+anyResource+"-"+" FAITH: "+faithPoint);
