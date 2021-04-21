@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PositionToken implements Token {
     private int position;
     private final boolean isShuffle;
-    private LorenzoIlMagnifico lorenzoIlMagnifico = null;
 
     @JsonCreator
     public PositionToken(@JsonProperty("position") int position,
@@ -16,15 +15,12 @@ public class PositionToken implements Token {
     }
 
     @Override
-    public void doActionToken() {
+    public void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico) {
         lorenzoIlMagnifico.increaseFaithPosition(position);
         if(isShuffle) lorenzoIlMagnifico.shuffleToken();
     }
 
-    @Override
-    public void attachLorenzoIlMagnifico(LorenzoIlMagnifico lorenzoIlMagnifico) {
-        this.lorenzoIlMagnifico = lorenzoIlMagnifico;
-    }
+
 
     @Override
     public String toString() {

@@ -79,9 +79,6 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         if (deckToken.size() != SIZE_TOKEN_DECK){
             throw new JsonFileConfigError("Deck token size wrong");
         }
-        for (Token token: deckToken){
-            token.attachLorenzoIlMagnifico(this);
-        }
         Collections.shuffle(this.deckToken);
 
     }
@@ -268,13 +265,12 @@ public class GameMaster implements Observer, LorenzoIlMagnifico {
         deckToken.offer(token);
         if(token != null){
             try{
-                token.doActionToken();
+                token.doActionToken(this);
             } catch (DeckDevelopmentCardException  e) {
                 //its all okay, just there is no more to delete
                 //with the cardToken effect from the deck of development cards
             }
         }
-
     }
 
     public boolean isGameEnded() {

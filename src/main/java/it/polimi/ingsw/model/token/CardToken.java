@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.card.Color;
 public class CardToken implements Token{
     private final Color cardColor;
     private final int numDiscard;
-    private LorenzoIlMagnifico lorenzoIlMagnifico;
 
     @JsonCreator
     public CardToken(@JsonProperty("cardColor") Color cardColor,
@@ -18,15 +17,11 @@ public class CardToken implements Token{
     }
 
     @Override
-    public void doActionToken() throws DeckDevelopmentCardException {
+    public void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico) throws DeckDevelopmentCardException {
         lorenzoIlMagnifico.discardDevelopment(cardColor, numDiscard);
     }
 
 
-    @Override
-    public void attachLorenzoIlMagnifico(LorenzoIlMagnifico lorenzoIlMagnifico) {
-        this.lorenzoIlMagnifico = lorenzoIlMagnifico;
-    }
 
     @Override
     public String toString() {
