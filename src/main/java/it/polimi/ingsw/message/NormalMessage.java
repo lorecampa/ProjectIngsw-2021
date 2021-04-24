@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NormalMessage implements Message{
-    String message;
+
+    MessageType messageType;
 
     @JsonCreator
-    public NormalMessage(@JsonProperty("message") String message) { this.message = message; }
+    public NormalMessage(@JsonProperty("messageType") MessageType messageType) { this.messageType = messageType; }
 
     @Override
     public String print() {
@@ -16,6 +17,6 @@ public class NormalMessage implements Message{
 
     @Override
     public String toString() {
-        return message;
+        return messageType.getMessage();
     }
 }

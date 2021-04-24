@@ -64,13 +64,7 @@ public class Server {
         VirtualClient virtualClient = new VirtualClient(id, username, clientHandler);
         userVirtualClientMap.put(username, virtualClient);
 
-        // TODO: motivo di questo if?
-
-        if (id % 2 == 0){
-            virtualClient.sendMessage(new NormalMessage("You are added!"));
-        }else{
-            virtualClient.sendMessage(new CommandMessage(MessageType.BUY_LEADER, 1, 2));
-        }
+        virtualClient.sendMessage(new NormalMessage(MessageType.INFO));
 
         System.out.println("Added: " + virtualClient);
 

@@ -6,10 +6,8 @@ import it.polimi.ingsw.exception.JsonFileConfigError;
 import it.polimi.ingsw.message.CommandMessage;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.MessageType;
-import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
-import it.polimi.ingsw.util.GsonUtil;
 import it.polimi.ingsw.util.JacksonMapper;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -68,7 +66,7 @@ public class MastersOfRenaissanceTest
 
     @Test
     public void testJackson() throws IOException {
-        Message commandMessage = new CommandMessage(MessageType.MARKET,2,2);
+        Message commandMessage = new CommandMessage(MessageType.CONNECTION,2,2);
 
         String prova = JacksonMapper.getInstance().writeValueAsString(commandMessage);
         System.out.println(prova);

@@ -1,9 +1,8 @@
 package it.polimi.ingsw.server;
 
-import com.google.gson.Gson;
+
 import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.message.NormalMessage;
-import it.polimi.ingsw.util.GsonUtil;
+import it.polimi.ingsw.util.JacksonMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,7 +30,7 @@ public class ClientHandler implements Runnable {
 
     public String readFromStream(){
         String serializedMessage = in.nextLine();
-        Message message = GsonUtil.deserialize(serializedMessage);
+        Message message = JacksonMapper.deserializeMessage(serializedMessage);
         return message.toString();
     }
 
