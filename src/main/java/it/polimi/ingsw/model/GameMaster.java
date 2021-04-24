@@ -24,6 +24,7 @@ import java.util.*;
  */
 public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, CardManagerObserver, LorenzoIlMagnifico {
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
+
     private String currentPlayer = null;
     private final int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();

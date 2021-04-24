@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
     int port;
@@ -61,6 +63,9 @@ public class Server {
         int id = getNextId();
         VirtualClient virtualClient = new VirtualClient(id, username, clientHandler);
         userVirtualClientMap.put(username, virtualClient);
+
+        // TODO: motivo di questo if?
+
         if (id % 2 == 0){
             virtualClient.sendMessage(new NormalMessage("You are added!"));
         }else{

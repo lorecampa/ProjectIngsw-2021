@@ -14,5 +14,4 @@ public final class JacksonMapper {
         }
         return mapper;
     }
-
 }

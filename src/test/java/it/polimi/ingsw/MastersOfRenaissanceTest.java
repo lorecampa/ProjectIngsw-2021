@@ -3,8 +3,13 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.polimi.ingsw.exception.JsonFileConfigError;
+import it.polimi.ingsw.message.CommandMessage;
+import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.MessageType;
+import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.util.GsonUtil;
 import it.polimi.ingsw.util.JacksonMapper;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -59,5 +64,16 @@ public class MastersOfRenaissanceTest
         }
         assertEquals(48, deckSize);
 
+    }
+
+    @Test
+    public void testJackson() throws IOException {
+        Message commandMessage = new CommandMessage(MessageType.MARKET,2,2);
+
+        String prova = JacksonMapper.getInstance().writeValueAsString(commandMessage);
+        System.out.println(prova);
+
+        Message dev = JacksonMapper.getInstance().readValue(prova,Message.class);
+        System.out.println(dev.print());
     }
 }

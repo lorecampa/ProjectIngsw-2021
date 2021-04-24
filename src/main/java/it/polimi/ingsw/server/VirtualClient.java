@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.util.GsonUtil;
+import it.polimi.ingsw.util.JacksonMapper;
 
 public class VirtualClient{
     int id;

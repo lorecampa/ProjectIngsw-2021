@@ -36,6 +36,9 @@ public class ClientHandler implements Runnable {
     }
 
     public void registerClient(){
+
+        // TODO: chiedere al server se è il primo
+
         writeToStream("Insert Username: ");
 
         String username = in.nextLine();
