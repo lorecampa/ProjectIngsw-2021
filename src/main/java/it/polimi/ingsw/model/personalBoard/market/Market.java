@@ -23,6 +23,7 @@ public class Market {
     private final ArrayList<ArrayList<Marble>> marketTray;
     private Marble marbleToInsert;
     private int numOfWhiteMarbleDrew = 0;
+    private int whiteMarbleToTransform = 0;
     private final ArrayList<Resource> resourcesToSend = new ArrayList<>();
 
     /**
@@ -147,6 +148,15 @@ public class Market {
         return resourcesToSend.stream()
                 .map(Res -> ResourceFactory.createResource(Res.getType(), Res.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void setWhiteMarbleToTransform(int whiteMarbleToTransform) {
+        numOfWhiteMarbleDrew -= whiteMarbleToTransform;
+        this.whiteMarbleToTransform = whiteMarbleToTransform;
+    }
+
+    public int getWhiteMarbleToTransform() {
+        return whiteMarbleToTransform;
     }
 
     /**

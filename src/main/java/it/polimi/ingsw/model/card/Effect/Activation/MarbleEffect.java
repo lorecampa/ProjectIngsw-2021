@@ -36,7 +36,7 @@ public class MarbleEffect implements Effect {
     @Override
     public void doEffect(State state) {
         if (state == State.MARKET_STATE){
-            int whiteMarble = market.getWhiteMarbleDrew();
+            int whiteMarble = market.getWhiteMarbleToTransform();
             //add resource in market
             for (Resource res: transformIn){
                 market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
