@@ -1,9 +1,5 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.message.CommandMessage;
-import it.polimi.ingsw.message.MessageType;
-import it.polimi.ingsw.message.NormalMessage;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class Server {
     int port;
@@ -46,7 +41,7 @@ public class Server {
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("Server Socket has accepted a connection");
-                ClientHandler client = new ClientHandler(socket, this);
+                ClientConnectionHandler client = new ClientConnectionHandler(socket, this);
                 executorService.submit(client);
 
             } catch(IOException e) {
@@ -59,14 +54,14 @@ public class Server {
         return  numOfActivePlayers++;
     }
 
-    public void addClient(String username, ClientHandler clientHandler){
+    public void addClient(String username, ClientConnectionHandler clientConnectionHandler){
         int id = getNextId();
-        VirtualClient virtualClient = new VirtualClient(id, username, clientHandler);
+        VirtualClient virtualClient = new VirtualClient(id, username, clientConnectionHandler);
         userVirtualClientMap.put(username, virtualClient);
 
-        virtualClient.sendMessage(new NormalMessage(MessageType.INFO));
+        virtualClient.sendMessage("[Client] We are happy to have you join the game: " + username);
 
-        System.out.println("Added: " + virtualClient);
+        System.out.println("[Server] Added: " + virtualClient);
 
     }
 

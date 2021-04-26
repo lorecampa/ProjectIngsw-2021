@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.observer.Observable;
 
 /**
  * Class Card is an abstract class that defines the model of a card

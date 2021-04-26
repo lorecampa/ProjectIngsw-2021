@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Observable<T> {
+public abstract class Observable<T> {
 
     private List<T> observers = new ArrayList<>();
     /**

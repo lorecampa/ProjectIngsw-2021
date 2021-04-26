@@ -6,4 +6,6 @@ public interface FaithTrackObserver {
      * @param idVR is the id of the vatican report reached
      */
     void vaticanReportReached(int idVR);
+
+
 }

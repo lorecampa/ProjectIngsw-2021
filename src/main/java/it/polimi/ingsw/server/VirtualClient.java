@@ -1,22 +1,22 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.util.JacksonMapper;
+import it.polimi.ingsw.observer.ModelObserver;
+import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.VirtualViewObserver;
 
-public class VirtualClient{
+public class VirtualClient extends Observable<VirtualViewObserver> implements ModelObserver{
     int id;
     String username;
-    ClientHandler clientHandler;
+    ClientConnectionHandler clientConnectionHandler;
 
-    public VirtualClient(int id, String username, ClientHandler clientHandler) {
+    public VirtualClient(int id, String username, ClientConnectionHandler clientConnectionHandler) {
         this.id = id;
         this.username = username;
-        this.clientHandler = clientHandler;
+        this.clientConnectionHandler = clientConnectionHandler;
     }
 
-    public void sendMessage(Message message) {
-        String serializedMessage = JacksonMapper.serializeMessage(message);
-        clientHandler.writeToStream(serializedMessage);
+    public void sendMessage(String message) {
+        clientConnectionHandler.writeToStream(message);
     }
 
     public int getId() {
@@ -27,8 +27,8 @@ public class VirtualClient{
         return username;
     }
 
-    public ClientHandler getClientHandler() {
-        return clientHandler;
+    public ClientConnectionHandler getClientHandler() {
+        return clientConnectionHandler;
     }
 
 
@@ -38,7 +38,7 @@ public class VirtualClient{
         return "VirtualClient{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", clientHandler=" + clientHandler +
+                ", clientHandler=" + clientConnectionHandler +
                 '}';
     }
 }

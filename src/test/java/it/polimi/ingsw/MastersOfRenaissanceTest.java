@@ -3,12 +3,16 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.polimi.ingsw.exception.JsonFileConfigError;
-import it.polimi.ingsw.message.CommandMessage;
+import it.polimi.ingsw.message.ClientMessageHandler;
+import it.polimi.ingsw.message.Handler;
 import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.message.MessageType;
+import it.polimi.ingsw.message.clientMessage.ActivateProductionMessage;
+import it.polimi.ingsw.message.clientMessage.BuyDevelopmentCardMessage;
+import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.util.JacksonMapper;
+import it.polimi.ingsw.util.JacksonSerializer;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
@@ -66,12 +70,27 @@ public class MastersOfRenaissanceTest
 
     @Test
     public void testJackson() throws IOException {
-        Message commandMessage = new CommandMessage(MessageType.CONNECTION,2,2);
+        JacksonSerializer<ClientMessageHandler> jacksonSerializer = new JacksonSerializer<>();
+        Message<ClientMessageHandler> buyDevMessage = new BuyDevelopmentCardMessage(1,2);
+        Message<ClientMessageHandler> actProd = new ActivateProductionMessage(5,1);
+        Message<ClientMessageHandler> errorMess = new ErrorMessage("Errore 404");
 
-        String prova = JacksonMapper.getInstance().writeValueAsString(commandMessage);
-        System.out.println(prova);
 
-        Message dev = JacksonMapper.getInstance().readValue(prova,Message.class);
-        System.out.println(dev.print());
+
+        String buyDevSerialized = jacksonSerializer.serializeMessage(buyDevMessage);
+        System.out.println(buyDevSerialized);
+
+        String actProdSerialized = jacksonSerializer.serializeMessage(actProd);
+        System.out.println(actProdSerialized);
+
+        String errMessSerialized = jacksonSerializer.serializeMessage(errorMess);
+        System.out.println(errMessSerialized);
+
+
+        Message<ClientMessageHandler> messageDeserialized = jacksonSerializer.deserializeMessage(buyDevSerialized);
+        ClientMessageHandler clientMessageHandler = new ClientMessageHandler();
+        messageDeserialized.process(clientMessageHandler);
+
+
     }
 }
