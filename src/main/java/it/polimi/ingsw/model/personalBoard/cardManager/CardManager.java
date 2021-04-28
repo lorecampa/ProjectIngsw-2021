@@ -26,6 +26,8 @@ public class CardManager extends Observable<CardManagerObserver> {
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
     private final ArrayList<Leader> leadersUsed = new ArrayList<>();
 
+
+
     public CardManager() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);

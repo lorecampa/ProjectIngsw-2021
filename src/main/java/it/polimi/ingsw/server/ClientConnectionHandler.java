@@ -1,9 +1,11 @@
 package it.polimi.ingsw.server;
 
-
-import it.polimi.ingsw.message.ClientMessageHandler;
-import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.util.JacksonSerializer;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.message.ServerMessageHandler;
+import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,31 +17,23 @@ public class ClientConnectionHandler implements Runnable {
     private Server server;
     private Scanner in;
     private PrintWriter out;
-    ClientMessageHandler clientMessageHandler = new ClientMessageHandler();
-    JacksonSerializer<ClientMessageHandler> jacksonSerializer = new JacksonSerializer<>();
+    ServerMessageHandler serverMessageHandler = new ServerMessageHandler();
+    ObjectMapper mapper = new ObjectMapper();
+
+
     private Boolean exit = false;
 
 
     public ClientConnectionHandler(Socket socket, Server server) throws IOException {
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
         this.socket = socket;
         this.server = server;
-
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());
     }
 
 
-    private void quitter(){
-        String message;
-        while(true){
-            message = in.nextLine();
-            if (message.equals("quit")){
-                exit  = true;
-                break;
-            }
-        }
-
-    }
 
     public void writeToStream(String message){
         out.println(message);
@@ -48,12 +42,18 @@ public class ClientConnectionHandler implements Runnable {
 
     public void readFromStream(){
         String serializedMessage = in.nextLine();
-        writeToStream("Message received correctly\n.\n.\n.");
-        Message<ClientMessageHandler> message = jacksonSerializer.deserializeMessage(serializedMessage);
+        if (serializedMessage.equalsIgnoreCase("QUIT")){
+            exit = true;
+            return;
+        }
+
+        writeToStream("Message received correctly\n.\n.");
+        ServerMessage message = deserialize(serializedMessage);
         if (message == null){
-            writeToStream("Message doesn't make sense");
+            writeToStream("Message doesn't make sense\n");
         }else{
-            message.process(clientMessageHandler);
+            writeToStream("Message make sense\n");
+            message.process(serverMessageHandler);
         }
     }
 
@@ -67,11 +67,31 @@ public class ClientConnectionHandler implements Runnable {
         server.addClient(username, this);
     }
 
+    public ServerMessage deserialize(String serializedMessage){
+        ServerMessage message;
+        try {
+            message = mapper.readValue(serializedMessage, ServerMessage.class);
+        } catch (JsonProcessingException e) {
+            //TODO change how to send an error
+            return null;
+        }
+        return message;
+    }
+
+    public String serialize(ServerMessage message){
+        String serializedMessage;
+        try {
+            serializedMessage = mapper.writeValueAsString(message);
+        } catch (JsonProcessingException e) {
+            serializedMessage =  "Error in serializing";
+        }
+        return serializedMessage;
+    }
+
+
     @Override
     public void run() {
         registerClient();
-        //new Thread(this::quitter).start();
-
         while (!exit) {
             readFromStream();
         }

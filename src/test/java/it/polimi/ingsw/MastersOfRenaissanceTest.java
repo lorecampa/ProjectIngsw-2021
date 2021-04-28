@@ -1,18 +1,15 @@
 package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.JsonFileConfigError;
-import it.polimi.ingsw.message.ClientMessageHandler;
-import it.polimi.ingsw.message.Handler;
-import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.message.clientMessage.ActivateProductionMessage;
-import it.polimi.ingsw.message.clientMessage.BuyDevelopmentCardMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
-import it.polimi.ingsw.util.JacksonMapper;
-import it.polimi.ingsw.util.JacksonSerializer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
@@ -22,11 +19,16 @@ import java.util.Collections;
 
 public class MastersOfRenaissanceTest
 {
-
+    private  ObjectMapper mapper;
+    @BeforeEach
+    void init(){
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    }
     @Test
     public void CardPrintTest() throws IOException, JsonFileConfigError {
 
-        ArrayList<Leader> leaders = JacksonMapper.getInstance()
+        ArrayList<Leader> leaders = mapper
                 .readValue(new File("src/main/resources/json/leader.json"), new TypeReference<ArrayList<Leader>>() {});
 
         for(Leader leader: leaders){
@@ -35,7 +37,7 @@ public class MastersOfRenaissanceTest
         assertEquals(16, leaders.size());
 
 
-        Development[] developmentsJson = JacksonMapper.getInstance()
+        Development[] developmentsJson = mapper
                 .readValue(new File("src/main/resources/json/development.json"), Development[].class);
         int deckSize = developmentsJson.length;
         if (deckSize % (3 * 4) != 0) {
@@ -65,32 +67,6 @@ public class MastersOfRenaissanceTest
             System.out.println(dev);
         }
         assertEquals(48, deckSize);
-
-    }
-
-    @Test
-    public void testJackson() throws IOException {
-        JacksonSerializer<ClientMessageHandler> jacksonSerializer = new JacksonSerializer<>();
-        Message<ClientMessageHandler> buyDevMessage = new BuyDevelopmentCardMessage(1,2);
-        Message<ClientMessageHandler> actProd = new ActivateProductionMessage(5,1);
-        Message<ClientMessageHandler> errorMess = new ErrorMessage("Errore 404");
-
-
-
-        String buyDevSerialized = jacksonSerializer.serializeMessage(buyDevMessage);
-        System.out.println(buyDevSerialized);
-
-        String actProdSerialized = jacksonSerializer.serializeMessage(actProd);
-        System.out.println(actProdSerialized);
-
-        String errMessSerialized = jacksonSerializer.serializeMessage(errorMess);
-        System.out.println(errMessSerialized);
-
-
-        Message<ClientMessageHandler> messageDeserialized = jacksonSerializer.deserializeMessage(buyDevSerialized);
-        ClientMessageHandler clientMessageHandler = new ClientMessageHandler();
-        messageDeserialized.process(clientMessageHandler);
-
 
     }
 }

@@ -1,9 +1,12 @@
-package it.polimi.ingsw.message.clientMessage;
+package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.message.ClientMessageHandler;
+import it.polimi.ingsw.message.ServerMessageHandler;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
 
-public class ActivateProductionMessage implements ClientMessage{
+
+public class ActivateProductionMessage implements ServerMessage {
     private int cardSlot;
     private int indexCard;
 
@@ -23,9 +26,8 @@ public class ActivateProductionMessage implements ClientMessage{
 
 
     @Override
-    public void process(ClientMessageHandler handler) {
+    public void process(ServerMessageHandler handler) {
         handler.handleActivateProductionMessage(this);
     }
-
 
 }

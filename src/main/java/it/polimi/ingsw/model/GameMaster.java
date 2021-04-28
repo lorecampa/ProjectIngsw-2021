@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.ResourceManagerObserver;
@@ -14,7 +17,7 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.LorenzoIlMagnifico;
 import it.polimi.ingsw.model.token.Token;
-import it.polimi.ingsw.util.JacksonMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -23,8 +26,8 @@ import java.util.*;
  * GameMaster class
  */
 public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, CardManagerObserver, LorenzoIlMagnifico {
+    private final ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
-
     private String currentPlayer = null;
     private final int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
@@ -54,6 +57,10 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @throws IOException when there are problems opening Json files when loading game information
      */
     public GameMaster(String usernameCreator, int numberOfPlayer) throws IOException, JsonFileConfigError {
+        //setting up mapper
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
         this.numberOfPlayer = numberOfPlayer;
         addPlayer(usernameCreator);
 
@@ -72,12 +79,11 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
     }
 
     private void createMarket() throws IOException {
-        market = JacksonMapper.getInstance()
-                .readValue(new File("src/main/resources/json/market.json"), Market.class);
+        market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class);
     }
 
     private void createDeckToken() throws IOException, JsonFileConfigError {
-        deckToken = JacksonMapper.getInstance().readValue(new File("src/main/resources/json/token.json"),
+        deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
                 new TypeReference<LinkedList<Token>>() {});
         if (deckToken.size() != SIZE_TOKEN_DECK){
             throw new JsonFileConfigError("Deck token size wrong");
@@ -87,14 +93,14 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
     }
 
     private void createDeckLeader() throws IOException {
-        deckLeader = JacksonMapper.getInstance()
+        deckLeader = mapper
                 .readValue(new File("src/main/resources/json/leader.json"),
                 new TypeReference<LinkedList<Leader>>() {});
         Collections.shuffle(deckLeader);
     }
 
     private void createDeckDevelopment() throws IOException, JsonFileConfigError {
-        Development[] developmentsJson = JacksonMapper.getInstance()
+        Development[] developmentsJson = mapper
                 .readValue(new File("src/main/resources/json/development.json"), Development[].class);
 
         if (developmentsJson.length != SIZE_DECK) {

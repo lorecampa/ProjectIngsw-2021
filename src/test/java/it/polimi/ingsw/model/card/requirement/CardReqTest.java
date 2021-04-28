@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model.card.requirement;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
-import it.polimi.ingsw.util.JacksonMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -17,8 +19,11 @@ class CardReqTest {
     static CardManager cm;
     @BeforeAll
     static void  init() throws IOException, CardWithHigherOrSameLevelAlreadyIn {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
         cm = new CardManager();
-        Development[] developmentsJson = JacksonMapper.getInstance()
+        Development[] developmentsJson = mapper
                 .readValue(new File("src/main/resources/json/development.json"), Development[].class);
 
         //slot 1 (1: purple level 1 -  2: yellow level 2)

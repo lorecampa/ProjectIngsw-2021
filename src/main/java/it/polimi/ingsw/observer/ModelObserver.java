@@ -1,4 +1,5 @@
 package it.polimi.ingsw.observer;
 
-public interface ModelObserver {
+public interface ModelObserver{
+
 }
