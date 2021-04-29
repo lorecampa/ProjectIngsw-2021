@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MarbleEffectTest {
     //TODO fix test for different leader with marble effect (now it does not work)
-    /*
+
     private static Market market;
 
     private static final ArrayList<Resource> trasformIn1 = new ArrayList<>();
@@ -67,9 +67,10 @@ class MarbleEffectTest {
         //for each row insert a marble in the market and then reset it
         market.reset();
         market.insertMarbleInRow(index);
+        market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
         assertDoesNotThrow(()->me1.doEffect(State.MARKET_STATE));
 
-        int whiteMarble = market.getWhiteMarbleDrew();
+        int whiteMarble = market.getWhiteMarbleToTransform();
 
         //real resources extracted
         int numResourceToSend = 0;
@@ -94,9 +95,10 @@ class MarbleEffectTest {
         //for each column insert a marble in the market and then reset it
         market.reset();
         market.insertMarbleInCol(index);
+        market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
         assertDoesNotThrow(()->me1.doEffect(State.MARKET_STATE));
 
-        int whiteMarble = market.getWhiteMarbleDrew();
+        int whiteMarble = market.getWhiteMarbleToTransform();
 
         //real resources extracted
         int numResourceToSend = 0;
@@ -121,10 +123,11 @@ class MarbleEffectTest {
         //for each column insert a marble in the market and then reset it
         market.reset();
         market.insertMarbleInCol(index);
+        market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
 
         assertDoesNotThrow(()->me2.doEffect(State.MARKET_STATE));
 
-        int whiteMarble = market.getWhiteMarbleDrew();
+        int whiteMarble = market.getWhiteMarbleToTransform();
 
         //real resources extracted
         int numResourceToSend = 0;
@@ -149,10 +152,11 @@ class MarbleEffectTest {
         //for each row insert a marble in the market and then reset it
         market.reset();
         market.insertMarbleInRow(index);
+        market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
 
         assertDoesNotThrow(()->me3.doEffect(State.MARKET_STATE));
 
-        int whiteMarble = market.getWhiteMarbleDrew();
+        int whiteMarble = market.getWhiteMarbleToTransform();
 
         //real resources extracted
         int numResourceToSend = 0;
@@ -171,7 +175,7 @@ class MarbleEffectTest {
 
     }
 
-    */
+
 
 
 }
