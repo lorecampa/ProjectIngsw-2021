@@ -6,11 +6,12 @@ import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class that manage the Faith Track of a player
  */
-public class FaithTrack extends Observable<FaithTrackObserver> {
+public class FaithTrack extends Observable<FaithTrackObserver>{
     private int victoryPoints;
     private int popeFavorVP;
     private int currentPositionOnTrack;
@@ -91,6 +92,9 @@ public class FaithTrack extends Observable<FaithTrackObserver> {
         if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport))
             popeFavorVP += popeFavor.get(idVaticanReport);
     }
+
+
+
 
 
 }

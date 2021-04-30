@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
         @Type(value = NormalCell.class, name = "normal"),
         @Type(value = VictoryCell.class, name = "victory"),
         @Type(value = PopeSpaceCell.class, name = "pope") })
-public interface Cell {
+public interface Cell extends Cloneable{
 
     /**
      * Method implemented by all cells that will perform a different effect for each type
@@ -31,4 +31,6 @@ public interface Cell {
      * @return is the vatican report id
      */
     int getIdVaticanReport();
+
+
 }

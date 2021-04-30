@@ -41,4 +41,6 @@ public class VictoryCell implements Cell{
     public int getIdVaticanReport() {
         return idVaticanReport;
     }
+
+
 }

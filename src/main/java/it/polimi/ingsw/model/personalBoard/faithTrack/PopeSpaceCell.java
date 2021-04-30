@@ -44,4 +44,6 @@ public class PopeSpaceCell implements Cell{
     public int getIdVaticanReport() {
         return idVaticanReport;
     }
+
+
 }

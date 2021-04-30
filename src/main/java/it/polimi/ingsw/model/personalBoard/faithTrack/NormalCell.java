@@ -36,4 +36,6 @@ public class NormalCell implements Cell{
     public int getIdVaticanReport() {
         return idVaticanReport;
     }
+
+
 }

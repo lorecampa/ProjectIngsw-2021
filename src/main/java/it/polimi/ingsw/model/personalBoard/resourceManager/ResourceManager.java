@@ -21,8 +21,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
     private final ArrayList<Resource> myDiscounts = new ArrayList<>();
 
     public ResourceManager(){
-        currWarehouse =new Warehouse();
-        strongbox=new Strongbox();
+        currWarehouse = new Warehouse();
+        strongbox = new Strongbox();
     }
 
     /**

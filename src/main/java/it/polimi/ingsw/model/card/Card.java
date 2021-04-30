@@ -141,11 +141,11 @@ public  abstract class Card {
 
     @Override
     public String toString() {
-        String x;
+        String x = "\n";
         if(this.getClass() == Leader.class){
-            x = "Leader";
+            x += "Leader";
         }else{
-            x = "Development";
+            x += "Development";
         }
         x+= "\nvictoryPoints= " + victoryPoints;
 

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.exception.CantMakeProductionException;
@@ -12,9 +9,7 @@ import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.Leader;
-import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -28,10 +23,8 @@ public class CardManager extends Observable<CardManagerObserver> {
 
 
 
-    public CardManager() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        this.baseProduction = mapper.readValue(new File("src/main/resources/json/baseProduction.json"), Development.class);
+    public CardManager(Development baseProduction) throws IOException {
+        this.baseProduction = baseProduction;
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
@@ -44,14 +37,6 @@ public class CardManager extends Observable<CardManagerObserver> {
     public void clearUsed(){
         devCardsUsed.clear();
         leadersUsed.clear();
-    }
-
-    /**
-     * Method to add the player Resource Manager to the base production of the player board
-     * @param playerResourceManager is the player Resource Manager
-     */
-    public void setUpBaseProduction(ResourceManager playerResourceManager){
-        baseProduction.setResourceManager(playerResourceManager);
     }
 
     /**

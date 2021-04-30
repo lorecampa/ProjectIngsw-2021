@@ -2,13 +2,14 @@ package it.polimi.ingsw.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.ResourceManagerObserver;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
-import it.polimi.ingsw.exception.JsonFileConfigError;
+import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
@@ -17,8 +18,6 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.LorenzoIlMagnifico;
 import it.polimi.ingsw.model.token.Token;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -26,106 +25,70 @@ import java.util.*;
  * GameMaster class
  */
 public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, CardManagerObserver, LorenzoIlMagnifico {
-    private final ObjectMapper mapper;
+    ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
-    private final int numberOfPlayer;
+    private int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
-    private final ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment = new ArrayList<>();
+
+    private ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment;
     private LinkedList<Leader> deckLeader;
     private Market market;
+
+    private String faithTrackSerialized;
+    private String baseProductionSerialized;
+
+    private LinkedList<Token> deckToken;
+
     private int vaticanReportReached = 0;
-    private LinkedList<Token> deckToken = new LinkedList<>();
+    private int leaderAtStart;
     private boolean gameEnded = false;
-
-    private static final int SIZE_DECK = 48;
-    private static final int ROW_DECK = 3;
-    private static final int COLUMN_DECK = 4;
-    private static final int DEPTH_DECK = SIZE_DECK / (ROW_DECK * COLUMN_DECK);
-    private static final int SIZE_TOKEN_DECK = 6;
-    private static final int LEADERS_AT_START = 4;
-
-
-
-
 
     /**
      * Constructor GameMaster creates a new game. It creates a new Market, deck of Leader and deck of Development card,
      * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player
+     * @param gameSetting of type GameSetting - the class that represent the game customization made by
+     *                    the player
      * @param usernameCreator of type String -  username of the player that creates the game
-     * @param numberOfPlayer of type int - number of players in game
      * @throws IOException when there are problems opening Json files when loading game information
      */
-    public GameMaster(String usernameCreator, int numberOfPlayer) throws IOException, JsonFileConfigError {
-        //setting up mapper
+    public GameMaster(GameSetting gameSetting,
+                      String usernameCreator) throws IOException{
+
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        this.numberOfPlayer = numberOfPlayer;
+        //game loading
+        loadGameSetting(gameSetting);
+
+        //setting up first player
         addPlayer(usernameCreator);
 
-        createMarket();
-        createDeckLeader();
-        createDeckDevelopment();
-
-        //single player
-        if(numberOfPlayer == 1){
-            //set the first player
-            setCurrentPlayer(usernameCreator);
+        if (numberOfPlayer == 1){
             addPlayer(NAME_LORENZO);
-            createDeckToken();
+            setCurrentPlayer(usernameCreator);
         }
 
     }
 
-    private void createMarket() throws IOException {
-        market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class);
+
+    /**
+     * Method loadGameSetting is responsible to load the game data from the gameSetting
+     * @param gameSetting of type GameSetting - game data
+     * @throws JsonProcessingException if some error occurs in serialization
+     */
+    private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
+        baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
+        faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
+
+        deckDevelopment = gameSetting.getDeckDevelopment();
+        deckLeader = gameSetting.getDeckLeader();
+        market = gameSetting.getMarket();
+        deckToken = gameSetting.getDeckToken();
+        leaderAtStart = gameSetting.getLeaderAtStart();
+        numberOfPlayer = gameSetting.getNumberOfPlayer();
     }
 
-    private void createDeckToken() throws IOException, JsonFileConfigError {
-        deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
-                new TypeReference<LinkedList<Token>>() {});
-        if (deckToken.size() != SIZE_TOKEN_DECK){
-            throw new JsonFileConfigError("Deck token size wrong");
-        }
-        Collections.shuffle(this.deckToken);
-
-    }
-
-    private void createDeckLeader() throws IOException {
-        deckLeader = mapper
-                .readValue(new File("src/main/resources/json/leader.json"),
-                new TypeReference<LinkedList<Leader>>() {});
-        Collections.shuffle(deckLeader);
-    }
-
-    private void createDeckDevelopment() throws IOException, JsonFileConfigError {
-        Development[] developmentsJson = mapper
-                .readValue(new File("src/main/resources/json/development.json"), Development[].class);
-
-        if (developmentsJson.length != SIZE_DECK) {
-            throw new JsonFileConfigError("Deck Development size is not valid");
-        }
-
-        int index = 0;
-        for (int i = 0; i < ROW_DECK; i++){
-            //row
-            ArrayList<ArrayList<Development>> row = new ArrayList<>();
-            for (int j = 0; j < COLUMN_DECK; j++){
-                //depth
-                ArrayList<Development> cardBlock = new ArrayList<>();
-                for (int k = 0; k < DEPTH_DECK; k++) {
-                    cardBlock.add(developmentsJson[index]);
-                    index++;
-                }
-                Collections.shuffle(cardBlock);
-                row.add(cardBlock);
-            }
-            deckDevelopment.add(row);
-        }
-    }
-
-    //control integrity
 
     /**
      * Method nextPlayer change the current player in the game when a new turn starts
@@ -176,7 +139,13 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @throws IOException when creating the personal board causes problem opening the Json files
      */
     public void addPlayer(String username) throws IOException {
-        playersPersonalBoard.put(username, new PersonalBoard(username));
+        //depth copy of game faithTrack
+        FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
+        //depth copy of game base production
+        Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
+
+        playersPersonalBoard.put(username, new PersonalBoard(username, playerFaithTrack, playerBaseProduction));
+
     }
 
     /**
@@ -199,13 +168,11 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
     /**
      * Method deliverLeaderCards delivers all the initial four card to all the players in the game
      */
-    public void deliverLeaderCards() throws JsonFileConfigError {
-        if (LEADERS_AT_START * numberOfPlayer > deckLeader.size()){
-            throw new JsonFileConfigError("Not enough leaders to deliver");
-        }
+    public void deliverLeaderCards() {
+
         for (PersonalBoard personalBoard: playersPersonalBoard.values()){
             CardManager cardManager = personalBoard.getCardManager();
-            for (int i = 0; i < LEADERS_AT_START; i++){
+            for (int i = 0; i < leaderAtStart; i++){
                 cardManager.addLeader(deckLeader.poll());
             }
         }
@@ -257,7 +224,8 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @throws IndexOutOfBoundsException when you are not selecting a block of card inside the matrix
      */
     public void pushDeckDevelopmentCard(int row, int column, Development development) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
-        if (deckDevelopment.get(row).get(column).size() == DEPTH_DECK){
+        int depthDeck = deckDevelopment.get(0).get(0).size();
+        if (deckDevelopment.get(row).get(column).size() == depthDeck){
             throw new DeckDevelopmentCardException("Too much card at selection (Row: " + row +
                     "Column: " + column + ")");
         }
@@ -359,7 +327,7 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
             }catch (DeckDevelopmentCardException e){
                 rowReached++;
             }
-            if (rowReached == ROW_DECK){
+            if (rowReached == deckDevelopment.size()){
                 throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
                         color.getDisplayName() + "cards.\n" +
                         "There are left " + (num - numDiscarded) + " "

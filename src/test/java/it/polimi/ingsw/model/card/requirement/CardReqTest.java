@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
@@ -16,13 +17,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CardReqTest {
 
+    static GameSetting gs;
     static CardManager cm;
     @BeforeAll
     static void  init() throws IOException, CardWithHigherOrSameLevelAlreadyIn {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        cm = new CardManager();
+        assertDoesNotThrow(()-> gs = new GameSetting(4));
+        cm = new CardManager(gs.getBaseProduction());
         Development[] developmentsJson = mapper
                 .readValue(new File("src/main/resources/json/development.json"), Development[].class);
 

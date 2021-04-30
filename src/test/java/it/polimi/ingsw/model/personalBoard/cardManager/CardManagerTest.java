@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Effect;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardManagerTest {
 
     PersonalBoard personalBoard;
-
+    GameSetting gs;
     CardManager cardManager;
     Development devLv1_1, devLv1_2;
     Development devLv2_1, devLv2_2;
@@ -33,7 +34,10 @@ class CardManagerTest {
 
     @BeforeEach
     void setUp(){
-        assertDoesNotThrow(()-> personalBoard = new PersonalBoard("player1"));
+        assertDoesNotThrow(()-> gs = new GameSetting(4));
+        assertDoesNotThrow(()-> personalBoard = new PersonalBoard("player1", gs.getFaithTrack(),
+                gs.getBaseProduction()));
+
         cardManager = personalBoard.getCardManager();
         personalBoard.getResourceManager().addToStrongbox(ResourceFactory.createResource(ResourceType.STONE,5));
         devLv1_1 = new Development(1,requirements,effects,effects,1,Color.BLUE); devLv1_2 = new Development(1,requirements,effects,effects,1,Color.BLUE);

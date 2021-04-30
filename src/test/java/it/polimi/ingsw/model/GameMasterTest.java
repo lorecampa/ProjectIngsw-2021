@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
-import it.polimi.ingsw.exception.JsonFileConfigError;
+import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +14,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameMasterTest {
 
     GameMaster gm;
+    GameMaster gmSinglePlayer;
+    GameSetting gs;
+    GameSetting gsSinglePlayer;
+
     int numOfPlayer;
     @BeforeEach
-    void setUp() throws IOException, JsonFileConfigError {
+    void setUp() throws IOException, JsonFileModificationError {
+        assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
+        gmSinglePlayer = new GameMaster(gsSinglePlayer, "Single Player");
+
         numOfPlayer = 4;
-        gm = new GameMaster("player1", numOfPlayer);
+        assertDoesNotThrow(()-> gs = new GameSetting(numOfPlayer));
+        gm = new GameMaster(gs, "player1");
+
+
         gm.setCurrentPlayer("player1");
 
         gm.addPlayer("player2");
@@ -107,12 +117,14 @@ class GameMasterTest {
     }
 
     @Test
-    void drawToken() throws IOException, JsonFileConfigError {
+    void drawToken() throws IOException, JsonFileModificationError {
         assertEquals(0, gm.getSizeDeckToken());
-        GameMaster gmSp = new GameMaster("Single Player", 1);
-        int sizeDeckToken = gmSp.getSizeDeckToken();
-        gmSp.drawToken();
-        assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
+
+        int sizeDeckToken = gmSinglePlayer.getSizeDeckToken();
+        assertEquals(6, sizeDeckToken);
+
+        gmSinglePlayer.drawToken();
+        assertEquals(sizeDeckToken, gmSinglePlayer.getSizeDeckToken());
 
     }
 
@@ -160,4 +172,6 @@ class GameMasterTest {
         gm.discardLeader();
         assertEquals(2, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
     }
+
+
 }

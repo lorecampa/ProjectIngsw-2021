@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LeaderTest {
+    GameSetting gs;
     ResourceManager rm;
     Market mk;
     CardManager cm;
@@ -33,7 +35,8 @@ class LeaderTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        cm = new CardManager();
+        assertDoesNotThrow(()-> gs = new GameSetting(4));
+        cm = new CardManager(gs.getBaseProduction());
 
         //strongbox (5 coin, 2 shield, 4 servant, 0 stone)
         //warehouse (0 -> , 1-> 2 stone, 2-> )
@@ -51,6 +54,7 @@ class LeaderTest {
 
 
         mk = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class);
+
         leaders =
                 mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<ArrayList<Leader>>() {});
 
