@@ -4,10 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import it.polimi.ingsw.exception.JsonFileModificationError;
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothMessage.ConnectionType;
+import it.polimi.ingsw.message.clientMessage.ErrorMessage;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
+import it.polimi.ingsw.message.clientMessage.ErrorType;
+import it.polimi.ingsw.message.serverMessage.ServerMessage;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
@@ -45,7 +50,21 @@ public class MastersOfRenaissanceTest
         assertEquals(4, deckDevelopment.get(0).size());
         assertEquals(4, deckDevelopment.get(0).get(0).size());
 
+    }
+    ObjectMapper mapper;
 
+    @Test
+    void test() throws JsonProcessingException {
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        ClientMessage message = new ErrorMessage(ErrorType.INVALID_USERNAME);
+        String clientSer = mapper.writeValueAsString(message);
+        System.out.println(clientSer);
+
+        ServerMessage message1 = new ConnectionMessage(ConnectionType.USERNAME, "Lupo");
+        String serverSer = mapper.writeValueAsString(message1);
+        System.out.println(serverSer);
 
     }
 

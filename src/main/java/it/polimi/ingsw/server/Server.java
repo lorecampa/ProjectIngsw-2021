@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothMessage.ConnectionType;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -59,7 +62,9 @@ public class Server {
         VirtualClient virtualClient = new VirtualClient(id, username, clientConnectionHandler);
         userVirtualClientMap.put(username, virtualClient);
 
-        virtualClient.sendMessage("[Client] We are happy to have you join the game: " + username);
+        clientConnectionHandler.writeToStream(
+                new ConnectionMessage(ConnectionType.INFO,
+                        "[Client] We are happy to have you join the game: " + username));
 
         System.out.println("[Server] Added: " + virtualClient);
 

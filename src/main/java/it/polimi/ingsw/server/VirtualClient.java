@@ -1,23 +1,24 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothMessage.ConnectionType;
 import it.polimi.ingsw.observer.ModelObserver;
-import it.polimi.ingsw.observer.Observable;
-import it.polimi.ingsw.observer.VirtualViewObserver;
 
-public class VirtualClient extends Observable<VirtualViewObserver> implements ModelObserver{
+public class VirtualClient implements ModelObserver{
     int id;
     String username;
-    ClientConnectionHandler clientConnectionHandler;
+    ClientConnectionHandler client;
+    Controller controller;
 
-    public VirtualClient(int id, String username, ClientConnectionHandler clientConnectionHandler) {
+    public VirtualClient(int id, String username,
+                         ClientConnectionHandler clientConnectionHandler) {
         this.id = id;
         this.username = username;
-        this.clientConnectionHandler = clientConnectionHandler;
+        this.client= clientConnectionHandler;
     }
 
-    public void sendMessage(String message) {
-        clientConnectionHandler.writeToStream(message);
-    }
+
 
     public int getId() {
         return id;
@@ -27,18 +28,24 @@ public class VirtualClient extends Observable<VirtualViewObserver> implements Mo
         return username;
     }
 
-    public ClientConnectionHandler getClientHandler() {
-        return clientConnectionHandler;
-    }
-
-
-
     @Override
     public String toString() {
         return "VirtualClient{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", clientHandler=" + clientConnectionHandler +
+                ", clientHandler=" + client +
                 '}';
     }
+
+
+
+
+    //MODEL OBSERVER IMPLEMENTATION
+    @Override
+    public void currentPlayerChange() {
+        //TODO send to all player a change
+        client.writeToStream(new ConnectionMessage(ConnectionType.INFO, "Current player has changed"));
+    }
+
+
 }

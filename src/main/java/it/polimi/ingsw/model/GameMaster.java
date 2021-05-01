@@ -9,7 +9,6 @@ import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.ResourceManagerObserver;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
-import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;

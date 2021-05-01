@@ -1,23 +1,18 @@
 package it.polimi.ingsw.message;
 
-
-import it.polimi.ingsw.message.serverMessage.ActivateProductionMessage;
-import it.polimi.ingsw.message.serverMessage.BuyDevelopmentCardMessage;
-import it.polimi.ingsw.message.serverMessage.ErrorMessage;
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
 
 public class ServerMessageHandler {
-    public ServerMessageHandler() {}
+    Controller controller;
 
-    public void handleBuyDevelopmentCard(BuyDevelopmentCardMessage message){
-        System.out.println("[Row: " + message.getRow() + " Column: " + message.getColumn() + "]");
+    public ServerMessageHandler() { }
+
+    public void handleConnectionMessage(ConnectionMessage message){
+        System.out.println(message.getType() + ": " + message.getMessage());
     }
 
-    public void handleActivateProductionMessage(ActivateProductionMessage message){
-        System.out.println("[CardSlot: " + message.getCardSlot() + " CardIndex: " + message.getIndexCard() + "]");
-    }
 
 
-    public void handleErrorMessage(ErrorMessage message){
-        System.out.println("[ErrorMessage: " + message.getMessage() + "]");
-    }
+
 }
