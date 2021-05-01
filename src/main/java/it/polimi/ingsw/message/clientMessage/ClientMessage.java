@@ -2,7 +2,7 @@ package it.polimi.ingsw.message.clientMessage;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.message.ClientMessageHandler;
+import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
 

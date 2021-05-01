@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class CardManager extends Observable<CardManagerObserver> {
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
-
     private final ArrayList<Leader> leaders = new ArrayList<>();
     private final Development baseProduction;
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
@@ -28,7 +27,6 @@ public class CardManager extends Observable<CardManagerObserver> {
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
-
     }
 
     /**
@@ -159,7 +157,8 @@ public class CardManager extends Observable<CardManagerObserver> {
                  if (dev.getLevel() == level){
                      if (color == Color.ANY || dev.getColor() == color) count ++;
                  }
-                 if (count >= howMany) return true;
+                 if (count >= howMany)
+                     return true;
             }
         }
         return false;

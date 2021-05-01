@@ -2,8 +2,8 @@ package it.polimi.ingsw.message.bothMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.message.ClientMessageHandler;
-import it.polimi.ingsw.message.ServerMessageHandler;
+import it.polimi.ingsw.client.ClientMessageHandler;
+import it.polimi.ingsw.server.ServerMessageHandler;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
@@ -38,7 +38,22 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
 
     @Override
     public void process(ClientMessageHandler handler) {
-        handler.handleConnectionMessage(this);
+        switch(type){
+            case CONNECT:
+                handler.connectNewUser(this);
+                break;
+            case WAIT_PLAYERS:
+                handler.waitingPeople(this);
+                break;
+            case USERNAME:
+                handler.username(this);
+                break;
+            case NUM_OF_PLAYER:
+                handler.numberOfPlayer(this);
+                break;
+            default:
+        }
+        //handler.handleConnectionMessage(this);
     }
 
     @Override

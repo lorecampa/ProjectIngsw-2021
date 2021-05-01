@@ -2,8 +2,7 @@ package it.polimi.ingsw.message.clientMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.message.ClientMessageHandler;
-import it.polimi.ingsw.message.ServerMessageHandler;
+import it.polimi.ingsw.client.ClientMessageHandler;
 
 
 public class ErrorMessage implements ClientMessage {

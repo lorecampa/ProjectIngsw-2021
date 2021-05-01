@@ -1,10 +1,11 @@
-package it.polimi.ingsw.message;
+package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothMessage.ConnectionType;
 import it.polimi.ingsw.server.ClientConnectionHandler;
 import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.message.bothMessage.PingPongMessage;
 
 public class ServerMessageHandler {
     Controller controller;
@@ -36,6 +37,8 @@ public class ServerMessageHandler {
         if (!registration) return;
     }
 
-
+    public void handlePingPong(PingPongMessage message){
+        //TODO
+    }
 
 }

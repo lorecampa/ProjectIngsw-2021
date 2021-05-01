@@ -6,6 +6,6 @@ public enum ConnectionType {
     NUM_OF_PLAYER,
     RECONNECTION,
     WAIT_PLAYERS,
-    CONNECT;
+    CONNECT        //il client si connette al server
 
 }

@@ -48,6 +48,4 @@ public class VirtualClient implements ModelObserver{
         //TODO send to all player a change
         client.writeToStream(new ConnectionMessage(ConnectionType.INFO, "Current player has changed"));
     }
-
-
 }

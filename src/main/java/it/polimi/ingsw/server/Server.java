@@ -50,7 +50,7 @@ public class Server {
                 lobby.subList(0, openMatch.getNumOfPlayers()).clear();
                 openMatch = null;
                 if (lobby.size() > 0)
-                    lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players"));
+                    lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players: "));
             }
         }
     }
@@ -76,12 +76,12 @@ public class Server {
             if (!lobby.contains(client)){
                 lobby.add(client);
                 if (lobby.get(0).equals(client)){
-                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER,"Insert the number of Players"));
+                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER,"Insert the number of Players: "));
                 }else{
                     synchronized (lockOpenMatch){
                         if (openMatch != null && openMatch.isOpen()){
                             openMatch.addPlayer(new VirtualClient(client.getClientID(),"Quest".concat(String.valueOf(openMatch.currentNumOfPLayer())),client));
-                        }else client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Insert the number of Players"));
+                        }else client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Waiting Players!"));
                     }
                 }
             }
