@@ -34,6 +34,7 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
     public String getType(){
         return type.toString();
     }
+    public int getNum(){return  num;}
 
     @Override
     public void process(ClientMessageHandler handler) {
@@ -42,6 +43,14 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
 
     @Override
     public void process(ServerMessageHandler handler) {
-        handler.handleConnectionMessage(this);
+        switch (type){
+            case CONNECT:
+                handler.handleFirstContact(this);
+                break;
+            case NUM_OF_PLAYER:
+                handler.handleMatchCreation(this);
+                break;
+        }
+        //handler.handleConnectionMessage(this);
     }
 }

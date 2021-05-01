@@ -18,7 +18,9 @@ public class VirtualClient implements ModelObserver{
         this.client= clientConnectionHandler;
     }
 
-
+    public ClientConnectionHandler getClient() {
+        return client;
+    }
 
     public int getId() {
         return id;

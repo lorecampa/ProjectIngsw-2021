@@ -11,6 +11,7 @@ import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -22,21 +23,26 @@ public class ClientConnectionHandler implements Runnable {
     private final Server server;
     private final Scanner in;
     private final PrintWriter out;
-    ServerMessageHandler serverMessageHandler = new ServerMessageHandler();
+    ServerMessageHandler serverMessageHandler;
     ObjectMapper mapper = new ObjectMapper();
     private Boolean exit = false;
+    private int clientID;
 
 
-    public ClientConnectionHandler(Socket socket, Server server) throws IOException {
+    public ClientConnectionHandler(Socket socket, Server server, int clientID) throws IOException {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         this.socket = socket;
         this.server = server;
+        this.clientID = clientID;
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());
+        serverMessageHandler = new ServerMessageHandler(server,this);
     }
 
-
+    public int getClientID() {
+        return clientID;
+    }
 
     public void writeToStream(ClientMessage message){
         Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
@@ -58,14 +64,6 @@ public class ClientConnectionHandler implements Runnable {
         message.ifPresentOrElse(
                 x -> x.process(serverMessageHandler),
                 () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
-
-    }
-
-    public void registerClient(){
-
-        writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert username (not in json format yet): "));
-        String username = in.nextLine();
-        server.addClient(username, this);
 
     }
 
@@ -92,7 +90,6 @@ public class ClientConnectionHandler implements Runnable {
 
     @Override
     public void run() {
-        registerClient();
         while (!exit) {
             readFromStream();
         }

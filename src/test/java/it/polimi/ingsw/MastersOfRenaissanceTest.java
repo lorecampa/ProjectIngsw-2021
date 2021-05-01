@@ -58,11 +58,7 @@ public class MastersOfRenaissanceTest
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        ClientMessage message = new ErrorMessage(ErrorType.INVALID_USERNAME);
-        String clientSer = mapper.writeValueAsString(message);
-        System.out.println(clientSer);
-
-        ServerMessage message1 = new ConnectionMessage(ConnectionType.USERNAME, "Lupo");
+        ServerMessage message1 = new ConnectionMessage(ConnectionType.CONNECT,"a");
         String serverSer = mapper.writeValueAsString(message1);
         System.out.println(serverSer);
 

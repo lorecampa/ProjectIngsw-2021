@@ -5,6 +5,7 @@ public enum ConnectionType {
     USERNAME,
     NUM_OF_PLAYER,
     RECONNECTION,
-    WAIT_PLAYERS;
+    WAIT_PLAYERS,
+    CONNECT;
 
 }
