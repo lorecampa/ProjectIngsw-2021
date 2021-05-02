@@ -49,8 +49,10 @@ public class Server {
             synchronized (lockOpenMatch) {
                 lobby.subList(0, openMatch.getNumOfPlayers()).clear();
                 openMatch = null;
-                if (lobby.size() > 0)
+                if (lobby.size() > 0) {
+                    lobby.get(0).setState(HandlerState.NUM_OF_PLAYER);
                     lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players: "));
+                }
             }
         }
     }
@@ -63,10 +65,10 @@ public class Server {
             synchronized (lockOpenMatch) {
                 openMatch = newMatch;
                 matches.add(newMatch);
-                newMatch.addPlayer(new VirtualClient(player.getClientID(),"Quest".concat(String.valueOf(newMatch.currentNumOfPLayer())),player));
+                newMatch.addPlayer(new VirtualClient(player.getClientID(),"Quest_".concat(String.valueOf(newMatch.currentNumOfPLayer())),player,openMatch));
             }
             for (int i = 1; i < newMatch.getNumOfPlayers() && i < lobby.size(); i++) {
-                newMatch.addPlayer(new VirtualClient(lobby.get(i).getClientID(),"Quest".concat(String.valueOf(newMatch.currentNumOfPLayer())),lobby.get(i)));
+                newMatch.addPlayer(new VirtualClient(lobby.get(i).getClientID(),"Quest_".concat(String.valueOf(newMatch.currentNumOfPLayer())),lobby.get(i),openMatch));
             }
         }
     }
@@ -76,12 +78,16 @@ public class Server {
             if (!lobby.contains(client)){
                 lobby.add(client);
                 if (lobby.get(0).equals(client)){
+                    client.setState(HandlerState.NUM_OF_PLAYER);
                     client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER,"Insert the number of Players: "));
                 }else{
                     synchronized (lockOpenMatch){
                         if (openMatch != null && openMatch.isOpen()){
-                            openMatch.addPlayer(new VirtualClient(client.getClientID(),"Quest".concat(String.valueOf(openMatch.currentNumOfPLayer())),client));
-                        }else client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Waiting Players!"));
+                            openMatch.addPlayer(new VirtualClient(client.getClientID(),"Quest_".concat(String.valueOf(openMatch.currentNumOfPLayer())),client,openMatch));
+                        }else{
+                            client.setState(HandlerState.WAITING);
+                            client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Waiting Players!"));
+                        }
                     }
                 }
             }

@@ -65,6 +65,9 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
             case NUM_OF_PLAYER:
                 handler.handleMatchCreation(this);
                 break;
+            case USERNAME:
+                handler.handleUsernameInput(this);
+                break;
         }
         //handler.handleConnectionMessage(this);
     }

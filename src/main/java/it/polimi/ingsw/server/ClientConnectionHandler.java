@@ -23,7 +23,7 @@ public class ClientConnectionHandler implements Runnable {
     ServerMessageHandler serverMessageHandler;
     ObjectMapper mapper = new ObjectMapper();
     private Boolean exit = false;
-    private int clientID;
+    private final int clientID;
 
 
     public ClientConnectionHandler(Socket socket, Server server, int clientID) throws IOException {
@@ -39,6 +39,14 @@ public class ClientConnectionHandler implements Runnable {
 
     public int getClientID() {
         return clientID;
+    }
+
+    public void setState(HandlerState state){
+        serverMessageHandler.setState(state);
+    }
+
+    public void setVirtualClient(VirtualClient virtualClient){
+        serverMessageHandler.setVirtualClient(virtualClient);
     }
 
     public void writeToStream(ClientMessage message){

@@ -11,12 +11,21 @@ public class ServerMessageHandler {
     Controller controller;
     Server server;
     ClientConnectionHandler client;
-    boolean registration;
+    VirtualClient virtualClient;
+    HandlerState state;
 
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
         this.server = server;
         this.client = client;
-        this.registration = true;
+        this.state = HandlerState.FIRST_CONTACT;
+    }
+
+    public void setVirtualClient(VirtualClient virtualClient) {
+        this.virtualClient = virtualClient;
+    }
+
+    public void setState(HandlerState state){
+        this.state = state;
     }
 
     public void handleConnectionMessage(ConnectionMessage message){
@@ -24,17 +33,18 @@ public class ServerMessageHandler {
     }
 
     public void handleFirstContact(ConnectionMessage message){
-        if(!registration) return;
+        if(state != HandlerState.FIRST_CONTACT) return;
         server.putInLobby(client);
     }
 
     public void handleMatchCreation(ConnectionMessage message){
-        if (!registration) return;
+        if (state != HandlerState.NUM_OF_PLAYER) return;
         server.createMatch(message.getNum(),client);
     }
 
     public void handleUsernameInput(ConnectionMessage message){
-        if (!registration) return;
+        if (state != HandlerState.USERNAME) return;
+        virtualClient.getMatch().setPlayerUsername(virtualClient, message.getMessage());
     }
 
     public void handlePingPong(PingPongMessage message){
