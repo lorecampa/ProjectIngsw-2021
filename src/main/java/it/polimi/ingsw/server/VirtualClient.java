@@ -1,8 +1,8 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.ConnectionType;
 import it.polimi.ingsw.observer.ModelObserver;
 
 public class VirtualClient implements ModelObserver{
@@ -64,5 +64,19 @@ public class VirtualClient implements ModelObserver{
     public void currentPlayerChange() {
         //TODO send to all player a change
         client.writeToStream(new ConnectionMessage(ConnectionType.INFO, "Current player has changed"));
+    }
+
+    @Override
+    public void discardLeader() {
+    }
+
+    @Override
+    public void vaticanReportReached(int idVR) {
+
+    }
+
+    @Override
+    public void discardResources(int numResources) {
+
     }
 }

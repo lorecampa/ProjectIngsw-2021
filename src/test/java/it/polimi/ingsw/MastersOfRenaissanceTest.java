@@ -7,11 +7,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.JsonFileModificationError;
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
-import it.polimi.ingsw.message.clientMessage.ErrorMessage;
-import it.polimi.ingsw.message.clientMessage.ClientMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorType;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.ConnectionType;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Development;
@@ -50,6 +47,8 @@ public class MastersOfRenaissanceTest
         assertEquals(4, deckDevelopment.get(0).size());
         assertEquals(4, deckDevelopment.get(0).get(0).size());
 
+
+
     }
     ObjectMapper mapper;
 
@@ -61,6 +60,8 @@ public class MastersOfRenaissanceTest
         ServerMessage message1 = new ConnectionMessage(ConnectionType.CONNECT,"a");
         String serverSer = mapper.writeValueAsString(message1);
         System.out.println(serverSer);
+
+
 
     }
 

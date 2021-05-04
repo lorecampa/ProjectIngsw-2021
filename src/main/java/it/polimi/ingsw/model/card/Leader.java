@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class Leader defines a class for all card of type leader. It extends Card class adding the

@@ -15,7 +15,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
     private int faithPoint=0;
-    private int anyResource=0;
+    private int anyResourceCost =0;
+    private int anyResourceProduction = 0;
 
     private final ArrayList<Resource> myResources = new ArrayList<>();
     private final ArrayList<Resource> myDiscounts = new ArrayList<>();
@@ -29,7 +30,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
      * Set up the resource manager to be ready for the curr turn
      * */
     public void newTurn(){
-        anyResource=0;
+        anyResourceCost =0;
+        anyResourceProduction = 0;
         faithPoint=0;
         resourcesBuffer.clear();
         resourcesToProduce.clear();
@@ -45,7 +47,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
         Resource resourceFaith = ResourceFactory.createResource(ResourceType.FAITH, 0);
         while(resourcesSent.contains(resourceAny)){
-            anyResource+= resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
+            anyResourceCost += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
             resourcesSent.remove(resourceAny);
         }
         while(resourcesSent.contains(resourceFaith)){
@@ -118,25 +120,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         strongbox.subResourceValueOf(resource);
     }
 
-    /**
-     * Convert one ANY to a specific resource
-     * @param type of resource i want to have
-    */
-    private void changeAnyInResource(ResourceType type, boolean isCost) throws NoMoreAnyResourceException, NegativeResourceException {
-        if(anyResource <= 0){ //maybe
-            throw new NoMoreAnyResourceException("don't have enough any");
-        }
-        Resource resource = ResourceFactory.createResource(type,1);
-        if (isCost){
-            if (myResources.get(myResources.indexOf(resource)).getValue() == 0)
-                throw new NegativeResourceException("don't have this resource");
-            else
-                myResources.get(myResources.indexOf(resource)).subValue(1);
-        }else{
-            addToResourcesToProduce(resource);
-        }
-        anyResource--;
-    }
+
 
 
     /**
@@ -164,14 +148,22 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
 
     /**
      * Used to add a resource value or the resource itself in the resource to produce
-     * @param resource I want to add */
-    public void addToResourcesToProduce(Resource resource) {
-        if(resourcesToProduce.contains(resource)){
-            resourcesToProduce.get(resourcesToProduce.indexOf(resource)).addValue(resource.getValue());
+     * @param resources I want to add */
+    public void addToResourcesToProduce(ArrayList<Resource> resources) {
+        for (Resource resource: resources){
+            if (resource.getType().equals(ResourceType.ANY)){
+                anyResourceProduction++;
+            }else if(resource.getType().equals(ResourceType.FAITH)){
+                faithPoint++;
+            }
+            else if(resourcesToProduce.contains(resource)){
+                resourcesToProduce.get(resourcesToProduce.indexOf(resource)).addValue(resource.getValue());
+            }
+            else{
+                resourcesToProduce.add(resource);
+            }
         }
-        else{
-            resourcesToProduce.add(resource);
-        }
+
     }
 
     /**
@@ -236,7 +228,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
                 return false;
         }
 
-        if(extraRes + numOfDiscountNotUsed() < anyResource)
+        if(extraRes + numOfDiscountNotUsed() < anyResourceCost)
             return false;
 
         for(Resource res : resources){
@@ -343,14 +335,14 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
     /**
      * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
     public void clearBuffers(){
-        anyResource = 0;
+        anyResourceCost = 0;
         resourcesToProduce.clear();
         resourcesBuffer.clear();
     }
 
 
     public void print(){
-        System.out.println("ANY: "+anyResource+"-"+" FAITH: "+faithPoint);
+        System.out.println("ANY: "+ anyResourceCost +"-"+" FAITH: "+faithPoint);
         currWarehouse.print();
         strongbox.print();
     }
@@ -359,8 +351,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         return faithPoint;
     }
 
-    public int getAnyResource() {
-        return anyResource;
+    public int getAnyResourceCost() {
+        return anyResourceCost;
     }
 
     public Strongbox getStrongbox() {

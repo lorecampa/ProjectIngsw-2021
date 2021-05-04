@@ -12,7 +12,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
 
 public class ModelClient {
-    private final Integer NUMBER_OF_CELL_FAITH=12;
+    private final Integer NUMBER_OF_CELL_FAITH=10;
     private final Integer OFFSET_AllIGN = 2; //2 per 12 ====== 3 per 15
     private final Integer DIM_CELL_CHAR = 14;
 

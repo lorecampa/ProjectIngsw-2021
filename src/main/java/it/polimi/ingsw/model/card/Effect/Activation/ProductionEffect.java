@@ -49,9 +49,14 @@ public class ProductionEffect implements Effect {
                     .collect(Collectors.toCollection(ArrayList::new));
 
             if (resourceManager.canIAfford(resourceCostCopy, false)){
-                resourceAcquired.stream().
-                        map(x -> ResourceFactory.createResource(x.getType(), x.getValue())).
-                        forEach(x -> resourceManager.addToResourcesToProduce(x));
+
+                resourceManager.addToResourcesToProduce(
+                        resourceAcquired.stream().
+                        map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
+                        .collect(Collectors.toCollection(ArrayList::new))
+                );
+
+
             }else{
                 throw new CantMakeProductionException("Can't afford resource cost production");
             }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.ConnectionType;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -27,7 +27,7 @@ public class Server {
 
 
     public  Server(){
-        port = 2020;
+        port = 2021;
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();

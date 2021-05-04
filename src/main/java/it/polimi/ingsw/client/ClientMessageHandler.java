@@ -1,12 +1,11 @@
 package it.polimi.ingsw.client;
 
 
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
-import it.polimi.ingsw.message.bothMessage.PingPongMessage;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.ConnectionType;
+import it.polimi.ingsw.message.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ClientMessageHandler {

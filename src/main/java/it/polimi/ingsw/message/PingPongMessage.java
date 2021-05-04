@@ -1,4 +1,4 @@
-package it.polimi.ingsw.message.bothMessage;
+package it.polimi.ingsw.message;
 
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.server.ServerMessageHandler;
