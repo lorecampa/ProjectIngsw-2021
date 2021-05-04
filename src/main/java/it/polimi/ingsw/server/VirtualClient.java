@@ -11,6 +11,7 @@ public class VirtualClient implements ModelObserver{
     private final ClientConnectionHandler client;
     private Controller controller;
     private Match match;
+    private boolean ready;
 
     public VirtualClient(int id, String username,
                          ClientConnectionHandler clientConnectionHandler,
@@ -20,6 +21,7 @@ public class VirtualClient implements ModelObserver{
         this.client= clientConnectionHandler;
         this.match = match;
         this.client.setVirtualClient(this);
+        this.ready = false;
     }
 
     public ClientConnectionHandler getClient() { return client; }
@@ -34,6 +36,11 @@ public class VirtualClient implements ModelObserver{
 
     public void setUsername(String username) {
         this.username = username;
+        this.ready = true;
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 
     public Match getMatch() {

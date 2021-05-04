@@ -20,6 +20,7 @@ public class Server {
     private final ArrayList<ClientConnectionHandler> lobby;
 
     private final ArrayList<Match> matches;
+    private final ArrayList<Match> matchesToFill;
 
     private final Object lockOpenMatch = new Object();
     private Match openMatch;
@@ -30,6 +31,7 @@ public class Server {
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
+        matchesToFill = new ArrayList<>();
         numOfActivePlayers = 0;
     }
 
@@ -47,11 +49,21 @@ public class Server {
     public void closeOpenMatch(){
         synchronized (lobby) {
             synchronized (lockOpenMatch) {
-                lobby.subList(0, openMatch.getNumOfPlayers()).clear();
-                openMatch = null;
-                if (lobby.size() > 0) {
-                    lobby.get(0).setState(HandlerState.NUM_OF_PLAYER);
-                    lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players: "));
+                synchronized (matchesToFill) {
+                    lobby.subList(0, openMatch.getNumOfPlayers()).clear();
+                    openMatch = null;
+                    if (matchesToFill.size() == 0) {
+                        if (lobby.size() > 0) {
+                            lobby.get(0).setState(HandlerState.NUM_OF_PLAYER);
+                            lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players: "));
+                        }
+                    }else{
+                        openMatch = matchesToFill.get(0);
+                        for (int i = 0; i < openMatch.getNumOfPlayers() && i < lobby.size(); i++) {
+                            openMatch.addPlayer(new VirtualClient(lobby.get(i).getClientID(),
+                                    "Quest_".concat(String.valueOf(openMatch.currentNumOfPLayer())),lobby.get(i),openMatch));
+                        }
+                    }
                 }
             }
         }
@@ -85,11 +97,31 @@ public class Server {
                         if (openMatch != null && openMatch.isOpen()){
                             openMatch.addPlayer(new VirtualClient(client.getClientID(),"Quest_".concat(String.valueOf(openMatch.currentNumOfPLayer())),client,openMatch));
                         }else{
-                            client.setState(HandlerState.WAITING);
+                            client.setState(HandlerState.WAITING_LOBBY);
                             client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Waiting Players!"));
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void clientDisconnect(ClientConnectionHandler client){
+        synchronized (lobby){
+            client.setExit();
+            lobby.remove(client);
+            if ((client.getState() == HandlerState.NUM_OF_PLAYER)&&(lobby.size() > 0))
+            {
+                lobby.get(0).setState(HandlerState.NUM_OF_PLAYER);
+                lobby.get(0).writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "Insert the number of Players: "));
+            }
+        }
+    }
+
+    public void putInToFill(Match matchToFill){
+        synchronized (matchesToFill) {
+            if (matchToFill != openMatch) {
+                matchesToFill.add(matchToFill);
             }
         }
     }
@@ -102,6 +134,7 @@ public class Server {
         while (true){
             try {
                 Socket socket = serverSocket.accept();
+                //socket.setSoTimeout(5000);
                 System.out.println("Server Socket has accepted a connection");
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextId());
                 executorService.submit(client);

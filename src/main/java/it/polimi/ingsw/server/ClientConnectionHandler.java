@@ -23,6 +23,7 @@ public class ClientConnectionHandler implements Runnable {
     ServerMessageHandler serverMessageHandler;
     ObjectMapper mapper = new ObjectMapper();
     private Boolean exit = false;
+
     private final int clientID;
 
 
@@ -37,6 +38,8 @@ public class ClientConnectionHandler implements Runnable {
         serverMessageHandler = new ServerMessageHandler(server,this);
     }
 
+    public void setExit(){exit = true;};
+
     public int getClientID() {
         return clientID;
     }
@@ -44,6 +47,8 @@ public class ClientConnectionHandler implements Runnable {
     public void setState(HandlerState state){
         serverMessageHandler.setState(state);
     }
+
+    public HandlerState getState(){return serverMessageHandler.getState();}
 
     public void setVirtualClient(VirtualClient virtualClient){
         serverMessageHandler.setVirtualClient(virtualClient);
@@ -57,19 +62,20 @@ public class ClientConnectionHandler implements Runnable {
     }
 
     public void readFromStream(){
-        String serializedMessage = in.nextLine();
-        if (serializedMessage.equalsIgnoreCase("QUIT")){
-            exit = true;
-            return;
+        String serializedMessage = null;
+        try {
+            serializedMessage = in.nextLine();
+            //TODO handle quit with a message
+            Optional<ServerMessage> message = Optional.
+                    ofNullable(deserialize(serializedMessage));
+
+            message.ifPresentOrElse(
+                    x -> x.process(serverMessageHandler),
+                    () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
+        }catch (Exception e){
+            //TODO client disconnection unexpected handle
+            serverMessageHandler.handleDisconnection();
         }
-
-        Optional<ServerMessage> message = Optional.
-                ofNullable(deserialize(serializedMessage));
-
-        message.ifPresentOrElse(
-                x -> x.process(serverMessageHandler),
-                () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
-
     }
 
     public ServerMessage deserialize(String serializedMessage){

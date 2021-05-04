@@ -4,5 +4,6 @@ public enum HandlerState {
     FIRST_CONTACT,
     NUM_OF_PLAYER,
     USERNAME,
-    WAITING;
+    WAITING_LOBBY,
+    WAITING_MATCH
 }

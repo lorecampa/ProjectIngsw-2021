@@ -7,11 +7,13 @@ import it.polimi.ingsw.server.ClientConnectionHandler;
 import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.message.bothMessage.PingPongMessage;
 
+import java.util.Optional;
+
 public class ServerMessageHandler {
     Controller controller;
     Server server;
     ClientConnectionHandler client;
-    VirtualClient virtualClient;
+    Optional<VirtualClient> virtualClient = Optional.empty();
     HandlerState state;
 
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
@@ -21,12 +23,14 @@ public class ServerMessageHandler {
     }
 
     public void setVirtualClient(VirtualClient virtualClient) {
-        this.virtualClient = virtualClient;
+        this.virtualClient = Optional.of(virtualClient);
     }
 
     public void setState(HandlerState state){
         this.state = state;
     }
+
+    public HandlerState getState() { return state; }
 
     public void handleConnectionMessage(ConnectionMessage message){
         System.out.println(message.getType() + ": " + message.getMessage());
@@ -44,7 +48,12 @@ public class ServerMessageHandler {
 
     public void handleUsernameInput(ConnectionMessage message){
         if (state != HandlerState.USERNAME) return;
-        virtualClient.getMatch().setPlayerUsername(virtualClient, message.getMessage());
+        virtualClient.ifPresent(value -> value.getMatch().setPlayerUsername(value, message.getMessage()));
+    }
+
+    public void handleDisconnection(){
+        virtualClient.ifPresentOrElse(value -> value.getMatch().playerDisconnection(value),()->server.clientDisconnect(client));
+
     }
 
     public void handlePingPong(PingPongMessage message){
