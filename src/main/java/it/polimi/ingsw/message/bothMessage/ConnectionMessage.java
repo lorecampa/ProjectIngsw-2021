@@ -12,6 +12,7 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
     private String message;
     private int num;
 
+
     @JsonCreator
     public ConnectionMessage(@JsonProperty("type") ConnectionType type,
                              @JsonProperty("message") String message,

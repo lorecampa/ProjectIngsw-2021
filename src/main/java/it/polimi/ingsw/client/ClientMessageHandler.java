@@ -6,6 +6,9 @@ import it.polimi.ingsw.message.bothMessage.ConnectionType;
 import it.polimi.ingsw.message.bothMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class ClientMessageHandler {
 
     private Client client;
@@ -28,21 +31,32 @@ public class ClientMessageHandler {
 
     //Connection message handler
     public void connectNewUser(ConnectionMessage message){
-        System.out.println(message.getMessage());
+        PrintAssistant.instance.printf(message.getMessage());
     }
 
     public void waitingPeople(ConnectionMessage message){
-        System.out.println(message.getMessage());
+        PrintAssistant.instance.printf(message.getMessage());
     }
 
     public void username(ConnectionMessage message){
-        System.out.println(message.getMessage());
+        PrintAssistant.instance.printf(message.getMessage());
         client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, client.waitToStringInputCLI()));
     }
 
     public void numberOfPlayer(ConnectionMessage message){
-        System.out.println(message.getMessage());
+        PrintAssistant.instance.printf(message.getMessage());
         client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "", client.waitToIntegerInputCLI()));
     }
 
+    //MainMenu message handler
+    public void mainMenu(){
+        ArrayList<String> texts = new ArrayList<>();
+        texts.add("Main menu");
+        texts.add("1)Play multiplayer");
+        texts.add("2)Play single player");
+        texts.add("3)Reconnect to last game");
+        texts.add("4)Quit");
+        PrintAssistant.instance.printfMultipleString(texts, PrintAssistant.ANSI_RED);
+        client.setChooseAction(client.waitToIntegerInputCLI());
+    }
 }

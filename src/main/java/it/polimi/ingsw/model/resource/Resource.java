@@ -56,4 +56,8 @@ public class Resource {
         return ((Resource) obj).getType() == type;
     }
 
+    @Override
+    public String toString() {
+        return type+": "+value;
+    }
 }

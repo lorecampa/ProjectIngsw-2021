@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
+import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
 import java.io.BufferedReader;
@@ -28,6 +29,10 @@ public class Client{
     private ClientMessageHandler clientMessageHandler;
     private ObjectMapper mapper = new ObjectMapper();
     private boolean exit=false;
+    private Object lockInput;
+    private int chooseAction;
+
+
 
     public static void main(String[] args){
         /*
@@ -48,12 +53,31 @@ public class Client{
             e.printStackTrace();
             //messaggio che si scusa e dice di riaprire
         }
-        client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-        //switch cosa fare (menu iniziale)
-        while(!client.exit){
-            client.readFromStream();
-        }
 
+        client.messageToMainMenu();
+        while(client.chooseAction!=4){
+            switch(client.chooseAction){
+                case 1:
+                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                    while(!client.exit){
+                        client.readFromStream();
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    client.writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION, ""));
+                    break;
+                default:
+                    //simula un errore in arrivo dal server, avrà un metodo come il messageToMainMenu ma per un errore
+                    PrintAssistant.instance.printf("INVALID OPTION CHOOSEN! PLEASE SELECT A VALID ONE!", PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_RED_BACKGROUND);
+            }
+            client.messageToMainMenu();
+        }
+    }
+
+    public void setChooseAction(int chooseAction) {
+        this.chooseAction = chooseAction;
     }
 
     private void startClient() throws IOException {
@@ -64,18 +88,22 @@ public class Client{
         }
         clientMessageHandler = new ClientMessageHandler(this);
         exit = false;
+        lockInput = new Object();
         out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //i messaggi che vengono dal server
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
         stdIn = new Scanner(new InputStreamReader(System.in));
-
     }
 
     public int waitToIntegerInputCLI(){
-        return stdIn.nextInt();
+        synchronized (lockInput) {
+            return stdIn.nextInt();
+        }
     }
 
     public String waitToStringInputCLI(){
-        return stdIn.next();
+        synchronized (lockInput) {
+            return stdIn.next();
+        }
     }
 
     public void writeToStream(ServerMessage message){
@@ -122,6 +150,9 @@ public class Client{
         return serializedMessage;
     }
 
-
+    private void messageToMainMenu(){
+        ClientMessage mainMenu= new MainMenuMessage();
+        mainMenu.process(clientMessageHandler);
+    }
 
 }
