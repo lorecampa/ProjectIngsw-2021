@@ -1,18 +1,17 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.PingPongMessage;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.PingPongMessage;
 import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
-
 import java.util.Optional;
 
 public class ServerMessageHandler {
-    Controller controller;
-    Server server;
-    ClientConnectionHandler client;
-    Optional<VirtualClient> virtualClient = Optional.empty();
-    HandlerState state;
+    private Controller controller;
+    private Server server;
+    private ClientConnectionHandler client;
+    private Optional<VirtualClient> virtualClient = Optional.empty();
+    private HandlerState state;
 
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
         this.server = server;
