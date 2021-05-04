@@ -6,6 +6,8 @@ import it.polimi.ingsw.message.bothMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Match {
@@ -15,11 +17,14 @@ public class Match {
     private final ArrayList<VirtualClient> players;
     private final ArrayList<VirtualClient> inactivePlayers;
 
-    public Match(int numOfPlayers, Server server) {
+    private final int matchID;
+
+    public Match(int numOfPlayers, Server server, int matchID) {
         this.server = server;
         this.numOfPlayers = numOfPlayers;
         this.players = new ArrayList<>();
         this.inactivePlayers = new ArrayList<>();
+        this.matchID = matchID;
     }
 
     public boolean isOpen(){
@@ -32,13 +37,17 @@ public class Match {
 
     public int getNumOfPlayers(){return numOfPlayers;}
 
+    public int getMatchID() { return matchID; }
+
     public void addPlayer(VirtualClient client){
-        if (!players.contains(client)) {
-            players.add(client);
-            client.getClient().setState(HandlerState.USERNAME);
-            client.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME,"Insert your Username"));
-            if (!isOpen())
-                server.closeOpenMatch();
+        synchronized (players) {
+            if (!players.contains(client)) {
+                players.add(client);
+                client.getClient().setState(HandlerState.USERNAME);
+                client.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert your Username"));
+                if (!isOpen())
+                    server.closeOpenMatch();
+            }
         }
     }
 
@@ -72,6 +81,25 @@ public class Match {
                     server.clientDisconnect(player.getClient());
                     server.putInToFill(this);
                 }
+            }
+        }
+    }
+
+    public boolean playerReconnection(int clientID, Socket socket){
+        synchronized (players){
+            synchronized (inactivePlayers){
+                for (VirtualClient virtualClient : inactivePlayers){
+                    if (virtualClient.getId() == clientID){
+                        try {
+                            virtualClient.getClient().setSocket(socket);
+                        } catch (IOException e) {
+                            return false;
+                        }
+                        inactivePlayers.remove(virtualClient);
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }

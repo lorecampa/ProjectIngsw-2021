@@ -2,10 +2,8 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
-import it.polimi.ingsw.server.ClientConnectionHandler;
-import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.message.bothMessage.PingPongMessage;
+import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
 
 import java.util.Optional;
 
@@ -54,6 +52,10 @@ public class ServerMessageHandler {
     public void handleDisconnection(){
         virtualClient.ifPresentOrElse(value -> value.getMatch().playerDisconnection(value),()->server.clientDisconnect(client));
 
+    }
+
+    public void handleReconnection(ReconnectionMessage message){
+        server.clientReconnection(message.getMatchID(), message.getClientID(), client);
     }
 
     public void handlePingPong(PingPongMessage message){
