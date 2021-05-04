@@ -1,10 +1,9 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorType;
-import it.polimi.ingsw.message.PingPongMessage;
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothMessage.PingPongMessage;
+import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
 
 import java.util.Optional;
 
@@ -55,19 +54,12 @@ public class ServerMessageHandler {
 
     }
 
+    public void handleReconnection(ReconnectionMessage message){
+        server.clientReconnection(message.getMatchID(), message.getClientID(), client);
+    }
+
     public void handlePingPong(PingPongMessage message){
         //TODO
     }
-
-
-
-
-    //CONTROLLER METHOD
-
-
-    public void sample(){
-        client.writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE));
-    }
-
 
 }

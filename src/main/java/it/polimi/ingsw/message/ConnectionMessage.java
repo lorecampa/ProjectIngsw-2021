@@ -8,9 +8,9 @@ import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
 public class ConnectionMessage implements ClientMessage, ServerMessage {
-    private ConnectionType type;
-    private String message;
-    private int num;
+    private final ConnectionType type;
+    private final String message;
+    private final int num;
 
 
     @JsonCreator
@@ -75,6 +75,9 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
                 break;
             case USERNAME:
                 handler.handleUsernameInput(this);
+                break;
+            case INFO:
+                handler.handleConnectionMessage(this);
                 break;
         }
         //handler.handleConnectionMessage(this);

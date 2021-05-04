@@ -16,10 +16,10 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ClientConnectionHandler implements Runnable {
-    private final Socket socket;
+    private Socket socket;
     private final Server server;
-    private final Scanner in;
-    private final PrintWriter out;
+    private Scanner in;
+    private PrintWriter out;
     ServerMessageHandler serverMessageHandler;
     ObjectMapper mapper = new ObjectMapper();
     private Boolean exit = false;
@@ -38,7 +38,17 @@ public class ClientConnectionHandler implements Runnable {
         serverMessageHandler = new ServerMessageHandler(server,this);
     }
 
-    public void setExit(){exit = true;};
+    public void setSocket(Socket socket) throws IOException {
+        this.socket = socket;
+        in = new Scanner(socket.getInputStream());
+        out = new PrintWriter(socket.getOutputStream());
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setExit(){exit = true;}
 
     public int getClientID() {
         return clientID;
@@ -62,7 +72,7 @@ public class ClientConnectionHandler implements Runnable {
     }
 
     public void readFromStream(){
-        String serializedMessage = null;
+        String serializedMessage;
         try {
             serializedMessage = in.nextLine();
             //TODO handle quit with a message
@@ -105,7 +115,7 @@ public class ClientConnectionHandler implements Runnable {
             readFromStream();
         }
 
-        // Chiudo gli stream e il socket
+        // Close stream and socket
         in.close();
         out.close();
         try {

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.ConnectionType;
+import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothMessage.ConnectionType;
+import it.polimi.ingsw.message.clientMessage.ErrorMessage;
+import it.polimi.ingsw.message.clientMessage.ErrorType;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,10 +14,11 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
-    private int port;
-    private ExecutorService executorService;
+    private final int port;
+    private final ExecutorService executorService;
     private ServerSocket serverSocket;
-    private int numOfActivePlayers;
+    private int nextClientID;
+    private int nextMatchID;
 
     private final ArrayList<ClientConnectionHandler> lobby;
 
@@ -27,12 +30,14 @@ public class Server {
 
 
     public  Server(){
-        port = 2021;
+        port = 2020;
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
         matchesToFill = new ArrayList<>();
-        numOfActivePlayers = 0;
+        nextClientID = 0;
+        nextMatchID = 0;
+
     }
 
     public void startServer(){
@@ -70,7 +75,7 @@ public class Server {
     }
 
     public void createMatch(int numOfPlayer, ClientConnectionHandler player){
-        Match newMatch = new Match(numOfPlayer, this);
+        Match newMatch = new Match(numOfPlayer, this, getNextMatchID());
         synchronized (lobby){
             if (!lobby.contains(player) || !lobby.get(0).equals(player))
                 return;
@@ -118,6 +123,20 @@ public class Server {
         }
     }
 
+    public void clientReconnection(int matchID, int clientID, ClientConnectionHandler client){
+        synchronized (matches){
+            boolean reconnected = false;
+            for (Match match : matches){
+                if (match.getMatchID() == matchID)
+                    reconnected = match.playerReconnection(clientID, client.getSocket());
+            }
+            if (reconnected)
+                client.writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,"Reconnected"));
+            else
+                client.writeToStream(new ErrorMessage(ErrorType.FAIL_RECONNECTION));
+        }
+    }
+
     public void putInToFill(Match matchToFill){
         synchronized (matchesToFill) {
             if (matchToFill != openMatch) {
@@ -126,8 +145,12 @@ public class Server {
         }
     }
 
-    public int getNextId(){
-        return  numOfActivePlayers++;
+    public int getNextClientID(){
+        return  nextClientID++;
+    }
+
+    public int getNextMatchID(){
+        return nextMatchID++;
     }
 
     public void acceptConnection(){
@@ -136,7 +159,7 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 //socket.setSoTimeout(5000);
                 System.out.println("Server Socket has accepted a connection");
-                ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextId());
+                ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);
             } catch(IOException e) {
                 break;

@@ -10,7 +10,7 @@ public class VirtualClient implements ModelObserver{
     private String username;
     private final ClientConnectionHandler client;
     private Controller controller;
-    private Match match;
+    private final Match match;
     private boolean ready;
 
     public VirtualClient(int id, String username,
@@ -38,6 +38,8 @@ public class VirtualClient implements ModelObserver{
         this.username = username;
         this.ready = true;
     }
+
+
 
     public boolean isReady() {
         return ready;
