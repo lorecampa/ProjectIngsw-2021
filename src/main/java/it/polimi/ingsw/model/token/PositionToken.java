@@ -16,7 +16,7 @@ public class PositionToken implements Token {
 
     @Override
     public void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico) {
-        lorenzoIlMagnifico.increaseFaithPosition(position);
+        lorenzoIlMagnifico.increaseLorenzoFaithPosition(position);
         if(isShuffle) lorenzoIlMagnifico.shuffleToken();
     }
 

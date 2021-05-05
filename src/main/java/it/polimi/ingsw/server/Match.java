@@ -1,8 +1,9 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.ConnectionType;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 
@@ -104,4 +105,10 @@ public class Match {
         }
     }
 
+
+
+    public void sendAllPlayers(ClientMessage message){
+        players.forEach(x -> x.getClient().writeToStream(message));
+        inactivePlayers.forEach(x -> x.getClient().writeToStream(message));
+    }
 }

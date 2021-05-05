@@ -5,13 +5,13 @@ import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.requirement.Requirement;
+import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.observer.Observable;
 
 /**
  * Class Card is an abstract class that defines the model of a card
@@ -24,6 +24,7 @@ import it.polimi.ingsw.observer.Observable;
         @Type(value = Development.class, name = "Development")
 })
 public  abstract class Card {
+
     private final int victoryPoints;
     final ArrayList<Requirement> requirements;
     private final ArrayList<Effect> onCreationEffect;
@@ -76,12 +77,13 @@ public  abstract class Card {
         }
     }
 
-    //guardare come fare gli attach
-    //si possono fare gli attach dei resource manager anche dentro il check requirements e poi dopo qua il resto
-    public void attachAll(ResourceManager resourceManager, CardManager cardManager, Market market){
-        this.setResourceManager(resourceManager);
-        this.setCardManager(cardManager);
+
+    public void attachCardToUser(PersonalBoard personalBoard, Market market){
+
+        this.setResourceManager(personalBoard.getResourceManager());
+        this.setCardManager(personalBoard.getCardManager());
         this.setMarket(market);
+        this.setOwner(personalBoard.getUsername());
     }
 
     /**
@@ -89,31 +91,22 @@ public  abstract class Card {
      * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
      */
     public void setResourceManager(ResourceManager resourceManager){
-        for (Effect effect: onActivationEffects){
-            effect.attachResourceManager(resourceManager);
-        }
-        for (Effect effect: onCreationEffect){
-            effect.attachResourceManager(resourceManager);
-        }
-        for (Requirement requirement: requirements){
-            requirement.attachResourceManager(resourceManager);
-        }
+        onActivationEffects.forEach(x -> x.attachResourceManager(resourceManager));
+        onCreationEffect.forEach(x -> x.attachResourceManager(resourceManager));
+        requirements.forEach(x -> x.attachResourceManager(resourceManager));
     }
 
-    public void setCardManager(CardManager cardManager){
-        for(Requirement requirement: requirements){
-            requirement.attachCardManager(cardManager);
-        }
+    private void setCardManager(CardManager cardManager){
+        requirements.forEach(x -> x.attachCardManager(cardManager));
     }
 
     /**
      * Method setMarket attach the market to all the activation effect
      * @param market of type Market is an instance of the market of the game
      */
-    public void setMarket(Market market){
-        for(Effect effect: onActivationEffects){
-            effect.attachMarket(market);
-        }
+    private void setMarket(Market market){
+        onActivationEffects.forEach(x -> x.attachMarket(market));
+
     }
 
     /**

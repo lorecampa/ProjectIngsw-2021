@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
-import it.polimi.ingsw.observer.Observable;
-import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
@@ -9,11 +7,19 @@ import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.observer.CardManagerObserver;
+import it.polimi.ingsw.observer.GameMasterObservable;
+import it.polimi.ingsw.observer.GameMasterObserver;
+import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-public class CardManager extends Observable<CardManagerObserver> {
+public class CardManager extends GameMasterObservable implements Observable<CardManagerObserver> {
+
+    List<CardManagerObserver> cardManagerObserverList = new ArrayList<>();
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
     private final ArrayList<Leader> leaders = new ArrayList<>();
     private final Development baseProduction;
@@ -52,7 +58,7 @@ public class CardManager extends Observable<CardManagerObserver> {
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
-        notifyAllObservers(CardManagerObserver::discardLeader);
+        notifyGameMasterObserver(GameMasterObserver::discardLeader);
     }
 
     /**
@@ -177,4 +183,14 @@ public class CardManager extends Observable<CardManagerObserver> {
         return count>=howMany;
     }
 
+
+    @Override
+    public void attachObserver(CardManagerObserver observer) {
+        cardManagerObserverList.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers(Consumer<CardManagerObserver> consumer) {
+        cardManagerObserverList.forEach(consumer);
+    }
 }

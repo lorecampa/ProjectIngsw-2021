@@ -1,9 +1,9 @@
 package it.polimi.ingsw.client;
 
 
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.ConnectionType;
-import it.polimi.ingsw.message.PingPongMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
+import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 
 import java.util.ArrayList;

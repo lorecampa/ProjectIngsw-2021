@@ -5,12 +5,32 @@ import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.server.VirtualClient;
 
 public class Controller {
     private GameMaster gameMaster;
 
     public Controller(GameMaster gameMaster) {
         this.gameMaster = gameMaster;
+    }
+
+
+
+    public void registerToAllObservable(VirtualClient virtualClient){
+        //model observer
+        gameMaster.attachObserver(virtualClient);
+
+        //resource manager observer
+        gameMaster.getPlayerPersonalBoard(virtualClient.getUsername())
+                .getResourceManager().attachObserver(virtualClient);
+
+        //faith track observer
+        gameMaster.getPlayerPersonalBoard(virtualClient.getUsername())
+                .getFaithTrack().attachObserver(virtualClient);
+
+        //card manager
+        gameMaster.getPlayerPersonalBoard(virtualClient.getUsername())
+                .getCardManager().attachObserver(virtualClient);
     }
 
 
@@ -35,6 +55,7 @@ public class Controller {
         ResourceManager rm = gameMaster.getPlayerPersonalBoard(username)
                 .getResourceManager();
     }
+
 
 
     private boolean isYourTurn(String username){

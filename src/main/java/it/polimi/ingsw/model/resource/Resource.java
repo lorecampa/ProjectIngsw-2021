@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public class Resource {
     public ResourceType getType() {
         return type;
     }
+
+    public ResourceData toClient(){
+        return new ResourceData(type, value);
+    }
+
 
     @Override
     public boolean equals(Object obj) {

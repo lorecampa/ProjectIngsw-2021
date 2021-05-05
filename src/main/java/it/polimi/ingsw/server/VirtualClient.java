@@ -1,11 +1,24 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.ConnectionType;
+import it.polimi.ingsw.message.bothArchitectureMessage.*;
+import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
+import it.polimi.ingsw.message.clientMessage.FaithTrackIncrement;
+import it.polimi.ingsw.message.clientMessage.NewTurn;
+import it.polimi.ingsw.message.clientMessage.PopeFavorActivated;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.observer.CardManagerObserver;
+import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.ModelObserver;
+import it.polimi.ingsw.observer.ResourceManagerObserver;
 
-public class VirtualClient implements ModelObserver{
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class VirtualClient implements ModelObserver, ResourceManagerObserver,
+        FaithTrackObserver, CardManagerObserver {
+
     private final int id;
     private String username;
     private final ClientConnectionHandler client;
@@ -22,6 +35,11 @@ public class VirtualClient implements ModelObserver{
         this.match = match;
         this.client.setVirtualClient(this);
         this.ready = false;
+
+
+        //TODO it is null pointer exception now
+        //maybe to do here
+        controller.registerToAllObservable(this);
     }
 
     public ClientConnectionHandler getClient() { return client; }
@@ -60,25 +78,56 @@ public class VirtualClient implements ModelObserver{
 
 
 
+    //OBSERVER IMPLEMENTATION
 
-    //MODEL OBSERVER IMPLEMENTATION
+    //MODEL OBSERVER
     @Override
     public void currentPlayerChange() {
-        //TODO send to all player a change
-        client.writeToStream(new ConnectionMessage(ConnectionType.INFO, "Current player has changed"));
+        match.sendAllPlayers(new NewTurn());
+    }
+
+
+
+    //RESOURCE MANAGER OBSERVER
+    @Override
+    public void depotModify(Resource resource, int depotIndex, boolean isDepotLeader) {
+
+        match.sendAllPlayers(new DepotModify(depotIndex, resource.toClient(), isDepotLeader, username));
     }
 
     @Override
-    public void discardLeader() {
+    public void depotSwitch(int from, int to, boolean isToLeader) {
+        match.sendAllPlayers(new DepotSwitch(from, to, isToLeader , username));
     }
 
     @Override
-    public void vaticanReportReached(int idVR) {
+    public void strongboxModify(Resource resource, boolean isAdd) {
+        match.sendAllPlayers(new StrongboxModify(resource.toClient(), isAdd, username));
 
     }
 
     @Override
-    public void discardResources(int numResources) {
+    public void anyConversionRequest(ArrayList<Resource> optionOfConversion,
+                                     ArrayList<Resource> optionOfDiscount,
+                                     int numOfAny, boolean isProduction) {
 
+        client.writeToStream(new AnyConversionRequest(
+                optionOfConversion.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new)),
+                optionOfDiscount.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList<ResourceData>::new)),
+                numOfAny)
+        );
+
+    }
+
+    //Faith Track OBSERVER
+    @Override
+    public void positionIncrease() {
+        match.sendAllPlayers(new FaithTrackIncrement(1, username));
+    }
+
+
+    @Override
+    public void popeFavorReached(int idVaticanReport, boolean isDiscard) {
+        match.sendAllPlayers(new PopeFavorActivated(idVaticanReport, isDiscard, username));
     }
 }

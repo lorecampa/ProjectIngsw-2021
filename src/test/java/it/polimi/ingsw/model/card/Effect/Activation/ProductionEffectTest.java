@@ -72,7 +72,7 @@ class ProductionEffectTest {
         effect.attachResourceManager(rm);
 
         assertDoesNotThrow(()->effect.doEffect(State.PRODUCTION_STATE));
-        assertEquals(1, rm.getAnyResourceCost());
+        assertEquals(1, rm.getAnyRequired());
 
         //subtract production cost
         //1 any -> 1 servant
@@ -100,7 +100,7 @@ class ProductionEffectTest {
         effect.attachResourceManager(rm);
 
         assertDoesNotThrow(()->effect.doEffect(State.PRODUCTION_STATE));
-        assertEquals(2, rm.getAnyResourceCost());
+        assertEquals(2, rm.getAnyRequired());
 
         //subtract production cost
         //2 any -> 2 servant (one from warehouse and one from strongbox)

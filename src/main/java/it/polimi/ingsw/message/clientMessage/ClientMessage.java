@@ -4,24 +4,26 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.message.ConnectionMessage;
-import it.polimi.ingsw.message.PingPongMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.*;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "@class")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = ConnectionMessage.class, name = "ConnectionMessage"),
-        @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
+        @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
+        @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
+        @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
+        @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
+
         @JsonSubTypes.Type(value = AnyConversionRequest.class, name = "AnyConversionRequest"),
-        @JsonSubTypes.Type(value = ChooseAction.class, name = "ChooseAction"),
-        @JsonSubTypes.Type(value = EndTurn.class, name = "EndTurn"),
+        @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
+        @JsonSubTypes.Type(value = NewTurn.class, name = "NewTurn"),
+        @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
         @JsonSubTypes.Type(value = ResourceManagement.class, name = "ResourceManagement"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
-        @JsonSubTypes.Type(value = WarehousePlayerUpdate.class, name = "WarehousePlayerUpdate"),
-        @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConversionRequest")
+        @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConversionRequest"),
 
 })
 public interface ClientMessage extends Message{

@@ -4,7 +4,7 @@ import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.model.card.Color;
 
 public interface LorenzoIlMagnifico {
-    void discardDevelopment(Color color, int num) throws DeckDevelopmentCardException;
+    void discardDevelopmentSinglePlayer(Color color, int num) throws DeckDevelopmentCardException;
     void shuffleToken();
-    void increaseFaithPosition(int pos);
+    void increaseLorenzoFaithPosition(int pos);
 }

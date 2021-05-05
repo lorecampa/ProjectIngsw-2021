@@ -3,15 +3,19 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.observer.FaithTrackObserver;
+import it.polimi.ingsw.observer.GameMasterObservable;
+import it.polimi.ingsw.observer.GameMasterObserver;
 import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Class that manage the Faith Track of a player
  */
-public class FaithTrack extends Observable<FaithTrackObserver>{
+public class FaithTrack extends GameMasterObservable  implements Observable<FaithTrackObserver>{
+    List<FaithTrackObserver> faithTrackObserverList = new ArrayList<>();
     private int victoryPoints;
     private int popeFavorVP;
     private int currentPositionOnTrack;
@@ -75,7 +79,10 @@ public class FaithTrack extends Observable<FaithTrackObserver>{
     /**
      * Method to increase the player's position on track
      */
-    public void increasePlayerPosition(){ currentPositionOnTrack++;}
+    public void increasePlayerPosition(){
+        currentPositionOnTrack++;
+        notifyAllObservers(FaithTrackObserver::positionIncrease);
+    }
 
     /**
      * Method to activate the effect of the current cell
@@ -89,12 +96,28 @@ public class FaithTrack extends Observable<FaithTrackObserver>{
      * @param idVaticanReport is the id of the Vatican Report activated
      */
     public void popeFavorActivated(int idVaticanReport){
-        if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport))
+
+        if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport)){
             popeFavorVP += popeFavor.get(idVaticanReport);
+
+            notifyAllObservers(x -> x.popeFavorReached(idVaticanReport, false));
+        }else{
+            notifyAllObservers(x -> x.popeFavorReached(idVaticanReport, true));
+
+        }
+
+
+
     }
 
 
+    @Override
+    public void attachObserver(FaithTrackObserver observer) {
+        faithTrackObserverList.add(observer);
+    }
 
-
-
+    @Override
+    public void notifyAllObservers(Consumer<FaithTrackObserver> consumer) {
+        faithTrackObserverList.forEach(consumer);
+    }
 }

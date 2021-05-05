@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.GameSetting;
+import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
+import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -57,28 +59,39 @@ class LeaderTest {
 
         leaders =
                 mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<ArrayList<Leader>>() {});
+        FaithTrack faithTrack =
+                mapper.readValue(new File("src/main/resources/json/faithTrack.json"), FaithTrack.class);
+        PersonalBoard pb = new PersonalBoard("lupo", faithTrack, rm, cm);
 
         //cardReq (green 1, level 1) (yellow 1, level 1)
         //(servant 1)
         discountLeader = leaders.get(0);
-        discountLeader.attachAll(rm, cm, mk);
+
+        discountLeader.attachCardToUser(pb, mk);
 
         //resReq (servant 5)
         //(shield 2)
         warehouseLeader = leaders.get(6);
-        warehouseLeader.attachAll(rm, cm, mk);
+
+
+        warehouseLeader.attachCardToUser(pb, mk);
 
 
         //cardReq (blue 2, level 1) (yellow 1, level 1)
         //(stone 1)
         marbleLeader = leaders.get(10);
-        marbleLeader.attachAll(rm, cm, mk);
+
+
+        marbleLeader.attachCardToUser(pb, mk);
 
 
         //cardReq (green 1, level 2)
         //(coin 1) -> (any 1, faith 1)
         productionLeader = leaders.get(15);
-        productionLeader.attachAll(rm, cm, mk);
+
+
+
+        productionLeader.attachCardToUser(pb, mk);
 
         assertEquals(16, leaders.size());
 

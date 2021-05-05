@@ -2,46 +2,53 @@ package it.polimi.ingsw.message.clientMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
 
 import java.util.ArrayList;
 
-public class AnyConversionRequest {
+public class AnyConversionRequest implements ClientMessage{
     private final ArrayList<ResourceData> optionConversion;
-    private final int numOfAnyRequirement;
-    private final int numOfAnyProduction;
+    private final ArrayList<ResourceData> optionOfDiscountNotUsed;
+    private final int numOfAny;
+    private final boolean isProduction;
 
     @JsonCreator
     public AnyConversionRequest(@JsonProperty("optionConversion") ArrayList<ResourceData> optionConversion,
-                                @JsonProperty("numOfAnyRequirement")int numOfAnyRequirement,
-                                @JsonProperty("numOfAnyProduction")int numOfAnyProduction) {
+                                @JsonProperty("optionOfDiscountNotUsed") ArrayList<ResourceData> optionOfDiscountNotUsed,
+                                @JsonProperty("numOfAny")int numOfAny) {
         this.optionConversion = optionConversion;
-        this.numOfAnyRequirement = numOfAnyRequirement;
-        this.numOfAnyProduction = numOfAnyProduction;
+        this.optionOfDiscountNotUsed = optionOfDiscountNotUsed;
+        this.numOfAny = numOfAny;
+        this.isProduction = false;
     }
     @JsonCreator
-    public AnyConversionRequest(@JsonProperty("optionConversion")ArrayList<ResourceData> optionConversion,
-                                @JsonProperty("numOfAnyRequirement")int numOfAnyRequirement) {
-        this.optionConversion = optionConversion;
-        this.numOfAnyRequirement = numOfAnyRequirement;
-        this.numOfAnyProduction = 0;
-    }
-    @JsonCreator
-    public AnyConversionRequest(@JsonProperty("numOfAnyProduction")int numOfAnyProduction) {
+    public AnyConversionRequest(@JsonProperty("numOfAny")int numOfAny) {
         this.optionConversion = null;
-        this.numOfAnyRequirement = 0;
-        this.numOfAnyProduction = numOfAnyProduction;
+        this.optionOfDiscountNotUsed = null;
+        this.numOfAny = numOfAny;
+        this.isProduction = true;
     }
+
 
     public ArrayList<ResourceData> getOptionConversion() {
         return optionConversion;
     }
 
-    public int getNumOfAnyRequirement() {
-        return numOfAnyRequirement;
+    public ArrayList<ResourceData> getOptionOfDiscountNotUsed() {
+        return optionOfDiscountNotUsed;
     }
 
-    public int getNumOfAnyProduction() {
-        return numOfAnyProduction;
+    public int getNumOfAny() {
+        return numOfAny;
+    }
+
+    public boolean isProduction() {
+        return isProduction;
+    }
+
+    @Override
+    public void process(ClientMessageHandler handler) {
+        System.out.println("AnyRequestHandler");
     }
 }

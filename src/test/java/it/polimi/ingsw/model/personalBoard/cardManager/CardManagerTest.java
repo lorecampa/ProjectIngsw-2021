@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.card.Effect.State;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +36,13 @@ class CardManagerTest {
     @BeforeEach
     void setUp(){
         assertDoesNotThrow(()-> gs = new GameSetting(4));
-        assertDoesNotThrow(()-> personalBoard = new PersonalBoard("player1", gs.getFaithTrack(),
-                gs.getBaseProduction()));
+        Development baseProduction = gs.getBaseProduction();
+        ResourceManager rm = new ResourceManager();
+        baseProduction.setResourceManager(rm);
+        assertDoesNotThrow(()-> personalBoard = new PersonalBoard("player1",
+                gs.getFaithTrack(),
+                rm,
+                new CardManager(baseProduction)));
 
         cardManager = personalBoard.getCardManager();
         personalBoard.getResourceManager().addToStrongbox(ResourceFactory.createResource(ResourceType.STONE,5));

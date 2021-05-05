@@ -162,13 +162,20 @@ class ResourceManagerTest {
 
     @Test
     void switchResourceFromDepotToDepot() {
-        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0, 1));
+        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0, 1, false));
         rs.print();
     }
 
     @Test
-    void discardResources() {
-        //Just call 2 other methods in the ResourceManager
+    void switchLeaderDepot() {
+        rs.addLeaderDepot(new Depot(
+                ResourceFactory.createResource(ResourceType.COIN, 2),
+                true,
+                4
+        ));
+
+        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0, 0, true));
+        rs.print();
     }
 
     @Test

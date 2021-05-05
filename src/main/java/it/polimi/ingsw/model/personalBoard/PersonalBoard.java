@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard;
 
+import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
@@ -11,16 +12,20 @@ public class PersonalBoard {
     private final CardManager cardManager;
     private final ResourceManager resourceManager;
     private boolean inkwell;
-    private final String nickname;
+    private final String username;
 
 
-    public PersonalBoard(String nickname, FaithTrack faithTrack, Development baseProduction) throws IOException {
-        this.resourceManager = new ResourceManager();
+    public PersonalBoard(String username,
+                         FaithTrack faithTrack,
+                         ResourceManager resourceManager,
+                         CardManager cardManager) throws IOException {
+
+        this.username = username;
         this.faithTrack = faithTrack;
-        baseProduction.setResourceManager(getResourceManager());
-        this.cardManager = new CardManager(baseProduction);
+        this.resourceManager = resourceManager;
+
+        this.cardManager = cardManager;
         this.inkwell=false;
-        this.nickname=nickname;
 
     }
 
@@ -42,5 +47,9 @@ public class PersonalBoard {
 
     public void setInkwell(boolean inkwell) {
         this.inkwell = inkwell;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

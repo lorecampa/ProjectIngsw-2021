@@ -1,22 +1,27 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.observer.Observable;
-import it.polimi.ingsw.observer.ResourceManagerObserver;
+import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-import java.util.ArrayList;
 
-public class ResourceManager extends Observable<ResourceManagerObserver> {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+
+public class ResourceManager extends GameMasterObservable implements Observable<ResourceManagerObserver> {
+    List<ResourceManagerObserver> resourceManagerObserverList = new ArrayList<>();
+
     private final Warehouse currWarehouse;
     private final Strongbox strongbox;
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
     private int faithPoint=0;
-    private int anyResourceCost =0;
-    private int anyResourceProduction = 0;
+    private int anyRequired =0;
+    private int anyToProduce = 0;
 
     private final ArrayList<Resource> myResources = new ArrayList<>();
     private final ArrayList<Resource> myDiscounts = new ArrayList<>();
@@ -30,8 +35,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
      * Set up the resource manager to be ready for the curr turn
      * */
     public void newTurn(){
-        anyResourceCost =0;
-        anyResourceProduction = 0;
+        anyRequired =0;
+        anyToProduce = 0;
         faithPoint=0;
         resourcesBuffer.clear();
         resourcesToProduce.clear();
@@ -47,7 +52,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
         Resource resourceFaith = ResourceFactory.createResource(ResourceType.FAITH, 0);
         while(resourcesSent.contains(resourceAny)){
-            anyResourceCost += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
+            anyRequired += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
             resourcesSent.remove(resourceAny);
         }
         while(resourcesSent.contains(resourceFaith)){
@@ -79,6 +84,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         else{
             currWarehouse.addToLeaderDepotValueAt(index, resource);
         }
+
+        notifyAllObservers(x -> x.depotModify(resource, index, true));
     }
 
     /**
@@ -95,6 +102,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
      * @param resource i want to add */
     public void addToStrongbox(Resource resource){
         strongbox.addResourceValueOf(resource);
+
+        notifyAllObservers(x -> x.strongboxModify(resource, true));
     }
 
     /**
@@ -111,6 +120,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         else{
             currWarehouse.subToLeaderDepotValueAt(index, resource);
         }
+        notifyAllObservers(x -> x.depotModify(resource, index, false));
     }
 
     /**
@@ -118,6 +128,8 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResourceValueOf(resource);
+
+        notifyAllObservers(x -> x.strongboxModify(resource, false));
     }
 
 
@@ -150,9 +162,10 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
      * Used to add a resource value or the resource itself in the resource to produce
      * @param resources I want to add */
     public void addToResourcesToProduce(ArrayList<Resource> resources) {
+
         for (Resource resource: resources){
             if (resource.getType().equals(ResourceType.ANY)){
-                anyResourceProduction++;
+                anyToProduce++;
             }else if(resource.getType().equals(ResourceType.FAITH)){
                 faithPoint++;
             }
@@ -189,17 +202,7 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
         }
     }
 
-    /**
-     * numOfDiscountNotUsed
-     * @return the number of discounts not used
-     */
-    public int numOfDiscountNotUsed(){
-        int num = 0;
-        for (Resource discount: myDiscounts){
-            num += discount.getValue();
-        }
-        return num;
-    }
+
 
     /**
      * Compute if u can afford some resources
@@ -228,12 +231,20 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
                 return false;
         }
 
-        if(extraRes + numOfDiscountNotUsed() < anyResourceCost)
+        int numOfDiscountNotUsed =  myDiscounts.stream().mapToInt(Resource::getValue).sum();
+
+        if(extraRes + numOfDiscountNotUsed < anyRequired)
             return false;
 
         for(Resource res : resources){
             addToBuffer(res);
         }
+
+        if (anyRequired > 0){
+            notifyAllObservers(x -> x.anyConversionRequest(myResources, myDiscounts,
+                    anyRequired, false));
+        }
+
         return true;
     }
 
@@ -286,35 +297,67 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
     * @param fromDepot the first depot
     * @param toDepot the second depot
     * */
-   public void switchResourceFromDepotToDepot(int fromDepot, int toDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-       Resource fromSupportResource = currWarehouse.removeResourceAt(fromDepot);
-       Resource toSupportResource = currWarehouse.removeResourceAt(toDepot);
-       try{
-           currWarehouse.setResourceDepotAt(fromDepot, toSupportResource);
+   public void switchResourceFromDepotToDepot(int fromDepot,
+                                              int toDepot, boolean isToLeader) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+
+       if (isToLeader &&
+           currWarehouse.getDepot(fromDepot).getResourceType().
+                   equals(currWarehouse.getDepotLeader(toDepot).getResourceType())){
+
+           int toInsert = currWarehouse.getDepot(fromDepot).getResource().getValue();
+
+           int freeSpace = currWarehouse.getDepotLeader(toDepot)
+                   .howMuchResCanIStillStoreIn();
+
+
+           int delta = freeSpace - toInsert;
+           if (delta < 0)
+               delta = freeSpace;
+           else
+               delta = toInsert;
+
+           try {
+               currWarehouse.getDepot(fromDepot).subValueResource(delta);
+           } catch (NegativeResourceException e) {
+               //it will never happen
+           }
+
+           currWarehouse.getDepotLeader(toDepot).addValueResource(delta);
+
+       }else{
+           Resource fromSupportResource = currWarehouse.removeResourceAt(fromDepot);
+
+           Resource toSupportResource = currWarehouse.removeResourceAt(toDepot);
+
+           try{
+               currWarehouse.setResourceDepotAt(fromDepot, toSupportResource);
+           }
+           catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
+               currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
+               currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
+               throw e;
+           }
+           try{
+               currWarehouse.setResourceDepotAt(toDepot, fromSupportResource);
+           }
+           catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
+               currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
+               currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
+               throw e;
+           }
        }
-       catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
-           currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
-           currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
-           throw e;
-       }
-       try{
-           currWarehouse.setResourceDepotAt(toDepot, fromSupportResource);
-       }
-       catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
-           currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
-           currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
-           throw e;
-       }
+
+       notifyAllObservers(x -> x.depotSwitch(fromDepot, toDepot, isToLeader));
    }
 
     /**
-     * Discard resources*/
+     * Discard resources  called by controller CLEARBUFFER MESSAGE methods*/
     public void discardResources(){
-        notifyAllObservers(x -> x.discardResources(numberOfResourceInBuffer()));
+        notifyGameMasterObserver(x -> x.discardResources(numberOfResourceInBuffer()));
         resourcesBuffer.clear();
     }
 
-    /**Add a depot as a leaderDepot in the wearehouse
+    /**Add a depot as a leaderDepot in the warehouse
      * @param depot i want to add*/
     public void addLeaderDepot(Depot depot){
         currWarehouse.addDepotLeader(depot);
@@ -331,31 +374,39 @@ public class ResourceManager extends Observable<ResourceManagerObserver> {
             discounts.add(resource);
         }
     }
+    public void print(){
+        currWarehouse.print();
+        strongbox.print();
+    }
 
     /**
      * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
     public void clearBuffers(){
-        anyResourceCost = 0;
+        anyRequired = 0;
         resourcesToProduce.clear();
         resourcesBuffer.clear();
     }
 
 
-    public void print(){
-        System.out.println("ANY: "+ anyResourceCost +"-"+" FAITH: "+faithPoint);
-        currWarehouse.print();
-        strongbox.print();
-    }
-
     public int getFaithPoint() {
         return faithPoint;
     }
 
-    public int getAnyResourceCost() {
-        return anyResourceCost;
+    public int getAnyRequired() {
+        return anyRequired;
     }
 
     public Strongbox getStrongbox() {
         return strongbox;
+    }
+
+    @Override
+    public void attachObserver(ResourceManagerObserver observer) {
+        resourceManagerObserverList.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers(Consumer<ResourceManagerObserver> consumer) {
+        resourceManagerObserverList.forEach(consumer);
     }
 }

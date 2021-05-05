@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
-import it.polimi.ingsw.observer.CardManagerObserver;
-import it.polimi.ingsw.observer.FaithTrackObserver;
-import it.polimi.ingsw.observer.ResourceManagerObserver;
+import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
+import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
@@ -17,13 +16,21 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.LorenzoIlMagnifico;
 import it.polimi.ingsw.model.token.Token;
+import it.polimi.ingsw.observer.Observable;
+
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * GameMaster class
  */
-public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, CardManagerObserver, LorenzoIlMagnifico {
+public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
+        LorenzoIlMagnifico {
+
+    List<ModelObserver> modelObserverList = new ArrayList<>();
+
+
     ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
@@ -71,6 +78,7 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
     }
 
 
+
     /**
      * Method loadGameSetting is responsible to load the game data from the gameSetting
      * @param gameSetting of type GameSetting - game data
@@ -99,6 +107,8 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
         }else{
             this.currentPlayer = nextPlayer;
         }
+
+        notifyAllObservers(ModelObserver::currentPlayerChange);
     }
 
 
@@ -140,10 +150,25 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
     public void addPlayer(String username) throws IOException {
         //depth copy of game faithTrack
         FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
+        playerFaithTrack.attachGameMasterObserver(this);
+
+        //resource manager
+        ResourceManager playerResourceManager = new ResourceManager();
+        playerResourceManager.attachGameMasterObserver(this);
+
         //depth copy of game base production
         Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
+        playerBaseProduction.setResourceManager(playerResourceManager);
 
-        playersPersonalBoard.put(username, new PersonalBoard(username, playerFaithTrack, playerBaseProduction));
+        CardManager playerCardManager = new CardManager(playerBaseProduction);
+        playerCardManager.attachGameMasterObserver(this);
+
+
+
+        playersPersonalBoard.put(username, new PersonalBoard(username,
+                playerFaithTrack,
+                playerResourceManager,
+                playerCardManager));
 
     }
 
@@ -168,11 +193,14 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * Method deliverLeaderCards delivers all the initial four card to all the players in the game
      */
     public void deliverLeaderCards() {
-
+        Optional<Leader> leader;
         for (PersonalBoard personalBoard: playersPersonalBoard.values()){
             CardManager cardManager = personalBoard.getCardManager();
             for (int i = 0; i < leaderAtStart; i++){
-                cardManager.addLeader(deckLeader.poll());
+
+                leader = Optional.ofNullable(deckLeader.poll());
+                leader.ifPresent(x -> x.attachCardToUser(personalBoard, market));
+                leader.ifPresent(cardManager::addLeader);
             }
         }
     }
@@ -186,11 +214,14 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
      */
     public Development popDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
+
         if(deckDevelopment.get(row).get(column).isEmpty()){
             throw new DeckDevelopmentCardException("No development card at selection (Row: "+row+" Column: "+column+")");
         }
         Development development = deckDevelopment.get(row).get(column).get(0);
         deckDevelopment.get(row).get(column).remove(0);
+
+        development.attachCardToUser(playersPersonalBoard.get(currentPlayer), market);
         return development;
     }
 
@@ -237,16 +268,17 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      */
     public void drawToken() {
         //forse devo restituire il token per farlo vedere a schermo? bho
-        Token token = deckToken.poll();
-        deckToken.offer(token);
-        if(token != null){
-            try{
-                token.doActionToken(this);
-            } catch (DeckDevelopmentCardException  e) {
+        Optional<Token> token = Optional.ofNullable(deckToken.poll());
+        token.ifPresent(deckToken::offer);
+
+        token.ifPresent(x -> {
+            try {
+                x.doActionToken(this);
+            } catch (DeckDevelopmentCardException e) {
                 //its all okay, just there is no more to delete
                 //with the cardToken effect from the deck of development cards
             }
-        }
+        });
     }
 
     public boolean isGameEnded() {
@@ -315,7 +347,7 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @throws DeckDevelopmentCardException if it fails on deleting all the card required
      */
     @Override
-    public void discardDevelopment(Color color, int num) throws DeckDevelopmentCardException {
+    public void discardDevelopmentSinglePlayer(Color color, int num) throws DeckDevelopmentCardException {
         int rowReached = 0;
         int colorColumn = color.getColumnDeckDevelopment();
         int numDiscarded = 0;
@@ -349,12 +381,17 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
      * @param pos of type int - position to increase
      */
     @Override
-    public void increaseFaithPosition(int pos) {
+    public void increaseLorenzoFaithPosition(int pos) {
         this.playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().movePlayer(pos);
     }
 
+    @Override
+    public void attachObserver(ModelObserver observer) {
+        modelObserverList.add(observer);
+    }
 
-
-
-
+    @Override
+    public void notifyAllObservers(Consumer<ModelObserver> consumer) {
+        modelObserverList.forEach(consumer);
+    }
 }

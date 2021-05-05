@@ -36,10 +36,10 @@ class GameMasterTest {
         gm.addPlayer("player4");
 
 
-        gm.getPlayerPersonalBoard("player1").getFaithTrack().attachObserver(gm);
-        gm.getPlayerPersonalBoard("player2").getFaithTrack().attachObserver(gm);
-        gm.getPlayerPersonalBoard("player3").getFaithTrack().attachObserver(gm);
-        gm.getPlayerPersonalBoard("player4").getFaithTrack().attachObserver(gm);
+        gm.getPlayerPersonalBoard("player1").getFaithTrack().attachGameMasterObserver(gm);
+        gm.getPlayerPersonalBoard("player2").getFaithTrack().attachGameMasterObserver(gm);
+        gm.getPlayerPersonalBoard("player3").getFaithTrack().attachGameMasterObserver(gm);
+        gm.getPlayerPersonalBoard("player4").getFaithTrack().attachGameMasterObserver(gm);
 
 
     }
@@ -130,15 +130,15 @@ class GameMasterTest {
 
     @Test
     void discardDevelopment() throws DeckDevelopmentCardException {
-        gm.discardDevelopment(Color.GREEN, 4);
+        gm.discardDevelopmentSinglePlayer(Color.GREEN, 4);
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
-        assertDoesNotThrow(()->gm.discardDevelopment(Color.GREEN, 5));
-        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopment(Color.GREEN, 4));
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 5));
+        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 4));
 
-        assertDoesNotThrow(()->gm.discardDevelopment(Color.BLUE, 9));
-        assertDoesNotThrow(()->gm.discardDevelopment(Color.PURPLE, 12));
-        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopment(Color.YELLOW, 13));
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.BLUE, 9));
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.PURPLE, 12));
+        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopmentSinglePlayer(Color.YELLOW, 13));
 
     }
 

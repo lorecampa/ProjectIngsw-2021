@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.exception.CantModifyDepotException;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
@@ -132,7 +131,8 @@ public class Warehouse implements Cloneable{
      * @param index of depot i want to empty
      * @return the resource i took from the index depot*/
     public Resource removeResourceAt(int index) throws IndexOutOfBoundsException{
-        Resource resource = depots.get(index).getResource();
+        Resource resource;
+        resource = depots.get(index).getResource();
         depots.get(index).setEmptyResource();
         return resource;
     }
