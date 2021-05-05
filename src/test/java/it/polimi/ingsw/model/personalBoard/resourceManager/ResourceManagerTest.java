@@ -63,7 +63,9 @@ class ResourceManagerTest {
 
     @Test
     void doProduction() {
-        rs.addToResourcesToProduce(ResourceFactory.createResource(ResourceType.COIN, 5));
+        ArrayList<Resource> arrRes = new ArrayList<>();
+        arrRes.add(ResourceFactory.createResource(ResourceType.COIN, 5));
+        rs.addToResourcesToProduce(arrRes);
         rs.doProduction();
         assertEquals(10,  rs.getStrongbox().howManyDoIHave(ResourceType.COIN));
     }

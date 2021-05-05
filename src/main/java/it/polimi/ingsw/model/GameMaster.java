@@ -263,6 +263,7 @@ public class GameMaster implements ResourceManagerObserver, FaithTrackObserver, 
         return deckDevelopment;
     }
 
+
     /**
      * Method of FaithTrackObserver that manage the activation of a popeSpace from a player Faith Track
      * @param idVR is the id of the popeSpace activated

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.message.bothMessage;
+package it.polimi.ingsw.message;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,6 +27,13 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
         this.type = type;
         this.message = message;
         this.num = -1;
+    }
+
+    public ConnectionMessage(@JsonProperty("type") ConnectionType type,
+                             @JsonProperty("num") int num) {
+        this.type = type;
+        this.message = "";
+        this.num = num;
     }
 
     public String getMessage() {

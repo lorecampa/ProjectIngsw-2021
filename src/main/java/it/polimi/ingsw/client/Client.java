@@ -3,8 +3,8 @@ package it.polimi.ingsw.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.message.bothMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothMessage.ConnectionType;
+import it.polimi.ingsw.message.ConnectionMessage;
+import it.polimi.ingsw.message.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class Client{
     private static final String ipHost ="127.0.0.1";
-    private static final int portNumber = 2020;
+    private static final int portNumber = 2021;
     private Socket clientSocket;
 
     private PrintWriter out;

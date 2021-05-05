@@ -1,4 +1,4 @@
-package it.polimi.ingsw.message.bothMessage;
+package it.polimi.ingsw.message;
 
 public enum ConnectionType {
     INFO,
