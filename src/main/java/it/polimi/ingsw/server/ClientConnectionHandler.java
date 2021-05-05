@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.message.bothMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
@@ -14,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class ClientConnectionHandler implements Runnable {
     private Socket socket;
@@ -23,6 +25,8 @@ public class ClientConnectionHandler implements Runnable {
     ServerMessageHandler serverMessageHandler;
     ObjectMapper mapper = new ObjectMapper();
     private Boolean exit = false;
+
+    private Thread ping;
 
     private final int clientID;
 
@@ -36,6 +40,19 @@ public class ClientConnectionHandler implements Runnable {
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());
         serverMessageHandler = new ServerMessageHandler(server,this);
+
+        this.ping = new Thread(() -> {
+            while(true) {
+                writeToStream(new PingPongMessage());
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        ping.start();
     }
 
     public void setSocket(Socket socket) throws IOException {
