@@ -5,7 +5,6 @@ import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,6 +18,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
+
     private int faithPoint=0;
     private int anyRequired =0;
     private int anyToProduce = 0;
@@ -44,30 +44,50 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         myDiscounts.clear();
     }
 
+
+
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
      * @param resourcesSent the original list I'll change
      */
-    private ArrayList<Resource> fromResourceToConcreteResource(ArrayList<Resource> resourcesSent){
+
+
+    private ArrayList<Resource> fromResourceToConcreteResource(ArrayList<Resource> resourcesSent,
+                                                               boolean countAnyProductionCost,
+                                                               boolean countAnyProductionProfit,
+                                                               boolean countFaithPoints){
+
         Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
         Resource resourceFaith = ResourceFactory.createResource(ResourceType.FAITH, 0);
+
         while(resourcesSent.contains(resourceAny)){
-            anyRequired += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
+            if (countAnyProductionCost){
+                anyRequired += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
+            }else if (countAnyProductionProfit){
+                anyToProduce += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
+            }
             resourcesSent.remove(resourceAny);
         }
+
         while(resourcesSent.contains(resourceFaith)){
-            faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
+            if(countFaithPoints){
+                faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
+            }
             resourcesSent.remove(resourceFaith);
         }
 
         return resourcesSent;
     }
 
+
     /**
      * Store the resources i have to manage from the market in the buffer
      * @param resourcesSent contain the array of the resources i got from market*/
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
-        resourcesBuffer = fromResourceToConcreteResource(resourcesSent);
+        resourcesBuffer = fromResourceToConcreteResource(resourcesSent,
+                false,
+                false,
+                true);
     }
 
     /**
@@ -163,19 +183,18 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resources I want to add */
     public void addToResourcesToProduce(ArrayList<Resource> resources) {
 
-        for (Resource resource: resources){
-            if (resource.getType().equals(ResourceType.ANY)){
-                anyToProduce++;
-            }else if(resource.getType().equals(ResourceType.FAITH)){
-                faithPoint++;
-            }
-            else if(resourcesToProduce.contains(resource)){
-                resourcesToProduce.get(resourcesToProduce.indexOf(resource)).addValue(resource.getValue());
-            }
-            else{
-                resourcesToProduce.add(resource);
+        fromResourceToConcreteResource(resources, false,
+                true,
+                true);
+
+        for (Resource res: resources){
+            if(resourcesToProduce.contains(res)){
+                resourcesToProduce.get(resourcesToProduce.indexOf(res)).addValue(res.getValue());
+            }else{
+                resourcesToProduce.add(res);
             }
         }
+
 
     }
 
@@ -212,7 +231,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * */
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
-        fromResourceToConcreteResource(resources);
+        fromResourceToConcreteResource(resources,
+                true,
+                false,
+                false);
 
         if (checkDiscount){
             allMyDiscounts();
@@ -240,11 +262,12 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             addToBuffer(res);
         }
 
+        /*
         if (anyRequired > 0){
             notifyAllObservers(x -> x.anyConversionRequest(myResources, myDiscounts,
                     anyRequired, false));
         }
-
+        */
         return true;
     }
 

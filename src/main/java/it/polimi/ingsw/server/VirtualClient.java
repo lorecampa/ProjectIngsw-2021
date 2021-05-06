@@ -3,10 +3,7 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
-import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
-import it.polimi.ingsw.message.clientMessage.FaithTrackIncrement;
-import it.polimi.ingsw.message.clientMessage.NewTurn;
-import it.polimi.ingsw.message.clientMessage.PopeFavorActivated;
+import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.FaithTrackObserver;
@@ -87,6 +84,10 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
 
+    @Override
+    public void removeDeckDevelopmentSinglePlayer(int row, int column) {
+        client.writeToStream(new RemoveDeckDevelopmentCard(row, column));
+    }
 
     //RESOURCE MANAGER OBSERVER
     @Override
@@ -130,4 +131,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     public void popeFavorReached(int idVaticanReport, boolean isDiscard) {
         match.sendAllPlayers(new PopeFavorActivated(idVaticanReport, isDiscard, username));
     }
+
+
 }

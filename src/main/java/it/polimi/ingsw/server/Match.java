@@ -10,6 +10,7 @@ import it.polimi.ingsw.message.clientMessage.ErrorType;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class Match {
     private final Server server;
@@ -104,7 +105,6 @@ public class Match {
             }
         }
     }
-
 
 
     public void sendAllPlayers(ClientMessage message){

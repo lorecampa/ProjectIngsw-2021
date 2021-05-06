@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,29 +18,22 @@ class GameMasterTest {
     GameMaster gmSinglePlayer;
     GameSetting gs;
     GameSetting gsSinglePlayer;
+    ArrayList<String> players = new ArrayList<>();
 
     int numOfPlayer;
     @BeforeEach
     void setUp() throws IOException, JsonFileModificationError {
+        players.add("player1");
         assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
-        gmSinglePlayer = new GameMaster(gsSinglePlayer, "Single Player");
+        gmSinglePlayer = new GameMaster(gsSinglePlayer, players);
 
         numOfPlayer = 4;
+        players.add("player2");
+        players.add("player3");
+        players.add("player4");
         assertDoesNotThrow(()-> gs = new GameSetting(numOfPlayer));
-        gm = new GameMaster(gs, "player1");
-
-
-        gm.setCurrentPlayer("player1");
-
-        gm.addPlayer("player2");
-        gm.addPlayer("player3");
-        gm.addPlayer("player4");
-
-
-        gm.getPlayerPersonalBoard("player1").getFaithTrack().attachGameMasterObserver(gm);
-        gm.getPlayerPersonalBoard("player2").getFaithTrack().attachGameMasterObserver(gm);
-        gm.getPlayerPersonalBoard("player3").getFaithTrack().attachGameMasterObserver(gm);
-        gm.getPlayerPersonalBoard("player4").getFaithTrack().attachGameMasterObserver(gm);
+        gm = new GameMaster(gs, players);
+        gm.nextPlayer();
 
 
     }
@@ -54,6 +48,17 @@ class GameMasterTest {
         assertEquals("player4", gm.getCurrentPlayer());
         gm.nextPlayer();
         assertEquals("player1", gm.getCurrentPlayer());
+    }
+
+    @Test
+    void nextPlayerSinglePlayer() {
+        gmSinglePlayer.nextPlayer();
+        assertEquals("player1", gm.getCurrentPlayer());
+        gmSinglePlayer.nextPlayer();
+        assertEquals("player1", gm.getCurrentPlayer());
+        gmSinglePlayer.nextPlayer();
+        assertEquals("player1", gm.getCurrentPlayer());
+
     }
 
     @Test
@@ -73,10 +78,11 @@ class GameMasterTest {
         assertThrows(IndexOutOfBoundsException.class, ()-> gm.popDeckDevelopmentCard(2, -1));
         assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(2, 3));
 
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(1,1));
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(1,1));
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(1,1));
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(1,1));
+        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
+        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
+        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
+        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
+
 
         //try to pop where there's no card
         assertThrows(DeckDevelopmentCardException.class, ()-> gm.popDeckDevelopmentCard(1, 1));
@@ -84,23 +90,7 @@ class GameMasterTest {
 
     }
 
-    @Test
-    void removeDeckDevelopmentCard() {
-        Development dev = gm.getDeckDevelopment().get(1).get(1).get(1);
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(1,1));
-        assertSame(dev, gm.getDeckDevelopment().get(1).get(1).get(0));
 
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(2,2));
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(2,2));
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(2,2));
-
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(2, 2));
-        assertThrows(DeckDevelopmentCardException.class, ()-> gm.removeDeckDevelopmentCard(2, 2));
-
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.removeDeckDevelopmentCard(2, -1));
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.removeDeckDevelopmentCard(3, 2));
-
-    }
 
     @Test
     void pushDeckDevelopmentCard() throws DeckDevelopmentCardException {
@@ -108,7 +98,8 @@ class GameMasterTest {
         Development dev = gm.popDeckDevelopmentCard(1,1);
         assertThrows(DeckDevelopmentCardException.class, ()-> gm.pushDeckDevelopmentCard(2, 2, dev));
 
-        assertDoesNotThrow(()->gm.removeDeckDevelopmentCard(2,3));
+        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(2, 3));
+
         assertDoesNotThrow(()->gm.pushDeckDevelopmentCard(2, 3, dev));
         assertSame(gm.popDeckDevelopmentCard(2,3), dev);
 

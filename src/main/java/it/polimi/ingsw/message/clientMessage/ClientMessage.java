@@ -13,6 +13,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = ConnectionMessage.class, name = "ConnectionMessage"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
+        @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
 
@@ -21,6 +22,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
         @JsonSubTypes.Type(value = NewTurn.class, name = "NewTurn"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
+        @JsonSubTypes.Type(value = RemoveDeckDevelopmentCard.class, name = "RemoveDeckDevelopmentCard"),
         @JsonSubTypes.Type(value = ResourceManagement.class, name = "ResourceManagement"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
         @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConversionRequest"),

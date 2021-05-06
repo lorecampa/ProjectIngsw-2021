@@ -30,7 +30,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
     List<ModelObserver> modelObserverList = new ArrayList<>();
 
-
     ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
@@ -55,24 +54,26 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player
      * @param gameSetting of type GameSetting - the class that represent the game customization made by
      *                    the player
-     * @param usernameCreator of type String -  username of the player that creates the game
      * @throws IOException when there are problems opening Json files when loading game information
      */
     public GameMaster(GameSetting gameSetting,
-                      String usernameCreator) throws IOException{
+                      ArrayList<String> players) throws IOException{
 
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
+        this.numberOfPlayer = players.size();
+
         //game loading
         loadGameSetting(gameSetting);
 
-        //setting up first player
-        addPlayer(usernameCreator);
+        //setting up  players
+        for (String player: players){
+            addPlayer(player);
+        }
 
         if (numberOfPlayer == 1){
             addPlayer(NAME_LORENZO);
-            setCurrentPlayer(usernameCreator);
         }
 
     }
@@ -94,6 +95,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         deckToken = gameSetting.getDeckToken();
         leaderAtStart = gameSetting.getLeaderAtStart();
         numberOfPlayer = gameSetting.getNumberOfPlayer();
+
     }
 
 
@@ -101,11 +103,16 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Method nextPlayer change the current player in the game when a new turn starts
      */
     public void nextPlayer(){
-        String nextPlayer = playersPersonalBoard.higherKey(currentPlayer);
-        if(nextPlayer == null){
+
+        if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersPersonalBoard.firstKey();
         }else{
-            this.currentPlayer = nextPlayer;
+            String nextPlayer = playersPersonalBoard.higherKey(currentPlayer);
+            if(nextPlayer == null){
+                this.currentPlayer = playersPersonalBoard.firstKey();
+            }else{
+                this.currentPlayer = nextPlayer;
+            }
         }
 
         notifyAllObservers(ModelObserver::currentPlayerChange);
@@ -234,12 +241,13 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
      * @see GameMaster#popDeckDevelopmentCard(int, int)
      */
-    public void removeDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException{
+    private void removeDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException{
         if(deckDevelopment.get(row).get(column).isEmpty()){
             throw new DeckDevelopmentCardException("No development card at selection (Row: " + row +
                     " Column: " + column + ")");
         }
         deckDevelopment.get(row).get(column).remove(0);
+
     }
 
 
