@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Server {
@@ -112,7 +113,7 @@ public class Server {
 
     public void clientDisconnect(ClientConnectionHandler client){
         synchronized (lobby){
-            client.setExit();
+            client.setExit(true);
             lobby.remove(client);
             if ((client.getState() == HandlerState.NUM_OF_PLAYER)&&(lobby.size() > 0))
             {
@@ -125,14 +126,21 @@ public class Server {
     public void clientReconnection(int matchID, int clientID, ClientConnectionHandler client){
         synchronized (matches){
             boolean reconnected = false;
-            for (Match match : matches){
+            for (Match match : matches) {
                 if (match.getMatchID() == matchID)
-                    reconnected = match.playerReconnection(clientID, client.getSocket());
+                    reconnected = match.playerReconnection(clientID, client);
             }
-            if (reconnected)
-                client.writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,"Reconnected"));
-            else
+            if (!reconnected)
                 client.writeToStream(new ErrorMessage(ErrorType.FAIL_RECONNECTION));
+            else{
+                synchronized (lobby){
+                    for (ClientConnectionHandler clientConnectionHandler : lobby ){
+                        if (clientConnectionHandler.getClientID() == clientID){
+                            lobby.set(lobby.indexOf(clientConnectionHandler), client);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -144,11 +152,11 @@ public class Server {
         }
     }
 
-    public int getNextClientID(){
+    public synchronized int getNextClientID(){
         return  nextClientID++;
     }
 
-    public int getNextMatchID(){
+    public synchronized int getNextMatchID(){
         return nextMatchID++;
     }
 
@@ -156,7 +164,7 @@ public class Server {
         while (true){
             try {
                 Socket socket = serverSocket.accept();
-                //socket.setSoTimeout(5000);
+                //socket.setSoTimeout(20000);
                 System.out.println("Server Socket has accepted a connection");
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);

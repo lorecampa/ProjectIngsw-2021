@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class ServerMessageHandler {
     private Controller controller;
-    private Server server;
+    private final Server server;
     private ClientConnectionHandler client;
     private VirtualClient virtualClient;
     private HandlerState state;
@@ -26,6 +26,8 @@ public class ServerMessageHandler {
     public Optional<VirtualClient> getVirtualClient() {
         return Optional.ofNullable(virtualClient);
     }
+
+    public void setClient(ClientConnectionHandler client) { this.client = client; }
 
     public void setState(HandlerState state){
         this.state = state;
@@ -53,9 +55,8 @@ public class ServerMessageHandler {
     }
 
     public void handleDisconnection(){
-        getVirtualClient().ifPresentOrElse(value -> value.getMatch().playerDisconnection(value),
+        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
                 ()->server.clientDisconnect(client));
-
     }
 
     public void handleReconnection(ReconnectionMessage message){

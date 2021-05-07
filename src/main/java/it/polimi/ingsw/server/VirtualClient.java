@@ -18,7 +18,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     private final int id;
     private String username;
-    private final ClientConnectionHandler client;
+    private ClientConnectionHandler client;
     private Controller controller;
     private final Match match;
     private boolean ready;
@@ -36,10 +36,12 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
         //TODO it is null pointer exception now
         //maybe to do here
-        controller.registerToAllObservable(this);
+        //controller.registerToAllObservable(this);
     }
 
     public ClientConnectionHandler getClient() { return client; }
+
+    public void setClient(ClientConnectionHandler client) { this.client = client; }
 
     public int getId() {
         return id;

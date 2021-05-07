@@ -18,17 +18,18 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class ClientConnectionHandler implements Runnable {
-    private Socket socket;
+    private final Socket socket;
     private final Server server;
-    private Scanner in;
-    private PrintWriter out;
-    ServerMessageHandler serverMessageHandler;
-    ObjectMapper mapper = new ObjectMapper();
-    private Boolean exit = false;
+    private final Scanner in;
+    private final PrintWriter out;
 
-    private Thread ping;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private final int clientID;
+    //private boolean active = true;
+    private boolean exit = false;
+
+    private ServerMessageHandler serverMessageHandler;
+    private int clientID;
 
 
     public ClientConnectionHandler(Socket socket, Server server, int clientID) throws IOException {
@@ -41,8 +42,11 @@ public class ClientConnectionHandler implements Runnable {
         out = new PrintWriter(socket.getOutputStream());
         serverMessageHandler = new ServerMessageHandler(server,this);
 
-        this.ping = new Thread(() -> {
-            while(true) {
+    }
+
+    private void startPinging(){
+        Thread ping = new Thread(() -> {
+            while (!exit) {
                 writeToStream(new PingPongMessage());
                 try {
                     TimeUnit.SECONDS.sleep(10);
@@ -55,17 +59,7 @@ public class ClientConnectionHandler implements Runnable {
         ping.start();
     }
 
-    public void setSocket(Socket socket) throws IOException {
-        this.socket = socket;
-        in = new Scanner(socket.getInputStream());
-        out = new PrintWriter(socket.getOutputStream());
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public void setExit(){exit = true;}
+    public void setExit(boolean exit) { this.exit = exit; }
 
     public int getClientID() {
         return clientID;
@@ -81,6 +75,12 @@ public class ClientConnectionHandler implements Runnable {
         serverMessageHandler.setVirtualClient(virtualClient);
     }
 
+    public ServerMessageHandler getServerMessageHandler() { return serverMessageHandler; }
+
+    public void setServerMessageHandler(ServerMessageHandler serverMessageHandler) {  this.serverMessageHandler = serverMessageHandler; }
+
+    public void setClientID(int clientID) { this.clientID = clientID; }
+
     public void writeToStream(ClientMessage message){
         Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
         serializedMessage.ifPresentOrElse(out::println,
@@ -92,21 +92,23 @@ public class ClientConnectionHandler implements Runnable {
         String serializedMessage;
         try {
             serializedMessage = in.nextLine();
-            //TODO handle quit with a message
+
             Optional<ServerMessage> message = Optional.
                     ofNullable(deserialize(serializedMessage));
 
             message.ifPresentOrElse(
                     x -> x.process(serverMessageHandler),
                     () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
+            //TODO handle quit with a message
         }catch (Exception e){
-            //TODO client disconnection unexpected handle
             serverMessageHandler.handleDisconnection();
         }
+
     }
 
     public ServerMessage deserialize(String serializedMessage){
         ServerMessage message;
+        if (serializedMessage == null) return null;
         try {
             message = mapper.readValue(serializedMessage, ServerMessage.class);
         } catch (JsonProcessingException e) {
@@ -128,11 +130,13 @@ public class ClientConnectionHandler implements Runnable {
 
     @Override
     public void run() {
+
+        startPinging();
+
         while (!exit) {
             readFromStream();
         }
 
-        // Close stream and socket
         in.close();
         out.close();
         try {
