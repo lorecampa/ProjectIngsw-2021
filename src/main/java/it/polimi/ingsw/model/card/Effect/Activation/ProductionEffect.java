@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -38,12 +38,12 @@ public class ProductionEffect implements Effect {
      * Method doEffect checks if the player has enough resource for the production, if it does
      * then pass all the resource that he will gain to the resource manager and it will handle those
      * putting them into the strongbox, otherwise throws CantMakeProductionException
-     * @param state of type State - defines the state of the turn, in this case must be of type PRODUCTION_STATE
+     * @param turnState of type State - defines the state of the turn, in this case must be of type PRODUCTION_STATE
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
-    public void doEffect(State state) throws  CantMakeProductionException {
-        if (state == State.PRODUCTION_STATE){
+    public void doEffect(TurnState turnState) throws  CantMakeProductionException {
+        if (turnState == TurnState.PRODUCTION_ACTION){
             ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                     .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new));
@@ -53,8 +53,9 @@ public class ProductionEffect implements Effect {
                 resourceManager.addToResourcesToProduce(
                         resourceAcquired.stream().
                         map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
-                        .collect(Collectors.toCollection(ArrayList::new))
-                );
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                        true,
+                        true);
 
 
             }else{

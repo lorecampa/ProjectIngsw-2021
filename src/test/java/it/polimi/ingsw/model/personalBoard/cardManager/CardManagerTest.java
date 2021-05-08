@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
@@ -117,17 +117,17 @@ class CardManagerTest {
         cardManager.addLeader(leader1);
         cardManager.addLeader(leader2);
 
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, State.MARKET_STATE));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(2,State.PRODUCTION_STATE));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, TurnState.MARKET_ACTION));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(2, TurnState.PRODUCTION_ACTION));
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0,State.MARKET_STATE));
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, State.PRODUCTION_STATE));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1,State.MARKET_STATE));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
+        assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, TurnState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
 
         cardManager.clearUsed();
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0,State.MARKET_STATE));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1,State.MARKET_STATE));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.observer;
 
+import it.polimi.ingsw.controller.TurnState;
+
 public interface GameMasterObserver {
     /**
      * Method to get an update from the Faith Track
@@ -18,4 +20,7 @@ public interface GameMasterObserver {
      * @param numResources is the number of discarded resources
      */
     void discardResources(int numResources);
+
+
+    void onTurnStateChange(TurnState turnState);
 }

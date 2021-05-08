@@ -2,9 +2,8 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -31,16 +30,18 @@ public class MarbleEffect implements Effect {
     /**
      * Method doEffect is in charge of pass all the resources to
      * the market based on how many white marble the user haw drawn
-     * @param state of type State - defines the state of the turn, in this case must be MARKET_STATE
+     * @param turnState of type State - defines the state of the turn, in this case must be MARKET_STATE
      */
     @Override
-    public void doEffect(State state) {
-        if (state == State.MARKET_STATE){
+    public void doEffect(TurnState turnState) {
+        if (turnState == TurnState.WHITE_MARBLE_CONVERSION){
             int whiteMarble = market.getWhiteMarbleToTransform();
             //add resource in market
+            ArrayList<Resource> conversion = new ArrayList<>();
             for (Resource res: transformIn){
-                market.addInResourcesToSend(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
+                conversion.add(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
             }
+            market.insertLeaderResources(conversion);
         }
     }
 
@@ -61,7 +62,9 @@ public class MarbleEffect implements Effect {
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {}
 
-
+    public ArrayList<Resource> getTransformIn() {
+        return transformIn;
+    }
 
     @Override
     public String toString() {

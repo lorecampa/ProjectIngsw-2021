@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
+import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -16,7 +17,8 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
 
-        @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
+        @JsonSubTypes.Type(value = AnyProductionResponse.class, name = "AnyProductionResponse"),
+        @JsonSubTypes.Type(value = AnyConversionRequest.class, name = "AnyConversionRequest"),
         @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
         @JsonSubTypes.Type(value = LeaderManage.class, name = "LeaderManage"),
         @JsonSubTypes.Type(value = MarketAction.class, name = "MarketAction"),

@@ -3,8 +3,13 @@ package it.polimi.ingsw.message.clientMessage;
 public enum ErrorType {
     INVALID_MESSAGE ("Message is not valid"),
     INVALID_USERNAME("Username is not valid"),
+    NOT_YOUR_TURN("It is not your turn, please wait!"),
     FAIL_RECONNECTION("Not able to reconnect"),
-    FAIL_GAME_LOADING("Error in match creation");
+    FAIL_GAME_LOADING("Error in match creation"),
+    //GAME ERROR
+    INVALID_NUM_ANY_CONVERSION("Invalid number of any requested to convert"),
+    NOT_ENOUGH_REQUIREMENT("You don't have enough requirements to buy this card");
+
 
     private final String message;
 

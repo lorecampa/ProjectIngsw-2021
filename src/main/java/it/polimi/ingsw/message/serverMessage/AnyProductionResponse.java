@@ -2,26 +2,29 @@ package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.server.ServerMessageHandler;
 
 import java.util.ArrayList;
 
-public class AnyResponse {
+public class AnyProductionResponse implements ServerMessage {
     private final ArrayList<ResourceData> resources;
-    private final Boolean isProductionAny;
 
     @JsonCreator
-    public AnyResponse(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                       @JsonProperty("isProductionAny")Boolean isProductionAny) {
+    public AnyProductionResponse(@JsonProperty("resources") ArrayList<ResourceData> resources) {
         this.resources = resources;
-        this.isProductionAny = isProductionAny;
+
     }
 
     public ArrayList<ResourceData> getResources() {
         return resources;
     }
 
-    public Boolean getProductionAny() {
-        return isProductionAny;
+
+    @Override
+    public void process(ServerMessageHandler handler) {
+        System.out.println("AnyProductionResponseHandler");
+
     }
 }

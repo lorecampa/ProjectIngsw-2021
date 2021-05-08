@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -35,7 +35,7 @@ class WarehouseEffectTest {
 
         effect = new WarehouseEffect(resources);
         effect.attachResourceManager(rm);
-        assertDoesNotThrow(()->effect.doEffect(State.CREATION_STATE));
+        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGING));
 
         //add resources to our leaders depots just created
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 2)));

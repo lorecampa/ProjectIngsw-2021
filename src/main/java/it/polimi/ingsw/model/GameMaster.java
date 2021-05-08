@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.observer.*;
@@ -30,20 +31,19 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
     List<ModelObserver> modelObserverList = new ArrayList<>();
 
+    private TurnState turnState;
     ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
     private int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
-
     private ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment;
     private LinkedList<Leader> deckLeader;
     private Market market;
-
     private String faithTrackSerialized;
     private String baseProductionSerialized;
-
     private LinkedList<Token> deckToken;
+
 
     private int vaticanReportReached = 0;
     private int leaderAtStart;
@@ -68,6 +68,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         loadGameSetting(gameSetting);
 
         //setting up  players
+        Collections.shuffle(players);
         for (String player: players){
             addPlayer(player);
         }
@@ -90,9 +91,21 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
         deckDevelopment = gameSetting.getDeckDevelopment();
+        for (int i = 0; i < deckDevelopment.size(); i++){
+            for (int j = 0; j < deckDevelopment.get(i).size(); j++){
+                Collections.shuffle(deckDevelopment.get(i).get(j));
+            }
+        }
+
         deckLeader = gameSetting.getDeckLeader();
+        Collections.shuffle(deckLeader);
+
         market = gameSetting.getMarket();
+        market.attachGameMasterObserver(this);
+
         deckToken = gameSetting.getDeckToken();
+        Collections.shuffle(deckToken);
+
         leaderAtStart = gameSetting.getLeaderAtStart();
         numberOfPlayer = gameSetting.getNumberOfPlayer();
 
@@ -115,6 +128,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             }
         }
 
+        onTurnStateChange(TurnState.ACTION_CHOOSING);
         notifyAllObservers(ModelObserver::currentPlayerChange);
     }
 
@@ -180,14 +194,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     *Method setCurrentPlayer is a setter for the current player of the turn
-     * @param player of type String - identifier of the current player we want to set
-     */
-    public void setCurrentPlayer(String player){
-        currentPlayer = player;
-    }
-
-    /**
      * Method getPersonalBoard is a getter for the personal board associated with a certain username
      * @param username of type String - player identifier
      * @return PersonalBoard - personal board associated with username, null if username is not in game
@@ -229,6 +235,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         deckDevelopment.get(row).get(column).remove(0);
 
         development.attachCardToUser(playersPersonalBoard.get(currentPlayer), market);
+
+        onTurnStateChange(TurnState.BUY_DEVELOPMENT_ACTION);
+
         return development;
     }
 
@@ -391,6 +400,15 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     @Override
     public void increaseLorenzoFaithPosition(int pos) {
         this.playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().movePlayer(pos);
+    }
+
+    @Override
+    public void onTurnStateChange(TurnState turnState) {
+        this.turnState = turnState;
+    }
+
+    public TurnState getTurnState() {
+        return turnState;
     }
 
     @Override

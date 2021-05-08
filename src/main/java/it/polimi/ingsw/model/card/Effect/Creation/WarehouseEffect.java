@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -31,11 +31,11 @@ public class WarehouseEffect  implements Effect {
 
     /**
      * Method doEffect creates a new locked depot (lockDepot = true)  for all the resources in depots
-     * @param state of type State - defines the state of the turn, in this case must be of type CREATION_STATE
+     * @param turnState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
      */
     @Override
-    public void doEffect(State state) {
-        if (state == State.CREATION_STATE){
+    public void doEffect(TurnState turnState) {
+        if (turnState == TurnState.LEADER_MANAGING){
             for (Resource depot: depots){
                 Resource res = ResourceFactory.createResource(depot.getType(), 0);
                 resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));

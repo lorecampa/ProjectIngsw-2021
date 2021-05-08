@@ -3,9 +3,11 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.GameMasterObservable;
@@ -25,6 +27,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     private final Development baseProduction;
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
     private final ArrayList<Leader> leadersUsed = new ArrayList<>();
+    private Development bufferBuyCard;
 
 
 
@@ -41,6 +44,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void clearUsed(){
         devCardsUsed.clear();
         leadersUsed.clear();
+    }
+
+    public void setBufferBuyCard(Development dev){
+        this.bufferBuyCard = dev;
     }
 
     /**
@@ -90,16 +97,16 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     /**
      * Method to activate a leader effect
      * @param leaderIndex is the index of the leader
-     * @param state is the current state of the turn
+     * @param turnState is the current state of the turn
      * @throws IndexOutOfBoundsException if the leader selected does not exist
      * @throws CantMakeProductionException if the leader's production effect can't be activated
      * @throws CardAlreadyUsed if the card has already been used in this turn
      */
-    public void activateLeaderEffect(int leaderIndex, State state) throws IndexOutOfBoundsException, CantMakeProductionException, CardAlreadyUsed {
+    public void activateLeaderEffect(int leaderIndex, TurnState turnState) throws IndexOutOfBoundsException, CantMakeProductionException, CardAlreadyUsed {
         Leader leader = leaders.get(leaderIndex);
         if (leadersUsed.contains(leader))
             throw new CardAlreadyUsed("Leader already used");
-        leader.doEffects(state);
+        leader.doEffects(turnState);
         leadersUsed.add(leader);
     }
 
@@ -115,7 +122,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         Development development = cardSlots.get(indexCardSlot).getCardOfLv(lvCard);
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
-        development.doEffects(State.PRODUCTION_STATE);
+        development.doEffects(TurnState.PRODUCTION_ACTION);
         devCardsUsed.add(development);
     }
 
@@ -127,7 +134,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void baseProductionProduce() throws CardAlreadyUsed, CantMakeProductionException {
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
-        baseProduction.doEffects(State.PRODUCTION_STATE);
+        baseProduction.doEffects(TurnState.PRODUCTION_ACTION);
         devCardsUsed.add(baseProduction);
     }
 
@@ -182,6 +189,38 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         }
         return count>=howMany;
     }
+
+    public boolean doIHaveMarbleEffects(){
+        return leaders.stream()
+                .map(Card::getOnActivationEffects)
+                .flatMap(ArrayList::stream)
+                .anyMatch(x -> x instanceof MarbleEffect);
+    }
+
+    /*
+    metodo che andrà nel client per cercare il numero di leader con una determinato numero di palline bianche
+
+    public HashMap<Integer, ArrayList<ResourceData>> whiteMarbleLeaderTransformation(){
+        HashMap<Integer, ArrayList<ResourceData>> assignment = new HashMap<>();
+        for(Leader leader: leaders){
+            if (leader.isActive()){
+                for (Effect effect: leader.getOnActivationEffects()){
+                    if (effect instanceof MarbleEffect){
+                        ArrayList<ResourceData> transformInData =
+                                ((MarbleEffect) effect).getTransformIn().stream()
+                                .map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+
+                        assignment.put(leaders.indexOf(leader),
+                                transformInData);
+                    }
+                }
+            }
+        }
+        return assignment;
+    }
+
+     */
+
 
 
     @Override

@@ -18,15 +18,17 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
 
         @JsonSubTypes.Type(value = AnyConversionRequest.class, name = "AnyConversionRequest"),
+        @JsonSubTypes.Type(value = BufferUpdate.class, name = "BufferUpdate"),
         @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
+        @JsonSubTypes.Type(value = GameSetup.class, name = "GameSetup"),
+        @JsonSubTypes.Type(value = MainMenuMessage.class, name = "MainMenuMessage"),
+        @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
         @JsonSubTypes.Type(value = NewTurn.class, name = "NewTurn"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
         @JsonSubTypes.Type(value = RemoveDeckDevelopmentCard.class, name = "RemoveDeckDevelopmentCard"),
-        @JsonSubTypes.Type(value = ResourceManagement.class, name = "ResourceManagement"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
-        @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConversionRequest"),
-
+        @JsonSubTypes.Type(value = WhiteMarbleConverted.class, name = "WhiteMarbleConverted"),
 })
 public interface ClientMessage extends Message{
     void process (ClientMessageHandler handler);

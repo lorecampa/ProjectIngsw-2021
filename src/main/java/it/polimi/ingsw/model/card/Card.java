@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
@@ -63,7 +63,7 @@ public  abstract class Card {
      */
     public void  doCreationEffects() throws CantMakeProductionException {
         for(Effect effect: onCreationEffect) {
-            effect.doEffect(State.CREATION_STATE);
+            effect.doEffect(TurnState.LEADER_MANAGING);
         }
     }
 
@@ -71,9 +71,9 @@ public  abstract class Card {
      * Method doEffects does all the effect of type activation
      * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    public  void doEffects(State state) throws  CantMakeProductionException {
+    public  void doEffects(TurnState turnState) throws  CantMakeProductionException {
         for (Effect effect: onActivationEffects){
-            effect.doEffect(state);
+            effect.doEffect(turnState);
         }
     }
 
@@ -131,6 +131,9 @@ public  abstract class Card {
      */
     public void setOwner(String username) {this.owner = username; }
 
+    public ArrayList<Effect> getOnActivationEffects() {
+        return onActivationEffects;
+    }
 
     @Override
     public String toString() {

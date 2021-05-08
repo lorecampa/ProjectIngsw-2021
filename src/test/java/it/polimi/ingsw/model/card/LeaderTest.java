@@ -58,7 +58,8 @@ class LeaderTest {
         mk = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class);
 
         leaders =
-                mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<ArrayList<Leader>>() {});
+                mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<>() {
+                });
         FaithTrack faithTrack =
                 mapper.readValue(new File("src/main/resources/json/faithTrack.json"), FaithTrack.class);
         PersonalBoard pb = new PersonalBoard("lupo", faithTrack, rm, cm);

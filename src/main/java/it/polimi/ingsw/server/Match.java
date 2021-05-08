@@ -163,7 +163,8 @@ public class Match {
             try {
                 gameSetting = new GameSetting(numOfPlayers);
                 gameMaster = new GameMaster(gameSetting, playersUsername);
-                controller = new Controller(gameMaster);
+                //added match to controller (Lorenzo)
+                controller = new Controller(gameMaster, this);
                 sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
             } catch (IOException | JsonFileModificationError e) {
                 e.printStackTrace();
@@ -177,5 +178,11 @@ public class Match {
         synchronized (activePlayers) {
             activePlayers.forEach(x -> x.getClient().writeToStream(message));
         }
+    }
+
+    public void sendSinglePlayer(String username, ClientMessage message){
+        activePlayers.stream().filter(x -> x.getUsername().equals(username))
+                .findFirst()
+                .ifPresent(y -> y.getClient().writeToStream(message));
     }
 }

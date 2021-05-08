@@ -13,7 +13,6 @@ import it.polimi.ingsw.model.token.Token;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 
 
@@ -78,7 +77,7 @@ public class GameSetting {
         if (deckToken.size() != INITIAL_SIZE_TOKEN_DECK){
             throw new JsonFileModificationError("Deck token size wrong");
         }
-        Collections.shuffle(this.deckToken);
+
 
     }
 
@@ -88,10 +87,11 @@ public class GameSetting {
         deckLeader = mapper
                 .readValue(new File("src/main/resources/json/leader.json"),
                         new TypeReference<LinkedList<Leader>>() {});
+
         if (deckLeader.size() != INITIAL_SIZE_LEADER_DECK){
             throw new JsonFileModificationError("Leader deck size wrong");
         }
-        Collections.shuffle(deckLeader);
+
     }
 
     private void createDefaultDeckDevelopment() throws IOException, JsonFileModificationError {
@@ -119,7 +119,6 @@ public class GameSetting {
                     cardBlock.add(developmentsJson[index]);
                     index++;
                 }
-                Collections.shuffle(cardBlock);
                 row.add(cardBlock);
             }
             deckDevelopment.add(row);

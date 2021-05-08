@@ -2,24 +2,32 @@ package it.polimi.ingsw.model.personalBoard.market;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.ColorData;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.observer.GameMasterObservable;
+import it.polimi.ingsw.observer.GameMasterObserver;
+import it.polimi.ingsw.observer.MarketObserver;
+import it.polimi.ingsw.observer.Observable;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * Class that manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
  */
-public class Market {
+public class Market extends GameMasterObservable implements Observable<MarketObserver> {
+    List<MarketObserver> marketObserverList = new ArrayList<>();
+
     private final int numCol;
     private final int numRow;
-
-
     private final ArrayList<ArrayList<Marble>> marketTray;
     private Marble marbleToInsert;
     private int numOfWhiteMarbleDrew = 0;
@@ -70,6 +78,8 @@ public class Market {
         // set the marble to insert with the last marble
         this.marbleToInsert = allMarbles.get(numCol*numRow);
 
+
+
     }
 
     /**
@@ -115,6 +125,21 @@ public class Market {
         marketTray.get(row).remove(0);
         marketTray.get(row).add(numCol - 1 , marbleToInsert);
         marbleToInsert = tempMarble;
+
+
+        //state change
+        if (getWhiteMarbleDrew() > 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
+        }
+
+        //observer
+        ArrayList<ColorData> rowUpdated = new ArrayList<>();
+        for (int i = 0; i < numRow; i++){
+            rowUpdated.add(marketTray.get(row).get(i).getColorData());
+        }
+        notifyAllObservers(x ->
+                x.marketTrayChange(rowUpdated, marbleToInsert.getColorData(), row, true));
+
     }
 
 
@@ -137,6 +162,21 @@ public class Market {
         marketTray.get(numRow - 1).remove(col);
         marketTray.get(numRow - 1).add(marbleToInsert);
         marbleToInsert = tempMarble;
+
+        //state change
+        if (getWhiteMarbleDrew() > 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
+        }
+
+        //observer
+        ArrayList<ColorData> colUpdated = new ArrayList<>();
+        for (int i = 0; i < numRow; i++){
+            colUpdated.add(marketTray.get(i).get(col).getColorData());
+        }
+        notifyAllObservers(x ->
+                x.marketTrayChange(colUpdated, marbleToInsert.getColorData(), col, false));
+
+
     }
 
 
@@ -150,9 +190,27 @@ public class Market {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+
+    public void insertLeaderResources(ArrayList<Resource> resources){
+        resources.forEach(this::addInResourcesToSend);
+
+    }
+
     public void setWhiteMarbleToTransform(int whiteMarbleToTransform) {
-        numOfWhiteMarbleDrew -= whiteMarbleToTransform;
+        int delta = numOfWhiteMarbleDrew - whiteMarbleToTransform;
+        //control that we don't exceed setting leader white marble assignment
+        if (delta <= 0){
+            this.whiteMarbleToTransform = numOfWhiteMarbleDrew;
+            numOfWhiteMarbleDrew = 0;
+        }else{
+            numOfWhiteMarbleDrew = delta;
+            this.whiteMarbleToTransform = whiteMarbleToTransform;
+        }
+
+
+
         this.whiteMarbleToTransform = whiteMarbleToTransform;
+
     }
 
     public int getWhiteMarbleToTransform() {
@@ -165,5 +223,16 @@ public class Market {
     public void reset(){
         numOfWhiteMarbleDrew = 0;
         resourcesToSend.clear();
+    }
+
+
+    @Override
+    public void attachObserver(MarketObserver observer) {
+        marketObserverList.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers(Consumer<MarketObserver> consumer) {
+        marketObserverList.forEach(consumer);
     }
 }

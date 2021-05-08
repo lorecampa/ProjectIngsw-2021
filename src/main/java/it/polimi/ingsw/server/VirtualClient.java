@@ -1,20 +1,18 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.observer.CardManagerObserver;
-import it.polimi.ingsw.observer.FaithTrackObserver;
-import it.polimi.ingsw.observer.ModelObserver;
-import it.polimi.ingsw.observer.ResourceManagerObserver;
+import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
-        FaithTrackObserver, CardManagerObserver {
+        FaithTrackObserver, CardManagerObserver, MarketObserver {
 
     private final int id;
     private String username;
@@ -79,6 +77,8 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //OBSERVER IMPLEMENTATION
 
+
+
     //MODEL OBSERVER
     @Override
     public void currentPlayerChange() {
@@ -92,6 +92,16 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     //RESOURCE MANAGER OBSERVER
+
+
+    @Override
+    public void bufferUpdate(ArrayList<Resource> resources) {
+        match.sendSinglePlayer(getUsername(),
+                new BufferUpdate(resources.stream()
+                        .map(Resource::toClient)
+                        .collect(Collectors.toCollection(ArrayList::new))));
+    }
+
     @Override
     public void depotModify(Resource resource, int depotIndex, boolean isDepotLeader) {
 
@@ -135,4 +145,13 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
 
+    //Market
+
+
+    @Override
+    public void marketTrayChange(ArrayList<ColorData> sequenceUpdated,
+                                 ColorData lastMarble, int selection, boolean isRow) {
+
+
+    }
 }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -28,11 +28,11 @@ public class DiscountEffect implements Effect {
 
     /**
      * Method doEffect is responsible to pass all the discounts to the resource manager
-     * @param state of type State - defines the state of the turn, in this case must be of type CREATION_STATE
+     * @param turnState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
      */
     @Override
-    public void doEffect(State state) {
-        if (state == State.CREATION_STATE){
+    public void doEffect(TurnState turnState) {
+        if (turnState == TurnState.LEADER_MANAGING){
             for(Resource res: discounts){
                 resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));
             }

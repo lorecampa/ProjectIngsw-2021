@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
@@ -79,6 +80,40 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         return resourcesSent;
     }
 
+    public void convertAnyRequirement(ArrayList<Resource> resources, boolean isBuyDev) throws NegativeResourceException, AnyConversionNotPossible {
+        for(Resource res: resources){
+            if (myResources.contains(res)){
+                myResources.get(myResources.indexOf(res)).subValue(res.getValue());
+            }else{
+                throw new AnyConversionNotPossible("You can't convert this any");
+            }
+        }
+        resources.forEach(this::addToBuffer);
+        anyRequired -= resources.stream().mapToInt(Resource::getValue).sum();
+
+        if (anyRequired == 0){
+            if (isBuyDev){
+                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WAREHOUSE_RESOURCE_REMOVING));
+            }else{
+                if(anyToProduce != 0){
+                    notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
+                }else{
+                    notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
+                }
+            }
+        }
+
+    }
+
+    public void convertAnyProductionProfit(ArrayList<Resource> resources){
+        addToResourcesToProduce(resources, false, false);
+        anyToProduce -= resources.stream().mapToInt(Resource::getValue).sum();
+
+        if(anyToProduce == 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WAREHOUSE_RESOURCE_REMOVING));
+        }
+    }
+
 
     /**
      * Store the resources i have to manage from the market in the buffer
@@ -88,6 +123,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 false,
                 false,
                 true);
+
+        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.DEPOTS_POSITIONING));
+
     }
 
     /**
@@ -181,12 +219,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Used to add a resource value or the resource itself in the resource to produce
      * @param resources I want to add */
-    public void addToResourcesToProduce(ArrayList<Resource> resources) {
+    public void addToResourcesToProduce(ArrayList<Resource> resources, boolean countAny, boolean countFaith) {
 
-        fromResourceToConcreteResource(resources, false,
-                true,
-                true);
-
+        fromResourceToConcreteResource(resources, false, countAny, countFaith);
         for (Resource res: resources){
             if(resourcesToProduce.contains(res)){
                 resourcesToProduce.get(resourcesToProduce.indexOf(res)).addValue(res.getValue());
@@ -230,6 +265,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @return true if u can false if u can't
      * */
     public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
+
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources,
                 true,
@@ -262,12 +298,17 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             addToBuffer(res);
         }
 
-        /*
+
         if (anyRequired > 0){
+            if(checkDiscount){
+                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_BUY_DEV_CONVERSION));
+            }else{
+                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_COST_CONVERSION));
+            }
             notifyAllObservers(x -> x.anyConversionRequest(myResources, myDiscounts,
                     anyRequired, false));
         }
-        */
+
         return true;
     }
 

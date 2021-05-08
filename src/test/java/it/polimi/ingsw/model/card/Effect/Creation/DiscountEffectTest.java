@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.card.Effect.State;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -47,7 +47,7 @@ class DiscountEffectTest {
         discounts = resourceArray(3,2,0,0,0,0);
         effect = new DiscountEffect(discounts);
         effect.attachResourceManager(rm);
-        assertDoesNotThrow(()->effect.doEffect(State.CREATION_STATE));
+        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGING));
 
         ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0,0,0,0);
         for (Resource res: resStrongbox){

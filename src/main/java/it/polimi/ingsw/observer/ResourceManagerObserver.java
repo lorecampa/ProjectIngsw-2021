@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 public interface ResourceManagerObserver {
 
+
+    void bufferUpdate(ArrayList<Resource> resources);
+
     void depotModify(Resource resource, int depotIndex, boolean isDepotLeader);
 
     void depotSwitch(int from, int to, boolean isToLeader);
