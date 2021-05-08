@@ -68,7 +68,7 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
     public void process(ServerMessageHandler handler) {
         switch (type){
             case CONNECT:
-                handler.handleFirstContact(this);
+                handler.handleFirstContact();
                 break;
             case NUM_OF_PLAYER:
                 handler.handleMatchCreation(this);

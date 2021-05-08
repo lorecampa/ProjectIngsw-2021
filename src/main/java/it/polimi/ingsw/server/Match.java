@@ -36,10 +36,10 @@ public class Match {
     }
 
     public boolean isOpen(){
-        return numOfPlayers > currentNumOfPLayer();
+        return numOfPlayers > currentNumOfPlayer();
     }
 
-    public int currentNumOfPLayer(){
+    public int currentNumOfPlayer(){
         synchronized (allPlayers){
             return allPlayers.size();
         }
@@ -51,14 +51,14 @@ public class Match {
 
     public Controller getController() { return controller; }
 
-    public void addPlayer(VirtualClient client){
+    public void addPlayer(VirtualClient player){
         synchronized (allPlayers) {
             synchronized (activePlayers) {
-                if (!allPlayers.contains(client)) {
-                    allPlayers.add(client);
-                    activePlayers.add(client);
-                    client.getClient().setState(HandlerState.USERNAME);
-                    client.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert your Username"));
+                if (!allPlayers.contains(player)) {
+                    allPlayers.add(player);
+                    activePlayers.add(player);
+                    player.getClient().setState(HandlerState.USERNAME);
+                    player.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert your Username"));
                     if (!isOpen())
                         server.closeOpenMatch();
                 }
@@ -117,7 +117,7 @@ public class Match {
             synchronized (inactivePlayers){
 
                 for (VirtualClient virtualClient : inactivePlayers){
-                    if (virtualClient.getId() == clientID){
+                    if (virtualClient.getClientID() == clientID){
 
                         newClientConnHandler.setServerMessageHandler(virtualClient.getClient().getServerMessageHandler());
                         newClientConnHandler.getServerMessageHandler().setClient(newClientConnHandler);
@@ -165,6 +165,9 @@ public class Match {
                 gameMaster = new GameMaster(gameSetting, playersUsername);
                 //added match to controller (Lorenzo)
                 controller = new Controller(gameMaster, this);
+                for (VirtualClient player: allPlayers){
+                    player.getClient().getServerMessageHandler().setController(controller);
+                }
                 sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
             } catch (IOException | JsonFileModificationError e) {
                 e.printStackTrace();

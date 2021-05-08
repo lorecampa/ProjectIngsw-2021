@@ -2,7 +2,6 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
@@ -31,6 +30,10 @@ public class ServerMessageHandler {
 
     public void setClient(ClientConnectionHandler client) { this.client = client; }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
     public Optional<Controller> getController() {
         return Optional.ofNullable(controller);
     }
@@ -45,7 +48,7 @@ public class ServerMessageHandler {
         System.out.println(message.getType() + ": " + message.getMessage());
     }
 
-    public void handleFirstContact(ConnectionMessage message){
+    public void handleFirstContact(){
         if(state != HandlerState.FIRST_CONTACT) return;
         server.putInLobby(client);
     }
@@ -69,13 +72,7 @@ public class ServerMessageHandler {
         server.clientReconnection(message.getMatchID(), message.getClientID(), client);
     }
 
-    public void handlePingPong(PingPongMessage message){
-        //TODO
-    }
-
-
     public boolean checkTurn(){
-        String username;
         if (getVirtualClient().isPresent() && getController().isPresent()){
             return controller.isYourTurn(virtualClient.getUsername());
         }
