@@ -5,6 +5,8 @@ import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
+import it.polimi.ingsw.message.clientMessage.GameSetup;
+import it.polimi.ingsw.message.clientMessage.StarTurn;
 
 import java.util.ArrayList;
 
@@ -15,12 +17,7 @@ public class ClientMessageHandler {
         this.client =client;
     }
 
-
     public void handlePingPong(PingPongMessage message){
-        //TODO no client yet
-    }
-
-    public void handleConnectionMessage(ConnectionMessage message){
         //TODO no client yet
     }
 
@@ -39,12 +36,10 @@ public class ClientMessageHandler {
 
     public void username(ConnectionMessage message){
         PrintAssistant.instance.printf(message.getMessage());
-        client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, client.waitToStringInputCLI()));
     }
 
     public void numberOfPlayer(ConnectionMessage message){
         PrintAssistant.instance.printf(message.getMessage());
-        client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, "", client.waitToIntegerInputCLI()));
     }
 
     //MainMenu message handler
@@ -54,8 +49,20 @@ public class ClientMessageHandler {
         texts.add("1)Play multiplayer");
         texts.add("2)Play single player");
         texts.add("3)Reconnect to last game");
-        texts.add("4)Quit");
         PrintAssistant.instance.printfMultipleString(texts, PrintAssistant.ANSI_RED);
-        client.setChooseAction(client.waitToIntegerInputCLI());
+    }
+
+    //NewTurn message handler
+    public void newTurn(StarTurn message){
+        if(message.getUsername().equals(client.getMyName())){
+            client.setGameState(ClientGameState.START_YOUR_TURN);
+        }
+    }
+
+    //GameSetup message handler
+    public void gameSetUp(GameSetup message){
+        client.setModels(message.getUsernames());
+        client.setMarketData(message.getMarket());
+        client.setDeckDevData(message.getDeckDev());
     }
 }

@@ -29,7 +29,7 @@ public class Server {
 
 
     public  Server(){
-        port = 2021;
+        port = 2020;
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();

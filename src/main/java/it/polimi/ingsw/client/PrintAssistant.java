@@ -24,13 +24,17 @@ public class PrintAssistant {
     public static PrintAssistant instance = new PrintAssistant();
 
     public void printf(String text, String txColor, String bkColor){
-        System.out.println(bkColor + txColor+text+ANSI_RESET);
+        System.out.println(bkColor + txColor+text+ANSI_RESET+ANSI_BLACK+"|"+ANSI_RESET);
     }
     public void printf(String text, String txColor){
         System.out.println(txColor+text+ANSI_RESET);
     }
     public void printf(String text){
         System.out.println(text);
+    }
+
+    public void errorPrint(String text){
+        System.out.println(ANSI_RED_BACKGROUND + ANSI_BLACK+text+ANSI_RESET);
     }
 
     public void printfMultipleString(ArrayList<String>texts, String txColor, String bkColor){
@@ -93,11 +97,19 @@ public class PrintAssistant {
         s+=originalString;
         int numContained = howManyColorContain(originalString);
         int numberOfSpaces=width-s.length()-offSet + (numContained*9)+(numContained==0?0:1);
-        s+=generataAStringOf(spacing, numberOfSpaces);
+        s+= generateAStringOf(spacing, numberOfSpaces);
         s+=endChar;
         return s;
     }
 
+    public String fitToWidth(String originalString, int width){
+        String s="";
+        s+=originalString;
+        int numContained = howManyColorContain(originalString);
+        int numberOfSpaces=width-s.length() + (numContained*9)+(numContained==0?0:1);
+        s+= generateAStringOf(' ', numberOfSpaces);
+        return s;
+    }
     private int howManyColorContain(String s){
         int num=0;
         if(s.contains(ANSI_WHITE_BACKGROUND)) num++;
@@ -116,15 +128,25 @@ public class PrintAssistant {
         if(s.contains(ANSI_BLUE_BACKGROUND)) num++;
         if(s.contains(ANSI_GREEN)) num++;
         if(s.contains(ANSI_GREEN_BACKGROUND)) num++;
+        //if(s.contains(ANSI_RESET)) num++;
         return num;
     }
-
-    public String generataAStringOf(char c, int num){
+    public String generateAStringOf(char c, int num){
         String string= "";
+        if(num<=0)
+            return string;
         for(int i=0;i<num;i++){
             string+=c;
         }
         return string;
     }
 
+    public void invalidParamCommand(String command){
+        command.toUpperCase();
+        errorPrint("Invalid param of "+command+", pls type help "+command+" to know the right one!");
+    }
+    public void invalidStateCommand(String command){
+        command.toUpperCase();
+        errorPrint("You can't call the command "+command+" now, you haven't the permissions!");
+    }
 }
