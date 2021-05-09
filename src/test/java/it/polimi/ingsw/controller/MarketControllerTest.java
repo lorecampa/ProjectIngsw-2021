@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ControllerTest {
+class MarketControllerTest {
 
     GameSetting gameSetting;
     GameMaster gameMaster;
@@ -54,12 +54,10 @@ class ControllerTest {
         System.out.println("State: " + controller.getTurnState());
     }
 
-    private Leader getLeader(int index){
+    private void attachLeader(int index){
         Leader leader = leaders.get(index);
         leader.attachCardToUser(personalBoard, gameMaster.getMarket());
         personalBoard.getCardManager().addLeader(leader);
-
-        return leader;
     }
 
     @Test
@@ -73,9 +71,9 @@ class ControllerTest {
     @Test
     void marketActionWithLeaders() {
         //1 stone
-        Leader marbleLeader1 = getLeader(10);
+        attachLeader(10);
         //1 coin
-        Leader marbleLeader2 = getLeader(11);
+        attachLeader(11);
 
 
         printState();

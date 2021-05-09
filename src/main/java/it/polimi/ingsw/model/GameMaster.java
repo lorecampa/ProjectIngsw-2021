@@ -43,11 +43,11 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private String faithTrackSerialized;
     private String baseProductionSerialized;
     private LinkedList<Token> deckToken;
-
-
+    private int depthDeckDevelopment;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
     private boolean gameEnded = false;
+
 
     /**
      * Constructor GameMaster creates a new game. It creates a new Market, deck of Leader and deck of Development card,
@@ -81,6 +81,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
 
 
+
     /**
      * Method loadGameSetting is responsible to load the game data from the gameSetting
      * @param gameSetting of type GameSetting - game data
@@ -91,6 +92,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
         deckDevelopment = gameSetting.getDeckDevelopment();
+        depthDeckDevelopment = deckDevelopment.get(0).get(0).size();
         for (int i = 0; i < deckDevelopment.size(); i++){
             for (int j = 0; j < deckDevelopment.get(i).size(); j++){
                 Collections.shuffle(deckDevelopment.get(i).get(j));
@@ -218,26 +220,25 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         }
     }
 
+
     /**
-     * Method popDeckDevelopmentCard return the first development Development card in the block of card deleting it
+     * Method popDeckDevelopmentCard return the first development Development card in the block of card
      * @param row of type int - row of the matrix
      * @param column of type int - column of the matrix
      * @return Development - the first card in the block associated with this coordinates (row, col)
      * @throws DeckDevelopmentCardException if the block of cards selected is empty
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
      */
-    public Development popDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
+
+    public Development getDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
 
         if(deckDevelopment.get(row).get(column).isEmpty()){
             throw new DeckDevelopmentCardException("No development card at selection (Row: "+row+" Column: "+column+")");
         }
         Development development = deckDevelopment.get(row).get(column).get(0);
-        deckDevelopment.get(row).get(column).remove(0);
-
         development.attachCardToUser(playersPersonalBoard.get(currentPlayer), market);
 
         onTurnStateChange(TurnState.BUY_DEVELOPMENT_ACTION);
-
         return development;
     }
 
@@ -248,7 +249,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @param column of type int - column to select
      * @throws DeckDevelopmentCardException if the block of cards selected is empty
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
-     * @see GameMaster#popDeckDevelopmentCard(int, int)
+     * @see GameMaster#getDeckDevelopmentCard(int, int)
      */
     private void removeDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException{
         if(deckDevelopment.get(row).get(column).isEmpty()){
@@ -270,9 +271,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * already full (4 card)
      * @throws IndexOutOfBoundsException when you are not selecting a block of card inside the matrix
      */
+
+    //non credo servirà
     public void pushDeckDevelopmentCard(int row, int column, Development development) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
-        int depthDeck = deckDevelopment.get(0).get(0).size();
-        if (deckDevelopment.get(row).get(column).size() == depthDeck){
+        if (deckDevelopment.get(row).get(column).size() == depthDeckDevelopment){
             throw new DeckDevelopmentCardException("Too much card at selection (Row: " + row +
                     "Column: " + column + ")");
         }
@@ -407,6 +409,15 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         this.turnState = turnState;
     }
 
+    @Override
+    public void onDeckDevelopmentCardRemove(int row, int col) {
+        try {
+            removeDeckDevelopmentCard(row, col);
+        } catch (Exception e) {
+            //it will never happen
+        }
+    }
+
     public TurnState getTurnState() {
         return turnState;
     }
@@ -414,6 +425,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     @Override
     public void attachObserver(ModelObserver observer) {
         modelObserverList.add(observer);
+
     }
 
     @Override

@@ -70,38 +70,16 @@ class GameMasterTest {
 
     }
 
-    @Test
-    void popDeckDevelopmentCard()  {
-        //deck development is Matrix(3,4)
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.popDeckDevelopmentCard(4, 4));
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.popDeckDevelopmentCard(-1, 4));
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.popDeckDevelopmentCard(2, -1));
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(2, 3));
-
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(1, 1));
-
-
-        //try to pop where there's no card
-        assertThrows(DeckDevelopmentCardException.class, ()-> gm.popDeckDevelopmentCard(1, 1));
-
-
-    }
-
-
 
     @Test
     void pushDeckDevelopmentCard() throws DeckDevelopmentCardException {
+        Development dev = gm.getDeckDevelopmentCard(1,1);
         //if size is already 4
-        Development dev = gm.popDeckDevelopmentCard(1,1);
         assertThrows(DeckDevelopmentCardException.class, ()-> gm.pushDeckDevelopmentCard(2, 2, dev));
 
-        assertDoesNotThrow(()-> gm.popDeckDevelopmentCard(2, 3));
+        assertDoesNotThrow(()-> gm.onDeckDevelopmentCardRemove(2, 3));
 
         assertDoesNotThrow(()->gm.pushDeckDevelopmentCard(2, 3, dev));
-        assertSame(gm.popDeckDevelopmentCard(2,3), dev);
 
         assertThrows(IndexOutOfBoundsException.class, ()-> gm.pushDeckDevelopmentCard(4, 2, dev));
 

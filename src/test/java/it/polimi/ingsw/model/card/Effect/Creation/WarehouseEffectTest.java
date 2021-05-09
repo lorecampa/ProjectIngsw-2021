@@ -35,7 +35,7 @@ class WarehouseEffectTest {
 
         effect = new WarehouseEffect(resources);
         effect.attachResourceManager(rm);
-        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGING));
+        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGE_BEFORE));
 
         //add resources to our leaders depots just created
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 2)));

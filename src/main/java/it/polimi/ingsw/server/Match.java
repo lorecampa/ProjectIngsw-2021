@@ -45,6 +45,10 @@ public class Match {
         }
     }
 
+    public ArrayList<VirtualClient> getAllPlayers() {
+        return allPlayers;
+    }
+
     public int getNumOfPlayers(){ return numOfPlayers; }
 
     public int getMatchID() { return matchID; }

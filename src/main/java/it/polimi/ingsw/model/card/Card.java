@@ -63,7 +63,7 @@ public  abstract class Card {
      */
     public void  doCreationEffects() throws CantMakeProductionException {
         for(Effect effect: onCreationEffect) {
-            effect.doEffect(TurnState.LEADER_MANAGING);
+            effect.doEffect(TurnState.LEADER_MANAGE_BEFORE);
         }
     }
 

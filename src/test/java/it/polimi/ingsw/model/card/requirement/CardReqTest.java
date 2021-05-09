@@ -34,14 +34,25 @@ class CardReqTest {
         //slot 3 (1: yellow level 1 -  2: yellow level 2 - 3: green level 3)
 
         cm.addDevelopmentCardTo(developmentsJson[4], 0);
+        cm.emptyCardSlotBuffer();
+
         cm.addDevelopmentCardTo(developmentsJson[30], 0);
+        cm.emptyCardSlotBuffer();
 
         cm.addDevelopmentCardTo(developmentsJson[10], 1);
+        cm.emptyCardSlotBuffer();
+
         cm.addDevelopmentCardTo(developmentsJson[24], 1);
+        cm.emptyCardSlotBuffer();
 
         cm.addDevelopmentCardTo(developmentsJson[15], 2);
+        cm.emptyCardSlotBuffer();
+
         cm.addDevelopmentCardTo(developmentsJson[31], 2);
+        cm.emptyCardSlotBuffer();
+
         cm.addDevelopmentCardTo(developmentsJson[33], 2);
+        cm.emptyCardSlotBuffer();
 
 
     }

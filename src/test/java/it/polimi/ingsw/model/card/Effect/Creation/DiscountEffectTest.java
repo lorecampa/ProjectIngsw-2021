@@ -47,7 +47,7 @@ class DiscountEffectTest {
         discounts = resourceArray(3,2,0,0,0,0);
         effect = new DiscountEffect(discounts);
         effect.attachResourceManager(rm);
-        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGING));
+        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGE_BEFORE));
 
         ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0,0,0,0);
         for (Resource res: resStrongbox){

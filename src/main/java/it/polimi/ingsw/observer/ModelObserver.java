@@ -1,6 +1,5 @@
 package it.polimi.ingsw.observer;
 
-import it.polimi.ingsw.message.clientMessage.ErrorType;
 
 public interface ModelObserver {
     void currentPlayerChange();

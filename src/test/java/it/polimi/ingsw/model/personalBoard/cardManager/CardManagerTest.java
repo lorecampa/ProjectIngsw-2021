@@ -33,6 +33,10 @@ class CardManagerTest {
     ArrayList<Effect> effects = new ArrayList<>();
     ArrayList<Requirement> requirements = new ArrayList<>();
 
+    private void clearBuffer(){
+        cardManager.emptyCardSlotBuffer();
+    }
+
     @BeforeEach
     void setUp(){
         assertDoesNotThrow(()-> gs = new GameSetting(4));
@@ -55,26 +59,44 @@ class CardManagerTest {
 
     @Test
     void doIHaveDevWithLv() {
-        assertFalse(cardManager.doIHaveDevWithLv(2,1));
+        assertFalse(cardManager.doIHaveDev(2,Color.ANY, 1));
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv2_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv3_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_2,2));
-        assertTrue(cardManager.doIHaveDevWithLv(2,1));
-        assertTrue(cardManager.doIHaveDevWithLv(1,2));
-        assertTrue(cardManager.doIHaveDevWithLv(1,3));
+        clearBuffer();
+
+        assertTrue(cardManager.doIHaveDev(2, Color.ANY, 1));
+        assertTrue(cardManager.doIHaveDev(1, Color.ANY, 2));
+        assertTrue(cardManager.doIHaveDev(1, Color.ANY, 3));
     }
 
     @Test
     void doIhaveDevWithColor() {
-        assertFalse(cardManager.doIhaveDevWithColor(2, Color.BLUE));
+        assertFalse(cardManager.doIHaveDev(2, Color.BLUE, 0));
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv2_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv3_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_2,2));
-        assertTrue(cardManager.doIhaveDevWithColor(2,Color.BLUE));
-        assertTrue(cardManager.doIhaveDevWithColor(1,Color.YELLOW));
-        assertTrue(cardManager.doIhaveDevWithColor(1,Color.GREEN));
+        clearBuffer();
+
+        assertTrue(cardManager.doIHaveDev(2,Color.BLUE, 0));
+        assertTrue(cardManager.doIHaveDev(1,Color.YELLOW, 0));
+        assertTrue(cardManager.doIHaveDev(1,Color.GREEN, 0));
     }
 
     @Test
@@ -105,8 +127,13 @@ class CardManagerTest {
         assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.addDevelopmentCardTo(devLv1_1,3));
 
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,0));
+        clearBuffer();
+
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        clearBuffer();
+
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,2));
+        clearBuffer();
 
         assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevelopmentCardTo(devLv3_2,0));
         assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevelopmentCardTo(devLv1_2,0));
@@ -124,6 +151,7 @@ class CardManagerTest {
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, TurnState.PRODUCTION_ACTION));
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
 
+
         cardManager.clearUsed();
 
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
@@ -133,31 +161,35 @@ class CardManagerTest {
     @Test
     void developmentProduce() {
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,0));
+        clearBuffer();
+
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_2,1));
+        clearBuffer();
+
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv2_1,0));
+        clearBuffer();
+
         assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv3_1,0));
+        clearBuffer();
 
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(1,-1));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(1,2));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(0,0));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(2,1));
 
-        assertDoesNotThrow(()-> cardManager.developmentProduce(1,0));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(1,1));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(2,0));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(3,0));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(-1));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(2));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.developmentProduce(3));
 
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(1,0));
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(1,1));
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(2,0));
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(3,0));
+
+        assertDoesNotThrow(()-> cardManager.developmentProduce(0));
+        assertDoesNotThrow(()-> cardManager.developmentProduce(1));
+
+        assertThrows(CardAlreadyUsed.class, ()->cardManager.developmentProduce(0));
+        assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(1));
+
 
         cardManager.clearUsed();
 
-        assertDoesNotThrow(()-> cardManager.developmentProduce(1,0));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(1,1));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(2,0));
-        assertDoesNotThrow(()-> cardManager.developmentProduce(3,0));
+        assertDoesNotThrow(()-> cardManager.developmentProduce(0));
+        assertDoesNotThrow(()-> cardManager.developmentProduce(1));
+
     }
 
     @Test

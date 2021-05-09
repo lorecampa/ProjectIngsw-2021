@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
+import it.polimi.ingsw.message.serverMessage.DepotModify;
+import it.polimi.ingsw.message.serverMessage.DepotSwitch;
+import it.polimi.ingsw.message.serverMessage.StrongboxModify;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -13,7 +16,6 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = ConnectionMessage.class, name = "ConnectionMessage"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
-        @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
 

@@ -7,7 +7,6 @@ public enum ErrorType {
     FAIL_RECONNECTION("Not able to reconnect"),
     FAIL_GAME_LOADING("Error in match creation"),
     //GAME ERROR
-    INVALID_NUM_ANY_CONVERSION("Invalid number of any requested to convert"),
     NOT_ENOUGH_REQUIREMENT("You don't have enough requirements to buy this card");
 
 

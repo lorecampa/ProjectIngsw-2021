@@ -2,19 +2,17 @@ package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.server.ServerMessageHandler;
 
-public class LeaderManage {
+public class LeaderManage implements ServerMessage{
     private final int index;
     private final boolean discard;
-    private final String username;
 
     @JsonCreator
     public LeaderManage(@JsonProperty("index") int index,
-                        @JsonProperty("discard") boolean discard,
-                        @JsonProperty("username") String username) {
+                        @JsonProperty("discard") boolean discard) {
         this.index = index;
         this.discard = discard;
-        this.username = username;
     }
 
     public int getIndex() {
@@ -25,7 +23,8 @@ public class LeaderManage {
         return discard;
     }
 
-    public String getUsername() {
-        return username;
+    @Override
+    public void process(ServerMessageHandler handler) {
+        System.out.println("LeaderManage Handler");
     }
 }

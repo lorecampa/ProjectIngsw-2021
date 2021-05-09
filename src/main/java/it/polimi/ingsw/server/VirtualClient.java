@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
 import it.polimi.ingsw.message.clientMessage.*;
+import it.polimi.ingsw.message.serverMessage.StrongboxModify;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.*;
 
@@ -103,23 +104,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void depotModify(Resource resource, int depotIndex, boolean isDepotLeader) {
-
-        match.sendAllPlayers(new DepotModify(depotIndex, resource.toClient(), isDepotLeader, username));
-    }
-
-    @Override
-    public void depotSwitch(int from, int to, boolean isToLeader) {
-        match.sendAllPlayers(new DepotSwitch(from, to, isToLeader , username));
-    }
-
-    @Override
-    public void strongboxModify(Resource resource, boolean isAdd) {
-        match.sendAllPlayers(new StrongboxModify(resource.toClient(), isAdd, username));
-
-    }
-
-    @Override
     public void anyConversionRequest(ArrayList<Resource> optionOfConversion,
                                      ArrayList<Resource> optionOfDiscount,
                                      int numOfAny, boolean isProduction) {
@@ -153,5 +137,22 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
                                  ColorData lastMarble, int selection, boolean isRow) {
 
 
+    }
+
+
+
+
+    //Card Manager
+
+    @Override
+    public void cardSlotUpdate(int indexCardSlot, int rowDeckDevelopment, int colDeckDevelopment) {
+        match.sendAllPlayers(
+                new CardSlotUpdate(rowDeckDevelopment, colDeckDevelopment, indexCardSlot, username));
+    }
+
+    @Override
+    public void leaderManage(int leaderIndex, boolean discard) {
+        match.sendAllPlayers(
+                new LeaderStatusUpdate(leaderIndex, discard, username));
     }
 }

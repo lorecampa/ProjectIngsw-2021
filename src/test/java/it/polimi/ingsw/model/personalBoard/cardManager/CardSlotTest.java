@@ -44,11 +44,17 @@ class CardSlotTest {
     @Test
     void getLvReached() {
         assertEquals(0, cs.getLvReached());
+
         assertDoesNotThrow(() -> cs.insertCard(devLv1Pv1));
+        cs.emptyBuffer();
         assertEquals(1, cs.getLvReached());
+
         assertDoesNotThrow(() -> cs.insertCard(devLv2Pv1));
+        cs.emptyBuffer();
         assertEquals(2, cs.getLvReached());
+
         assertDoesNotThrow(()-> cs.insertCard(devLv3Pv1));
+        cs.emptyBuffer();
         assertEquals(3, cs.getLvReached());
     }
 
@@ -71,24 +77,5 @@ class CardSlotTest {
 
     }
 
-    @Test
-    void getCardOfLv() {
-        assertDoesNotThrow(()->cs.insertCard(devLv1Pv1));
-        assertEquals(devLv1Pv1, cs.getCardOfLv(1));
-        assertThrows(IndexOutOfBoundsException.class, () -> cs.getCardOfLv(0));
-        assertThrows(IndexOutOfBoundsException.class, () -> cs.getCardOfLv(2));
-        assertThrows(IndexOutOfBoundsException.class, () -> cs.getCardOfLv(3));
-    }
 
-
-    @Test
-    void howManyCardWithColor(){
-        assertDoesNotThrow(() -> cs.insertCard(devLv1Pv1));
-        assertDoesNotThrow(() -> cs.insertCard(devLv2Pv1));
-        assertDoesNotThrow(()-> cs.insertCard(devLv3Pv1));
-
-        assertEquals(0, cs.howManyCardWithColor(Color.PURPLE));
-        assertEquals(1, cs.howManyCardWithColor(Color.GREEN));
-        assertEquals(2, cs.howManyCardWithColor(Color.BLUE));
-    }
 }

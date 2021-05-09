@@ -32,7 +32,7 @@ public class DiscountEffect implements Effect {
      */
     @Override
     public void doEffect(TurnState turnState) {
-        if (turnState == TurnState.LEADER_MANAGING){
+        if (turnState == TurnState.LEADER_MANAGE_BEFORE){
             for(Resource res: discounts){
                 resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));
             }

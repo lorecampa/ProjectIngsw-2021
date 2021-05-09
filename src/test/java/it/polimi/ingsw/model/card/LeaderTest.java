@@ -101,11 +101,18 @@ class LeaderTest {
 
         //(slot 1) -> 1: green 2: blue
         assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(0), 0));
+        cm.emptyCardSlotBuffer();
+
         assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(30), 0));
+        cm.emptyCardSlotBuffer();
+
         //(slot 2) -> 1: blue
         assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(10), 1));
+        cm.emptyCardSlotBuffer();
+
         //(slot 3) -> 1: yellow
         assertDoesNotThrow(()->cm.addDevelopmentCardTo(developmentsJson.get(15), 2));
+        cm.emptyCardSlotBuffer();
 
     }
 
@@ -113,8 +120,11 @@ class LeaderTest {
     void checkRequirements() {
         rm.newTurn();
         assertFalse(warehouseLeader.checkRequirements());
+        rm.newTurn();
         assertTrue(discountLeader.checkRequirements());
+        rm.newTurn();
         assertFalse(marbleLeader.checkRequirements());
+        rm.newTurn();
         assertFalse(productionLeader.checkRequirements());
 
     }

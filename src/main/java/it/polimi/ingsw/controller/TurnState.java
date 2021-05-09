@@ -6,7 +6,7 @@ package it.polimi.ingsw.controller;
 public enum TurnState {
     ACTION_CHOOSING,
 
-    LEADER_MANAGING,
+    LEADER_MANAGE_BEFORE,
 
     //market
     MARKET_ACTION,
@@ -21,7 +21,9 @@ public enum TurnState {
     //production
     PRODUCTION_ACTION,
     ANY_PRODUCE_COST_CONVERSION,
-    ANY_PRODUCE_PROFIT_CONVERSION;
+    ANY_PRODUCE_PROFIT_CONVERSION,
 
+
+    LEADER_MANAGE_AFTER;
 
 }

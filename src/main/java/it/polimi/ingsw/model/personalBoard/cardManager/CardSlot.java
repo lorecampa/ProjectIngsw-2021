@@ -5,10 +5,11 @@ import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class CardSlot {
     private final ArrayList<Development> developments = new ArrayList<>();
-
+    private Development buffer = null;
     /**
      * Method to get the higher lv present in this slot
      */
@@ -25,30 +26,21 @@ public class CardSlot {
         if(developments.size() + 1 != newCard.getLevel()){
             throw new CardWithHigherOrSameLevelAlreadyIn("This card slot already contain that lv or higher!");
         }
-        developments.add(newCard);
+        buffer= newCard;
     }
 
-    /**
-     * Method to get a specific card
-     * @param level of the card i want
-     * @return the card i'm asking for
-     * @throws IndexOutOfBoundsException if the level selected does not exist
-     */
-    public Development getCardOfLv(int level) throws IndexOutOfBoundsException{
-        return developments.get(level-1);
-    }
-
-    /**
-     * Method to get the amount of card of a specify color
-     * @param color is the color I'm searching
-     */
-    public int howManyCardWithColor(Color color){
-        int count=0;
-        for(Development dev: developments){
-            if(dev.getColor().equals(color)){
-                count++;
-            }
+    public void emptyBuffer(){
+        if (buffer != null){
+            developments.add(buffer);
+            buffer = null;
         }
-        return count;
+    }
+
+    public Development getDevelopment(int index) {
+        return developments.get(index);
+    }
+
+    public Development getLastInsertedCard(){
+        return developments.get(0);
     }
 }

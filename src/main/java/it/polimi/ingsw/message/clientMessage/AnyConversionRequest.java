@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class AnyConversionRequest implements ClientMessage{
     private final ArrayList<ResourceData> optionConversion;
@@ -22,6 +23,7 @@ public class AnyConversionRequest implements ClientMessage{
         this.numOfAny = numOfAny;
         this.isProduction = false;
     }
+
     @JsonCreator
     public AnyConversionRequest(@JsonProperty("numOfAny")int numOfAny) {
         this.optionConversion = null;
@@ -31,12 +33,12 @@ public class AnyConversionRequest implements ClientMessage{
     }
 
 
-    public ArrayList<ResourceData> getOptionConversion() {
-        return optionConversion;
+    public Optional<ArrayList<ResourceData>> getOptionConversion() {
+        return Optional.ofNullable(optionConversion);
     }
 
-    public ArrayList<ResourceData> getOptionOfDiscountNotUsed() {
-        return optionOfDiscountNotUsed;
+    public Optional<ArrayList<ResourceData>> getOptionOfDiscountNotUsed() {
+        return Optional.ofNullable(optionOfDiscountNotUsed);
     }
 
     public int getNumOfAny() {

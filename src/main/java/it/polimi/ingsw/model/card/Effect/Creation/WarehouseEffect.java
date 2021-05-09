@@ -35,7 +35,7 @@ public class WarehouseEffect  implements Effect {
      */
     @Override
     public void doEffect(TurnState turnState) {
-        if (turnState == TurnState.LEADER_MANAGING){
+        if (turnState == TurnState.LEADER_MANAGE_BEFORE){
             for (Resource depot: depots){
                 Resource res = ResourceFactory.createResource(depot.getType(), 0);
                 resourceManager.addLeaderDepot(new Depot(res, true, depot.getValue()));

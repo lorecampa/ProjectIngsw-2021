@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
 import it.polimi.ingsw.exception.CantModifyDepotException;
+import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
@@ -51,7 +52,7 @@ public class Depot {
      * */
     public void setResource(Resource resource) throws TooMuchResourceDepotException{
         if(resource.getValue()>maxStorable){
-            throw new TooMuchResourceDepotException("You tried to put more res then possible");
+            throw new TooMuchResourceDepotException("You tried to put more resources than possible");
         }
         this.resource = resource;
     }
