@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientConnectionHandler implements Runnable {
     private final Socket socket;
-    private final Server server;
     private final Scanner in;
     private final PrintWriter out;
 
@@ -36,7 +35,6 @@ public class ClientConnectionHandler implements Runnable {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         this.socket = socket;
-        this.server = server;
         this.clientID = clientID;
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());

@@ -2,8 +2,9 @@ package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.server.ServerMessageHandler;
 
-public class ProductionAction {
+public class ProductionAction implements ServerMessage{
     private final int slotsIndex;
     private final boolean baseProduction;
     private final boolean isLeader;
@@ -27,5 +28,10 @@ public class ProductionAction {
 
     public boolean isLeader() {
         return isLeader;
+    }
+
+    @Override
+    public void process(ServerMessageHandler handler) {
+
     }
 }

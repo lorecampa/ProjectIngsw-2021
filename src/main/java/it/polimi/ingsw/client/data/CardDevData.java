@@ -22,6 +22,11 @@ public class CardDevData {
         this.productionEarn = productionEarn;
     }
 
+    public CardDevData(int level, Color color){
+        this.level=level;
+        this.color=color;
+    }
+
     public int getLevel() {
         return level;
     }
@@ -66,5 +71,11 @@ public class CardDevData {
 
     public ArrayList<ResourceData> getProductionEarn() {
         return productionEarn;
+    }
+
+    public String toCLIForLeader(){
+        String s;
+        s=getColorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";
+        return s;
     }
 }

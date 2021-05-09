@@ -3,36 +3,39 @@ package it.polimi.ingsw.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
+import it.polimi.ingsw.client.data.DeckDevData;
+import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class Client{
     private static final String ipHost ="127.0.0.1";
-    private static final int portNumber = 2021;
+    private static final int portNumber = 2020;
     private Socket clientSocket;
 
     private PrintWriter out;
     private BufferedReader in ;
-    private Scanner stdIn;
     private ClientMessageHandler clientMessageHandler;
-    private ObjectMapper mapper = new ObjectMapper();
-    private boolean exit=false;
-    private Object lockInput;
-    private int chooseAction;
+    private final ObjectMapper mapper = new ObjectMapper();
 
 
+    private ClientState state;
+    private ClientGameState gameState;
+
+    private String myName;
+
+    private ArrayList<ModelClient> models= new ArrayList<>();
+    private MarketData marketData;
+    private DeckDevData deckDevData;
 
     public static void main(String[] args){
         /*
@@ -53,7 +56,17 @@ public class Client{
             e.printStackTrace();
             //messaggio che si scusa e dice di riaprire
         }
-
+        ArrayList<String> users=new ArrayList<>();
+        client.setMyName("Teo");
+        users.add("Teo");
+        users.add("Davide");
+        users.add("Lollo");
+        client.setModels(users);
+        client.messageToMainMenu();
+        while(client.state!=ClientState.QUIT){
+            client.readFromStream();
+        }
+        /*
         client.messageToMainMenu();
         while(client.chooseAction!=4){
             switch(client.chooseAction){
@@ -67,17 +80,32 @@ public class Client{
                     break;
                 case 3:
                     client.writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION, ""));
+                    while(!client.exit){
+                        client.readFromStream();
+                    }
                     break;
                 default:
                     //simula un errore in arrivo dal server, avrà un metodo come il messageToMainMenu ma per un errore
+
                     PrintAssistant.instance.printf("INVALID OPTION CHOOSEN! PLEASE SELECT A VALID ONE!", PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_RED_BACKGROUND);
             }
             client.messageToMainMenu();
         }
+         */
     }
 
-    public void setChooseAction(int chooseAction) {
-        this.chooseAction = chooseAction;
+    public ModelClient getModelOf(String username) {
+        return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(username)).findFirst().get();
+    }
+
+    public boolean existAModelOf(String username){
+        return models.stream().map(ModelClient::getUsername).anyMatch(x->x.equalsIgnoreCase(username));
+    }
+
+    public void setModels(ArrayList<String> usernames) {
+        for(String s : usernames){
+            this.models.add(new ModelClient(s));
+        }
     }
 
     private void startClient() throws IOException {
@@ -86,24 +114,14 @@ public class Client{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        state=ClientState.MAIN_MENU;
+        gameState=ClientGameState.NOT_IN_GAME;
         clientMessageHandler = new ClientMessageHandler(this);
-        exit = false;
-        lockInput = new Object();
+        new Thread(new ClientInput(this)).start();
+
         out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
-        stdIn = new Scanner(new InputStreamReader(System.in));
-    }
-
-    public int waitToIntegerInputCLI(){
-        synchronized (lockInput) {
-            return stdIn.nextInt();
-        }
-    }
-
-    public String waitToStringInputCLI(){
-        synchronized (lockInput) {
-            return stdIn.next();
-        }
+        //stdIn = new Scanner(new InputStreamReader(System.in));
     }
 
     public void writeToStream(ServerMessage message){
@@ -122,7 +140,6 @@ public class Client{
         }
         //da riguardare perchè secondo me non fa quello che dovrebbe
         if (serializedMessage.equalsIgnoreCase("QUIT")){
-            exit = true;
             return;
         }
         ClientMessage message = deserialize(serializedMessage);
@@ -155,4 +172,43 @@ public class Client{
         mainMenu.process(clientMessageHandler);
     }
 
+    public ClientState getState() {
+        return state;
+    }
+
+    public ClientGameState getGameState() {
+        return gameState;
+    }
+
+    public void setState(ClientState state) {
+        this.state = state;
+    }
+
+    public void setGameState(ClientGameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public String getMyName() {
+        return myName;
+    }
+
+    public void setMyName(String myName) {
+        this.myName = myName;
+    }
+
+    public MarketData getMarketData() {
+        return marketData;
+    }
+
+    public void setMarketData(MarketData marketData) {
+        this.marketData = marketData;
+    }
+
+    public DeckDevData getDeckDevData() {
+        return deckDevData;
+    }
+
+    public void setDeckDevData(DeckDevData deckDevData) {
+        this.deckDevData = deckDevData;
+    }
 }

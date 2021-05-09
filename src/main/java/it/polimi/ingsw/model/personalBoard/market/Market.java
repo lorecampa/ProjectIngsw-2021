@@ -160,7 +160,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
             marketTray.get(i).add(col,marketTray.get(i+1).get(col));
         }
         marketTray.get(numRow - 1).remove(col);
-        marketTray.get(numRow - 1).add(marbleToInsert);
+        marketTray.get(numRow - 1).add(col, marbleToInsert);
         marbleToInsert = tempMarble;
 
         //state change

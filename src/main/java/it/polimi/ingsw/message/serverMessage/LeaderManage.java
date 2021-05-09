@@ -27,4 +27,9 @@ public class LeaderManage implements ServerMessage{
     public void process(ServerMessageHandler handler) {
         System.out.println("LeaderManage Handler");
     }
+
+    @Override
+    public void process(ServerMessageHandler handler) {
+
+    }
 }

@@ -15,17 +15,16 @@ import java.util.stream.Collectors;
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         FaithTrackObserver, CardManagerObserver, MarketObserver {
 
-    private final int id;
     private String username;
     private ClientConnectionHandler client;
     private Controller controller;
     private final Match match;
     private boolean ready;
 
-    public VirtualClient(int id, String username,
+    public VirtualClient(String username,
                          ClientConnectionHandler clientConnectionHandler,
                          Match match) {
-        this.id = id;
+
         this.username = username;
         this.client= clientConnectionHandler;
         this.match = match;
@@ -42,8 +41,8 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     public void setClient(ClientConnectionHandler client) { this.client = client; }
 
-    public int getId() {
-        return id;
+    public int getClientID() {
+        return client.getClientID();
     }
 
     public String getUsername() {
@@ -54,8 +53,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.username = username;
         this.ready = true;
     }
-
-
 
     public boolean isReady() {
         return ready;
@@ -68,7 +65,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     @Override
     public String toString() {
         return "VirtualClient{" +
-                "id=" + id +
                 ", username='" + username + '\'' +
                 ", clientHandler=" + client +
                 '}';

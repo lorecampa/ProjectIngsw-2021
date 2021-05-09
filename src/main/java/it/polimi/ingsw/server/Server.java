@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Server {
@@ -30,7 +29,7 @@ public class Server {
 
 
     public  Server(){
-        port = 2021;
+        port = 2020;
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
@@ -65,8 +64,8 @@ public class Server {
                     }else{
                         openMatch = matchesToFill.get(0);
                         for (int i = 0; i < openMatch.getNumOfPlayers() && i < lobby.size(); i++) {
-                            openMatch.addPlayer(new VirtualClient(lobby.get(i).getClientID(),
-                                    "Quest_".concat(String.valueOf(openMatch.currentNumOfPLayer())),lobby.get(i),openMatch));
+                            openMatch.addPlayer(new VirtualClient(
+                                    "Quest_".concat(String.valueOf(openMatch.currentNumOfPlayer())),lobby.get(i),openMatch));
                         }
                     }
                 }
@@ -82,10 +81,10 @@ public class Server {
             synchronized (lockOpenMatch) {
                 openMatch = newMatch;
                 matches.add(newMatch);
-                newMatch.addPlayer(new VirtualClient(player.getClientID(),"Quest_".concat(String.valueOf(newMatch.currentNumOfPLayer())),player,openMatch));
+                newMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())),player,openMatch));
             }
             for (int i = 1; i < newMatch.getNumOfPlayers() && i < lobby.size(); i++) {
-                newMatch.addPlayer(new VirtualClient(lobby.get(i).getClientID(),"Quest_".concat(String.valueOf(newMatch.currentNumOfPLayer())),lobby.get(i),openMatch));
+                newMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())),lobby.get(i),openMatch));
             }
         }
     }
@@ -100,7 +99,7 @@ public class Server {
                 }else{
                     synchronized (lockOpenMatch){
                         if (openMatch != null && openMatch.isOpen()){
-                            openMatch.addPlayer(new VirtualClient(client.getClientID(),"Quest_".concat(String.valueOf(openMatch.currentNumOfPLayer())),client,openMatch));
+                            openMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(openMatch.currentNumOfPlayer())),client,openMatch));
                         }else{
                             client.setState(HandlerState.WAITING_LOBBY);
                             client.writeToStream(new ConnectionMessage(ConnectionType.WAIT_PLAYERS,"Waiting Players!"));
