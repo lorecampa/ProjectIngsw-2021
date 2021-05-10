@@ -13,13 +13,13 @@ import java.util.ArrayList;
 
 public class ClientMessageHandler {
 
-    private Client client;
+    private final Client client;
     public ClientMessageHandler(Client client) {
         this.client =client;
     }
 
-    public void handlePingPong(PingPongMessage message){
-        //TODO no client yet
+    public void handlePingPong(){
+        client.writeToStream(new PingPongMessage());
     }
 
     public void handleError(ErrorMessage message){

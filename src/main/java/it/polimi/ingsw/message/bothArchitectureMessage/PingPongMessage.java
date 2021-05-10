@@ -8,7 +8,7 @@ import it.polimi.ingsw.message.serverMessage.ServerMessage;
 public class PingPongMessage implements ClientMessage, ServerMessage {
     @Override
     public void process(ClientMessageHandler handler) {
-
+        handler.handlePingPong();
     }
 
     @Override

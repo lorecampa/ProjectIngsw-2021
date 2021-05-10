@@ -22,6 +22,8 @@ public class ClientConnectionHandler implements Runnable {
     private final Scanner in;
     private final PrintWriter out;
 
+    private final Object streamLock = new Object();
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     private boolean exit = false;
@@ -79,10 +81,12 @@ public class ClientConnectionHandler implements Runnable {
     public void setClientID(int clientID) { this.clientID = clientID; }
 
     public void writeToStream(ClientMessage message){
-        Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
-        serializedMessage.ifPresentOrElse(out::println,
-                ()-> out.println("Error in serialization"));
-        out.flush();
+        synchronized (streamLock) {
+            Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
+            serializedMessage.ifPresentOrElse(out::println,
+                    () -> out.println("Error in serialization"));
+            out.flush();
+        }
     }
 
     public void readFromStream(){
