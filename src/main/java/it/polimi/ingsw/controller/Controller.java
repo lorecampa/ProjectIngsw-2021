@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.exception.*;
+import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
+import it.polimi.ingsw.exception.NegativeResourceException;
+import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
@@ -162,6 +164,7 @@ public class Controller {
             sendError(ErrorType.NOT_ENOUGH_REQUIREMENT);
             return;
         }
+
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         CardManager cardManager = personalBoard.getCardManager();
         try {
@@ -226,14 +229,57 @@ public class Controller {
 
     //WAREHOUSE MANAGING
 
-
     public void addToStrongbox(ArrayList<Resource> resources){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        resources.forEach(resourceManager::addToStrongbox);
 
     }
 
-    public void addToWarehouse(ArrayList<Resource> resources, int index) {
+    public void subToStrongbox(ArrayList<Resource> resources){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        for(Resource resource: resources){
+            try {
+                resourceManager.subToStrongbox(resource);
+            } catch (Exception e) {
+                sendError(e.getMessage());
+            }
+        }
+    }
 
+    public void addToWarehouse(Resource resource, int index, boolean isNormalDepot) {
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        try {
+            resourceManager.addToWarehouse(isNormalDepot, index, resource);
+        } catch (Exception e) {
+            sendError(e.getMessage());
+        }
+    }
+
+    public void subToWarehouse(Resource resource, int index, boolean isNormalDepot){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        try {
+            resourceManager.subtractToBuffer(resource);
+        } catch (Exception e) {
+            sendError(e.getMessage());
+            return;
+        }
+        try {
+            resourceManager.subToWarehouse(isNormalDepot, index, resource);
+        } catch (Exception e) {
+            resourceManager.addToBuffer(resource);
+            sendError(e.getMessage());
+        }
+
+    }
+
+
+    public void switchDepots(int from, boolean isFromLeaderDepot, int to, boolean isToLeaderDepot){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        try {
+            resourceManager.switchResourceFromDepotToDepot(from, isFromLeaderDepot, to, isToLeaderDepot);
+        } catch (Exception e) {
+            sendError(e.getMessage());
+        }
     }
 
 

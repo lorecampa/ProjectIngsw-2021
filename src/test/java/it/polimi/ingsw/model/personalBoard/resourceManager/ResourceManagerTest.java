@@ -162,19 +162,19 @@ class ResourceManagerTest {
 
     @Test
     void switchResourceFromDepotToDepot() {
-        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0, 1, false));
+        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,true, 1, true));
         rs.print();
     }
 
     @Test
     void switchLeaderDepot() {
         rs.addLeaderDepot(new Depot(
-                ResourceFactory.createResource(ResourceType.COIN, 2),
+                ResourceFactory.createResource(ResourceType.SHIELD, 2),
                 true,
                 4
         ));
 
-        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0, 0, true));
+        assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
         rs.print();
     }
 

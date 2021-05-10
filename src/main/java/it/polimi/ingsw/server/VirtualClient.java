@@ -30,11 +30,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.match = match;
         this.client.setVirtualClient(this);
         this.ready = false;
-
-
-        //TODO it is null pointer exception now
-        //maybe to do here
-        //controller.registerToAllObservable(this);
     }
 
     public ClientConnectionHandler getClient() { return client; }
@@ -150,5 +145,23 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     public void leaderManage(int leaderIndex, boolean discard) {
         match.sendAllPlayers(
                 new LeaderStatusUpdate(leaderIndex, discard, username));
+    }
+
+
+    //Warehouse updating
+
+    @Override
+    public void strongboxUpdate(ArrayList<Resource> strongboxUpdated) {
+        match.sendAllPlayers(
+                new StrongboxUpdate(strongboxUpdated.stream()
+                        .map(Resource::toClient)
+                        .collect(Collectors.toCollection(ArrayList::new)), username));
+    }
+
+    @Override
+    public void depotUpdate(Resource depotUpdated, int index, boolean isLeaderDepot) {
+        match.sendAllPlayers(
+                new DepotUpdate(depotUpdated.toClient(), index, isLeaderDepot, username)
+        );
     }
 }

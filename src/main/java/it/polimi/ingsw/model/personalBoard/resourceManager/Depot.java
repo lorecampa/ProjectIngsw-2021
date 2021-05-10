@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.exception.CantModifyDepotException;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
@@ -50,7 +49,12 @@ public class Depot {
     /**
      * set the resource, called the first time i need to put in this depot a new resource
      * */
-    public void setResource(Resource resource) throws TooMuchResourceDepotException{
+    public void setResource(Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+        if (lockDepot && resource.getType() != this.resource.getType()){
+            throw new InvalidOrganizationWarehouseException("You can't insert a " + resource.getType() + " in a " +
+                    "leader depot of " + this.resource.getType());
+        }
+
         if(resource.getValue()>maxStorable){
             throw new TooMuchResourceDepotException("You tried to put more resources than possible");
         }
@@ -58,7 +62,12 @@ public class Depot {
     }
 
     public void setEmptyResource(){
-        this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
+        if (lockDepot) {
+            resource = ResourceFactory.createResource(resource.getType(), 0);
+        }else{
+            resource = ResourceFactory.createResource(ResourceType.ANY, 0);
+        }
+
     }
 
     /**
@@ -85,20 +94,34 @@ public class Depot {
     /**       
      *Add a value to the value of my resource
      */
-    public void addValueResource(int value) throws TooMuchResourceDepotException{
-        if(value+resource.getValue()>maxStorable){
+    public void addResource(Resource newRes) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+        if (newRes.getValue() + resource.getValue() > maxStorable){
             throw new TooMuchResourceDepotException("Adding too much res in this depot");
         }
-        resource.addValue(value);
+        if (resource.getType() == ResourceType.ANY){
+            resource = newRes;
+        }else{
+            resource.addValue(newRes.getValue());
+        }
+
     }
 
     /**
      *Sub a value to the value of my resource
      */
-    public void subValueResource(int value) throws NegativeResourceException{
-        resource.subValue(value);
-        if(!lockDepot && resource.getValue()==0)
-            setEmptyResource();
+    public void subResource(Resource newRes) throws NegativeResourceException, InvalidOrganizationWarehouseException {
+        if(resource.getType() == ResourceType.ANY || (lockDepot && resource.getValue() == 0)){
+            throw new NegativeResourceException("No resource here!");
+        }
+        if(resource.getType() != newRes.getType()){
+            throw new InvalidOrganizationWarehouseException("You try to sub a resource type different from his own");
+        }
+        int delta = resource.getValue() - newRes.getValue();
+        if(delta < 0){
+            throw new NegativeResourceException("You can't sub more resources than are present");
+        }else{
+            resource.subValue(newRes.getValue());
+        }
     }
 
     @Override

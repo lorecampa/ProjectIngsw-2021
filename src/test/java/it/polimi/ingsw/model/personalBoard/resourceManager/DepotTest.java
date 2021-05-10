@@ -17,7 +17,7 @@ class DepotTest {
     void init(){
         r1 = ResourceFactory.createResource(ResourceType.COIN, 2);
         r2 = ResourceFactory.createResource(ResourceType.COIN, 4);
-        d1 = new Depot(true, 2);
+        d1 = new Depot(ResourceFactory.createResource(ResourceType.COIN, 2), true, 2);
         d2 = new Depot(false, 2);
         d3 = new Depot(r1, false, 3);
 
@@ -62,20 +62,6 @@ class DepotTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
-    void addValueResource(int index) {
-        switch (index){
-            case 0:
-                assertThrows(TooMuchResourceDepotException.class,()->d3.addValueResource(3));
-                break;
-            case 1:
-                assertDoesNotThrow(()->d3.addValueResource(1));
-                assertEquals(3, d3.getResourceValue());
-                break;
-
-        }
-    }
 
     @Test
     void getResource(){
@@ -96,6 +82,7 @@ class DepotTest {
     @Test
     void setEmptyResource(){
         d1.setEmptyResource();
-        assertEquals(ResourceType.ANY, d1.getResourceType());
+        assertEquals(ResourceType.COIN, d1.getResourceType());
+        assertEquals(d1.getResourceValue(), 0);
     }
 }

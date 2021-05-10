@@ -25,6 +25,10 @@ public class Warehouse implements Cloneable{
         this.depotsLeader=depotsLeader;
     }
 
+
+
+
+
     /**
      * Get a specific standard depot
      * @param index of the depot i want
@@ -48,56 +52,40 @@ public class Warehouse implements Cloneable{
         depotsLeader.add(depot);
     }
 
+
+
     /**
      * call the private modifyDepotValue with the leader depots list
      * @param indexDepot the index i want to modify in the normal depot list
      * @param resource the resource to sum*/
-    public void addToLeaderDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
-        if(depotsLeader.get(indexDepot).getResourceType()!=resource.getType()){
-            throw new InvalidOrganizationWarehouseException("You try to add a resource type different from his own to a leader depot");
+    public void addDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws TooMuchResourceDepotException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
+        Depot depot;
+        if(isNormalDepot) depot = depots.get(indexDepot);
+        else depot = depotsLeader.get(indexDepot);
+
+        if(depot.getResourceType()!=resource.getType() && depot.getResourceType() != ResourceType.ANY){
+            throw new InvalidOrganizationWarehouseException("You try to add a resource type different from his own");
         }
-        depotsLeader.get(indexDepot).addValueResource(resource.getValue());
+        if(isNormalDepot && (depot.getResourceType() == ResourceType.ANY) && doIHaveADepotWith(resource.getType())){
+            throw new InvalidOrganizationWarehouseException("You can't add " + resource.getType() +" because you " +
+                    "have those already stored in another depot");
+        }
+        depot.addResource(resource);
     }
 
-    /**
-     * call the private modifyDepotValue with the leader depots list
-     * @param indexDepot the index i want to modify in the normal depot list
-     * @param resource the resource to sub*/
-    public void subToLeaderDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
-        if(depotsLeader.get(indexDepot).getResourceType()!=resource.getType()){
-            throw new InvalidOrganizationWarehouseException("You try to sub a resource type different from his own to a leader depot");
-        }
-        depotsLeader.get(indexDepot).subValueResource(resource.getValue());
-    }
 
-    /**
-     * call the private modifyDepotValue with the standard depots list
-     *@param indexDepot the index i want to modify in the leader depot list
-     *@param resource the resource to sum*/
-    public void addToStandardDepotValueAt(int indexDepot, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, IndexOutOfBoundsException {
-        if(depots.get(indexDepot).getResourceType()==ResourceType.ANY){
-            setResourceDepotAt(indexDepot, resource);
-        }
-        else if(depots.get(indexDepot).getResourceType()==resource.getType()){
-            depots.get(indexDepot).addValueResource(resource.getValue());
-        }
-        else
-            throw new InvalidOrganizationWarehouseException("You try to add a type to another type");
-    }
+
 
     /**
      * call the private modifyDepotValue with the standard depots list
      *@param indexDepot the index i want to modify in the leader depot list
      *@param resource the resource to sub*/
-    public void subToStandardDepotValueAt(int indexDepot, Resource resource) throws NegativeResourceException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
-        if(depots.get(indexDepot).getResourceType()==ResourceType.ANY){
-            throw new NegativeResourceException("No resource here!");
-        }
-        if(depots.get(indexDepot).getResourceType()==resource.getType()){
-            depots.get(indexDepot).subValueResource(resource.getValue());
-        }
-        else
-            throw new InvalidOrganizationWarehouseException("You try to sub a type to another type");
+    public void subDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws NegativeResourceException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
+        Depot depot;
+        if(isNormalDepot) depot = depots.get(indexDepot);
+        else depot = depotsLeader.get(indexDepot);
+
+        depot.subResource(resource);
     }
 
     /**
@@ -113,27 +101,18 @@ public class Warehouse implements Cloneable{
         return false;
     }
 
-    /**
-     * used to set a new resource into a chosen depot, used when we have to change resource from one  depot to another
-     * @param indexDepot i'm modifying in the depots arraylist
-     * @param resource to set at indexDepot*/
-    public void setResourceDepotAt(int indexDepot, Resource resource) throws InvalidOrganizationWarehouseException, TooMuchResourceDepotException, IndexOutOfBoundsException {
-        if(doIHaveADepotWith(resource.getType())){
-            throw new InvalidOrganizationWarehouseException(    "You can't put 2 same type of res in 2 different depot! Try a new move!\n" +
-                                                                "U may have tried to put the same res type in a depot that contain that type");
-        }
-        //resourceToManage= ResourceFactory.createResource(depots.get(indexDepot).getResourceType(), depots.get(indexDepot).getResourceValue());
-        depots.get(indexDepot).setResource(resource);
-    }
 
     /**
      * Remove the resource from the standard depot
-     * @param index of depot i want to empty
+     * @param indexDepot of depot i want to empty
      * @return the resource i took from the index depot*/
-    public Resource removeResourceAt(int index) throws IndexOutOfBoundsException{
-        Resource resource;
-        resource = depots.get(index).getResource();
-        depots.get(index).setEmptyResource();
+    public Resource popResourceFromDepotAt(int indexDepot, boolean isNormalDepot) throws IndexOutOfBoundsException{
+        Depot depot;
+        if(isNormalDepot) depot = depots.get(indexDepot);
+        else depot = depotsLeader.get(indexDepot);
+
+        Resource resource = depot.getResource();
+        depot.setEmptyResource();
         return resource;
     }
 

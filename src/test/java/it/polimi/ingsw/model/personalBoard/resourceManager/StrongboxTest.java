@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
 import it.polimi.ingsw.exception.NegativeResourceException;
-import it.polimi.ingsw.exception.TooMuchResourceDepotException;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,7 @@ class StrongboxTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void addResourceValueOf(int  index){
-        s.addResourceValueOf(ResourceFactory.createResource(ResourceType.SHIELD,  2));
+        s.addResource(ResourceFactory.createResource(ResourceType.SHIELD,  2));
         assertEquals(2, s.howManyDoIHave(ResourceType.SHIELD));
     }
 
@@ -33,11 +31,11 @@ class StrongboxTest {
     void subResourceValueOf(int index){
         switch (index){
             case 0:
-                assertThrows(NegativeResourceException.class, ()->s.subResourceValueOf( ResourceFactory.createResource(ResourceType.COIN, 1)));
+                assertThrows(NegativeResourceException.class, ()->s.subResource( ResourceFactory.createResource(ResourceType.COIN, 1)));
                 break;
             case 1:
-                s.addResourceValueOf(ResourceFactory.createResource(ResourceType.SHIELD,  2));
-                assertDoesNotThrow(()->s.subResourceValueOf(ResourceFactory.createResource(ResourceType.SHIELD,  1)));
+                s.addResource(ResourceFactory.createResource(ResourceType.SHIELD,  2));
+                assertDoesNotThrow(()->s.subResource(ResourceFactory.createResource(ResourceType.SHIELD,  1)));
                 assertEquals(1, s.howManyDoIHave(ResourceType.SHIELD));
                 break;
         }
@@ -45,7 +43,7 @@ class StrongboxTest {
 
     @Test
     void howManyDoIHave() {
-        s.addResourceValueOf(ResourceFactory.createResource(ResourceType.SHIELD,  2));
+        s.addResource(ResourceFactory.createResource(ResourceType.SHIELD,  2));
         assertEquals(2, s.howManyDoIHave(ResourceType.SHIELD));
     }
 }

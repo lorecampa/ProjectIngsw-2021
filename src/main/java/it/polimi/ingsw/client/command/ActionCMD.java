@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.*;
-import it.polimi.ingsw.message.bothArchitectureMessage.DevelopmentAction;
+import it.polimi.ingsw.message.serverMessage.DevelopmentAction;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.message.serverMessage.MarketAction;
 import it.polimi.ingsw.message.serverMessage.ProductionAction;
@@ -180,6 +180,6 @@ public class ActionCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
         }
         leader--;
-        client.writeToStream(new LeaderManage(leader, false, client.getMyName()));
+        client.writeToStream(new LeaderManage(leader, false));
     }
 }

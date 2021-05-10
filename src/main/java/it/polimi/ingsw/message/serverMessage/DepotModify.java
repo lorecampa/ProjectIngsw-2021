@@ -15,18 +15,18 @@ public class DepotModify implements ServerMessage {
     private final int depotIndex;
     private final ArrayList<ResourceData> resources;
     private final boolean isAdd;
-    private final boolean isDepotLeader;
+    private final boolean isNormalDepot;
 
 
     @JsonCreator
     public DepotModify(@JsonProperty("depotIndex") int depotIndex,
                        @JsonProperty("resources")ArrayList<ResourceData> resources,
-                       @JsonProperty("idDepotLeader") boolean isDepotLeader,
+                       @JsonProperty("isNormalDepot") boolean isNormalDepot,
                        @JsonProperty("isAdd")boolean isAdd) {
         this.depotIndex = depotIndex;
         this.resources = resources;
         this.isAdd = isAdd;
-        this.isDepotLeader = isDepotLeader;
+        this.isNormalDepot = isNormalDepot;
     }
 
     public int getDepotIndex() {
@@ -41,8 +41,8 @@ public class DepotModify implements ServerMessage {
         return isAdd;
     }
 
-    public boolean isDepotLeader() {
-        return isDepotLeader;
+    public boolean isNormalDepot() {
+        return isNormalDepot;
     }
 
     @Override

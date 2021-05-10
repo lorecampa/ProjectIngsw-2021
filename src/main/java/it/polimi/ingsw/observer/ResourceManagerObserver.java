@@ -13,4 +13,8 @@ public interface ResourceManagerObserver {
                               ArrayList<Resource> optionOfDiscount,
                               int numOfAny, boolean isProduction);
 
+    void strongboxUpdate(ArrayList<Resource> strongboxUpdated);
+
+    void depotUpdate(Resource depotUpdated, int index, boolean isNormalDepot);
+
 }

@@ -121,7 +121,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 }
             }
         }
-
     }
 
     public void convertAnyProductionProfit(ArrayList<Resource> resources) throws AnyConversionNotPossible {
@@ -167,51 +166,57 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Add to the strongbox the resource
      * @param resource i want to add */
     public void addToStrongbox(Resource resource){
-        strongbox.addResourceValueOf(resource);
-
+        strongbox.addResource(resource);
+        //TODO change
+        notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
     /**
      * Subtract to the strongbox the resource
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
-        strongbox.subResourceValueOf(resource);
+        strongbox.subResource(resource);
 
+        notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
     /**
      * Add to the warehouse the resource
-     * @param normalDepot true for default false for leaderDepots
+     * @param isNormalDepot true for default false for leaderDepots
      * @param index of the depot i want to access (0 -> 1 res), (1 -> 2 res), (2 -> 3 res)
      * @param resource i want to add to that specific depot
      * @throws TooMuchResourceDepotException if i'm trying to add too much resource to that depot
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
-    public void addToWarehouse(boolean normalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-        if(normalDepot){
-            currWarehouse.addToStandardDepotValueAt(index, resource);
-        }
-        else{
-            currWarehouse.addToLeaderDepotValueAt(index, resource);
-        }
+    public void addToWarehouse(boolean isNormalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+        currWarehouse.addDepotResourceAt(index, resource, isNormalDepot);
+        sendDepotUpdate(isNormalDepot, index);
     }
 
     /**
      * Subtract to the warehouse the resource
-     * @param normalDepot true for default false for leaderDepots
+     * @param isNormalDepot true for default false for leaderDepots
      * @param index of the depot i want to access
      * @param resource i want to subtract to that specific depot
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
-    public void subToWarehouse(boolean normalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
-        if(normalDepot){
-            currWarehouse.subToStandardDepotValueAt(index, resource);
-        }
-        else{
-            currWarehouse.subToLeaderDepotValueAt(index, resource);
-        }
+    public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
+        currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
+        sendDepotUpdate(isNormalDepot, index);
+
+
+
     }
 
+    private void sendDepotUpdate(boolean isNormalDepot, int index){
+        Depot depot;
+        if (isNormalDepot){
+            depot = currWarehouse.getDepot(index);
+        }else{
+            depot = currWarehouse.getDepotLeader(index);
+        }
 
+        notifyAllObservers(x -> x.depotUpdate(depot.getResource(),index, isNormalDepot));
+    }
 
 
 
@@ -233,11 +238,33 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Used to remove a resource value from the buffer in resource manager
      * @param resource I want to remove from the buffer
      * @throws NegativeResourceException if resource'll go under value 0*/
-    public void subtractToBuffer(Resource resource) throws NegativeResourceException {
+    public void subtractToBuffer(Resource resource) throws Exception {
         if(resourcesBuffer.contains(resource)){
-            resourcesBuffer.get(resourcesBuffer.indexOf(resource)).subValue(resource.getValue());
+            int resourceIndex = resourcesBuffer.indexOf(resource);
+            int delta = resourcesBuffer.get(resourceIndex).getValue() - resource.getValue();
+            resourcesBuffer.get(resourceIndex).subValue(resource.getValue());
+            if (delta == 0){
+                resourcesBuffer.remove(resourceIndex);
+            }
+            controlBufferStatus();
+
+        }else{
+            throw new Exception("Resource not present in buffer");
+        }
+
+
+        if (resourcesBuffer.size() == 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
         }
     }
+
+    private void controlBufferStatus(){
+        if (resourcesBuffer.size() == 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
+        }
+    }
+
+
 
     /**
      * Used to add a resource value or the resource itself in the resource to produce
@@ -388,56 +415,31 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     * @param fromDepot the first depot
     * @param toDepot the second depot
     * */
-   public void switchResourceFromDepotToDepot(int fromDepot,
-                                              int toDepot, boolean isToLeader) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+   public void switchResourceFromDepotToDepot(int fromDepot, boolean isFromNormalDepot,
+                                              int toDepot, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
 
-       if (isToLeader &&
-           currWarehouse.getDepot(fromDepot).getResourceType().
-                   equals(currWarehouse.getDepotLeader(toDepot).getResourceType())){
+       Resource fromSupportResource = currWarehouse.popResourceFromDepotAt(fromDepot, isFromNormalDepot);
+       Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
 
-           int toInsert = currWarehouse.getDepot(fromDepot).getResource().getValue();
-
-           int freeSpace = currWarehouse.getDepotLeader(toDepot)
-                   .howMuchResCanIStillStoreIn();
-
-
-           int delta = freeSpace - toInsert;
-           if (delta < 0)
-               delta = freeSpace;
-           else
-               delta = toInsert;
-
-           try {
-               currWarehouse.getDepot(fromDepot).subValueResource(delta);
-           } catch (NegativeResourceException e) {
-               //it will never happen
-           }
-
-           currWarehouse.getDepotLeader(toDepot).addValueResource(delta);
-
-       }else{
-           Resource fromSupportResource = currWarehouse.removeResourceAt(fromDepot);
-
-           Resource toSupportResource = currWarehouse.removeResourceAt(toDepot);
-
-           try{
-               currWarehouse.setResourceDepotAt(fromDepot, toSupportResource);
-           }
-           catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
-               currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
-               currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
-               throw e;
-           }
-           try{
-               currWarehouse.setResourceDepotAt(toDepot, fromSupportResource);
-           }
-           catch(TooMuchResourceDepotException | InvalidOrganizationWarehouseException e){
-               currWarehouse.setResourceDepotAt(fromDepot, fromSupportResource);
-               currWarehouse.setResourceDepotAt(toDepot, toSupportResource);
-               throw e;
-           }
+       try{
+           currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+       }
+       catch(Exception e){
+           currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
+           currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
+           throw e;
+       }
+       try{
+           currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+       }
+       catch(Exception e){
+           currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
+           currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
+           throw e;
        }
 
+       sendDepotUpdate(isFromNormalDepot, fromDepot);
+       sendDepotUpdate(isToNormalDepot, toDepot);
    }
 
     /**

@@ -24,6 +24,6 @@ public enum TurnState {
     ANY_PRODUCE_PROFIT_CONVERSION,
 
 
-    LEADER_MANAGE_AFTER;
+    LEADER_MANAGE_AFTER
 
 }
