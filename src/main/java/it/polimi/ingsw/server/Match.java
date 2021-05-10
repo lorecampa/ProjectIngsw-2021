@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
@@ -62,6 +63,7 @@ public class Match {
                     allPlayers.add(player);
                     activePlayers.add(player);
                     player.getClient().setState(HandlerState.USERNAME);
+                    player.getClient().writeToStream(new ReconnectionMessage(matchID, player.getClientID()));
                     player.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert your Username"));
                     if (!isOpen())
                         server.closeOpenMatch();

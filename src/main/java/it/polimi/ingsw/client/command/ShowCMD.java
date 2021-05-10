@@ -19,6 +19,7 @@ public class ShowCMD implements Command{
 
     @Override
     public void doCommand() {
+
         if(client.getState()!= ClientState.IN_GAME){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;

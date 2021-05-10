@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class AnyRequirementResponse implements ServerMessage {
     private final ArrayList<ResourceData> resources;
-    private final Boolean isBuyDevelopmentAny;
+    private final boolean isBuyDevelopmentAny;
 
     @JsonCreator
     public AnyRequirementResponse(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                                  @JsonProperty("isBuyDevelopmentAny")Boolean isProductionAny) {
+                                  @JsonProperty("buydevelopmentany") boolean isProductionAny) {
         this.resources = resources;
         this.isBuyDevelopmentAny = isProductionAny;
     }
@@ -22,7 +22,7 @@ public class AnyRequirementResponse implements ServerMessage {
         return resources;
     }
 
-    public Boolean isBuyDevelopmentAny() {
+    public boolean isBuyDevelopmentAny() {
         return isBuyDevelopmentAny;
     }
 

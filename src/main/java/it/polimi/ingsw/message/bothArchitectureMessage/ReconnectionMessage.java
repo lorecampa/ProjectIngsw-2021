@@ -1,10 +1,13 @@
-package it.polimi.ingsw.message.serverMessage;
+package it.polimi.ingsw.message.bothArchitectureMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.ClientMessageHandler;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
+import it.polimi.ingsw.message.serverMessage.ServerMessage;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
-public class ReconnectionMessage implements ServerMessage{
+public class ReconnectionMessage implements ServerMessage, ClientMessage {
     private final int matchID;
     private final int clientID;
 
@@ -26,5 +29,10 @@ public class ReconnectionMessage implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleReconnection(this);
+    }
+
+    @Override
+    public void process(ClientMessageHandler handler) {
+        handler.reconnect(this);
     }
 }

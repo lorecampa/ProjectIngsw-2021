@@ -4,7 +4,7 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
-import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import java.util.Optional;
 
 public class ServerMessageHandler {

@@ -9,7 +9,6 @@ import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.observer.GameMasterObservable;
-import it.polimi.ingsw.observer.GameMasterObserver;
 import it.polimi.ingsw.observer.MarketObserver;
 import it.polimi.ingsw.observer.Observable;
 

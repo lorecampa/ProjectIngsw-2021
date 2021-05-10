@@ -14,7 +14,6 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
-
         @JsonSubTypes.Type(value = AnyProductionResponse.class, name = "AnyProductionResponse"),
         @JsonSubTypes.Type(value = AnyRequirementResponse.class, name = "AnyRequirementResponse"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),

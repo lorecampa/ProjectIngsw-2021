@@ -1,5 +1,6 @@
 package it.polimi.ingsw.message.clientMessage;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.ClientMessageHandler;
@@ -28,6 +29,7 @@ import it.polimi.ingsw.message.serverMessage.StrongboxModify;
         @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
         @JsonSubTypes.Type(value = NewTurn.class, name = "NewTurn"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
+        @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
         @JsonSubTypes.Type(value = RemoveDeckDevelopmentCard.class, name = "RemoveDeckDevelopmentCard"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
         @JsonSubTypes.Type(value = WhiteMarbleConverted.class, name = "WhiteMarbleConverted"),

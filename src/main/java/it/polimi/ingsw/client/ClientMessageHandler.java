@@ -4,6 +4,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.GameSetup;
 import it.polimi.ingsw.message.clientMessage.StarTurn;
@@ -42,6 +43,12 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printf(message.getMessage());
     }
 
+    public void connectInfo(ConnectionMessage message){PrintAssistant.instance.printf(message.getMessage());}
+
+    public void reconnect(ReconnectionMessage message){
+        PrintAssistant.instance.printf(message.getClientID() +" "+ message.getMatchID() + "");
+        //TODO save on file matchID and clientID
+        }
     //MainMenu message handler
     public void mainMenu(){
         ArrayList<String> texts = new ArrayList<>();

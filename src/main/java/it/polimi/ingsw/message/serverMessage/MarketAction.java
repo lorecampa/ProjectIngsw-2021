@@ -1,23 +1,19 @@
 package it.polimi.ingsw.message.serverMessage;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.server.ServerMessageHandler;
-
-import java.util.Map;
-import java.util.Optional;
 
 public class MarketAction implements ServerMessage{
     private final int selection;
-    private final boolean isRow;
+    private final boolean row;
     private final String username;
 
     @JsonCreator
     public MarketAction(@JsonProperty("selection") int selection,
-                        @JsonProperty("isRow") boolean isRow,
+                        @JsonProperty("row") boolean row,
                         @JsonProperty("username") String username) {
         this.selection = selection;
-        this.isRow = isRow;
+        this.row = row;
         this.username = username;
     }
 
@@ -26,7 +22,7 @@ public class MarketAction implements ServerMessage{
     }
 
     public boolean isRow() {
-        return isRow;
+        return row;
     }
 
     public String getUsername() {

@@ -6,7 +6,7 @@ import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
-import it.polimi.ingsw.message.serverMessage.ReconnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 
 import java.util.ArrayList;
 

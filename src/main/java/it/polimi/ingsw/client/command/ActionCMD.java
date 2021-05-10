@@ -20,6 +20,7 @@ public class ActionCMD implements Command{
 
     @Override
     public void doCommand() {
+
         if(client.getGameState()!= ClientGameState.START_YOUR_TURN){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;

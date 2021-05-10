@@ -24,7 +24,6 @@ public class ClientConnectionHandler implements Runnable {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    //private boolean active = true;
     private boolean exit = false;
 
     private ServerMessageHandler serverMessageHandler;
@@ -99,6 +98,7 @@ public class ClientConnectionHandler implements Runnable {
                     () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
             //TODO handle quit with a message
         }catch (Exception e){
+            System.out.println("client disconnection");
             serverMessageHandler.handleDisconnection();
         }
 

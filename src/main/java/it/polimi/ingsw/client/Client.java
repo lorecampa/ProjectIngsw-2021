@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.MarketData;
+import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
@@ -16,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class Client{
     private static final String ipHost ="127.0.0.1";
@@ -111,6 +113,7 @@ public class Client{
     private void startClient() throws IOException {
         try {
             clientSocket = new Socket(ipHost, portNumber);
+            clientSocket.setSoTimeout(20000);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,7 +124,26 @@ public class Client{
 
         out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
+
+        startPinging();
+
+
         //stdIn = new Scanner(new InputStreamReader(System.in));
+    }
+
+    private void startPinging(){
+        Thread ping = new Thread(() -> {
+            while (state != ClientState.QUIT) {
+                writeToStream(new PingPongMessage());
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        ping.start();
     }
 
     public void writeToStream(ServerMessage message){
@@ -135,9 +157,11 @@ public class Client{
         String serializedMessage = null;
         try{
             serializedMessage = in.readLine();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println("server disconnesso");
             e.printStackTrace();
         }
+        /*
         //da riguardare perchè secondo me non fa quello che dovrebbe
         if (serializedMessage.equalsIgnoreCase("QUIT")){
             return;
@@ -145,6 +169,8 @@ public class Client{
         ClientMessage message = deserialize(serializedMessage);
 
         message.process(clientMessageHandler);
+        */
+
     }
 
     public ClientMessage deserialize(String serializedMessage){
