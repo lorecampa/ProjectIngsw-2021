@@ -6,10 +6,13 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.message.serverMessage.StrongboxModify;
+import it.polimi.ingsw.model.personalBoard.market.Marble;
+import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
@@ -110,7 +113,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     //Faith Track OBSERVER
     @Override
     public void positionIncrease() {
-        match.sendAllPlayers(new FaithTrackIncrement(1, username));
+        match.sendAllPlayers(new FaithTrackIncrement(username));
     }
 
 
@@ -122,15 +125,19 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //Market
 
-
     @Override
-    public void marketTrayChange(ArrayList<ColorData> sequenceUpdated,
-                                 ColorData lastMarble, int selection, boolean isRow) {
+    public void marketTrayChange(ArrayList<ArrayList<Marble>> marketTray, Marble lastMarble) {
+        ArrayList<ArrayList<ColorData>> marketTrayToClient = new ArrayList<>();
+        for (int i = 0; i < marketTray.size(); i++){
+            ArrayList<ColorData> marketCol = new ArrayList<>();
+            for (Marble marble: marketTray.get(i)){
+                marketCol.add(marble.getColorData());
+            }
+            marketTrayToClient.add(marketCol);
+        }
 
-
+        match.sendAllPlayers(new MarketUpdate(marketTrayToClient, lastMarble.getColorData()));
     }
-
-
 
 
     //Card Manager

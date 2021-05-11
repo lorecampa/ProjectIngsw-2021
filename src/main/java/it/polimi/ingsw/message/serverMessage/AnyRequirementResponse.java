@@ -9,13 +9,13 @@ import java.util.ArrayList;
 
 public class AnyRequirementResponse implements ServerMessage {
     private final ArrayList<ResourceData> resources;
-    private final boolean isBuyDevelopmentAny;
+    private final boolean buyDevelopmentAny;
 
     @JsonCreator
     public AnyRequirementResponse(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                                  @JsonProperty("buydevelopmentany") boolean isProductionAny) {
+                                  @JsonProperty("buyDevelopmentAny") boolean buyDevelopmentAny) {
         this.resources = resources;
-        this.isBuyDevelopmentAny = isProductionAny;
+        this.buyDevelopmentAny = buyDevelopmentAny;
     }
 
     public ArrayList<ResourceData> getResources() {
@@ -23,9 +23,8 @@ public class AnyRequirementResponse implements ServerMessage {
     }
 
     public boolean isBuyDevelopmentAny() {
-        return isBuyDevelopmentAny;
+        return buyDevelopmentAny;
     }
-
 
     @Override
     public void process(ServerMessageHandler handler) {

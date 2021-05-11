@@ -31,7 +31,7 @@ class MakeProductionControllerTest {
     ResourceManager resourceManager;
     CardManager cardManager;
     Controller controller;
-    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper mapper;
     ArrayList<Leader> leaders;
     String devCardString;
     Development devCard;
@@ -40,7 +40,7 @@ class MakeProductionControllerTest {
     @BeforeEach
     @Test
     void init() throws IOException, JsonFileModificationError, DeckDevelopmentCardException {
-
+        mapper= new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         //ReqProduction    =    1 coin, 2 any
         //ProfitProduction =    1 fatih, 2 any, 1 stone

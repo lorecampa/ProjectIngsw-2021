@@ -9,6 +9,7 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -97,13 +98,19 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      */
     public void popeFavorActivated(int idVaticanReport){
 
+        Optional<Integer> popeSpacePosition = track.stream()
+                .filter(x -> (x instanceof PopeSpaceCell) && (x.isInVaticanReport(idVaticanReport)))
+                .map(track::indexOf)
+                .findFirst();
+
         if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport)){
             popeFavorVP += popeFavor.get(idVaticanReport);
 
-            notifyAllObservers(x -> x.popeFavorReached(idVaticanReport, false));
+            popeSpacePosition.ifPresent(popeIndex ->
+                    notifyAllObservers(x -> x.popeFavorReached(popeIndex, false)));
         }else{
-            notifyAllObservers(x -> x.popeFavorReached(idVaticanReport, true));
-
+            popeSpacePosition.ifPresent(popeIndex ->
+                    notifyAllObservers(x -> x.popeFavorReached(popeIndex, true)));
         }
 
 

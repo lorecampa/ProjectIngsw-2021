@@ -21,6 +21,7 @@ public class ResourceData {
     public int getValue() {
         return value;
     }
+
     public String toCli(){
         String s="";
         switch(type){

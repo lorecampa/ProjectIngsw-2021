@@ -7,15 +7,15 @@ import it.polimi.ingsw.server.ServerMessageHandler;
 public class ProductionAction implements ServerMessage{
     private final int slotsIndex;
     private final boolean baseProduction;
-    private final boolean isLeader;
+    private final boolean leader;
 
     @JsonCreator
     public ProductionAction(@JsonProperty("slotsIndex")int slotsIndex,
                             @JsonProperty("baseProduction")boolean baseProduction,
-                            @JsonProperty("isLeader") boolean isLeader) {
+                            @JsonProperty("leader") boolean leader) {
         this.slotsIndex = slotsIndex;
         this.baseProduction = baseProduction;
-        this.isLeader = isLeader;
+        this.leader = leader;
     }
 
     public int getSlotsIndex() {
@@ -27,7 +27,7 @@ public class ProductionAction implements ServerMessage{
     }
 
     public boolean isLeader() {
-        return isLeader;
+        return leader;
     }
 
     @Override

@@ -10,18 +10,19 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         property = "@class")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ConnectionMessage.class, name = "ConnectionMessage"),
-        @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
-        @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
-        @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
+        @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
+
         @JsonSubTypes.Type(value = AnyProductionResponse.class, name = "AnyProductionResponse"),
         @JsonSubTypes.Type(value = AnyRequirementResponse.class, name = "AnyRequirementResponse"),
+        @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
+        @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
         @JsonSubTypes.Type(value = LeaderManage.class, name = "LeaderManage"),
         @JsonSubTypes.Type(value = MarketAction.class, name = "MarketAction"),
         @JsonSubTypes.Type(value = ProductionAction.class, name = "ProductionAction"),
-        @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
+        @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
         @JsonSubTypes.Type(value = WhiteMarbleForLeader.class, name = "WhiteMarbleForLeader")
 })
 

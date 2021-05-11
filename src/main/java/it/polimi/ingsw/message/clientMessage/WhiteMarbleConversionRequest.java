@@ -4,15 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
-
 import java.util.ArrayList;
 
-public class WhiteMarbleConverted implements ClientMessage{
+public class WhiteMarbleConversionRequest implements ClientMessage{
+    private final int numOfWhiteMarbleDrew;
     private final ArrayList<ResourceData> whiteMarbleConversion;
 
     @JsonCreator
-    public WhiteMarbleConverted(@JsonProperty("whiteMarbleConversion") ArrayList<ResourceData> whiteMarbleConversion) {
+    public WhiteMarbleConversionRequest(@JsonProperty("numOfWhiteMarbleDrew") int numOfWhiteMarbleDrew,
+            @JsonProperty("whiteMarbleConversion") ArrayList<ResourceData> whiteMarbleConversion) {
+
+        this.numOfWhiteMarbleDrew = numOfWhiteMarbleDrew;
         this.whiteMarbleConversion = whiteMarbleConversion;
+    }
+
+    public int getNumOfWhiteMarbleDrew() {
+        return numOfWhiteMarbleDrew;
     }
 
     public ArrayList<ResourceData> getWhiteMarbleConversion() {

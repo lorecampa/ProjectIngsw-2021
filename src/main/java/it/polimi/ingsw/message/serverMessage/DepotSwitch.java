@@ -8,37 +8,37 @@ import java.util.Optional;
 
 public class DepotSwitch implements ClientMessage {
     private final int from;
-    private final int isFromLeader;
+    private final boolean fromLeader;
     private final int to;
-    private final boolean isToLeader;
-
-
+    private final boolean toLeader;
 
     @JsonCreator
     public DepotSwitch(@JsonProperty("from")int from,
-                       @JsonProperty("isFromLeader")int isFromLeader,
+                       @JsonProperty("fromLeader")boolean fromLeader,
                        @JsonProperty("to")int to,
-                       @JsonProperty("isToLeader")boolean isToLeader) {
+                       @JsonProperty("toLeader")boolean toLeader) {
         this.from = from;
-        this.isFromLeader = isFromLeader;
+        this.fromLeader = fromLeader;
         this.to = to;
-        this.isToLeader = isToLeader;
+        this.toLeader = toLeader;
     }
 
     public int getFrom() {
         return from;
     }
 
-    public int getIsFromLeader() {
-        return isFromLeader;
-    }
+
 
     public int getTo() {
         return to;
     }
 
+    public boolean isFromLeader() {
+        return fromLeader;
+    }
+
     public boolean isToLeader() {
-        return isToLeader;
+        return toLeader;
     }
 
     @Override

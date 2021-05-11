@@ -211,45 +211,25 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     //vedere come gestire la cosa in quanto forse avrebbe più senso avere
     //un array anche con gli effetti lato client
 
-    public boolean doIHaveMarbleEffects(){
+    public int howManyMarbleEffects(){
+        return  leaders.stream()
+                .map(Card::getOnActivationEffects)
+                .flatMap(ArrayList::stream)
+                .filter(x -> x instanceof MarbleEffect)
+                .mapToInt(x -> 1)
+                .sum();
+
+    }
+
+
+    public int howManyProductionEffects(){
         return leaders.stream()
                 .map(Card::getOnActivationEffects)
                 .flatMap(ArrayList::stream)
-                .anyMatch(x -> x instanceof MarbleEffect);
+                .filter(x -> x instanceof ProductionEffect)
+                .mapToInt(x -> 1)
+                .sum();
     }
-
-    //uguale come sopra
-    public boolean doIHaveProductionEffects(){
-        return leaders.stream()
-                .map(Card::getOnActivationEffects)
-                .flatMap(ArrayList::stream)
-                .anyMatch(x -> x instanceof ProductionEffect);
-    }
-
-    /*
-    metodo che andrà nel client per cercare il numero di leader con una determinato numero di palline bianche
-
-    public HashMap<Integer, ArrayList<ResourceData>> whiteMarbleLeaderTransformation(){
-        HashMap<Integer, ArrayList<ResourceData>> assignment = new HashMap<>();
-        for(Leader leader: leaders){
-            if (leader.isActive()){
-                for (Effect effect: leader.getOnActivationEffects()){
-                    if (effect instanceof MarbleEffect){
-                        ArrayList<ResourceData> transformInData =
-                                ((MarbleEffect) effect).getTransformIn().stream()
-                                .map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
-
-                        assignment.put(leaders.indexOf(leader),
-                                transformInData);
-                    }
-                }
-            }
-        }
-        return assignment;
-    }
-
-     */
-
 
 
     @Override

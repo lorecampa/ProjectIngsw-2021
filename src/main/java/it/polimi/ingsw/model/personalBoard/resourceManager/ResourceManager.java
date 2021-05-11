@@ -160,6 +160,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         for(Resource res:resourcesToProduce){
             addToStrongbox(res);
         }
+        notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
+
     }
 
     /**
@@ -167,8 +169,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to add */
     public void addToStrongbox(Resource resource){
         strongbox.addResource(resource);
-        //TODO change
-        notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
     /**
@@ -202,8 +202,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
         sendDepotUpdate(isNormalDepot, index);
-
-
 
     }
 

@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
 /**
  * GameMaster class
  */
-public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
-        LorenzoIlMagnifico {
+public class GameMaster implements GameMasterObserver,Observable<ModelObserver>, LorenzoIlMagnifico {
 
     List<ModelObserver> modelObserverList = new ArrayList<>();
 
@@ -96,11 +95,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
         deckDevelopment = gameSetting.getDeckDevelopment();
         depthDeckDevelopment = deckDevelopment.get(0).get(0).size();
-        for (int i = 0; i < deckDevelopment.size(); i++){
-            for (int j = 0; j < deckDevelopment.get(i).size(); j++){
-                Collections.shuffle(deckDevelopment.get(i).get(j));
-            }
-        }
+        deckDevelopment.stream()
+                .flatMap(ArrayList::stream)
+                .forEach(Collections::shuffle);
+
 
         deckLeader = gameSetting.getDeckLeader();
         Collections.shuffle(deckLeader);

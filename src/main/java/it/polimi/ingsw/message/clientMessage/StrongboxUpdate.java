@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
-
 import java.util.ArrayList;
 
 public class StrongboxUpdate implements ClientMessage{

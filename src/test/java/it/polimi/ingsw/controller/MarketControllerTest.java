@@ -9,7 +9,10 @@ import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
+import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
+import it.polimi.ingsw.model.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +26,10 @@ class MarketControllerTest {
 
     GameSetting gameSetting;
     GameMaster gameMaster;
+    CardManager cardManager;
     PersonalBoard personalBoard;
+    Market market;
+    ResourceManager resourceManager;
     Controller controller;
     ObjectMapper mapper = new ObjectMapper();
     ArrayList<Leader> leaders;
@@ -44,6 +50,9 @@ class MarketControllerTest {
         gameMaster = new GameMaster(gameSetting, players);
         gameMaster.nextPlayer();
         personalBoard = gameMaster.getPlayerPersonalBoard(gameMaster.getCurrentPlayer());
+        cardManager = personalBoard.getCardManager();
+        resourceManager = personalBoard.getResourceManager();
+        market = gameMaster.getMarket();
 
 
         controller = new Controller(gameMaster);
@@ -69,18 +78,21 @@ class MarketControllerTest {
     }
 
     @Test
-    void marketActionWithLeaders() {
+    void marketActionWithTwoLeaders() {
+        assertEquals(0, cardManager.howManyMarbleEffects());
         //1 stone
         attachLeader(10);
+        assertEquals(1, cardManager.howManyMarbleEffects());
         //1 coin
         attachLeader(11);
+        assertEquals(2, cardManager.howManyMarbleEffects());
 
 
         printState();
         controller.marketAction(2, true);
 
-        System.out.println(gameMaster.getMarket().getResourceToSend());
-        int whiteMarble = gameMaster.getMarket().getWhiteMarbleDrew();
+        System.out.println(market.getResourceToSend());
+        int whiteMarble = market.getWhiteMarbleDrew();
         System.out.println("WhiteMarble: " + whiteMarble);
         printState();
 
@@ -92,6 +104,21 @@ class MarketControllerTest {
                 controller.leaderWhiteMarbleConversion(1, 1));
         printState();
 
+
+
+    }
+
+
+    @Test
+    void marketActionOneTwoLeaders() {
+        assertEquals(0, cardManager.howManyMarbleEffects());
+        //1 stone
+        attachLeader(10);
+        assertEquals(1, cardManager.howManyMarbleEffects());
+
+        printState();
+        controller.marketAction(2, false);
+        printState();
 
 
     }

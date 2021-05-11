@@ -12,7 +12,7 @@ public class AnyConversionRequest implements ClientMessage{
     private final ArrayList<ResourceData> optionConversion;
     private final ArrayList<ResourceData> optionOfDiscountNotUsed;
     private final int numOfAny;
-    private final boolean isProduction;
+    private final boolean production;
 
     @JsonCreator
     public AnyConversionRequest(@JsonProperty("optionConversion") ArrayList<ResourceData> optionConversion,
@@ -21,7 +21,7 @@ public class AnyConversionRequest implements ClientMessage{
         this.optionConversion = optionConversion;
         this.optionOfDiscountNotUsed = optionOfDiscountNotUsed;
         this.numOfAny = numOfAny;
-        this.isProduction = false;
+        this.production = false;
     }
 
     @JsonCreator
@@ -29,24 +29,24 @@ public class AnyConversionRequest implements ClientMessage{
         this.optionConversion = null;
         this.optionOfDiscountNotUsed = null;
         this.numOfAny = numOfAny;
-        this.isProduction = true;
+        this.production = true;
     }
 
 
-    public Optional<ArrayList<ResourceData>> getOptionConversion() {
-        return Optional.ofNullable(optionConversion);
+    public ArrayList<ResourceData> getOptionConversion() {
+        return optionConversion;
     }
 
-    public Optional<ArrayList<ResourceData>> getOptionOfDiscountNotUsed() {
-        return Optional.ofNullable(optionOfDiscountNotUsed);
+    public ArrayList<ResourceData> getOptionOfDiscountNotUsed() {
+        return optionOfDiscountNotUsed;
     }
 
     public int getNumOfAny() {
         return numOfAny;
     }
 
-    public boolean isProduction() {
-        return isProduction;
+    public boolean production() {
+        return production;
     }
 
     @Override

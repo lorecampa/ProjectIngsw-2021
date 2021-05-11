@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.data.CardLeaderData;
 import java.util.ArrayList;
 
 public class LeaderSetUpMessage implements ClientMessage{
-
     ArrayList<CardLeaderData> leaders;
 
     public LeaderSetUpMessage(ArrayList<CardLeaderData> leaders) {

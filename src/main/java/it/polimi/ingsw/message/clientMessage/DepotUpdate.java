@@ -9,17 +9,17 @@ import it.polimi.ingsw.client.data.ResourceData;
 public class DepotUpdate implements ClientMessage{
     private final ResourceData depot;
     private final int depotIndex;
-    private final boolean isNormalDepot;
+    private final boolean normalDepot;
     private final String username;
 
     @JsonCreator
     public DepotUpdate(@JsonProperty("depot") ResourceData depot,
                        @JsonProperty("depotIndex") int depotIndex,
-                       @JsonProperty("isNormalDepot") boolean isNormalDepot,
+                       @JsonProperty("normalDepot") boolean normalDepot,
                        @JsonProperty("username") String username) {
         this.depot = depot;
         this.depotIndex = depotIndex;
-        this.isNormalDepot = isNormalDepot;
+        this.normalDepot = normalDepot;
         this.username = username;
     }
 
@@ -31,8 +31,8 @@ public class DepotUpdate implements ClientMessage{
         return depotIndex;
     }
 
-    public boolean isNormalDepot() {
-        return isNormalDepot;
+    public boolean normalDepot() {
+        return normalDepot;
     }
 
     public String getUsername() {

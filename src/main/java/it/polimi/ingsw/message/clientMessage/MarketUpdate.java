@@ -9,38 +9,23 @@ import it.polimi.ingsw.model.card.Color;
 import java.util.ArrayList;
 
 public class MarketUpdate implements ClientMessage{
-    private final ArrayList<ColorData> sequence;
+    private final ArrayList<ArrayList<ColorData>> marketTray;
     private final ColorData lastMarble;
-    private final int selection;
-    private final boolean isRow;
 
     @JsonCreator
-    public MarketUpdate(@JsonProperty("sequence") ArrayList<ColorData> sequence,
-                        @JsonProperty("lastMarble")ColorData lastMarble,
-                        @JsonProperty("selection")int selection,
-                        @JsonProperty("isRow")boolean isRow) {
-        this.sequence = sequence;
+    public MarketUpdate(@JsonProperty("marketTray") ArrayList<ArrayList<ColorData>> marketTray,
+                        @JsonProperty("lastMarble")ColorData lastMarble) {
+        this.marketTray = marketTray;
         this.lastMarble = lastMarble;
-        this.selection = selection;
-        this.isRow = isRow;
     }
 
-    public ArrayList<ColorData> getSequence() {
-        return sequence;
+    public ArrayList<ArrayList<ColorData>> getMarketTray() {
+        return marketTray;
     }
 
     public ColorData getLastMarble() {
         return lastMarble;
     }
-
-    public int getSelection() {
-        return selection;
-    }
-
-    public boolean isRow() {
-        return isRow;
-    }
-
 
     @Override
     public void process(ClientMessageHandler handler) {

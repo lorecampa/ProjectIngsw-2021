@@ -132,14 +132,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
         }
 
-        //observer
-        //TODO mandare matrice
-        ArrayList<ColorData> rowUpdated = new ArrayList<>();
-        for (int i = 0; i < numRow; i++){
-            rowUpdated.add(marketTray.get(row).get(i).getColorData());
-        }
-        notifyAllObservers(x ->
-                x.marketTrayChange(rowUpdated, marbleToInsert.getColorData(), row, true));
+        notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
     }
 
 
@@ -168,14 +161,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
         }
 
-        //TODO mettere matrice
-        ArrayList<ColorData> colUpdated = new ArrayList<>();
-        for (int i = 0; i < numRow; i++){
-            colUpdated.add(marketTray.get(i).get(col).getColorData());
-        }
-        notifyAllObservers(x ->
-                x.marketTrayChange(colUpdated, marbleToInsert.getColorData(), col, false));
-
+        notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
 
     }
 

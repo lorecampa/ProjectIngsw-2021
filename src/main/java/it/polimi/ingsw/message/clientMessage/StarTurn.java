@@ -1,13 +1,24 @@
 package it.polimi.ingsw.message.clientMessage;
 
-public class StarTurn {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.ClientMessageHandler;
+
+public class StarTurn implements ClientMessage{
     private String username;
 
-    public StarTurn(String username) {
+    @JsonCreator
+    public StarTurn(@JsonProperty("username") String username) {
         this.username = username;
     }
 
+
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public void process(ClientMessageHandler handler) {
+        System.out.println("StartTurnHandler");
     }
 }

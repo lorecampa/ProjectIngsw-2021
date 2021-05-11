@@ -1,12 +1,10 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
-import it.polimi.ingsw.exception.NegativeResourceException;
-import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
+import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -18,7 +16,7 @@ import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
 
 public class Controller {
-    private GameMaster gameMaster;
+    private final GameMaster gameMaster;
     private Match match;
 
     public Controller(GameMaster gameMaster, Match match) {
@@ -43,7 +41,7 @@ public class Controller {
 
     public TurnState getTurnState(){
         return gameMaster.getTurnState();
-    };
+    }
 
     public boolean isCorrectTurnState(String username, TurnState turnState){
         return isYourTurn(username) && getTurnState() == turnState;
@@ -56,7 +54,7 @@ public class Controller {
 
     private String getCurrentPlayer(){
         return gameMaster.getCurrentPlayer();
-    };
+    }
 
 
     private void registerAllVirtualClientObserver(){
@@ -118,18 +116,42 @@ public class Controller {
             return;
         }
 
+        int numOfMarbleEffects = cardManager.howManyMarbleEffects();
+        int whiteMarbleDrew = market.getWhiteMarbleDrew();
 
-        if (market.getWhiteMarbleDrew() == 0 || !cardManager.doIHaveMarbleEffects()){
+        if (!(numOfMarbleEffects >= 2 && whiteMarbleDrew > 0)){
+
+            if (numOfMarbleEffects == 1 && whiteMarbleDrew > 0){
+                market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
+
+                cardManager.getLeaders().stream()
+                        .filter(x -> x.getOnActivationEffects().stream().anyMatch(effect -> effect instanceof MarbleEffect))
+                        .mapToInt(x -> cardManager.getLeaders().indexOf(x))
+                        .findFirst()
+                        .ifPresent(x -> {
+                            try {
+                                cardManager.activateLeaderEffect(x, getTurnState());
+                            } catch (Exception e) {
+                                //it will never occur
+                                sendError(e.getMessage());
+                            }
+                        });
+            }
+
             ResourceManager resourceManager = personalBoard.getResourceManager();
             //bufferInsertion
             resourceManager.resourceFromMarket(market.getResourceToSend());
             market.reset();
         }
+
+
     }
+
 
     public void leaderWhiteMarbleConversion(int leaderIndex, int numOfWhiteMarble){
         CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        if(!cardManager.doIHaveMarbleEffects()){
+        int numOfMarbleEffects = cardManager.howManyMarbleEffects();
+        if(numOfMarbleEffects <= 0){
             sendError("You don't have leader with marble effects");
             return;
         }
@@ -181,7 +203,8 @@ public class Controller {
 
     public void leaderProductionAction(int leaderIndex){
         CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        if (!cardManager.doIHaveProductionEffects()){
+        int numOfProductionEffects = cardManager.howManyProductionEffects();
+        if (numOfProductionEffects <= 0){
             sendError("You don't have leader with production effect");
             return;
         }

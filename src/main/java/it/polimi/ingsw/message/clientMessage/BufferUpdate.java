@@ -7,7 +7,6 @@ import it.polimi.ingsw.client.data.ResourceData;
 import java.util.ArrayList;
 
 public class BufferUpdate implements ClientMessage{
-    //i don't know if i need to send it to all players
     private final ArrayList<ResourceData> resources;
 
     @JsonCreator
