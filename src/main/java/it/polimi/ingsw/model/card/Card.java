@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
@@ -10,6 +11,8 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -133,6 +136,15 @@ public  abstract class Card {
 
     public ArrayList<Effect> getOnActivationEffects() {
         return onActivationEffects;
+    }
+
+    public ArrayList<EffectData> effectToClient(){
+        ArrayList<EffectData> effects = new ArrayList<>();
+        if (onActivationEffects != null)
+            effects.addAll(onActivationEffects.stream().map(Effect::toEffectData).collect(Collectors.toCollection(ArrayList::new)));
+        if (onCreationEffect != null)
+            effects.addAll(onCreationEffect.stream().map(Effect::toEffectData).collect(Collectors.toCollection(ArrayList::new)));
+        return effects;
     }
 
     @Override

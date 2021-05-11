@@ -1,15 +1,16 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
-import it.polimi.ingsw.message.clientMessage.ClientMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorType;
+import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
+import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,10 +175,35 @@ public class Match {
                 for (VirtualClient player: allPlayers){
                     player.getClient().getServerMessageHandler().setController(controller);
                 }
-                sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
+                sendSetUp(gameMaster);
+                sendLeader(gameMaster);
             } catch (IOException | JsonFileModificationError e) {
                 e.printStackTrace();
                 sendAllPlayers(new ErrorMessage(ErrorType.FAIL_GAME_LOADING));
+            }
+
+        }
+    }
+
+    public void sendSetUp(GameMaster gameMaster){
+        sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
+        ArrayList<String> usernames = allPlayers.stream()
+                .map(VirtualClient::getUsername)
+                .collect(Collectors.toCollection(ArrayList::new));
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData()));
+    }
+
+    public void sendLeader(GameMaster gameMaster){
+        gameMaster.deliverLeaderCards();
+        for (VirtualClient virtualClient : allPlayers){
+            CardManager playerCardMan = gameMaster.getPlayerPersonalBoard(virtualClient.getUsername()).getCardManager();
+            ArrayList<CardLeaderData> leaders = playerCardMan.getLeaders()
+                    .stream().map(Leader::toCardLeaderData).collect(Collectors.toCollection(ArrayList::new));
+            if (inactivePlayers.contains(virtualClient)){
+                while(playerCardMan.getLeaders().size() > 2)
+                    controller.discardLeaderSetUp(playerCardMan.getLeaders().size() - 1, virtualClient.getUsername());
+            }else{
+                sendSinglePlayer(virtualClient.getUsername(), new LeaderSetUpMessage(leaders));
             }
 
         }

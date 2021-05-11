@@ -552,18 +552,18 @@ public class ModelClient {
         }
         PrintAssistant.instance.printfMultipleString(rowsOfLeaders);
     }
-/*
+
     public static void main(String[] args){
         ModelClient mc;
         ArrayList<ModelClient> array=new ArrayList<>();
         mc=new ModelClient("Teo");
-        /*
+
         mc.printFaithTrack();
         mc.printResource();
         mc.printCardSlots();
         mc.printLeader();
-        */
-    /*
+
+
         array.add(mc);
 
         if(array.stream().map(ModelClient::getUsername).anyMatch(x->x.equals("Teo"))){
@@ -573,7 +573,7 @@ public class ModelClient {
             System.out.println("DA EQUALS: ci sono");
         }
     }
-*/
+
 
     @Override
     public boolean equals(Object obj) {

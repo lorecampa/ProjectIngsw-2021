@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.CardLeaderData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
@@ -63,8 +66,17 @@ public class Leader extends Card{
         this.active = status;
     }
 
-
-
+    public CardLeaderData toCardLeaderData(){
+        ArrayList<ResourceData> resReq = new ArrayList<>();
+        ArrayList<CardDevData> cardReq = new ArrayList<>();
+        for (Requirement requirement: requirements){
+            if (requirement.toResourceData() != null)
+                resReq.addAll(requirement.toResourceData());
+            else
+                cardReq.addAll(requirement.toCardDevData());
+        }
+        return new CardLeaderData(getVictoryPoints(),cardReq,resReq,effectToClient());
+    }
     @Override
     public String toString() {
         String x = super.toString();

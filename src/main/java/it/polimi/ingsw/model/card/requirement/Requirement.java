@@ -3,8 +3,12 @@ package it.polimi.ingsw.model.card.requirement;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
+
+import java.util.ArrayList;
 
 /**
  * Class Requirement define an interface for all type of requirement a card could have in order to be
@@ -39,4 +43,7 @@ public interface Requirement {
      */
     void attachCardManager(CardManager cardManager);
 
+    ArrayList<ResourceData> toResourceData();
+
+    ArrayList<CardDevData> toCardDevData();
 }

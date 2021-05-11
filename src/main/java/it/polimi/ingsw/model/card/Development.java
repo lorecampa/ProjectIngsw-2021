@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
@@ -44,7 +47,14 @@ public class Development extends  Card{
         return color;
     }
 
-
+    public CardDevData toCardDevData(){
+        ArrayList<ResourceData> resReq = new ArrayList<>();
+        for (Requirement requirement: requirements){
+            if (requirement.toResourceData() != null)
+                resReq.addAll(requirement.toResourceData());
+        }
+        return new CardDevData(level,getVictoryPoints(),color, resReq, effectToClient());
+    }
 
     /**
      * Method checkRequirements checks if all requirement of the card are satisfied, leaders discounts

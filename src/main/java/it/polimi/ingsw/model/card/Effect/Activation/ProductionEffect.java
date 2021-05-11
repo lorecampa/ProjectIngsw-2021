@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
@@ -80,6 +82,14 @@ public class ProductionEffect implements Effect {
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
+    }
+
+    @Override
+    public EffectData toEffectData() {
+        String description = "Production effect: ";
+        ArrayList<ResourceData> productionCost = resourceCost.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<ResourceData> productionEarn = resourceAcquired.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+        return new EffectData(description,productionCost, productionEarn);
     }
 
     @Override

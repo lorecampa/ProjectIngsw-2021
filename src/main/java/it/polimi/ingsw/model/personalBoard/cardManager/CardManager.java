@@ -39,6 +39,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         }
     }
 
+    public ArrayList<Leader> getLeaders() {
+        return leaders;
+    }
+
     /**
      * Method to set up the card manager to be ready for the current turn
      */
@@ -66,6 +70,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leaders.remove(leaderIndex);
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderManage(leaderIndex, true));
+    }
+
+    public void discardLeaderNoNotify(int leaderIndex) throws IndexOutOfBoundsException{
+        leaders.remove(leaderIndex);
     }
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.personalBoard.market;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 
@@ -118,5 +119,11 @@ class MarketTest {
         market.reset();
         assertEquals(0, market.getWhiteMarbleDrew());
         assertEquals(0, market.getResourceToSend().size());
+    }
+
+    @Test
+    void testToMarketData(){
+        MarketData marketData = market.toMarketData();
+        System.out.println(marketData.toString());
     }
 }

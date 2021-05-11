@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.card.Effect;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.exception.CantMakeProductionException;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
@@ -46,4 +47,6 @@ public interface Effect {
      * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
      */
     void attachResourceManager(ResourceManager resourceManager);
+
+    EffectData toEffectData();
 }

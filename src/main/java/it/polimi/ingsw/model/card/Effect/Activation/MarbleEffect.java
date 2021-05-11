@@ -2,13 +2,18 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.model.resource.ResourceType;
+
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 /**
@@ -64,6 +69,16 @@ public class MarbleEffect implements Effect {
 
     public ArrayList<Resource> getTransformIn() {
         return transformIn;
+    }
+
+    @Override
+    public EffectData toEffectData() {
+        String description = "Marble effect: ";
+        ArrayList<ResourceData> whiteMarble = new ArrayList<>();
+        whiteMarble.add(new ResourceData(ResourceType.ANY));
+
+        ArrayList<ResourceData> transformInto = transformIn.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+        return new EffectData(description,whiteMarble,transformInto);
     }
 
     @Override

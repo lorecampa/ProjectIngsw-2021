@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
+import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
@@ -282,7 +283,14 @@ public class Controller {
         }
     }
 
-
+    public void discardLeaderSetUp(int leaderIndex, String username){
+        CardManager playerCardManeger = gameMaster.getPlayerPersonalBoard(username).getCardManager();
+        try {
+            playerCardManeger.discardLeaderNoNotify(leaderIndex);
+        }catch (IndexOutOfBoundsException e) {
+            match.sendSinglePlayer(username, new ErrorMessage("Index out of bound"));
+        }
+    }
 
 
 }

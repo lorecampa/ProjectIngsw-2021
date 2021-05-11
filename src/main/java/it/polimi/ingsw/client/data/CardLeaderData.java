@@ -6,6 +6,9 @@ public class CardLeaderData {
     private int victoryPoint;
     private ArrayList<CardDevData> cardReq;
     private ArrayList<ResourceData> resourceReq;
+
+    private ArrayList<EffectData> effects;
+
     private ArrayList<String> descriptionsLeader;
     private boolean isActive;
 
@@ -15,6 +18,14 @@ public class CardLeaderData {
         this.resourceReq = resourceReq;
         this.descriptionsLeader = descriptionsLeader;
         this.isActive = isActive;
+    }
+
+    public CardLeaderData(int victoryPoint, ArrayList<CardDevData> cardReq, ArrayList<ResourceData> resourceReq, ArrayList<EffectData> effects) {
+        this.victoryPoint = victoryPoint;
+        this.cardReq = cardReq;
+        this.resourceReq = resourceReq;
+        this.effects = effects;
+        this.isActive = false;
     }
 
     public int getVictoryPoint() {

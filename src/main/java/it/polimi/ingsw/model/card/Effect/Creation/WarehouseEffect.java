@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class WarehouseEffect defines a class for all effect that modify the warehouse structure
@@ -62,7 +65,12 @@ public class WarehouseEffect  implements Effect {
     }
 
 
-
+    @Override
+    public EffectData toEffectData() {
+        String description = "Werehouse effect: ";
+        ArrayList<ResourceData> depot = depots.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+        return new EffectData(description,depot,null);
+    }
 
     @Override
     public String toString() {

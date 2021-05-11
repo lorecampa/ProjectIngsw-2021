@@ -2,10 +2,13 @@ package it.polimi.ingsw.model.card.requirement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class ResourceReq defines a class that represent all requirement of type resource
@@ -50,6 +53,15 @@ public class ResourceReq implements Requirement {
     @Override
     public void attachCardManager(CardManager cardManager) {}
 
+    @Override
+    public ArrayList<ResourceData> toResourceData() {
+        return resourceReq.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public ArrayList<CardDevData> toCardDevData() {
+        return null;
+    }
 
     @Override
     public String toString() {

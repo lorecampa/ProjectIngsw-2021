@@ -81,6 +81,9 @@ public class ServerMessageHandler {
 
     }
 
+    public void handleLeaderSetUp(int leaderIndex){
+        controller.discardLeaderSetUp(leaderIndex, virtualClient.getUsername());
+    }
 
 
 }

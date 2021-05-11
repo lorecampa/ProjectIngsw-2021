@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.personalBoard.market;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ColorData;
+import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
@@ -222,6 +223,14 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         resourcesToSend.clear();
     }
 
+    public MarketData toMarketData(){
+        ArrayList<ArrayList<ColorData>> marketTrayColor = marketTray.stream()
+                .map(row -> row.stream().map(Marble::getColorData).collect(Collectors.toCollection(ArrayList::new)))
+                .collect(Collectors.toCollection(ArrayList::new));
+        ColorData marbleToInsertColor = marbleToInsert.getColorData();
+
+        return new MarketData(marketTrayColor,marbleToInsertColor,numRow,numCol);
+    }
 
     @Override
     public void attachObserver(MarketObserver observer) {

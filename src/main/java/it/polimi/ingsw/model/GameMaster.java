@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -22,6 +24,7 @@ import it.polimi.ingsw.observer.Observable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * GameMaster class
@@ -186,8 +189,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         CardManager playerCardManager = new CardManager(playerBaseProduction);
         playerCardManager.attachGameMasterObserver(this);
 
-
-
         playersPersonalBoard.put(username, new PersonalBoard(username,
                 playerFaithTrack,
                 playerResourceManager,
@@ -212,7 +213,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         for (PersonalBoard personalBoard: playersPersonalBoard.values()){
             CardManager cardManager = personalBoard.getCardManager();
             for (int i = 0; i < leaderAtStart; i++){
-
                 leader = Optional.ofNullable(deckLeader.poll());
                 leader.ifPresent(x -> x.attachCardToUser(personalBoard, market));
                 leader.ifPresent(cardManager::addLeader);
@@ -312,6 +312,16 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
     public ArrayList<ArrayList<ArrayList<Development>>> getDeckDevelopment() {
         return deckDevelopment;
+    }
+
+    public DeckDevData toDeckDevData(){
+        return new DeckDevData(deckDevelopment.stream()
+                .map(row -> row.stream()
+                        .map(singleDeck -> singleDeck.stream()
+                                .map(Development::toCardDevData)
+                        .collect(Collectors.toCollection(ArrayList::new)))
+                    .collect(Collectors.toCollection(ArrayList::new)))
+                .collect(Collectors.toCollection(ArrayList::new)));
     }
 
 

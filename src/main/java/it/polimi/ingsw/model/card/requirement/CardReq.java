@@ -2,9 +2,15 @@ package it.polimi.ingsw.model.card.requirement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Class CardReq represent a class for all kind of card requirement
@@ -56,6 +62,15 @@ public class CardReq implements Requirement {
         this.cardManager = cardManager;
     }
 
+    @Override
+    public ArrayList<ResourceData> toResourceData() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CardDevData> toCardDevData() {
+        return new ArrayList<>(Collections.nCopies(numRequired,new CardDevData(level,color)));
+    }
 
     @Override
     public String toString() {

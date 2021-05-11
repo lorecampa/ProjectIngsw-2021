@@ -2,13 +2,18 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.model.resource.ResourceType;
+
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Discount class defines represent all effect that concern a discount
@@ -57,7 +62,12 @@ public class DiscountEffect implements Effect {
     }
 
 
-
+    @Override
+    public EffectData toEffectData() {
+        String description = "Discount effect: ";
+        ArrayList<ResourceData> discount = discounts.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
+        return new EffectData(description,discount,null);
+    }
 
     @Override
     public String toString() {

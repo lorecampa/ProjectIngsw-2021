@@ -10,6 +10,9 @@ public class CardDevData {
     private int victoryPoints;
     private Color color;
     private ArrayList<ResourceData> resourceReq;
+
+    private ArrayList<EffectData> effects;
+
     private ArrayList<ResourceData> productionCost;
     private ArrayList<ResourceData> productionEarn;
 
@@ -20,6 +23,14 @@ public class CardDevData {
         this.resourceReq = resourceReq;
         this.productionCost = productionCost;
         this.productionEarn = productionEarn;
+    }
+
+    public CardDevData(int level, int victoryPoints, Color color,ArrayList<ResourceData> resourceReq, ArrayList<EffectData> effects){
+        this.level = level;
+        this.victoryPoints = victoryPoints;
+        this.color = color;
+        this.resourceReq = resourceReq;
+        this.effects = effects;
     }
 
     public CardDevData(int level, Color color){
