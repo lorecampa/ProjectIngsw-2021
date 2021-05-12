@@ -70,7 +70,7 @@ public class CardReq implements Requirement {
 
     @Override
     public ArrayList<CardDevData> toCardDevData() {
-        return new ArrayList<>(Collections.nCopies(numRequired,new CardDevData(level,color)));
+        return new ArrayList<>(Collections.nCopies(numRequired,new CardDevData(level,color.toColorData())));
     }
 
     @Override

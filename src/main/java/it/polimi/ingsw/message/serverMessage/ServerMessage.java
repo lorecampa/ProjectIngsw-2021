@@ -13,10 +13,9 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
 
-        @JsonSubTypes.Type(value = AnyProductionResponse.class, name = "AnyProductionResponse"),
-        @JsonSubTypes.Type(value = AnyRequirementResponse.class, name = "AnyRequirementResponse"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
+        @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
         @JsonSubTypes.Type(value = LeaderManage.class, name = "LeaderManage"),

@@ -3,12 +3,19 @@ package it.polimi.ingsw.client.data;
 import it.polimi.ingsw.client.PrintAssistant;
 
 public enum ColorData {
-    GRAY,
-    PURPLE,
-    RED,
-    BLUE,
-    YELLOW,
-    WHITE;
+    GRAY("GRAY"),
+    PURPLE("PURPLE"),
+    RED("RED"),
+    BLUE("BLUE"),
+    YELLOW("YELLOW"),
+    GREEN("GREEN"),
+    WHITE("WHITE");
+
+    private final String displayName;
+
+    ColorData(String displayName) {
+        this.displayName = displayName;
+    }
 
     public String toColor(){
         String s="";

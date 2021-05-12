@@ -6,10 +6,10 @@ import it.polimi.ingsw.client.PrintAssistant;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class Help implements Command{
+    private final String cmd="HELP";
     private final String param;
     private final Client client;
 
@@ -46,7 +46,7 @@ public class Help implements Command{
         //String argumentsCommand;
         if(commandPart.length>1) {
             if(!(commandPart[1].isBlank() || commandPart[1].isEmpty())){
-                PrintAssistant.instance.printf(ClientInput.ERROR_MSG);
+                PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }
         }
@@ -62,7 +62,7 @@ public class Help implements Command{
             }
         }
         else{
-            PrintAssistant.instance.printf(ClientInput.ERROR_MSG);
+            PrintAssistant.instance.invalidParamCommand(cmd);
         }
     }
 
@@ -73,6 +73,6 @@ public class Help implements Command{
 
     @Override
     public void description() {
-        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth("HELP", ClientInput.MAX_CHAR_COMMAND)+"to have a list of all the commands available");
+        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to have a list of all the commands available");
     }
 }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PrintAssistant {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -79,13 +81,14 @@ public class PrintAssistant {
 
     public String stringBetweenChar(String s, char charToFill, int numberOfCharTot, char startChar, char endChar){
         int numContained = howManyColorContain(s);
-        int widthRealColumn = numberOfCharTot -s.length()+ (numContained*12)+(numContained==0?0:1);
+        int numReset=howManyResetContain(s);
+        int widthRealColumn = numberOfCharTot -s.length()-2+ (numContained*5)+(numReset*4);
         String string=startChar+"";
-        for(int i=0; i<(widthRealColumn/2)-2;i++){
+        for(int i=0; i<(widthRealColumn/2);i++){
             string+=charToFill;
         }
         string+=s;
-        for(int i=0; i<(widthRealColumn/2)-1;i++){
+        for(int i=0; i<(widthRealColumn/2);i++){
             string+=charToFill;
         }
         string+=endChar;
@@ -96,7 +99,8 @@ public class PrintAssistant {
         String s=starChar+"";
         s+=originalString;
         int numContained = howManyColorContain(originalString);
-        int numberOfSpaces=width-s.length()-offSet + (numContained*9)+(numContained==0?0:1);
+        int numResetCont= howManyResetContain(originalString);
+        int numberOfSpaces=width-1-s.length()+ (numContained*5)+(numResetCont*4)/*+(numContained==0?0:1)*/;
         s+= generateAStringOf(spacing, numberOfSpaces);
         s+=endChar;
         return s;
@@ -106,31 +110,55 @@ public class PrintAssistant {
         String s="";
         s+=originalString;
         int numContained = howManyColorContain(originalString);
-        int numberOfSpaces=width-s.length() + (numContained*9)+(numContained==0?0:1);
+        int numResetCont= howManyResetContain(originalString);
+        int numberOfSpaces=width-s.length() + (numContained*5)+(numResetCont*4)/*+(numContained==0?0:1)*/;
         s+= generateAStringOf(' ', numberOfSpaces);
         return s;
     }
+
+    public static void main(String[] args) {
+        String s= ANSI_RED+"1234"+ANSI_RESET+"5678"+ ANSI_GREEN_BACKGROUND+"9"+ANSI_RESET;
+        System.out.println(s.length()+" Red:"+ANSI_RED.length()+" rese:"+ANSI_RESET.length());
+        instance.printf(instance.fitToWidth(s, 40, ' ', ' ', ' ',0));
+    }
+
     private int howManyColorContain(String s){
         int num=0;
-        if(s.contains(ANSI_WHITE_BACKGROUND)) num++;
-        if(s.contains(ANSI_WHITE)) num++;
-        if(s.contains(ANSI_PURPLE_BACKGROUND)) num++;
-        if(s.contains(ANSI_PURPLE)) num++;
-        if(s.contains(ANSI_RED_BACKGROUND)) num++;
-        if(s.contains(ANSI_RED)) num++;
-        if(s.contains(ANSI_CYAN_BACKGROUND)) num++;
-        if(s.contains(ANSI_CYAN)) num++;
-        if(s.contains(ANSI_YELLOW_BACKGROUND)) num++;
-        if(s.contains(ANSI_YELLOW)) num++;
-        if(s.contains(ANSI_BLACK)) num++;
-        if(s.contains(ANSI_BLACK_BACKGROUND)) num++;
-        if(s.contains(ANSI_BLUE)) num++;
-        if(s.contains(ANSI_BLUE_BACKGROUND)) num++;
-        if(s.contains(ANSI_GREEN)) num++;
-        if(s.contains(ANSI_GREEN_BACKGROUND)) num++;
-        //if(s.contains(ANSI_RESET)) num++;
+        num+=howManyXCotain(ANSI_WHITE_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_WHITE, s);
+        num+=howManyXCotain(ANSI_PURPLE_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_PURPLE, s);
+        num+=howManyXCotain(ANSI_RED_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_RED, s);
+        num+=howManyXCotain(ANSI_CYAN_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_CYAN, s);
+        num+=howManyXCotain(ANSI_YELLOW_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_YELLOW, s);
+        num+=howManyXCotain(ANSI_BLACK, s);
+        num+=howManyXCotain(ANSI_BLACK_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_BLUE, s);
+        num+=howManyXCotain(ANSI_BLUE_BACKGROUND, s);
+        num+=howManyXCotain(ANSI_GREEN, s);
+        num+=howManyXCotain(ANSI_GREEN_BACKGROUND, s);
         return num;
     }
+
+    private int howManyResetContain(String s){
+        return howManyXCotain(ANSI_RESET, s);
+    }
+
+    private int howManyXCotain(String color, String s){
+        int num=0;
+        Pattern p= Pattern.compile(color, Pattern.LITERAL);
+        Matcher m= p.matcher(s);
+        int index=0;
+        while(index<s.length() && m.find(index)){
+            num++;
+            index=m.start()+1;
+        }
+        return num;
+    }
+
     public String generateAStringOf(char c, int num){
         String string= "";
         if(num<=0)

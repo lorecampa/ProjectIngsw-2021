@@ -8,7 +8,10 @@ import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MainMenuCMD implements Command{
 
@@ -46,7 +49,19 @@ public class MainMenuCMD implements Command{
                 //single player, how do we connect to that game?
                 break;
             case 3:
-                client.writeToStream( new ReconnectionMessage(5,5)); //TODO: add function in client to get the last matchID and clientID from file
+                int matchID=-1;
+                int clientID=-1;
+                try{
+                    File file = new File(client.getNameFile());
+                    Scanner scanner= new Scanner(file);
+                    matchID=Integer.parseInt(scanner.nextLine());
+                    clientID=Integer.parseInt(scanner.nextLine());
+                }
+                catch(IOException e){
+                    PrintAssistant.instance.errorPrint("Some errors with your file where you data to re-log where stored!");
+                }
+                client.writeToStream( new ReconnectionMessage(matchID,clientID));
+                //TODO: dire a davide che in questo momento il server mi risponde di merda!
                 break;
         }
         client.setState(ClientState.ENTERING_LOBBY);

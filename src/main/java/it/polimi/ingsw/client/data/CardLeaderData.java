@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class CardLeaderData {
@@ -10,22 +13,34 @@ public class CardLeaderData {
     private ArrayList<EffectData> effects;
 
     private ArrayList<String> descriptionsLeader;
-    private boolean isActive;
+    private boolean active;
 
-    public CardLeaderData(int victoryPoint, ArrayList<CardDevData> cardReq, ArrayList<ResourceData> resourceReq, ArrayList<String> descriptionsLeader, boolean isActive) {
+
+    public CardLeaderData(@JsonProperty("victoryPoint")int victoryPoint,
+                          @JsonProperty("cardReq")ArrayList<CardDevData> cardReq,
+                          @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
+                          @JsonProperty("descriptionsLeader")ArrayList<String> descriptionsLeader,
+                          @JsonProperty("active")boolean active) {
         this.victoryPoint = victoryPoint;
         this.cardReq = cardReq;
         this.resourceReq = resourceReq;
         this.descriptionsLeader = descriptionsLeader;
-        this.isActive = isActive;
+        this.active = active;
     }
 
-    public CardLeaderData(int victoryPoint, ArrayList<CardDevData> cardReq, ArrayList<ResourceData> resourceReq, ArrayList<EffectData> effects) {
+    @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
+    public CardLeaderData(@JsonProperty("victoryPoint")int victoryPoint,
+                          @JsonProperty("cardReq")ArrayList<CardDevData> cardReq,
+                          @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
+                          @JsonProperty("effects")ArrayList<EffectData> effects,
+                          @JsonProperty("descriptionsLeader")ArrayList<String> descriptionsLeader,
+                          @JsonProperty("active")boolean active) {
         this.victoryPoint = victoryPoint;
         this.cardReq = cardReq;
         this.resourceReq = resourceReq;
         this.effects = effects;
-        this.isActive = false;
+        this.descriptionsLeader=null;
+        this.active = false;
     }
 
     public int getVictoryPoint() {
@@ -40,11 +55,15 @@ public class CardLeaderData {
         return resourceReq;
     }
 
+    public ArrayList<EffectData> getEffects() {
+        return effects;
+    }
+
     public ArrayList<String> getDescriptionsLeader() {
         return descriptionsLeader;
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -7,11 +9,14 @@ public class ResourceData {
     private ResourceType type;
     private int value;
 
-    public ResourceData(ResourceType type, int value) {
+    @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
+    public ResourceData(@JsonProperty("type")ResourceType type,
+                        @JsonProperty("value")int value) {
         this.type = type;
         this.value = value;
     }
-    public ResourceData(ResourceType type) {
+
+    public ResourceData(@JsonProperty("type")ResourceType type) {
         this.type = type;
         this.value = 0;
     }

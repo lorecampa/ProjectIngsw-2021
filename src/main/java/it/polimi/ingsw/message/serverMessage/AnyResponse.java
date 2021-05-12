@@ -7,27 +7,23 @@ import it.polimi.ingsw.server.ServerMessageHandler;
 
 import java.util.ArrayList;
 
-public class AnyRequirementResponse implements ServerMessage {
+public class AnyResponse implements ServerMessage{
     private final ArrayList<ResourceData> resources;
-    private final boolean buyDevelopmentAny;
 
     @JsonCreator
-    public AnyRequirementResponse(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                                  @JsonProperty("buyDevelopmentAny") boolean buyDevelopmentAny) {
+    public AnyResponse(@JsonProperty("resources") ArrayList<ResourceData> resources) {
         this.resources = resources;
-        this.buyDevelopmentAny = buyDevelopmentAny;
+
     }
 
     public ArrayList<ResourceData> getResources() {
         return resources;
     }
 
-    public boolean isBuyDevelopmentAny() {
-        return buyDevelopmentAny;
-    }
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("AnyRequirementResponseHandler");
+        System.out.println("AnyProductionResponseHandler");
+
     }
 }

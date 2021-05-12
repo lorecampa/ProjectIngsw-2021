@@ -45,12 +45,12 @@ public class AnyConversionRequest implements ClientMessage{
         return numOfAny;
     }
 
-    public boolean production() {
+    public boolean isProduction() {
         return production;
     }
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("AnyRequestHandler");
+        handler.anyConversionRequest(this);
     }
 }

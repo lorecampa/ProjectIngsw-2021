@@ -22,6 +22,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
         @JsonSubTypes.Type(value = GameSetup.class, name = "GameSetup"),
         @JsonSubTypes.Type(value = LeaderStatusUpdate.class, name = "LeaderStatusUpdate"),
+        @JsonSubTypes.Type(value = LeaderSetUpMessage.class, name ="LeaderSetUpMessage"),
         @JsonSubTypes.Type(value = MainMenuMessage.class, name = "MainMenuMessage"),
         @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
         @JsonSubTypes.Type(value = NewTurn.class, name = "NewTurn"),

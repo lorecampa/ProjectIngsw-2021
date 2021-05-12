@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.card;
 
+import it.polimi.ingsw.client.data.ColorData;
+
 /**
  * Class Color is an enumeration containing all the card color
  */
@@ -27,6 +29,22 @@ public enum Color {
     public String getDisplayName() {
         return displayName;
     }
+
+    public ColorData toColorData(){
+        switch(this){
+            case YELLOW:
+                return ColorData.YELLOW;
+            case PURPLE:
+                return ColorData.PURPLE;
+            case GREEN:
+                return ColorData.GREEN;
+            case BLUE:
+                return ColorData.BLUE;
+            default:
+                return ColorData.WHITE;
+        }
+    }
+
 
     /**
      * Method getColumnDeckDevelopment

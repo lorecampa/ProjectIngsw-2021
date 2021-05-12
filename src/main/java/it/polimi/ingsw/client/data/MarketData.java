@@ -1,9 +1,13 @@
 package it.polimi.ingsw.client.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
+
 
 public class MarketData {
     private final ArrayList<ArrayList<ColorData>> marketTray;
@@ -11,7 +15,11 @@ public class MarketData {
     private final int numRow;
     private final int numCol;
 
-    public MarketData(ArrayList<ArrayList<ColorData>> marketTray, ColorData extraMarble, int numRow, int numCol) {
+    @JsonCreator
+    public MarketData(@JsonProperty("marketTray") ArrayList<ArrayList<ColorData>> marketTray,
+                      @JsonProperty("extraMarble") ColorData extraMarble,
+                      @JsonProperty("numRow") int numRow,
+                      @JsonProperty("numCol")int numCol) {
         this.marketTray = marketTray;
         this.extraMarble = extraMarble;
         this.numRow = numRow;
@@ -35,6 +43,13 @@ public class MarketData {
         marketTray.get(numRow - 1).remove(col);
         marketTray.get(numRow - 1).add( col, extraMarble); //ho aggiunto col per index
         extraMarble = tempMarble;
+    }
+
+    public boolean validRow(int row){
+        return row >= 0 && row < numRow;
+    }
+    public boolean validCol(int col){
+        return col >= 0 && col < numCol;
     }
 /*
     public static void main(String[] args) {

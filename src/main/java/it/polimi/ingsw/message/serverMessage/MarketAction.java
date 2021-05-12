@@ -29,7 +29,6 @@ public class MarketAction implements ServerMessage{
         return username;
     }
 
-
     @Override
     public void process(ServerMessageHandler handler) {
         System.out.println("ServerMessageHandler");

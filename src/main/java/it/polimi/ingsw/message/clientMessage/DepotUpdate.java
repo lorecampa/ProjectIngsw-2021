@@ -41,6 +41,6 @@ public class DepotUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("DepotUpdateHandler");
+        handler.depotUpdate(this);
     }
 }

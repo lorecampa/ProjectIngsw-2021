@@ -18,6 +18,9 @@ public class ClientInput implements Runnable{
 
     private final static Map<String, Class<? extends Command>> commands = new HashMap<>() {
         {
+            put("discard", DiscardCMD.class);
+            put("any", AnyCMD.class);
+            put("quit", QuitCMD.class);
             put("action", ActionCMD.class);
             put("show", ShowCMD.class);
             put("username", UsernameCMD.class);
@@ -35,7 +38,7 @@ public class ClientInput implements Runnable{
     @Override
     public void run() {
         String command="";
-        while(!command.contains("quit")){
+        while(client.getState()!=ClientState.QUIT){
             try{
                 command=stdIn.readLine();
                 command = command.toLowerCase();
@@ -44,15 +47,12 @@ public class ClientInput implements Runnable{
             catch (IOException e) {
                 e.printStackTrace();
             }
-
             manageInput(command);
         }
-        client.setState(ClientState.QUIT);
     }
 
     public void manageInput(String command){
         String[] commandPart = command.split(" ", 2);
-        //ArrayList<String> mieipar = Arrays.stream(commandPart).collect(Collectors.toCollection(ArrayList::new));
         String keyCommand=commandPart[0];
         String argumentsCommand;
         if(commandPart.length>1)
@@ -73,7 +73,6 @@ public class ClientInput implements Runnable{
         else{
             PrintAssistant.instance.printf(ERROR_MSG);
         }
-
     }
 
     public static boolean containsKeyMap(String s){

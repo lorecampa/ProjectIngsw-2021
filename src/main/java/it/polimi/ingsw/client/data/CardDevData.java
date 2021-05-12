@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.model.card.Color;
 
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 public class CardDevData {
     private int level;
     private int victoryPoints;
-    private Color color;
+    private ColorData color;
     private ArrayList<ResourceData> resourceReq;
 
     private ArrayList<EffectData> effects;
@@ -16,7 +18,13 @@ public class CardDevData {
     private ArrayList<ResourceData> productionCost;
     private ArrayList<ResourceData> productionEarn;
 
-    public CardDevData(int level, int victoryPoints, Color color, ArrayList<ResourceData> resourceReq, ArrayList<ResourceData> productionCost, ArrayList<ResourceData> productionEarn) {
+
+    public CardDevData(@JsonProperty("level")int level,
+                       @JsonProperty("victoryPoints")int victoryPoints,
+                       @JsonProperty("color")ColorData color,
+                       @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
+                       @JsonProperty("productionCost")ArrayList<ResourceData> productionCost,
+                       @JsonProperty("productionEarn")ArrayList<ResourceData> productionEarn) {
         this.level = level;
         this.victoryPoints = victoryPoints;
         this.color = color;
@@ -25,15 +33,24 @@ public class CardDevData {
         this.productionEarn = productionEarn;
     }
 
-    public CardDevData(int level, int victoryPoints, Color color,ArrayList<ResourceData> resourceReq, ArrayList<EffectData> effects){
+    @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
+    public CardDevData(@JsonProperty("level")int level,
+                       @JsonProperty("victoryPoints")int victoryPoints,
+                       @JsonProperty("color")ColorData color,
+                       @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
+                       @JsonProperty("effects")ArrayList<EffectData> effects,
+                       @JsonProperty("productionCost")ArrayList<ResourceData> productionCost,
+                       @JsonProperty("productionEarn")ArrayList<ResourceData> productionEarn){
         this.level = level;
         this.victoryPoints = victoryPoints;
         this.color = color;
         this.resourceReq = resourceReq;
         this.effects = effects;
+        this.productionCost=null;
+        this.productionEarn=null;
     }
 
-    public CardDevData(int level, Color color){
+    public CardDevData(int level, ColorData color){
         this.level=level;
         this.color=color;
     }
@@ -46,11 +63,11 @@ public class CardDevData {
         return victoryPoints;
     }
 
-    public Color getColor() {
+    public ColorData getColor() {
         return color;
     }
 
-    public String getColorToColor(){
+    public String colorToColor(){
         String s="";
         switch (color){
             case BLUE:
@@ -65,7 +82,7 @@ public class CardDevData {
             case YELLOW:
                 s = PrintAssistant.ANSI_YELLOW_BACKGROUND;
                 break;
-            case ANY:
+            case WHITE:
                 s = PrintAssistant.ANSI_RESET;
                 break;
         }
@@ -84,9 +101,13 @@ public class CardDevData {
         return productionEarn;
     }
 
+    public ArrayList<EffectData> getEffects() {
+        return effects;
+    }
+
     public String toCLIForLeader(){
         String s;
-        s=getColorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";
+        s=colorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";
         return s;
     }
 }

@@ -36,6 +36,7 @@ public class UsernameCMD implements Command{
             return;
         }
         //System.out.println("--"+split[0]+"---");
+        client.setMyName(split[0]);
         client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, split[0]));
     }
 

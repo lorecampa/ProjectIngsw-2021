@@ -133,7 +133,7 @@ public class ClientConnectionHandler implements Runnable {
     @Override
     public void run() {
 
-        startPinging();
+        //startPinging();
 
         while (!exit) {
             readFromStream();

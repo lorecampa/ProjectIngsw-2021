@@ -1,5 +1,6 @@
 package it.polimi.ingsw.message.clientMessage;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.DeckDevData;
@@ -13,6 +14,7 @@ public class GameSetup implements ClientMessage{
     private final MarketData market;
     private final DeckDevData deckDev;
 
+    @JsonCreator
     public GameSetup(@JsonProperty("usernames")ArrayList<String> usernames,
                      @JsonProperty("market")MarketData market,
                      @JsonProperty("deckDev")DeckDevData deckDev) {
