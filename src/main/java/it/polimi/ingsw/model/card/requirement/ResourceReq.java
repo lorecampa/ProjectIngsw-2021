@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -33,8 +34,8 @@ public class ResourceReq implements Requirement {
      * @return boolean - true if he has them,  false if he hasn't
      */
     @Override
-    public boolean checkRequirement(boolean discount){
-        return resourceManager.canIAfford(resourceReq, discount);
+    public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
+        resourceManager.canIAfford(resourceReq, discount);
     }
 
     /**

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.controller.TurnState;
-import it.polimi.ingsw.exception.CantMakeProductionException;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
 import it.polimi.ingsw.model.card.Effect.Creation.DiscountEffect;
@@ -31,10 +31,9 @@ public interface Effect {
      *              (PRODUCTION_STATE -> ProductionEffect)
      *              (MARKET_STATE -> MarbleEffect)
      *              (CREATION_STATE -> DiscountEffect and WarehouseEffect)
-     * @throws CantMakeProductionException when the player can't afford the production cost
-     * (Throw only in PRODUCTION_STATE)
+     * @throws NotEnoughRequirementException
      */
-    void doEffect(TurnState turnState) throws  CantMakeProductionException;
+    void doEffect(TurnState turnState) throws NotEnoughRequirementException;
 
     /**
      * Method attachMarket attach the market

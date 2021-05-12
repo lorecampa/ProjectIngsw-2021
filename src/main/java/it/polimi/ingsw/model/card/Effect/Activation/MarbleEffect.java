@@ -41,12 +41,10 @@ public class MarbleEffect implements Effect {
     public void doEffect(TurnState turnState) {
         if (turnState == TurnState.WHITE_MARBLE_CONVERSION){
             int whiteMarble = market.getWhiteMarbleToTransform();
-            //add resource in market
-            ArrayList<Resource> conversion = new ArrayList<>();
-            for (Resource res: transformIn){
-                conversion.add(ResourceFactory.createResource(res.getType(), res.getValue()*whiteMarble));
-            }
-            market.insertLeaderResources(conversion);
+
+            market.insertLeaderResources(transformIn.stream()
+                    .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()*whiteMarble))
+                    .collect(Collectors.toCollection(ArrayList::new)));
         }
     }
 

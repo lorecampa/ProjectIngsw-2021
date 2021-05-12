@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -64,7 +65,7 @@ class DiscountEffectTest {
         //discounts (3 coin, 2 shield, 0 stone, 0 servant)
 
         costBuyDevelopment = resourceArray(4,1,0,0,0,2);
-        assertTrue(rm.canIAfford(costBuyDevelopment, true));
+        assertDoesNotThrow(()->rm.canIAfford(costBuyDevelopment, true));
 
     }
 
@@ -77,19 +78,19 @@ class DiscountEffectTest {
         switch (index){
             case 0:
                 costBuyDevelopment = resourceArray(5,0,0,0,0,3);
-                assertFalse(rm.canIAfford(costBuyDevelopment, true));
+                assertThrows(NotEnoughRequirementException.class, () ->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 1:
                 costBuyDevelopment = resourceArray(6,0,0,0,0,0);
-                assertFalse(rm.canIAfford(costBuyDevelopment, true));
+                assertThrows(NotEnoughRequirementException.class, () ->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 2:
                 costBuyDevelopment = resourceArray(2,1,0,0,0,4);
-                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+                assertDoesNotThrow(()->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 3:
                 costBuyDevelopment = new ArrayList<>();
-                assertTrue(rm.canIAfford(costBuyDevelopment, true));
+                assertDoesNotThrow(()->rm.canIAfford(costBuyDevelopment, true));
         }
 
     }

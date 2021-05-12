@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ResourceData;
-import it.polimi.ingsw.exception.CantMakeProductionException;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -41,28 +41,19 @@ public class ProductionEffect implements Effect {
      * then pass all the resource that he will gain to the resource manager and it will handle those
      * putting them into the strongbox, otherwise throws CantMakeProductionException
      * @param turnState of type State - defines the state of the turn, in this case must be of type PRODUCTION_STATE
-     * @throws CantMakeProductionException when the player can't afford the production cost
      */
     @Override
-    public void doEffect(TurnState turnState) throws  CantMakeProductionException {
+    public void doEffect(TurnState turnState) throws NotEnoughRequirementException {
         if (turnState == TurnState.PRODUCTION_ACTION){
             ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                     .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new));
 
-            if (resourceManager.canIAfford(resourceCostCopy, false)){
+            resourceManager.canIAfford(resourceCostCopy, false);
 
-                resourceManager.addToResourcesToProduce(
-                        resourceAcquired.stream().
-                        map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
-                        .collect(Collectors.toCollection(ArrayList::new)),
-                        true,
-                        true);
-
-
-            }else{
-                throw new CantMakeProductionException("Can't afford resource cost production");
-            }
+            resourceManager.addToResourcesToProduce(resourceAcquired.stream()
+                    .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
+                    .collect(Collectors.toCollection(ArrayList::new)), true, true);
         }
     }
 

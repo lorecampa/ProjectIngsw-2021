@@ -7,16 +7,16 @@ import it.polimi.ingsw.client.data.ResourceData;
 import java.util.ArrayList;
 
 public class BufferUpdate implements ClientMessage{
-    private final ArrayList<ResourceData> resources;
+    private final ArrayList<ResourceData> bufferUpdated;
 
     @JsonCreator
-    public BufferUpdate(@JsonProperty("resources") ArrayList<ResourceData> resources) {
-        this.resources = resources;
+    public BufferUpdate(@JsonProperty("bufferUpdated") ArrayList<ResourceData> bufferUpdated) {
+        this.bufferUpdated = bufferUpdated;
     }
 
 
-    public ArrayList<ResourceData> getResources() {
-        return resources;
+    public ArrayList<ResourceData> getBufferUpdated() {
+        return bufferUpdated;
     }
 
     @Override

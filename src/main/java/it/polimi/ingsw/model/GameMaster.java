@@ -95,10 +95,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
         deckDevelopment = gameSetting.getDeckDevelopment();
         depthDeckDevelopment = deckDevelopment.get(0).get(0).size();
-        deckDevelopment.stream()
-                .flatMap(ArrayList::stream)
-                .forEach(Collections::shuffle);
-
+        deckDevelopment.stream().flatMap(ArrayList::stream).forEach(Collections::shuffle);
 
         deckLeader = gameSetting.getDeckLeader();
         Collections.shuffle(deckLeader);
@@ -131,7 +128,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             }
         }
 
-        onTurnStateChange(TurnState.ACTION_CHOOSING);
+        onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
         notifyAllObservers(ModelObserver::currentPlayerChange);
     }
 
@@ -284,7 +281,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * puts it back in the bottom and then  applies its effect
      */
     public void drawToken() {
-        //forse devo restituire il token per farlo vedere a schermo? bho
         Optional<Token> token = Optional.ofNullable(deckToken.poll());
         token.ifPresent(deckToken::offer);
 
@@ -413,11 +409,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     @Override
-    public void onTurnStateChange(TurnState turnState) {
-        this.turnState = turnState;
-    }
-
-    @Override
     public void onDeckDevelopmentCardRemove(int row, int col) {
         try {
             removeDeckDevelopmentCard(row, col);
@@ -425,6 +416,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             //it will never happen
         }
     }
+
+    @Override
+    public void onTurnStateChange(TurnState turnState) {
+        this.turnState = turnState;
+    }
+
 
     public TurnState getTurnState() {
         return turnState;

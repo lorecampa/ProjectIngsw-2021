@@ -87,7 +87,6 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
      * @param resource is the resource that need to be added.
      */
     public void addInResourcesToSend(Resource resource) {
-        // check if there's already the resource in the array
         if(resourcesToSend.contains(resource)){
             resourcesToSend.get(resourcesToSend.indexOf(resource)).addValue(resource.getValue());
         }else {
@@ -126,13 +125,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         marketTray.get(row).add(numCol - 1 , marbleToInsert);
         marbleToInsert = tempMarble;
 
-
-        //state change
-        if (getWhiteMarbleDrew() > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
-        }
-
-        notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
+        notifyMarketChange();
     }
 
 
@@ -146,7 +139,6 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         for (int i = 0; i < numRow; i++) {
             marketTray.get(i).get(col).doMarbleAction(this);
         }
-
         Marble tempMarble = marketTray.get(0).get(col);
         for (int i = 0; i < numRow - 1; i++) {
             marketTray.get(i).remove(col);
@@ -156,15 +148,17 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         marketTray.get(numRow - 1).add(col, marbleToInsert);
         marbleToInsert = tempMarble;
 
-        //state change
-        if (getWhiteMarbleDrew() > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
-        }
+        notifyMarketChange();
 
-        notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
 
     }
 
+    private void notifyMarketChange(){
+        if (getWhiteMarbleDrew() > 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
+        }
+        notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
+    }
 
     /**
      * Method to get a copy of the resources got from market
@@ -172,7 +166,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
      */
     public ArrayList<Resource> getResourceToSend(){
         return resourcesToSend.stream()
-                .map(Res -> ResourceFactory.createResource(Res.getType(), Res.getValue()))
+                .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

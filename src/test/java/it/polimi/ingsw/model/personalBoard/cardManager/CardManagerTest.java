@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
@@ -59,44 +60,43 @@ class CardManagerTest {
 
     @Test
     void doIHaveDevWithLv() {
-        assertFalse(cardManager.doIHaveDev(2,Color.ANY, 1));
-
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        assertThrows(NotEnoughRequirementException.class, ()->cardManager.doIHaveDev(2,Color.ANY, 1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv1_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv2_1,1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv2_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv3_1,1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv3_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_2,2));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv1_2,2));
         clearBuffer();
 
-        assertTrue(cardManager.doIHaveDev(2, Color.ANY, 1));
-        assertTrue(cardManager.doIHaveDev(1, Color.ANY, 2));
-        assertTrue(cardManager.doIHaveDev(1, Color.ANY, 3));
+        assertDoesNotThrow(()-> cardManager.doIHaveDev(2, Color.ANY, 1));
+        assertDoesNotThrow(()-> cardManager.doIHaveDev(1, Color.ANY, 2));
+        assertDoesNotThrow(()-> cardManager.doIHaveDev(1, Color.ANY, 3));
     }
 
     @Test
     void doIhaveDevWithColor() {
-        assertFalse(cardManager.doIHaveDev(2, Color.BLUE, 0));
+        assertThrows(NotEnoughRequirementException.class, ()->cardManager.doIHaveDev(2, Color.BLUE, 0));
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv1_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv2_1,1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv2_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv3_1,1));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv3_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(() -> cardManager.addDevelopmentCardTo(devLv1_2,2));
+        assertDoesNotThrow(() -> cardManager.addDevCardTo(devLv1_2,2));
         clearBuffer();
 
-        assertTrue(cardManager.doIHaveDev(2,Color.BLUE, 0));
-        assertTrue(cardManager.doIHaveDev(1,Color.YELLOW, 0));
-        assertTrue(cardManager.doIHaveDev(1,Color.GREEN, 0));
+        assertDoesNotThrow(()->cardManager.doIHaveDev(2,Color.BLUE, 0));
+        assertDoesNotThrow(()->cardManager.doIHaveDev(1,Color.YELLOW, 0));
+        assertDoesNotThrow(()->cardManager.doIHaveDev(1,Color.GREEN, 0));
     }
 
     @Test
@@ -123,20 +123,20 @@ class CardManagerTest {
 
     @Test
     void addDevelopmentCardTo() {
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.addDevelopmentCardTo(devLv1_1,-1));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.addDevelopmentCardTo(devLv1_1,3));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.addDevCardTo(devLv1_1,-1));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.addDevCardTo(devLv1_1,3));
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,0));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv1_1,0));
         clearBuffer();
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,1));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv1_1,1));
         clearBuffer();
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,2));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv1_1,2));
         clearBuffer();
 
-        assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevelopmentCardTo(devLv3_2,0));
-        assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevelopmentCardTo(devLv1_2,0));
+        assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevCardTo(devLv3_2,0));
+        assertThrows(CardWithHigherOrSameLevelAlreadyIn.class,()->cardManager.addDevCardTo(devLv1_2,0));
     }
 
     @Test
@@ -152,7 +152,7 @@ class CardManagerTest {
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
 
 
-        cardManager.clearUsed();
+        cardManager.newTurn();
 
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
@@ -160,16 +160,16 @@ class CardManagerTest {
 
     @Test
     void developmentProduce() {
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_1,0));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv1_1,0));
         clearBuffer();
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv1_2,1));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv1_2,1));
         clearBuffer();
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv2_1,0));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv2_1,0));
         clearBuffer();
 
-        assertDoesNotThrow(()-> cardManager.addDevelopmentCardTo(devLv3_1,0));
+        assertDoesNotThrow(()-> cardManager.addDevCardTo(devLv3_1,0));
         clearBuffer();
 
 
@@ -185,7 +185,7 @@ class CardManagerTest {
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(1));
 
 
-        cardManager.clearUsed();
+        cardManager.newTurn();
 
         assertDoesNotThrow(()-> cardManager.developmentProduce(0));
         assertDoesNotThrow(()-> cardManager.developmentProduce(1));
@@ -196,8 +196,8 @@ class CardManagerTest {
     void baseProductionProduce() {
         assertDoesNotThrow(()->cardManager.baseProductionProduce());
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.baseProductionProduce());
-        cardManager.clearUsed();
-        personalBoard.getResourceManager().clearBuffers();
+        cardManager.newTurn();
+        personalBoard.getResourceManager().newTurn();
         assertDoesNotThrow(()-> cardManager.baseProductionProduce());
     }
 }

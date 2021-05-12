@@ -29,21 +29,19 @@ public class Depot {
     /**
     *Main constructor of Depot with all the attributes
     */
-    public Depot(Resource resource, boolean lockDepot, int maxStorable) {
+    public Depot(Resource resource, int maxStorable) {
         this.resource = resource;
         this.maxStorable = maxStorable;
-        this.lockDepot = lockDepot;
+        this.lockDepot = true;
     }
 
     /**
     *Constructor of Depot with only lockDepot and maxStorable
     */
-    public Depot(boolean lockDepot, int maxStorable) {
-        this.lockDepot = lockDepot;
+    public Depot(int maxStorable) {
+        this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
         this.maxStorable = maxStorable;
-        if(!lockDepot){
-            this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
-        }
+        this.lockDepot = false;
     }
 
     /**
@@ -116,8 +114,8 @@ public class Depot {
         if(resource.getType() != newRes.getType()){
             throw new InvalidOrganizationWarehouseException("You try to sub a resource type different from his own");
         }
-        int delta = resource.getValue() - newRes.getValue();
-        if(delta < 0){
+
+        if(resource.getValue() - newRes.getValue() < 0){
             throw new NegativeResourceException("You can't sub more resources than are present");
         }else{
             resource.subValue(newRes.getValue());

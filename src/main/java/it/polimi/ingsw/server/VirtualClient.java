@@ -149,7 +149,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void leaderManage(int leaderIndex, boolean discard) {
+    public void leaderStatusUpdate(int leaderIndex, boolean discard) {
         match.sendAllPlayers(
                 new LeaderStatusUpdate(leaderIndex, discard, username));
     }

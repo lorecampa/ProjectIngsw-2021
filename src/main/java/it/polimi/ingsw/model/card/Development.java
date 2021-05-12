@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.card;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.CardDevData;
-import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
@@ -61,11 +61,11 @@ public class Development extends  Card{
      * are considered in the counting
      * @return boolean - true if all requirements are satisfied, otherwise false
      */
-    public boolean checkRequirements(){
-        for(Requirement req: requirements) {
-            if (!req.checkRequirement(true)) return false;
+    public void checkRequirements() throws NotEnoughRequirementException {
+        for(Requirement req: requirements){
+            req.checkRequirement(true);
         }
-        return true;
+
     }
 
     @Override

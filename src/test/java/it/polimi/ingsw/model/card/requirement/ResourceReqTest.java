@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.card.requirement;
 
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -30,7 +31,7 @@ class ResourceReqTest {
 
         Requirement req = new ResourceReq(resourceReq);
         req.attachResourceManager(rm);
-        assertTrue(req.checkRequirement(true));
+        assertDoesNotThrow(()->req.checkRequirement(true));
 
     }
 
@@ -45,7 +46,7 @@ class ResourceReqTest {
 
         Requirement req = new ResourceReq(resourceReq);
         req.attachResourceManager(rm);
-        assertFalse(req.checkRequirement(true));
+        assertThrows(NotEnoughRequirementException.class, ()->req.checkRequirement(true));
 
     }
 
@@ -59,7 +60,7 @@ class ResourceReqTest {
 
         Requirement req = new ResourceReq(resourceReq);
         req.attachResourceManager(rm);
-        assertTrue(req.checkRequirement(true));
+        assertDoesNotThrow(()->req.checkRequirement(true));
 
     }
 
@@ -87,9 +88,9 @@ class ResourceReqTest {
         Requirement req3 = new ResourceReq(resourceReq3);
         req3.attachResourceManager(rm);
 
-        assertTrue(req1.checkRequirement(true));
-        assertTrue(req2.checkRequirement(true));
-        assertFalse(req3.checkRequirement(true));
+        assertDoesNotThrow(()->req1.checkRequirement(true));
+        assertDoesNotThrow(()->req2.checkRequirement(true));
+        assertThrows(NotEnoughRequirementException.class, ()->req3.checkRequirement(true));
     }
 
 

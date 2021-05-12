@@ -120,7 +120,7 @@ class MakeProductionControllerTest {
 
         //production cost:   coin 1, any 2
         //production profit: faith 1, any 2, stone 1
-        assertDoesNotThrow(()->cardManager.addDevelopmentCardTo(devCard, 0));
+        assertDoesNotThrow(()->cardManager.addDevCardTo(devCard, 0));
         cardManager.emptyCardSlotBuffer();
         controller = new Controller(gameMaster);
 

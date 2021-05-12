@@ -17,9 +17,10 @@ class DepotTest {
     void init(){
         r1 = ResourceFactory.createResource(ResourceType.COIN, 2);
         r2 = ResourceFactory.createResource(ResourceType.COIN, 4);
-        d1 = new Depot(ResourceFactory.createResource(ResourceType.COIN, 2), true, 2);
-        d2 = new Depot(false, 2);
-        d3 = new Depot(r1, false, 3);
+        d1 = new Depot(ResourceFactory.createResource(ResourceType.COIN, 2), 2);
+        d2 = new Depot(2);
+        d3 = new Depot(3);
+        assertDoesNotThrow(()->d3.addResource(r1));
 
     }
 
@@ -55,7 +56,8 @@ class DepotTest {
                 assertEquals(1, d3.howMuchResCanIStillStoreIn());
                 break;
             case 1:
-                Depot d4 = new Depot(r1, false, 2);
+                Depot d4 = new Depot(2);
+                assertDoesNotThrow(()->d4.addResource(r1));
                 assertEquals(0, d4.howMuchResCanIStillStoreIn());
                 break;
             default:

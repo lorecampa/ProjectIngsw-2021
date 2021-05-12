@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
@@ -19,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,6 +80,16 @@ class MarketControllerTest {
         printState();
     }
 
+    private String arrayToString(ArrayList<ResourceData> array){
+        String x = "[";
+        for (ResourceData res: array){
+            x+= res.getType() + ": " + res.getValue();
+        }
+        x += "]";
+        return x;
+
+    }
+
     @Test
     void marketActionWithTwoLeaders() {
         assertEquals(0, cardManager.howManyMarbleEffects());
@@ -86,6 +99,11 @@ class MarketControllerTest {
         //1 coin
         attachLeader(11);
         assertEquals(2, cardManager.howManyMarbleEffects());
+
+        Map<Integer, ArrayList<ResourceData>> listOfMarbleEffect = cardManager.listOfMarbleEffect();
+        for (int i: listOfMarbleEffect.keySet()){
+            System.out.println(i + ": " + arrayToString(listOfMarbleEffect.get(i)));
+        }
 
 
         printState();

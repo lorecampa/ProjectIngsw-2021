@@ -36,48 +36,42 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Set up the resource manager to be ready for the curr turn
      * */
     public void newTurn(){
+        clearBuffers();
+        allMyResources();
+        allMyDiscounts();
+    }
+    /**
+     * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
+    //in teoria non dovrebbero servire a meno di disconnessioni o non completamenti dei turni
+    private void clearBuffers(){
         anyRequired =0;
         anyToProduce = 0;
         faithPoint=0;
         resourcesBuffer.clear();
         resourcesToProduce.clear();
-        allMyResources();
-        myDiscounts.clear();
     }
 
-
+    private void restoreMyResources(ArrayList<Resource> tempBuffer){
+        tempBuffer.forEach(x -> myResources.get(myResources.indexOf(x)).addValue(x.getValue()));
+    }
 
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
      * @param resourcesSent the original list I'll change
      */
 
+    private void fromResourceToConcreteResource(ArrayList<Resource> resourcesSent, boolean countAnyProductionCost, boolean countAnyProductionProfit, boolean countFaithPoints){
 
-    private ArrayList<Resource> fromResourceToConcreteResource(ArrayList<Resource> resourcesSent,
-                                                               boolean countAnyProductionCost,
-                                                               boolean countAnyProductionProfit,
-                                                               boolean countFaithPoints){
+        int any = resourcesSent.stream().filter(x -> x.getType() == ResourceType.ANY).mapToInt(Resource::getValue).sum();
+        if(countAnyProductionCost) anyRequired += any;
+        else if (countAnyProductionProfit) anyToProduce += any;
 
-        Resource resourceAny = ResourceFactory.createResource(ResourceType.ANY, 0);
-        Resource resourceFaith = ResourceFactory.createResource(ResourceType.FAITH, 0);
+        int faith = resourcesSent.stream().filter(x -> x.getType() == ResourceType.FAITH).mapToInt(Resource::getValue).sum();
+        if (countFaithPoints) faithPoint += faith;
 
-        while(resourcesSent.contains(resourceAny)){
-            if (countAnyProductionCost){
-                anyRequired += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
-            }else if (countAnyProductionProfit){
-                anyToProduce += resourcesSent.get(resourcesSent.indexOf(resourceAny)).getValue();
-            }
-            resourcesSent.remove(resourceAny);
-        }
+        resourcesSent.removeIf(x -> (x.getType() == ResourceType.ANY) || (x.getType() == ResourceType.FAITH));
 
-        while(resourcesSent.contains(resourceFaith)){
-            if(countFaithPoints){
-                faithPoint+=resourcesSent.get(resourcesSent.indexOf(resourceFaith)).getValue();
-            }
-            resourcesSent.remove(resourceFaith);
-        }
 
-        return resourcesSent;
     }
 
     private void containsAnyOrFaith(ArrayList<Resource> resources) throws AnyConversionNotPossible {
@@ -94,25 +88,31 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new AnyConversionNotPossible("Num of any requested to convert is less than the number inserted");
         }
 
+        ArrayList<Resource> tempBuffer = new ArrayList<>();
         for(Resource res: resources){
             if (myResources.contains(res)){
                 try{
                     myResources.get(myResources.indexOf(res)).subValue(res.getValue());
+                    tempBuffer.add(res);
+                    anyRequired -= res.getValue();
+
                 }catch (NegativeResourceException e){
+                    restoreMyResources(tempBuffer);
+                    anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                     throw new AnyConversionNotPossible("You can't convert this any, you don't have " +
                             "enough " + res.getType());
                 }
             }else{
+                restoreMyResources(tempBuffer);
+                anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                 throw new AnyConversionNotPossible("You can't convert this any, you don't own " + res.getType());
             }
         }
-        resources.forEach(this::addToBuffer);
-
-        anyRequired -= numOfConversion;
+        tempBuffer.forEach(this::addToBuffer);
 
         if (anyRequired == 0){
             if (isFromBuyDevelopment){
-                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WAREHOUSE_RESOURCE_REMOVING));
+                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
             }else{
                 if(anyToProduce > 0){
                     notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
@@ -143,12 +143,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Store the resources i have to manage from the market in the buffer
      * @param resourcesSent contain the array of the resources i got from market*/
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
-        resourcesBuffer = fromResourceToConcreteResource(resourcesSent,
-                false,
-                false,
-                true);
-
-        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.DEPOTS_POSITIONING));
+        fromResourceToConcreteResource(resourcesSent, false, false, true);
+        resourcesSent.forEach(this::addToBuffer);
+        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_RESOURCE_POSITIONING));
 
     }
 
@@ -157,11 +154,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Add all the resource store in resourcesToProduce to the strongbox
     */
     public void doProduction(){
-        for(Resource res:resourcesToProduce){
-            addToStrongbox(res);
-        }
+        resourcesToProduce.forEach(this::addToStrongbox);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
-
     }
 
     /**
@@ -176,7 +170,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResource(resource);
-
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
@@ -205,14 +198,40 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     }
 
-    private void sendDepotUpdate(boolean isNormalDepot, int index){
-        Depot depot;
-        if (isNormalDepot){
-            depot = currWarehouse.getDepot(index);
-        }else{
-            depot = currWarehouse.getDepotLeader(index);
+    /**
+     * Switch the resource from fromDepot to toDepot
+     * @param fromDepot the first depot
+     * @param toDepot the second depot
+     * */
+    public void switchResourceFromDepotToDepot(int fromDepot, boolean isFromNormalDepot,
+                                               int toDepot, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+
+        Resource fromSupportResource = currWarehouse.popResourceFromDepotAt(fromDepot, isFromNormalDepot);
+        Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
+
+        try{
+            currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+        }
+        catch(Exception e){
+            currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
+            currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
+            throw e;
+        }
+        try{
+            currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+        }
+        catch(Exception e){
+            currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
+            currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
+            throw e;
         }
 
+        sendDepotUpdate(isFromNormalDepot, fromDepot);
+        sendDepotUpdate(isToNormalDepot, toDepot);
+    }
+
+    private void sendDepotUpdate(boolean isNormalDepot, int index){
+        Depot depot = currWarehouse.getDepot(index, isNormalDepot);
         notifyAllObservers(x -> x.depotUpdate(depot.getResource(),index, isNormalDepot));
     }
 
@@ -220,55 +239,46 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Used to add a resource value or the resource itself in the buffer
-     * @param resource I want to add from the buffer
+     * @param res I want to add from the buffer
      */
-    public void addToBuffer(Resource resource){
-        if(resourcesBuffer.contains(resource)){
-            resourcesBuffer.get(resourcesBuffer.indexOf(resource)).addValue(resource.getValue());
+    public void addToBuffer(Resource res){
+        if(resourcesBuffer.contains(res)){
+            resourcesBuffer.get(resourcesBuffer.indexOf(res)).addValue(res.getValue());
         }
         else{
-            resourcesBuffer.add(resource);
+            resourcesBuffer.add(res);
         }
-        System.out.println(resourcesBuffer);
+
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
+
+
 
     /**
      * Used to remove a resource value from the buffer in resource manager
      * @param resource I want to remove from the buffer
      * @throws NegativeResourceException if resource'll go under value 0*/
-    public void subtractToBuffer(Resource resource) throws Exception {
+    public void subToBuffer(Resource resource) throws Exception {
         if(resourcesBuffer.contains(resource)){
             int resourceIndex = resourcesBuffer.indexOf(resource);
             int delta = resourcesBuffer.get(resourceIndex).getValue() - resource.getValue();
             resourcesBuffer.get(resourceIndex).subValue(resource.getValue());
-            if (delta == 0){
+            if (delta == 0)
                 resourcesBuffer.remove(resourceIndex);
-            }
-            controlBufferStatus();
-
         }else{
             throw new Exception("Resource not present in buffer");
         }
-
-
-        if (resourcesBuffer.size() == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
-        }
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 
-    private void controlBufferStatus(){
-        if (resourcesBuffer.size() == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
-        }
+    public int getBufferSize(){
+        return resourcesBuffer.stream().mapToInt(Resource::getValue).sum();
     }
-
-
 
     /**
      * Used to add a resource value or the resource itself in the resource to produce
      * @param resources I want to add */
     public void addToResourcesToProduce(ArrayList<Resource> resources, boolean countAny, boolean countFaith) {
-
         fromResourceToConcreteResource(resources, false, countAny, countFaith);
         for (Resource res: resources){
             if(resourcesToProduce.contains(res)){
@@ -277,7 +287,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 resourcesToProduce.add(res);
             }
         }
-
 
     }
 
@@ -313,43 +322,40 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @return true if u can false if u can't
      * */
 
-    //TODO if we have time
-    //instead of return true or false it would be better to throw a NotEnoughRequirementException
-    //with a custom message with
-    public boolean canIAfford(ArrayList<Resource> resources, boolean checkDiscount){
-
+    public void canIAfford(ArrayList<Resource> resources, boolean checkDiscount) throws NotEnoughRequirementException {
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
-        fromResourceToConcreteResource(resources,
-                true,
-                false,
-                false);
+        fromResourceToConcreteResource(resources, true, false, false);
 
-        if (checkDiscount){
-            allMyDiscounts();
-        }
+        ArrayList<Resource> tempBuffer = new ArrayList<>();
         for(Resource res : resources){
             if (myResources.contains(res)){
-                discount(res);
+                if(checkDiscount) discount(res);
                 try {
                     myResources.get(myResources.indexOf(res)).subValue(res.getValue());
+                    tempBuffer.add(res);
                     extraRes -=  res.getValue();
                 } catch (NegativeResourceException e) {
-                    return false;
+                    restoreMyResources(tempBuffer);
+                    throw new NotEnoughRequirementException("You don't have enough " + res.getType());
+
                 }
             }
-            else
-                return false;
+            else{
+                restoreMyResources(tempBuffer);
+                throw new NotEnoughRequirementException("You don't have " + res.getType());
+            }
+
         }
+
 
         int numOfDiscountNotUsed =  myDiscounts.stream().mapToInt(Resource::getValue).sum();
 
-        if(extraRes + numOfDiscountNotUsed < anyRequired)
-            return false;
-
-        for(Resource res : resources){
-            addToBuffer(res);
+        if(extraRes + numOfDiscountNotUsed < anyRequired){
+            restoreMyResources(tempBuffer);
+            throw new NotEnoughRequirementException("You don't have enough resources to try to " +
+                    "transform the any resources required in your card");
         }
-
+        resources.forEach(this::addToBuffer);
 
         if (anyRequired > 0){
             if(checkDiscount){
@@ -361,7 +367,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     anyRequired, false));
         }
 
-        return true;
     }
 
     /**
@@ -377,9 +382,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
     private void allMyDiscounts(){
+        myDiscounts.clear();
         for (Resource discount: discounts){
-            Resource discountCopy = ResourceFactory.createResource(discount.getType(), discount.getValue());
-            myDiscounts.add(discountCopy);
+            myDiscounts.add(ResourceFactory.createResource(discount.getType(), discount.getValue()));
         }
     }
 
@@ -401,44 +406,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Calculate the value of resources I'm storing in the resourcesBuffer
      * @return the value of resources i own in resourcesBuffer*/
     private int numberOfResourceInBuffer(){
-        int value=0;
-        for(Resource res : resourcesBuffer){
-            value+=res.getValue();
-        }
-        return value;
+        return resourcesBuffer.stream().mapToInt(Resource::getValue).sum();
     }
 
-   /**
-    * Switch the resource from fromDepot to toDepot
-    * @param fromDepot the first depot
-    * @param toDepot the second depot
-    * */
-   public void switchResourceFromDepotToDepot(int fromDepot, boolean isFromNormalDepot,
-                                              int toDepot, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
-
-       Resource fromSupportResource = currWarehouse.popResourceFromDepotAt(fromDepot, isFromNormalDepot);
-       Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
-
-       try{
-           currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
-       }
-       catch(Exception e){
-           currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
-           currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
-           throw e;
-       }
-       try{
-           currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
-       }
-       catch(Exception e){
-           currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
-           currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
-           throw e;
-       }
-
-       sendDepotUpdate(isFromNormalDepot, fromDepot);
-       sendDepotUpdate(isToNormalDepot, toDepot);
-   }
 
     /**
      * Discard resources  called by controller CLEARBUFFER MESSAGE methods*/
@@ -467,14 +437,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void print(){
         currWarehouse.print();
         strongbox.print();
-    }
-
-    /**
-     * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
-    public void clearBuffers(){
-        anyRequired = 0;
-        resourcesToProduce.clear();
-        resourcesBuffer.clear();
     }
 
 

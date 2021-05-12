@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
@@ -29,7 +30,7 @@ public interface Requirement {
      *                 must be true, otherwise false
      * @return boolean - true if he can afford it, otherwise false
      */
-    boolean checkRequirement(boolean discount);
+    void checkRequirement(boolean discount) throws NotEnoughRequirementException;
 
     /**
      * Method attachResourceManager attach the resource manager

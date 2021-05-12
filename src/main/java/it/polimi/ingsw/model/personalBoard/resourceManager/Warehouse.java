@@ -6,7 +6,6 @@ import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Warehouse implements Cloneable{
     private ArrayList<Depot> depots = new ArrayList<>();
@@ -14,7 +13,7 @@ public class Warehouse implements Cloneable{
 
     public Warehouse() {
         for (int i = 0; i < 3; i++) {
-            depots.add(new Depot(false, i+1));
+            depots.add(new Depot(i+1));
         }
     }
 
@@ -25,25 +24,6 @@ public class Warehouse implements Cloneable{
         this.depotsLeader=depotsLeader;
     }
 
-
-
-
-
-    /**
-     * Get a specific standard depot
-     * @param index of the depot i want
-     * @return the depot at index pos*/
-    public Depot getDepot(int index) throws IndexOutOfBoundsException{
-        return depots.get(index);
-    }
-
-    /**
-     * Get a specific leader depot
-     * @param index of the depot i want
-     * @return the depot at index pos*/
-    public Depot getDepotLeader(int index) throws IndexOutOfBoundsException{
-        return depotsLeader.get(index);
-    }
 
     /**
      * Method used to add a depot to the leader list when a WarehouseLeader is active
@@ -59,9 +39,7 @@ public class Warehouse implements Cloneable{
      * @param indexDepot the index i want to modify in the normal depot list
      * @param resource the resource to sum*/
     public void addDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws TooMuchResourceDepotException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
-        Depot depot;
-        if(isNormalDepot) depot = depots.get(indexDepot);
-        else depot = depotsLeader.get(indexDepot);
+        Depot depot = getDepot(indexDepot, isNormalDepot);
 
         if(depot.getResourceType()!=resource.getType() && depot.getResourceType() != ResourceType.ANY){
             throw new InvalidOrganizationWarehouseException("You try to add a resource type different from his own");
@@ -81,11 +59,7 @@ public class Warehouse implements Cloneable{
      *@param indexDepot the index i want to modify in the leader depot list
      *@param resource the resource to sub*/
     public void subDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws NegativeResourceException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
-        Depot depot;
-        if(isNormalDepot) depot = depots.get(indexDepot);
-        else depot = depotsLeader.get(indexDepot);
-
-        depot.subResource(resource);
+        getDepot(indexDepot, isNormalDepot).subResource(resource);
     }
 
     /**
@@ -136,21 +110,24 @@ public class Warehouse implements Cloneable{
     }
 
     /**
-     * Copy the standard array depot
-     * @return a clone of the standard depots*/
-    public ArrayList<Depot> copyDepots(){
-        return depots.stream()
-                .map(Dep -> new Depot(Dep.getResource(), Dep.isLockDepot(), Dep.getMaxStorable()))
-                .collect(Collectors.toCollection(ArrayList::new));
+     * Get a specific standard depot
+     * @param index of the depot i want
+     * @return the depot at index pos*/
+    public Depot getNormalDepot(int index) throws IndexOutOfBoundsException{
+        return depots.get(index);
     }
 
     /**
-     * Copy the leader array depot
-     * @return a clone of the leader depots*/
-    public ArrayList<Depot> copyDepotsLeader(){
-        return depotsLeader.stream()
-                .map(Dep -> new Depot(Dep.getResource(), Dep.isLockDepot(), Dep.getMaxStorable()))
-                .collect(Collectors.toCollection(ArrayList::new));
+     * Get a specific leader depot
+     * @param index of the depot i want
+     * @return the depot at index pos*/
+    public Depot getLeaderDepot(int index) throws IndexOutOfBoundsException{
+        return depotsLeader.get(index);
+    }
+
+    public Depot getDepot(int index, boolean isNormalDepot){
+        if (isNormalDepot) return getNormalDepot(index);
+        else return getLeaderDepot(index);
     }
 
     /**

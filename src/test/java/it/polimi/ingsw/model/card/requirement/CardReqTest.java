@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
@@ -33,25 +34,25 @@ class CardReqTest {
         //slot 2 (1: blue   level 1 -  2: blue   level 2)
         //slot 3 (1: yellow level 1 -  2: yellow level 2 - 3: green level 3)
 
-        cm.addDevelopmentCardTo(developmentsJson[4], 0);
+        cm.addDevCardTo(developmentsJson[4], 0);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[30], 0);
+        cm.addDevCardTo(developmentsJson[30], 0);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[10], 1);
+        cm.addDevCardTo(developmentsJson[10], 1);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[24], 1);
+        cm.addDevCardTo(developmentsJson[24], 1);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[15], 2);
+        cm.addDevCardTo(developmentsJson[15], 2);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[31], 2);
+        cm.addDevCardTo(developmentsJson[31], 2);
         cm.emptyCardSlotBuffer();
 
-        cm.addDevelopmentCardTo(developmentsJson[33], 2);
+        cm.addDevCardTo(developmentsJson[33], 2);
         cm.emptyCardSlotBuffer();
 
 
@@ -73,9 +74,9 @@ class CardReqTest {
         req3.attachCardManager(cm);
 
 
-        assertFalse(req1.checkRequirement(false));
-        assertTrue(req2.checkRequirement(false));
-        assertFalse(req3.checkRequirement(false));
+        assertThrows(NotEnoughRequirementException.class, ()->req1.checkRequirement(false));
+        assertDoesNotThrow(()->req2.checkRequirement(false));
+        assertThrows(NotEnoughRequirementException.class, ()->req3.checkRequirement(false));
 
     }
 
@@ -90,8 +91,8 @@ class CardReqTest {
         req1.attachCardManager(cm);
         req2.attachCardManager(cm);
 
-        assertTrue(req1.checkRequirement(false));
-        assertFalse(req2.checkRequirement(false));
+        assertDoesNotThrow(()->req1.checkRequirement(false));
+        assertThrows(NotEnoughRequirementException.class, ()->req2.checkRequirement(false));
 
     }
 }

@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.card;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.client.data.EffectData;
-import it.polimi.ingsw.exception.CantMakeProductionException;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.requirement.Requirement;
@@ -56,15 +56,14 @@ public  abstract class Card {
      * Method checkRequirements checks if all requirement of the card are satisfied
      * @return boolean - true if all requirements are satisfied, otherwise false
      */
-    public abstract boolean checkRequirements();
+    public abstract void checkRequirements() throws NotEnoughRequirementException;
 
 
     /**
      * Method doCreationEffect does all effect one time use in onCreationEffect when you buy or activate
      * the card for the first time
-     * @throws CantMakeProductionException will never be thrown because the effect of type creation
      */
-    public void  doCreationEffects() throws CantMakeProductionException {
+    public void  doCreationEffects() throws NotEnoughRequirementException {
         for(Effect effect: onCreationEffect) {
             effect.doEffect(TurnState.LEADER_MANAGE_BEFORE);
         }
@@ -72,9 +71,8 @@ public  abstract class Card {
 
     /**
      * Method doEffects does all the effect of type activation
-     * @throws CantMakeProductionException when the player can't afford the production cost
      */
-    public  void doEffects(TurnState turnState) throws  CantMakeProductionException {
+    public  void doEffects(TurnState turnState) throws NotEnoughRequirementException {
         for (Effect effect: onActivationEffects){
             effect.doEffect(turnState);
         }

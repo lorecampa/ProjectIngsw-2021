@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.resourceManager;
 
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -55,7 +56,7 @@ class ResourceManagerTest {
                 assertDoesNotThrow(() -> rs.addToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
                 assertDoesNotThrow(() -> rs.addToWarehouse(true,2,ResourceFactory.createResource(ResourceType.SERVANT,2)));
                 Resource r1=ResourceFactory.createResource(ResourceType.SERVANT, 2);
-                rs.addLeaderDepot(new Depot(r1, true, 10));
+                rs.addLeaderDepot(new Depot(r1, 10));
                 assertDoesNotThrow(() -> rs.addToWarehouse(false,0,ResourceFactory.createResource(ResourceType.SERVANT,2)));
                 break;
         }
@@ -93,7 +94,7 @@ class ResourceManagerTest {
                 assertDoesNotThrow(() -> rs.subToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
 
                 Resource r1=ResourceFactory.createResource(ResourceType.SERVANT, 2);
-                rs.addLeaderDepot(new Depot(r1, true, 10));
+                rs.addLeaderDepot(new Depot(r1, 10));
                 assertDoesNotThrow(() -> rs.subToWarehouse(false,0,ResourceFactory.createResource(ResourceType.SERVANT,1)));
                 break;
         }
@@ -133,29 +134,29 @@ class ResourceManagerTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void canIAfford(int index) {
+        rs.addDiscount(ResourceFactory.createResource(ResourceType.COIN,1));
         rs.newTurn();
         switch (index){
             case 0:
-                rs.addDiscount(ResourceFactory.createResource(ResourceType.COIN,1));
                 ArrayList<Resource> resourcesCosts1 = new ArrayList<>();
                 resourcesCosts1.add(ResourceFactory.createResource(ResourceType.COIN,7));
                 resourcesCosts1.add(ResourceFactory.createResource(ResourceType.SERVANT,3));
                 resourcesCosts1.add(ResourceFactory.createResource(ResourceType.STONE,1));
 
-                assertTrue(rs.canIAfford(resourcesCosts1,true));
+                assertDoesNotThrow(()->rs.canIAfford(resourcesCosts1,true));
                 break;
             case 1:
                 ArrayList<Resource> resourcesCosts2 = new ArrayList<>();
                 resourcesCosts2.add(ResourceFactory.createResource(ResourceType.STONE,1));
                 resourcesCosts2.add(ResourceFactory.createResource(ResourceType.ANY,2));
 
-                assertTrue(rs.canIAfford(resourcesCosts2,false));
+                assertDoesNotThrow(()->rs.canIAfford(resourcesCosts2,false));
                 break;
             case 2:
                 ArrayList<Resource> resourcesCosts3 = new ArrayList<>();
                 resourcesCosts3.add(ResourceFactory.createResource(ResourceType.STONE,1));
                 resourcesCosts3.add(ResourceFactory.createResource(ResourceType.COIN,10));
-                assertFalse(rs.canIAfford(resourcesCosts3, false));
+                assertThrows(NotEnoughRequirementException.class, ()->rs.canIAfford(resourcesCosts3, false));
                 break;
         }
     }
@@ -168,11 +169,7 @@ class ResourceManagerTest {
 
     @Test
     void switchLeaderDepot() {
-        rs.addLeaderDepot(new Depot(
-                ResourceFactory.createResource(ResourceType.SHIELD, 2),
-                true,
-                4
-        ));
+        rs.addLeaderDepot(new Depot(ResourceFactory.createResource(ResourceType.SHIELD, 2), 4));
 
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
         rs.print();

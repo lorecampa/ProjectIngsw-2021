@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 class WarehouseTest {
 
@@ -30,27 +28,16 @@ class WarehouseTest {
 
     @Test
     void getDepot(){
-        assertEquals(ResourceType.COIN, w.getDepot(0).getResourceType());
-        assertEquals(1, w.getDepot(0).getResourceValue());
+        assertEquals(ResourceType.COIN, w.getNormalDepot(0).getResourceType());
+        assertEquals(1, w.getNormalDepot(0).getResourceValue());
     }
 
-    @Test
-    void getDepotLeader(){
-        Depot leaderDepot=new Depot(true, 4);
-        w.addDepotLeader(leaderDepot);
-        assertEquals(leaderDepot, w.getDepotLeader(0));
-    }
 
-    @Test
-    void addDepotLeader() {
-        w.addDepotLeader(new Depot(true, 4));
-        assertEquals(1, w.copyDepotsLeader().size());
-    }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void addToLeaderDepotValueAt(int index){
-        w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2),true, 4));
+        w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2), 4));
         switch(index){
             case 0:
                 //TooMuchResourceDepotException
@@ -65,7 +52,7 @@ class WarehouseTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
     void subToLeaderDepotValueAt(int index){
-        w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2),true, 4));
+        w.addDepotLeader(new Depot(ResourceFactory.createResource(ResourceType.COIN, 2), 4));
         switch(index){
             case 0:
                 //NegativeResourceException
@@ -129,7 +116,7 @@ class WarehouseTest {
     @Test
     void removeResourceAt(){
         Resource r = w.popResourceFromDepotAt(0, true);
-        assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getDepot(0).getResource());
+        assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getNormalDepot(0).getResource());
         assertEquals(ResourceFactory.createResource(ResourceType.COIN, 1), r);
     }
 
@@ -138,19 +125,6 @@ class WarehouseTest {
         assertEquals(1, w.howManyDoIHave(ResourceType.SHIELD));
     }
 
-    @Test
-    void copyDepots(){
-        ArrayList<Depot> depoCopy;
-        depoCopy=w.copyDepots();
-        assertEquals(3, depoCopy.size());
-    }
 
-    @Test
-    void copyDepotsLeader(){
-        w.addDepotLeader(new Depot(true, 4));
-        ArrayList<Depot> depoLeaderCopy;
-        depoLeaderCopy=w.copyDepotsLeader();
-        assertEquals(1, depoLeaderCopy.size());
-    }
 
 }
