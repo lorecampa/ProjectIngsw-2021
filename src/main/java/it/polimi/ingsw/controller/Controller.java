@@ -205,7 +205,12 @@ public class Controller {
         } catch (Exception e) {
             sendError(e.getMessage());
         }
+    }
 
+    public void undoBuyDev(){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        gameMaster.onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
+        resourceManager.newTurn();
     }
 
     //PRODUCTION ACTION
@@ -355,6 +360,12 @@ public class Controller {
         }catch (IndexOutOfBoundsException e) {
             sendError(e.getMessage());
         }
+    }
+
+
+    //UNDO
+    public void handleUndo(){
+
     }
 
 

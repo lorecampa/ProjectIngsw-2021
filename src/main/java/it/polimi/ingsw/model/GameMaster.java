@@ -129,7 +129,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         }
 
         onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
-        notifyAllObservers(ModelObserver::currentPlayerChange);
+        notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
     }
 
 

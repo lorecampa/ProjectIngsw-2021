@@ -203,6 +203,13 @@ public class ServerMessageHandler {
         }
     }
 
+    public void handleSwitch(DepotSwitch msg){
+        if(!controlAuthority(new TurnState[]{
+                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
+        TurnState.MARKET_RESOURCE_POSITIONING})){ return; }
+    }
+
+
 
 
 }
