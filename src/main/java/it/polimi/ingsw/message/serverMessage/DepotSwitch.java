@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
+import it.polimi.ingsw.server.ServerMessageHandler;
+
 import java.util.Optional;
 
-public class DepotSwitch implements ClientMessage {
+public class DepotSwitch implements ServerMessage {
     private final int from;
     private final boolean fromLeader;
     private final int to;
@@ -42,7 +44,7 @@ public class DepotSwitch implements ClientMessage {
     }
 
     @Override
-    public void process(ClientMessageHandler handler) {
+    public void process(ServerMessageHandler handler) {
         System.out.println("DepotSwitchHandler");
     }
 }

@@ -6,15 +6,12 @@ import it.polimi.ingsw.server.ServerMessageHandler;
 public class MarketAction implements ServerMessage{
     private final int selection;
     private final boolean row;
-    private final String username;
 
     @JsonCreator
     public MarketAction(@JsonProperty("selection") int selection,
-                        @JsonProperty("row") boolean row,
-                        @JsonProperty("username") String username) {
+                        @JsonProperty("row") boolean row) {
         this.selection = selection;
         this.row = row;
-        this.username = username;
     }
 
     public int getSelection() {
@@ -25,12 +22,9 @@ public class MarketAction implements ServerMessage{
         return row;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("ServerMessageHandler");
+        handler.handleMarketAction(this);
     }
 }

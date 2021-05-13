@@ -156,32 +156,32 @@ class BuyDevelopmentControllerTest {
         //first any response
         System.out.println(1);
         anyConv = resourceArray(0, 0, 0, 0, 1, 0);
-        controller.anyRequiredResponse(anyConv, true);
+        controller.anyRequirementResponse(anyConv, true);
         printState();
 
         //second any response
         System.out.println(2);
         anyConv = resourceArray(0, 0, 0, 0, 0, 1);
-        controller.anyRequiredResponse(anyConv, true);
+        controller.anyRequirementResponse(anyConv, true);
         printState();
 
 
         //third any response
         System.out.println(3);
         anyConv = resourceArray(0, 2, 0, 0, 0, 0);
-        controller.anyRequiredResponse(anyConv, true);
+        controller.anyRequirementResponse(anyConv, true);
         printState();
 
         //fourth any response
         System.out.println(4);
         anyConv = resourceArray(1, 0, 1, 0, 0, 0);
-        controller.anyRequiredResponse(anyConv, true);
+        controller.anyRequirementResponse(anyConv, true);
         printState();
 
         //final true any response
         System.out.println(5);
         anyConv = resourceArray(2, 0, 0, 0, 0, 0);
-        controller.anyRequiredResponse(anyConv, true);
+        controller.anyRequirementResponse(anyConv, true);
         printState();
 
     }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -165,6 +166,8 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 //socket.setSoTimeout(20000);
                 System.out.println("Server Socket has accepted a connection");
+                Scanner in = new Scanner(socket.getInputStream());
+
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);
             } catch(IOException e) {
@@ -177,4 +180,5 @@ public class Server {
         Server server = new Server();
         server.startServer();
     }
+
 }

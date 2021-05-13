@@ -130,13 +130,14 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new AnyConversionNotPossible("Num of any requested to convert is less than the number inserted");
         }
 
-        addToResourcesToProduce(resources, false, false);
+        addToResourcesToProduce(resources);
         anyToProduce -= numOfConversion;
 
         if(anyToProduce == 0){
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
         }
     }
+
 
 
     /**
@@ -250,6 +251,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
 
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+        System.out.println(resourcesBuffer);
     }
 
 
@@ -269,6 +271,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new Exception("Resource not present in buffer");
         }
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+        System.out.println(resourcesBuffer);
     }
 
     public int getBufferSize(){
@@ -278,14 +281,19 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Used to add a resource value or the resource itself in the resource to produce
      * @param resources I want to add */
-    public void addToResourcesToProduce(ArrayList<Resource> resources, boolean countAny, boolean countFaith) {
-        fromResourceToConcreteResource(resources, false, countAny, countFaith);
+    public void addToResourcesToProduce(ArrayList<Resource> resources) {
+        fromResourceToConcreteResource(resources, false, true, true);
         for (Resource res: resources){
             if(resourcesToProduce.contains(res)){
                 resourcesToProduce.get(resourcesToProduce.indexOf(res)).addValue(res.getValue());
             }else{
                 resourcesToProduce.add(res);
             }
+        }
+        if(anyRequired == 0 && anyToProduce == 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
+        }else if (anyToProduce > 0 && anyRequired == 0){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
         }
 
     }

@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
-import it.polimi.ingsw.message.serverMessage.ServerMessage;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
+import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
@@ -61,8 +64,15 @@ public class MastersOfRenaissanceTest
         String serverSer = mapper.writeValueAsString(message1);
         System.out.println(serverSer);
 
+        ResourceData resource1 = new ResourceData(ResourceType.COIN, 2);
+        ServerMessage message2 = new StrongboxModify(resource1);
+        String message22 = mapper.writeValueAsString(message2);
+        System.out.println(message22);
+
 
 
     }
+
+
 
 }

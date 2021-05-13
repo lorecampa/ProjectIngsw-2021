@@ -44,7 +44,7 @@ public class ProductionEffect implements Effect {
      */
     @Override
     public void doEffect(TurnState turnState) throws NotEnoughRequirementException {
-        if (turnState == TurnState.PRODUCTION_ACTION){
+        if (turnState == TurnState.PRODUCTION_ACTION || turnState == TurnState.LEADER_MANAGE_BEFORE){
             ArrayList<Resource> resourceCostCopy = resourceCost.stream()
                     .map(res -> ResourceFactory.createResource(res.getType(), res.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new));
@@ -53,7 +53,7 @@ public class ProductionEffect implements Effect {
 
             resourceManager.addToResourcesToProduce(resourceAcquired.stream()
                     .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
-                    .collect(Collectors.toCollection(ArrayList::new)), true, true);
+                    .collect(Collectors.toCollection(ArrayList::new)));
         }
     }
 

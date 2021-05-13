@@ -23,7 +23,6 @@ public class AnyResponse implements ServerMessage{
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("AnyProductionResponseHandler");
-
+        handler.handleAnyResponse(this);
     }
 }

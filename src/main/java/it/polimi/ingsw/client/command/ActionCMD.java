@@ -178,7 +178,7 @@ public class ActionCMD implements Command{
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
-                client.writeToStream(new MarketAction(indexCol,false,client.getMyName()));
+                client.writeToStream(new MarketAction(indexCol,false));
                 break;
             case "row":
                 int indexRow=0;
@@ -192,7 +192,7 @@ public class ActionCMD implements Command{
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
-                client.writeToStream(new MarketAction(indexRow,true,client.getMyName()));
+                client.writeToStream(new MarketAction(indexRow,true));
                 break;
             default:
                 PrintAssistant.instance.invalidParamCommand(cmd);

@@ -9,19 +9,16 @@ import java.util.ArrayList;
 
 public class DepotModify implements ServerMessage {
     private final int depotIndex;
-    private final ArrayList<ResourceData> resources;
-    private final boolean add;
+    private final ResourceData resource;
     private final boolean normalDepot;
 
 
     @JsonCreator
     public DepotModify(@JsonProperty("depotIndex") int depotIndex,
-                       @JsonProperty("resources")ArrayList<ResourceData> resources,
-                       @JsonProperty("normalDepot") boolean normalDepot,
-                       @JsonProperty("add")boolean add) {
+                       @JsonProperty("resource") ResourceData resource,
+                       @JsonProperty("normalDepot") boolean normalDepot) {
         this.depotIndex = depotIndex;
-        this.resources = resources;
-        this.add = add;
+        this.resource = resource;
         this.normalDepot = normalDepot;
     }
 
@@ -29,13 +26,10 @@ public class DepotModify implements ServerMessage {
         return depotIndex;
     }
 
-    public ArrayList<ResourceData> getResources() {
-        return resources;
+    public ResourceData getResource() {
+        return resource;
     }
 
-    public boolean isAdd() {
-        return add;
-    }
 
     public boolean isNormalDepot() {
         return normalDepot;
@@ -43,6 +37,6 @@ public class DepotModify implements ServerMessage {
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("DepotModify Handler");
+        handler.handleDepotModify(this);
     }
 }

@@ -13,16 +13,18 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = PingPongMessage.class, name = "PingPongMessage"),
         @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
 
+        @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
-        @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
+        @JsonSubTypes.Type(value = EndTurn.class, name = "EndTurn"),
+        @JsonSubTypes.Type(value = LeaderDiscSetUpMessage.class, name = "LeaderDiscSetUpMessage"),
         @JsonSubTypes.Type(value = LeaderManage.class, name = "LeaderManage"),
         @JsonSubTypes.Type(value = MarketAction.class, name = "MarketAction"),
         @JsonSubTypes.Type(value = ProductionAction.class, name = "ProductionAction"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
-        @JsonSubTypes.Type(value = WhiteMarbleForLeader.class, name = "WhiteMarbleForLeader")
+        @JsonSubTypes.Type(value = WhiteMarbleConversionResponse.class, name = "WhiteMarbleForLeader")
 })
 
 public interface ServerMessage extends Message {

@@ -46,9 +46,6 @@ public class Controller {
         return gameMaster.getTurnState();
     }
 
-    public boolean isCorrectTurnState(String username, TurnState turnState){
-        return isYourTurn(username) && getTurnState() == turnState;
-    }
 
     public boolean isYourTurn(String username){
         return getCurrentPlayer().equals(username);
@@ -192,7 +189,7 @@ public class Controller {
             sendError(e.getMessage());
             return;
         }
-        //the card is already attached to the current player
+
         try{
             card.checkRequirements();
         }catch (Exception e){
@@ -242,9 +239,13 @@ public class Controller {
         }
     }
 
+    public void stopProductionCardSelection(){
+        changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
+    }
+
     //ANY MANAGING
 
-    public void anyRequiredResponse(ArrayList<Resource> resources, boolean isFromBuyDevelopment){
+    public void anyRequirementResponse(ArrayList<Resource> resources, boolean isFromBuyDevelopment){
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         try {
             personalBoard.getResourceManager().convertAnyRequirement(resources, isFromBuyDevelopment);
@@ -301,7 +302,7 @@ public class Controller {
         controlBufferStatus();
     }
 
-    public void putMarketResources(Resource resource, int index, boolean isNormalDepot) {
+    public void addToWarehouse(Resource resource, int index, boolean isNormalDepot) {
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
         try {
             resourceManager.subToBuffer(resource);

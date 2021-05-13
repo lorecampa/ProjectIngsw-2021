@@ -8,27 +8,20 @@ import it.polimi.ingsw.server.ServerMessageHandler;
 import java.util.ArrayList;
 
 public class StrongboxModify implements ServerMessage {
-    private final ArrayList<ResourceData> resources;
-    private final boolean add;
-
+    private final ResourceData resource;
 
     @JsonCreator
-    public StrongboxModify(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                           @JsonProperty("add") boolean add) {
-        this.resources = resources;
-        this.add = add;
+    public StrongboxModify(@JsonProperty("resource") ResourceData resource) {
+        this.resource = resource;
     }
 
-    public ArrayList<ResourceData> getResources() {
-        return resources;
+    public ResourceData getResource() {
+        return resource;
     }
 
-    public boolean isAdd() {
-        return add;
-    }
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("StrongboxModifyHandler");
+        handler.handleStrongboxModify(this);
     }
 }

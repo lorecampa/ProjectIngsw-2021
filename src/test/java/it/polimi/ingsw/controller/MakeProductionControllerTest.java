@@ -113,6 +113,7 @@ class MakeProductionControllerTest {
         //2 SHIELD
         resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 3));
         resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.STONE, 2));
+
         assertDoesNotThrow(()->resourceManager.addToWarehouse(true, 1,
                 ResourceFactory.createResource(ResourceType.SHIELD, 2)));
         devCard.attachCardToUser(personalBoard, gameMaster.getMarket());
@@ -158,14 +159,15 @@ class MakeProductionControllerTest {
     void test(){
         resourceManager.newTurn();
         printState();
+
         controller.normalProductionAction(0, false);
         printState();
 
-        controller.anyRequiredResponse(
+        controller.anyRequirementResponse(
                 resourceArray(0, 0, 0, 2, 0, 1), false);
         printState();
 
-        controller.anyRequiredResponse(
+        controller.anyRequirementResponse(
                 resourceArray(0, 0, 0, 2, 0, 0), false);
         printState();
 
@@ -177,8 +179,31 @@ class MakeProductionControllerTest {
         printState();
         controller.anyProductionProfitResponse(resourceArray(0, 1, 0, 0, 0, 0));
         printState();
+
+        controller.stopProductionCardSelection();
+        printState();
+        //resourceRemoving
+
+
+        controller.subToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 2));
+        printState();
+
+        controller.subToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 1));
+        printState();
+
+        controller.subToWarehouse(ResourceFactory.createResource(ResourceType.SHIELD, 1), 1, true);
+        printState();
+
+        controller.subToStrongbox(ResourceFactory.createResource(ResourceType.STONE, 2));
+        printState();
+
     }
 
+
+    void test2(){
+        resourceManager.newTurn();
+
+    }
 
 }
 

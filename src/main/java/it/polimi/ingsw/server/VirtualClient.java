@@ -95,6 +95,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
                 new BufferUpdate(resources.stream()
                         .map(Resource::toClient)
                         .collect(Collectors.toCollection(ArrayList::new))));
+
     }
 
     @Override

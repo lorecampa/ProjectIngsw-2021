@@ -1,11 +1,19 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
+import it.polimi.ingsw.message.serverMessage.*;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ServerMessageHandler {
     private Controller controller;
@@ -19,6 +27,43 @@ public class ServerMessageHandler {
         this.client = client;
         this.state = HandlerState.FIRST_CONTACT;
     }
+
+
+    private boolean areYouAllowed(TurnState turnState){
+        boolean result;
+        if (getController().isPresent() && getVirtualClient().isPresent()){
+            result = controller.getTurnState() == turnState;
+        }else{
+            result = false;
+        }
+        if (!result){
+            client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+        }
+        return result;
+    }
+
+    private boolean isYourTurn(){
+        boolean result;
+        if (getController().isPresent() && getVirtualClient().isPresent()){
+            result = controller.isYourTurn(virtualClient.getUsername());
+        }else{
+            result = false;
+        }
+
+        if (!result){
+            client.writeToStream(new ErrorMessage(ErrorType.NOT_YOUR_TURN));
+        }
+        return result;
+    }
+
+    private boolean controlAuthority(TurnState turnState){
+        return isYourTurn() && areYouAllowed(turnState);
+    }
+
+    private boolean controlAuthority(TurnState[] turnStates){
+        return isYourTurn() && Arrays.stream(turnStates).anyMatch(this::areYouAllowed);
+    }
+
 
     public void setVirtualClient(VirtualClient virtualClient) {
         this.virtualClient = virtualClient;
@@ -72,18 +117,92 @@ public class ServerMessageHandler {
         server.clientReconnection(message.getMatchID(), message.getClientID(), client);
     }
 
-    public boolean checkTurn(){
-        if (getVirtualClient().isPresent() && getController().isPresent()){
-            return controller.isYourTurn(virtualClient.getUsername());
-        }
-        client.writeToStream(new ErrorMessage(ErrorType.NOT_YOUR_TURN));
-        return false;
-
-    }
-
     public void handleLeaderSetUp(int leaderIndex){
         controller.discardLeaderSetUp(leaderIndex, virtualClient.getUsername());
     }
+
+    //NEW METHODS
+    public void handleMarketAction(MarketAction msg){
+        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
+        controller.marketAction(msg.getSelection(), msg.isRow());
+    }
+    
+    public void handleWhiteMarbleConversion(WhiteMarbleConversionResponse msg){
+        if(!controlAuthority(TurnState.WHITE_MARBLE_CONVERSION)) return;
+        controller.leaderWhiteMarbleConversion(msg.getLeaderIndex(), msg.getNumOfWhiteMarble());
+    }
+
+
+
+    public void handleProduction(ProductionAction msg){
+        if(!controlAuthority(new TurnState[]{
+                TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+        if (msg.isLeader()){
+            controller.leaderProductionAction(msg.getSlotsIndex());
+        }else {
+            controller.normalProductionAction(msg.getSlotsIndex(), msg.isBaseProduction());
+        }
+    }
+
+    public void handleEndCardSelection(EndProductionSelection msg){
+        if(!controlAuthority(TurnState.PRODUCTION_ACTION)) return;
+        controller.stopProductionCardSelection();
+    }
+
+    public void handleAnyResponse(AnyResponse msg){
+        if(!isYourTurn()){ return; }
+
+        ArrayList<Resource> resources = msg.getResources().stream()
+                .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        switch (controller.getTurnState()){
+            case ANY_PRODUCE_COST_CONVERSION:
+                controller.anyRequirementResponse(resources, false);
+                break;
+            case ANY_PRODUCE_PROFIT_CONVERSION:
+                controller.anyProductionProfitResponse(resources);
+                break;
+            case ANY_BUY_DEV_CONVERSION:
+                controller.anyRequirementResponse(resources, true);
+                break;
+            default:
+                client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+                break;
+        }
+    }
+
+    public void handleEndTurn(){
+        if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
+        controller.nextTurn();
+    }
+
+    public void handleStrongboxModify(StrongboxModify msg){
+        if(!controlAuthority(new TurnState[]{
+                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING})){ return; }
+
+        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
+        controller.subToStrongbox(resource);
+    }
+
+    public void handleDepotModify(DepotModify msg){
+        if(!isYourTurn()) { return; }
+        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
+
+        switch (controller.getTurnState()){
+            case MARKET_RESOURCE_POSITIONING:
+                controller.addToWarehouse(resource, msg.getDepotIndex(), msg.isNormalDepot());
+                break;
+            case BUY_DEV_RESOURCE_REMOVING:
+            case PRODUCTION_RESOURCE_REMOVING:
+                controller.subToWarehouse(resource, msg.getDepotIndex(), msg.isNormalDepot());
+                break;
+            default:
+                client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+                break;
+        }
+    }
+
 
 
 }
