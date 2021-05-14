@@ -23,10 +23,8 @@ public class LeaderManage implements ServerMessage{
         return discard;
     }
 
-  
-
     @Override
     public void process(ServerMessageHandler handler) {
-
+        handler.handleLeaderManage(this);
     }
 }

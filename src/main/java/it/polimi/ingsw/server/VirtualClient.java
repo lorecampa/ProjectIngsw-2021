@@ -75,7 +75,8 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     //MODEL OBSERVER
     @Override
     public void currentPlayerChange(String nextPlayer) {
-        match.sendAllPlayers(new StarTurn(nextPlayer));
+        match.sendSinglePlayer(username, new StarTurn(nextPlayer));
+
     }
 
 

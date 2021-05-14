@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Match {
@@ -49,6 +50,10 @@ public class Match {
 
     public ArrayList<VirtualClient> getAllPlayers() {
         return allPlayers;
+    }
+
+    public Optional<VirtualClient> getPlayer(String username){
+        return allPlayers.stream().filter(x->x.getUsername().equals(username)).findFirst();
     }
 
     public int getNumOfPlayers(){ return numOfPlayers; }
@@ -176,6 +181,7 @@ public class Match {
                     player.getClient().getServerMessageHandler().setController(controller);
                 }
                 sendSetUp(gameMaster);
+
                 sendLeader(gameMaster);
             } catch (IOException | JsonFileModificationError e) {
                 e.printStackTrace();
@@ -196,6 +202,7 @@ public class Match {
     public void sendLeader(GameMaster gameMaster){
         gameMaster.deliverLeaderCards();
         for (VirtualClient virtualClient : allPlayers){
+            virtualClient.getClient().setState(HandlerState.LEADER_SETUP);
             CardManager playerCardMan = gameMaster.getPlayerPersonalBoard(virtualClient.getUsername()).getCardManager();
             ArrayList<CardLeaderData> leaders = playerCardMan.getLeaders()
                     .stream().map(Leader::toCardLeaderData).collect(Collectors.toCollection(ArrayList::new));
@@ -220,4 +227,5 @@ public class Match {
                 .findFirst()
                 .ifPresent(y -> y.getClient().writeToStream(message));
     }
+
 }

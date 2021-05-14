@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
+import it.polimi.ingsw.message.clientMessage.MatchStart;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
@@ -373,12 +375,18 @@ public class Controller {
             if (hasFinishedLeaderSetUp(username)){
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
-                    case 1: match.sendSinglePlayer(username,new AnyConversionRequest(1));break;
+                    case 0: match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
+                            break;
+                    case 1: match.sendSinglePlayer(username,new AnyConversionRequest(1));
+                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
+                            break;
                     case 2: match.sendSinglePlayer(username,new AnyConversionRequest(1));
                             playerFaithTrack.movePlayer(1);
+                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
                             break;
                     case 3: match.sendSinglePlayer(username,new AnyConversionRequest(2));
                             playerFaithTrack.movePlayer(1);
+                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
                             break;
                 }
             }
@@ -401,7 +409,7 @@ public class Controller {
     }
 
     public void insertSetUpResources(ArrayList<Resource> resources, String username){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(username).getResourceManager();
         int size = resources.stream().mapToInt(Resource::getValue).sum();
 
         try{
@@ -425,11 +433,23 @@ public class Controller {
                     }
                     break;
             }
+            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
+            if(isFinishSetUp()){
+                match.sendAllPlayers(new MatchStart());
+                gameMaster.nextPlayer();
+            }
         }catch (Exception e){
             sendErrorTo(e.getMessage(), username);
         }
 
     }
 
+    private boolean isFinishSetUp(){
+        for(VirtualClient player : match.getAllPlayers()){
+            if(player.getClient().getState()!=HandlerState.IN_MATCH)
+                return false;
+        }
+        return true;
+    }
 
 }

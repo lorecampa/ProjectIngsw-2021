@@ -22,7 +22,7 @@ public class AnyCMD implements Command{
 
     @Override
     public void doCommand() {
-        if(client.getState()!= ClientState.IN_GAME){
+        if(client.getState()!= ClientState.IN_GAME && client.getState()!=ClientState.ENTERING_LOBBY){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }

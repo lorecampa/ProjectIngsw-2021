@@ -316,6 +316,7 @@ public class ModelClient {
         for(i=0; i<standardDepot.size(); i++){
             if(standardDepot.get(i).getType()==ResourceType.ANY){
                 row=(1+i)+")"+"EMPTY";
+                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|', OFFSET_AllIGN);
             }
             else{
                 row=(1+i)+")"+standardDepot.get(i).getType()+": "+standardDepot.get(i).getValue()+"/"+(i+1);

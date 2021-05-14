@@ -35,7 +35,8 @@ public class DeckDevData {
             return false;
         return true;
     }
-/*
+
+    /*
     public static void main(String[] args) {
         ArrayList<ResourceData> resourceReq = new ArrayList<>();
         ArrayList<ResourceData> cost = new ArrayList<>();
@@ -82,7 +83,7 @@ public class DeckDevData {
                             color=ColorData.GREEN;
                             break;
                     }
-                    pippo.add(new CardDevData(i+1, 2+k, color, resourceReq, effectsD,cost, earn ));
+                    pippo.add(new CardDevData(i+1, 2+k, color, resourceReq, effectsD ));
 
                 }
                 row.add(pippo);
@@ -153,7 +154,7 @@ public class DeckDevData {
                     }
                 }
                 else{
-                    row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("CARD LV" + deck.get(i).get(j).get(0).getLevel() + " +" + deck.get(i).get(j).get(0).getVictoryPoints() + "VP ", ' ', widthCard - 2, ' ', ' '));
+                    row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("CARD LV" + deck.get(i).get(j).get(0).getLevel() + " +" + deck.get(i).get(j).get(0).getVictoryPoints() + "VP", ' ', widthCard - 2, ' ', ' '));
                     row = new StringBuilder("|" + deck.get(i).get(j).get(0).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
                     rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                     writtenRow++;
@@ -203,7 +204,7 @@ public class DeckDevData {
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                     }
-                    row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthCard - 2, ' ', ' '));
+                    row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD ", ' ', widthCard - 2, ' ', ' '));
                     row = new StringBuilder("|" + deck.get(i).get(j).get(0).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
                     rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                     writtenRow++;

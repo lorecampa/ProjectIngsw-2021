@@ -5,8 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.MarketData;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
+import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
 
 import java.io.BufferedReader;
@@ -16,6 +19,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class Client{
     private static final String ipHost ="127.0.0.1";
@@ -55,7 +59,31 @@ public class Client{
             PrintAssistant.instance.errorPrint("There's no server ready to answer you! Try again later! Bye :)");
             System.exit(0);
         }
-
+        if (args.length == 1) {
+            if(args[0].equals("primo")){
+                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                client.setState(ClientState.ENTERING_LOBBY);
+                client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 2));
+                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
+                client.setMyName("Teo");
+                try{
+                    TimeUnit.SECONDS.sleep(10);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                client.writeToStream(new LeaderManage(0,true));
+                client.writeToStream(new LeaderManage(0,true));
+            }
+            else if(args[0].equals("secondo")){
+                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                client.setState(ClientState.ENTERING_LOBBY);
+                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Lollo"));
+                client.setMyName("Lollo");
+                client.writeToStream(new LeaderManage(0,true));
+                client.writeToStream(new LeaderManage(0,true));
+            }
+        }
         //to simulate 3 player
         /*
         ArrayList<String> users=new ArrayList<>();
@@ -113,8 +141,6 @@ public class Client{
         ClientMessage message = deserialize(serializedMessage);
 
         message.process(clientMessageHandler);
-
-
     }
 
     public ClientMessage deserialize(String serializedMessage){

@@ -76,6 +76,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
+        notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
     }
 
     /**

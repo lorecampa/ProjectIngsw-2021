@@ -26,6 +26,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = LeaderSetUpMessage.class, name ="LeaderSetUpMessage"),
         @JsonSubTypes.Type(value = MainMenuMessage.class, name = "MainMenuMessage"),
         @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
+        @JsonSubTypes.Type(value = MatchStart.class, name = "MatchStart"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
         @JsonSubTypes.Type(value = RemoveDeckDevelopmentCard.class, name = "RemoveDeckDevelopmentCard"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),

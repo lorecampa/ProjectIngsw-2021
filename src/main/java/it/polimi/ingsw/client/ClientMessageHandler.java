@@ -10,6 +10,7 @@ import it.polimi.ingsw.message.clientMessage.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class ClientMessageHandler {
 
@@ -106,6 +107,15 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printf("Please choose 2 leader to discard!");
     }
 
+    //start match handler
+    public void startGame(){
+        PrintAssistant.instance.printf("GL HF! Game starts!");
+        client.getModelOf(client.getMyName()).printAll();
+        PrintAssistant.instance.printf("Commands in game now available!");
+        //da qui sono in game
+    }
+
+
     //AnyConversionRequest message handler
     public void anyConversionRequest(AnyConversionRequest message){
         ArrayList<String> textToPrint = new ArrayList<>();
@@ -165,9 +175,6 @@ public class ClientMessageHandler {
             PrintAssistant.instance.printf(message.getUsername() + " has discarded a leader!");
         }
     }
-
-
-
 
     //MarketUpdate message handler
     public void marketUpdate(MarketUpdate message){

@@ -120,14 +120,22 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     public void nextPlayer(){
 
         if (currentPlayer == null || numberOfPlayer == 1) {
-            this.currentPlayer = playersPersonalBoard.firstKey();
+            this.currentPlayer = playersTurn.get(0);
         }else{
+            int indexOfCurr=playersTurn.indexOf(currentPlayer);
+            if(indexOfCurr==numberOfPlayer-1){
+                currentPlayer=playersTurn.get(0);
+            }
+            else{
+                currentPlayer=playersTurn.get(indexOfCurr+1);
+            }
+            /*
             String nextPlayer = playersPersonalBoard.higherKey(currentPlayer);
             if(nextPlayer == null){
                 this.currentPlayer = playersPersonalBoard.firstKey();
             }else{
                 this.currentPlayer = nextPlayer;
-            }
+            }*/
         }
 
         onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);

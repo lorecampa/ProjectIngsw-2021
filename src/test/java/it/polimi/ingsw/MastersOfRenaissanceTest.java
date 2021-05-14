@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -18,10 +19,13 @@ import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 
@@ -87,6 +91,23 @@ public class MastersOfRenaissanceTest
 
     }
 
+    @Test
+    void gameStartForSetUpServer(){
+        Server server = new Server();
+        String[] s= new String[2];
+        s[0]="pippo";
+        s[1]="pluto";
+        Server.main(s);
 
+    }
+
+    @Test
+    void gameStartForSetUpClient(){
+        String[] s= new String[2];
+        s[0]="pippo";
+        s[1]="pluto";
+        Client.main(s);
+        //Client.main(s);
+    }
 
 }

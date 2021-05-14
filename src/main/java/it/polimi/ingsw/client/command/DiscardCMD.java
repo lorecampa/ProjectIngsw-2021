@@ -21,7 +21,7 @@ public class DiscardCMD implements Command{
     @Override
     public void doCommand() {
 
-        if(client.getState()!= ClientState.IN_GAME){
+        if(client.getState()!= ClientState.IN_GAME && client.getState()!=ClientState.ENTERING_LOBBY){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }
@@ -47,7 +47,6 @@ public class DiscardCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        //TODO: send message to tell the serve witch leader i want to discard
         client.writeToStream(new LeaderManage(leaderIndex,true));
     }
 
