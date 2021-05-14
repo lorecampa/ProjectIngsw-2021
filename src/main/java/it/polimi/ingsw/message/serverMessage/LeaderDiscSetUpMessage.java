@@ -1,14 +1,17 @@
 package it.polimi.ingsw.message.serverMessage;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
 import java.util.ArrayList;
 
 public class LeaderDiscSetUpMessage implements ServerMessage{
 
-    ArrayList<Integer> leaderIndexes;
+    private final ArrayList<Integer> leaderIndexes;
 
-    public LeaderDiscSetUpMessage(ArrayList<Integer> leaderIndexes) {
+    @JsonCreator
+    public LeaderDiscSetUpMessage(@JsonProperty("leaderIndexes") ArrayList<Integer> leaderIndexes) {
         this.leaderIndexes = leaderIndexes;
     }
 

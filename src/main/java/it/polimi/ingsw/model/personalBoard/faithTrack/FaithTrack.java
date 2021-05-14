@@ -72,7 +72,7 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      */
     public void movePlayer(int positions){
         for (int i = 0; i < positions; i++) {
-            currentPositionOnTrack++;
+            increasePlayerPosition();
             track.get(currentPositionOnTrack).doAction(this);
         }
     }

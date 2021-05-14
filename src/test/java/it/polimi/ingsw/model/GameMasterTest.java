@@ -4,11 +4,12 @@ import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
+import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -141,6 +142,4 @@ class GameMasterTest {
         gm.discardLeader();
         assertEquals(2, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
     }
-
-
 }
