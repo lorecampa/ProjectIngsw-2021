@@ -17,15 +17,26 @@ public class AnyConversionRequest implements ClientMessage{
     @JsonCreator
     public AnyConversionRequest(@JsonProperty("optionConversion") ArrayList<ResourceData> optionConversion,
                                 @JsonProperty("optionOfDiscountNotUsed") ArrayList<ResourceData> optionOfDiscountNotUsed,
-                                @JsonProperty("numOfAny")int numOfAny) {
+                                @JsonProperty("numOfAny")int numOfAny,
+                                @JsonProperty("production")boolean production){
+        this.optionConversion = optionConversion;
+        this.optionOfDiscountNotUsed = optionOfDiscountNotUsed;
+        this.numOfAny = numOfAny;
+        this.production = production;
+    }
+
+
+    public AnyConversionRequest(ArrayList<ResourceData> optionConversion,
+                                ArrayList<ResourceData> optionOfDiscountNotUsed,
+                                int numOfAny) {
         this.optionConversion = optionConversion;
         this.optionOfDiscountNotUsed = optionOfDiscountNotUsed;
         this.numOfAny = numOfAny;
         this.production = false;
     }
 
-    @JsonCreator
-    public AnyConversionRequest(@JsonProperty("numOfAny")int numOfAny) {
+
+    public AnyConversionRequest(int numOfAny) {
         this.optionConversion = null;
         this.optionOfDiscountNotUsed = null;
         this.numOfAny = numOfAny;

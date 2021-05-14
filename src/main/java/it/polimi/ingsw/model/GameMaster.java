@@ -39,6 +39,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private String currentPlayer = null;
     private int numberOfPlayer;
     private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
+    private final ArrayList<String> playersTurn = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment;
     private LinkedList<Leader> deckLeader;
     private Market market;
@@ -73,12 +74,13 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         Collections.shuffle(players);
         for (String player: players){
             addPlayer(player);
+            playersTurn.add(player);
         }
 
         if (numberOfPlayer == 1){
             addPlayer(NAME_LORENZO);
+            playersTurn.add(NAME_LORENZO);
         }
-
     }
 
 
@@ -184,11 +186,15 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         CardManager playerCardManager = new CardManager(playerBaseProduction);
         playerCardManager.attachGameMasterObserver(this);
 
-        playersPersonalBoard.put(username, new PersonalBoard(username,
+        PersonalBoard playerPersonalBoard = new PersonalBoard(username,
                 playerFaithTrack,
                 playerResourceManager,
-                playerCardManager));
+                playerCardManager);
 
+        if (playersPersonalBoard.isEmpty())
+            playerPersonalBoard.setInkwell(true);
+
+        playersPersonalBoard.put(username, playerPersonalBoard);
     }
 
     /**
@@ -318,6 +324,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                 .collect(Collectors.toCollection(ArrayList::new)));
     }
 
+    public int getPlayerPosition(String username){
+        return playersTurn.indexOf(username);
+    }
 
     /**
      * Method of FaithTrackObserver that manage the activation of a popeSpace from a player Faith Track

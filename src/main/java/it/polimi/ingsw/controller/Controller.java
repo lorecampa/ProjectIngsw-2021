@@ -1,11 +1,14 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
+import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
+import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -39,6 +42,10 @@ public class Controller {
     private void sendError(String customMessage){
         System.out.println("SingleErrorMessage: " + customMessage);
         //match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
+    }
+
+    private void sendErrorTo(String customMessage, String username){
+        match.sendSinglePlayer(username, new ErrorMessage(customMessage));
     }
 
 
@@ -290,6 +297,12 @@ public class Controller {
         changeTurnState(TurnState.LEADER_MANAGE_AFTER);
     }
 
+    private boolean hasFinishedLeaderSetUp(String username){
+        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(username);
+        CardManager cardManager = personalBoard.getCardManager();
+        return cardManager.getLeaders().size() == 2;
+    }
+
     public void subToStrongbox(Resource resource){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
         try {
@@ -357,8 +370,20 @@ public class Controller {
         CardManager playerCardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         try {
             playerCardManager.discardLeaderNoNotify(leaderIndex);
+            if (hasFinishedLeaderSetUp(username)){
+                FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
+                switch (gameMaster.getPlayerPosition(username)){
+                    case 1: match.sendSinglePlayer(username,new AnyConversionRequest(1));break;
+                    case 2: match.sendSinglePlayer(username,new AnyConversionRequest(1));
+                            playerFaithTrack.movePlayer(1);
+                            break;
+                    case 3: match.sendSinglePlayer(username,new AnyConversionRequest(2));
+                            playerFaithTrack.movePlayer(1);
+                            break;
+                }
+            }
         }catch (IndexOutOfBoundsException e) {
-            sendError(e.getMessage());
+            sendErrorTo("Leader Index out of bound", username);
         }
     }
 
