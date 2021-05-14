@@ -19,6 +19,6 @@ public class StarTurn implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("StartTurnHandler");
+        handler.newTurn(this);
     }
 }

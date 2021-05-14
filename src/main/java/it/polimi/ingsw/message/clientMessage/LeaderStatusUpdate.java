@@ -32,6 +32,6 @@ public class LeaderStatusUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("LeaderStateUpdate Handler");
+        handler.leaderUpdateState(this);
     }
 }

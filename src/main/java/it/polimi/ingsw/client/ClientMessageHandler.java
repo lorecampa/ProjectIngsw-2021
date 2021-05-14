@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
@@ -83,7 +84,7 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printfMultipleString(texts, PrintAssistant.ANSI_RED);
     }
 
-    //NewTurn message handler
+    //StartTurn message handler
     public void newTurn(StarTurn message){
         if(message.getUsername().equals(client.getMyName())){
             client.setState(ClientState.IN_GAME);
@@ -97,7 +98,6 @@ public class ClientMessageHandler {
 
     //GameSetup message handler
     public void gameSetUp(GameSetup message){
-        PrintAssistant.instance.printf("setUpArrived!");
         client.setModels(message.getUsernames());
         client.setMarketData(message.getMarket());
         client.setDeckDevData(message.getDeckDev());
@@ -106,9 +106,9 @@ public class ClientMessageHandler {
 
     //leaders message handler
     public void leaderSetUp(LeaderSetUpMessage message){
-        PrintAssistant.instance.printf("leaders arrived!");
         client.getModelOf(client.getMyName()).setLeader(message.getLeaders());
         client.getModelOf(client.getMyName()).printLeader();
+        PrintAssistant.instance.printf("Please choose 2 leader to discard!");
     }
 
     //AnyConversionRequest message handler
@@ -144,6 +144,40 @@ public class ClientMessageHandler {
         }
         else{
             client.getModelOf(message.getUsername()).setLeaderDepotAt(message.getDepotIndex(), message.getDepot());
+        }
+    }
+
+    //LeaderStatusUpdate message handler
+    public void leaderUpdateState(LeaderStatusUpdate message){
+        if(message.isDiscard()){
+            client.getModelOf(message.getUsername()).removeLeaderAt(message.getLeaderIndex());
+            PrintAssistant.instance.printf("!");
+        }
+        else {
+            client.getModelOf(message.getUsername()).setActiveLeaderAt(message.getLeaderIndex());
+        }
+    }
+
+    //MarketUpdate message handler
+    public void marketUpdate(MarketUpdate message){
+        client.setMarketData(message.getMarket());
+    }
+
+    //CardSlotUpdate message handler
+    public void cardSlotUpdate(CardSlotUpdate message){
+        CardDevData c=client.getDeckDevData().getCard(message.getRowDeckDevelopment(), message.getColDeckDevelopment());
+        if(message.getUsername().equals(client.getMyName())){
+            switch (message.getSlotIndex()){
+                case 0:
+                    client.getModelOf(client.getMyName()).addToCardSlotOne(c);
+                    break;
+                case 1:
+                    client.getModelOf(client.getMyName()).addToCardSlotTwo(c);
+                    break;
+                case 2:
+                    client.getModelOf(client.getMyName()).addToCardSlotThree(c);
+                    break;
+            }
         }
     }
 }

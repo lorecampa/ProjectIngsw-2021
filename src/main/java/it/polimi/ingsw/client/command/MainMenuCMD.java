@@ -61,7 +61,7 @@ public class MainMenuCMD implements Command{
                     PrintAssistant.instance.errorPrint("Some errors with your file where you data to re-log where stored!");
                 }
                 client.writeToStream( new ReconnectionMessage(matchID,clientID));
-                //TODO: dire a davide che in questo momento il server mi risponde di merda!
+                //TODO: dire a davide che in questo momento il server non mi risponde!
                 break;
         }
         client.setState(ClientState.ENTERING_LOBBY);

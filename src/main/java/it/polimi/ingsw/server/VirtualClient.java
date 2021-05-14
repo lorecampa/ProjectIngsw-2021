@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.data.ColorData;
+import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
@@ -137,7 +138,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
             marketTrayToClient.add(marketCol);
         }
 
-        match.sendAllPlayers(new MarketUpdate(marketTrayToClient, lastMarble.getColorData()));
+        match.sendAllPlayers(new MarketUpdate(new MarketData(marketTrayToClient, lastMarble.getColorData(), marketTrayToClient.size(), marketTrayToClient.get(0).size())));
     }
 
 

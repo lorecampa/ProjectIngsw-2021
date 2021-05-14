@@ -11,7 +11,7 @@ public class ErrorMessage implements ClientMessage {
     private final ErrorType errorType;
     private final String customError;
     @JsonCreator
-    public ErrorMessage(@JsonProperty("errorType") ErrorType errorType) {
+    public ErrorMessage(@JsonProperty("errorType") ErrorType errorType) {   //json va giù di testa con 2 costruttori e nessuno dei due con entrambi i suoi attributi
         this.errorType = errorType;
         this.customError = null;
     }

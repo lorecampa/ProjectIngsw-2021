@@ -15,22 +15,16 @@ public class CardDevData {
 
     private ArrayList<EffectData> effects;
 
-    private ArrayList<ResourceData> productionCost;
-    private ArrayList<ResourceData> productionEarn;
 
 
     public CardDevData(@JsonProperty("level")int level,
                        @JsonProperty("victoryPoints")int victoryPoints,
                        @JsonProperty("color")ColorData color,
-                       @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
-                       @JsonProperty("productionCost")ArrayList<ResourceData> productionCost,
-                       @JsonProperty("productionEarn")ArrayList<ResourceData> productionEarn) {
+                       @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq) {
         this.level = level;
         this.victoryPoints = victoryPoints;
         this.color = color;
         this.resourceReq = resourceReq;
-        this.productionCost = productionCost;
-        this.productionEarn = productionEarn;
     }
 
     @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
@@ -38,16 +32,12 @@ public class CardDevData {
                        @JsonProperty("victoryPoints")int victoryPoints,
                        @JsonProperty("color")ColorData color,
                        @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
-                       @JsonProperty("effects")ArrayList<EffectData> effects,
-                       @JsonProperty("productionCost")ArrayList<ResourceData> productionCost,
-                       @JsonProperty("productionEarn")ArrayList<ResourceData> productionEarn){
+                       @JsonProperty("effects")ArrayList<EffectData> effects){
         this.level = level;
         this.victoryPoints = victoryPoints;
         this.color = color;
         this.resourceReq = resourceReq;
         this.effects = effects;
-        this.productionCost=null;
-        this.productionEarn=null;
     }
 
     public CardDevData(int level, ColorData color){
@@ -93,13 +83,6 @@ public class CardDevData {
         return resourceReq;
     }
 
-    public ArrayList<ResourceData> getProductionCost() {
-        return productionCost;
-    }
-
-    public ArrayList<ResourceData> getProductionEarn() {
-        return productionEarn;
-    }
 
     public ArrayList<EffectData> getEffects() {
         return effects;

@@ -27,8 +27,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        setUpForDebug();
-        //realSetUp();
+        //setUpForDebug();
+        realSetUp();
     }
 
     private void realSetUp(){
@@ -88,8 +88,8 @@ public class ModelClient {
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, cost, earn );
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, cost, earn );
          */
-        CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD,cost, earn );
-        CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD,cost, earn );
+        CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
+        CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
         cardSlotOne.add(cdd);
         cardSlotOne.add(cdd1);
         cardSlotTwo.add(cdd);
@@ -105,8 +105,8 @@ public class ModelClient {
         ArrayList<String> effects=new ArrayList<>();
         effects.add("Extra Depot COIN 2");
         effects.add("Discount SHIELD 1");
-        CardLeaderData cl=new CardLeaderData(4, cardSlotOne, cost, effectsL,effects,false);
-        CardLeaderData cl2=new CardLeaderData(4, cardSlotOne, cost, effectsL,effects,true);
+        CardLeaderData cl=new CardLeaderData(4, cardSlotOne, cost, effectsL,false);
+        CardLeaderData cl2=new CardLeaderData(4, cardSlotOne, cost, effectsL,true);
         leader.add(cl);
         leader.add(cl2);
         //leader.add(cl);
@@ -180,6 +180,14 @@ public class ModelClient {
 
     public void setLeader(ArrayList<CardLeaderData> leader) {
         this.leader = leader;
+    }
+
+    public void removeLeaderAt(int index){
+        leader.remove(index);
+    }
+
+    public void setActiveLeaderAt(int index){
+        leader.get(index).setActive(true);
     }
 
     public boolean validIndexForLeader(int index){
@@ -604,7 +612,7 @@ public class ModelClient {
                     row+=d.toCLIForLeader();
                 }
                 row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == leader.size()-1){
+                if(i == 1){
                     row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
                 }
                 rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
@@ -620,7 +628,7 @@ public class ModelClient {
                     row+=r.toCli();
                 }
                 row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == leader.size()-1){
+                if(i == 1){
                     row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
                 }
                 rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
@@ -634,13 +642,16 @@ public class ModelClient {
                 row="";
                 for(EffectData e : leader.get(i).getEffects()){
                     row=PrintAssistant.instance.fitToWidth(e.toString(), widthColumn, ' ', ' ', ' ', myOff);
+                    if(i == 1){
+                        row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
+                    }
                     rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
                     writtenRow++;
                 }
             }
             row =PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn-2, ' ', ' ');
             row =(leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row +" "+ PrintAssistant.ANSI_RESET+" " ;
-            if(i == leader.size()-1){
+            if(i == 1){
                 row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
             }
             rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
@@ -701,6 +712,9 @@ public class ModelClient {
                 row="";
                 for(EffectData e : leader.get(i).getEffects()){
                     row=PrintAssistant.instance.fitToWidth(e.toString(), widthColumn, ' ', ' ', ' ', myOff);
+                    if(i == leader.size()-1){
+                        row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
+                    }
                     rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
                     writtenRow++;
                 }
@@ -713,12 +727,10 @@ public class ModelClient {
             rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
             writtenRow++;
         }
-
-
         PrintAssistant.instance.printfMultipleString(rowsOfLeaders);
     }
 
-
+/*
     public static void main(String[] args){
         ModelClient mc;
         mc=new ModelClient("Teo");
@@ -728,7 +740,7 @@ public class ModelClient {
         mc.printCardSlots();
         mc.printLeader();
     }
-
+*/
 
     @Override
     public boolean equals(Object obj) {

@@ -12,19 +12,18 @@ public class CardLeaderData {
 
     private ArrayList<EffectData> effects;
 
-    private ArrayList<String> descriptionsLeader;
+    //private ArrayList<String> descriptionsLeader;
     private boolean active;
 
-
+    //questo costruttore non credoserva piu a nulla
     public CardLeaderData(@JsonProperty("victoryPoint")int victoryPoint,
                           @JsonProperty("cardReq")ArrayList<CardDevData> cardReq,
                           @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
-                          @JsonProperty("descriptionsLeader")ArrayList<String> descriptionsLeader,
                           @JsonProperty("active")boolean active) {
         this.victoryPoint = victoryPoint;
         this.cardReq = cardReq;
         this.resourceReq = resourceReq;
-        this.descriptionsLeader = descriptionsLeader;
+        //this.descriptionsLeader = descriptionsLeader;
         this.active = active;
     }
 
@@ -33,13 +32,12 @@ public class CardLeaderData {
                           @JsonProperty("cardReq")ArrayList<CardDevData> cardReq,
                           @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
                           @JsonProperty("effects")ArrayList<EffectData> effects,
-                          @JsonProperty("descriptionsLeader")ArrayList<String> descriptionsLeader,
                           @JsonProperty("active")boolean active) {
         this.victoryPoint = victoryPoint;
         this.cardReq = cardReq;
         this.resourceReq = resourceReq;
         this.effects = effects;
-        this.descriptionsLeader=null;
+        //this.descriptionsLeader=null;
         this.active = false;
     }
 
@@ -59,11 +57,11 @@ public class CardLeaderData {
         return effects;
     }
 
-    public ArrayList<String> getDescriptionsLeader() {
-        return descriptionsLeader;
-    }
-
     public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

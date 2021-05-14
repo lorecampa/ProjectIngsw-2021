@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
+import it.polimi.ingsw.message.serverMessage.LeaderManage;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class DiscardCMD implements Command{
             return;
         }
         //TODO: send message to tell the serve witch leader i want to discard
-        //client.writeToStream();
+        client.writeToStream(new LeaderManage(leaderIndex,true));
     }
 
     @Override
