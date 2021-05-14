@@ -27,12 +27,12 @@ public class ErrorMessage implements ClientMessage {
         this.customError = null;
     }
 
-    public Optional<ErrorType> getErrorType() {
-        return Optional.ofNullable(errorType);
+    public ErrorType getErrorType() {
+        return errorType;
     }
 
-    public Optional<String> getCustomError() {
-        return Optional.ofNullable(customError);
+    public String getCustomError() {
+        return customError;
     }
 
     @Override

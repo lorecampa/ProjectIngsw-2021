@@ -4,16 +4,13 @@ import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.message.bothArchitectureMessage.*;
 import it.polimi.ingsw.message.clientMessage.*;
-import it.polimi.ingsw.message.serverMessage.StrongboxModify;
+import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.market.Marble;
-import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
@@ -151,11 +148,14 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void leaderStatusUpdate(int leaderIndex, boolean discard) {
-        match.sendAllPlayers(
-                new LeaderStatusUpdate(leaderIndex, discard, username));
+    public void leaderActivated(Leader leader) {
+        match.sendAllPlayers(new LeaderActivate(leader.toCardLeaderData(), username));
     }
 
+    @Override
+    public void leaderDiscard(int leaderIndex) {
+        match.sendAllPlayers(new LeaderDiscard(leaderIndex, username));
+    }
 
     //Warehouse updating
 

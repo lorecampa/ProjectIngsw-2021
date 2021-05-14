@@ -113,15 +113,23 @@ public class ServerMessageHandler {
                 ()->server.clientDisconnect(client));
     }
 
-    public void handleReconnection(ReconnectionMessage message){
-        server.clientReconnection(message.getMatchID(), message.getClientID(), client);
+    public void handleReconnection(ReconnectionMessage msg){
+        server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);
     }
 
-    public void handleLeaderSetUp(int leaderIndex){
-        controller.discardLeaderSetUp(leaderIndex, virtualClient.getUsername());
+    public void handleLeaderManage(LeaderManage msg){
+        if(state == HandlerState.LEADER_SETUP){
+            controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
+            return;
+        }
+        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) { return; }
+
+        controller.leaderManage(msg.getIndex(), msg.isDiscard());
+
     }
 
     //NEW METHODS
+
     public void handleMarketAction(MarketAction msg){
         if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
         controller.marketAction(msg.getSelection(), msg.isRow());
@@ -150,11 +158,17 @@ public class ServerMessageHandler {
     }
 
     public void handleAnyResponse(AnyResponse msg){
-        if(!isYourTurn()){ return; }
-
+        //TODO resources can be null attention
         ArrayList<Resource> resources = msg.getResources().stream()
                 .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        if(state == HandlerState.RESOURCE_SETUP){
+            controller.insertSetUpResources(resources, virtualClient.getUsername());
+            return;
+        }
+
+        if(!isYourTurn()){ return; }
 
         switch (controller.getTurnState()){
             case ANY_PRODUCE_COST_CONVERSION:

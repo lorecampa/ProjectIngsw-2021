@@ -79,8 +79,8 @@ public class MastersOfRenaissanceTest
         String cm1 = mapper.writeValueAsString(errorMessage1);
         String cm2 = mapper.writeValueAsString(errorMessage2);
 
-        errorMessage1 = mapper.readValue(cm1, ClientMessage.class);
-        errorMessage2 = mapper.readValue(cm2, ClientMessage.class);
+        ClientMessage errorMessage11 = mapper.readValue(cm1, ClientMessage.class);
+        ClientMessage errorMessage22 = mapper.readValue(cm2, ClientMessage.class);
 
 
 

@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 
-public class LeaderStatusUpdate implements ClientMessage{
+public class LeaderDiscard implements ClientMessage{
     private final int leaderIndex;
-    private final boolean discard;
     private final String username;
 
     @JsonCreator
-    public LeaderStatusUpdate(@JsonProperty("leaderIndex") int leaderIndex,
-                              @JsonProperty("discard") boolean discard,
-                              @JsonProperty("username") String username) {
+    public LeaderDiscard(@JsonProperty("leaderIndex") int leaderIndex,
+                         @JsonProperty("username") String username) {
         this.leaderIndex = leaderIndex;
-        this.discard = discard;
         this.username = username;
     }
 
@@ -22,9 +19,6 @@ public class LeaderStatusUpdate implements ClientMessage{
         return leaderIndex;
     }
 
-    public boolean isDiscard() {
-        return discard;
-    }
 
     public String getUsername() {
         return username;
@@ -32,6 +26,6 @@ public class LeaderStatusUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        handler.leaderUpdateState(this);
+        handler.discardUpdate(this);
     }
 }

@@ -368,7 +368,8 @@ public class Controller {
     public void discardLeaderSetUp(int leaderIndex, String username){
         CardManager playerCardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         try {
-            playerCardManager.discardLeaderNoNotify(leaderIndex);
+            playerCardManager.discardLeaderSetUp(leaderIndex);
+
             if (hasFinishedLeaderSetUp(username)){
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
@@ -381,9 +382,53 @@ public class Controller {
                             break;
                 }
             }
-        }catch (IndexOutOfBoundsException e) {
-            sendErrorTo("Leader Index out of bound", username);
+        }catch (Exception e) {
+            sendErrorTo(e.getMessage(), username);
         }
+
+    }
+
+    public void leaderManage(int leaderIndex, boolean discard){
+        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
+        try{
+            if(discard)
+                cardManager.discardLeader(leaderIndex);
+            else
+                cardManager.activateLeader(leaderIndex);
+        }catch (Exception e){
+            sendError(e.getMessage());
+        }
+    }
+
+    public void insertSetUpResources(ArrayList<Resource> resources, String username){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        int size = resources.stream().mapToInt(Resource::getValue).sum();
+
+        try{
+            switch (gameMaster.getPlayerPosition(username)){
+                case 1:
+                case 2:
+                    if (size == 1){
+                        resourceManager.addToWarehouse(true, 0, resources.get(0));
+                    }else{
+                        sendErrorTo("Too many resources sent", username);
+                    }
+                    break;
+                case 3:
+                    if (size == 2 && resources.size() == 1){
+                        resourceManager.addToWarehouse(true, 1, resources.get(0));
+                    }else if(size == 2 && resources.size() == 2){
+                        resourceManager.addToWarehouse(true, 0, resources.get(0));
+                        resourceManager.addToWarehouse(true, 1, resources.get(1));
+                    }else{
+                        sendErrorTo("Too many resources sent", username);
+                    }
+                    break;
+            }
+        }catch (Exception e){
+            sendErrorTo(e.getMessage(), username);
+        }
+
     }
 
 

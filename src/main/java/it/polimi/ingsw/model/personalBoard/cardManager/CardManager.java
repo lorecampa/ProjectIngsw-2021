@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
-import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.CardManagerObserver;
@@ -18,7 +17,6 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -73,10 +71,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
-        notifyAllObservers(x -> x.leaderStatusUpdate(leaderIndex, true));
+        notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
     }
 
-    public void discardLeaderNoNotify(int leaderIndex) throws IndexOutOfBoundsException{
+    public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
     }
 
@@ -94,7 +92,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leader.doCreationEffects();
         leader.setActive(true);
 
-        notifyAllObservers(x -> x.leaderStatusUpdate(leaderIndex, false));
+        notifyAllObservers(x -> x.leaderActivated(leader));
 
     }
 

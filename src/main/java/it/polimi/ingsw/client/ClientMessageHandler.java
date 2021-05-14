@@ -4,17 +4,12 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
-import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
-import it.polimi.ingsw.model.resource.Resource;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ClientMessageHandler {
 
@@ -148,7 +143,8 @@ public class ClientMessageHandler {
     }
 
     //LeaderStatusUpdate message handler
-    public void leaderUpdateState(LeaderStatusUpdate message){
+    /*
+    public void leaderUpdateState(LeaderDiscard message){
         if(message.isDiscard()){
             client.getModelOf(message.getUsername()).removeLeaderAt(message.getLeaderIndex());
             PrintAssistant.instance.printf("!");
@@ -157,6 +153,21 @@ public class ClientMessageHandler {
             client.getModelOf(message.getUsername()).setActiveLeaderAt(message.getLeaderIndex());
         }
     }
+
+     */
+
+    //leader discard message handler
+    public void discardUpdate(LeaderDiscard message){
+        if (message.getUsername().equals(client.getMyName())){
+            client.getModelOf(client.getMyName()).removeLeaderAt(message.getLeaderIndex());
+            client.getModelOf(client.getMyName()).printLeader();
+        }else{
+            PrintAssistant.instance.printf(message.getUsername() + " has discarded a leader!");
+        }
+    }
+
+
+
 
     //MarketUpdate message handler
     public void marketUpdate(MarketUpdate message){
