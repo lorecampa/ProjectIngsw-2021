@@ -34,14 +34,13 @@ public class MarketData {
     }
 
     public void insertMarbleInCol(int col){
-
         ColorData tempMarble = marketTray.get(0).get(col);
         for (int i = 0; i < numRow - 1; i++) {
             marketTray.get(i).remove(col);
             marketTray.get(i).add(col,marketTray.get(i+1).get(col));
         }
         marketTray.get(numRow - 1).remove(col);
-        marketTray.get(numRow - 1).add( col, extraMarble); //ho aggiunto col per index
+        marketTray.get(numRow - 1).add( col, extraMarble);//ho aggiunto col per index
         extraMarble = tempMarble;
     }
 

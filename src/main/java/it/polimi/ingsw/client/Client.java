@@ -32,7 +32,7 @@ public class Client{
 
     private String nameFile;
     private String myName;
-    private ArrayList<ModelClient> models= new ArrayList<>();
+    private ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
 

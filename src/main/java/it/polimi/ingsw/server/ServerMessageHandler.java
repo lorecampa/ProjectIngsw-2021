@@ -207,6 +207,8 @@ public class ServerMessageHandler {
         if(!controlAuthority(new TurnState[]{
                 TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
         TurnState.MARKET_RESOURCE_POSITIONING})){ return; }
+
+        controller.switchDepots(msg.getFrom(), msg.isFromLeader(), msg.getTo(), msg.isToLeader());
     }
 
 

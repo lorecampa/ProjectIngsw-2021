@@ -249,9 +249,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         else{
             resourcesBuffer.add(res);
         }
-
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
-        System.out.println(resourcesBuffer);
+        //notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 
 
@@ -271,7 +269,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new Exception("Resource not present in buffer");
         }
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
-        System.out.println(resourcesBuffer);
     }
 
     public int getBufferSize(){

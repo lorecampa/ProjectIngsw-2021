@@ -24,14 +24,14 @@ class GameMasterTest {
     int numOfPlayer;
     @BeforeEach
     void setUp() throws IOException, JsonFileModificationError {
-        players.add("player1");
         assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
         gmSinglePlayer = new GameMaster(gsSinglePlayer, players);
 
         numOfPlayer = 4;
-        players.add("player2");
-        players.add("player3");
         players.add("player4");
+        players.add("player2");
+        players.add("player1");
+        players.add("player3");
         assertDoesNotThrow(()-> gs = new GameSetting(numOfPlayer));
         gm = new GameMaster(gs, players);
         gm.nextPlayer();

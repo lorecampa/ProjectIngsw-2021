@@ -19,7 +19,7 @@ public class ModelClient {
     private ArrayList<CardDevData> cardSlotOne=new ArrayList<>();
     private ArrayList<CardDevData> cardSlotTwo=new ArrayList<>();
     private ArrayList<CardDevData> cardSlotThree=new ArrayList<>();
-    private ArrayList<CardLeaderData> leader=new ArrayList<>();
+    private ArrayList<CardLeaderData> leader = new ArrayList<>();
 
     //attributes to CLI
     int lengthInChar = DIM_CELL_CHAR*NUMBER_OF_CELL_FAITH;

@@ -14,7 +14,6 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
-
 import java.util.ArrayList;
 
 public class Controller {
@@ -385,12 +384,6 @@ public class Controller {
         }catch (IndexOutOfBoundsException e) {
             sendErrorTo("Leader Index out of bound", username);
         }
-    }
-
-
-    //UNDO
-    public void handleUndo(){
-
     }
 
 
