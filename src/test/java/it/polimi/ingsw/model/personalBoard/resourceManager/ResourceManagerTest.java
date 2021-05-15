@@ -29,6 +29,7 @@ class ResourceManagerTest {
         assertDoesNotThrow(() -> rs.addToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
     }
 
+
     @Test
     void newTurn() {
         //No idea how to test it
@@ -164,7 +165,6 @@ class ResourceManagerTest {
     @Test
     void switchResourceFromDepotToDepot() {
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,true, 1, true));
-        rs.print();
     }
 
     @Test
@@ -172,7 +172,6 @@ class ResourceManagerTest {
         rs.addLeaderDepot(new Depot(ResourceFactory.createResource(ResourceType.SHIELD, 2), 4));
 
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
-        rs.print();
     }
 
     @Test

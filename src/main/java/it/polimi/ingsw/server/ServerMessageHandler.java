@@ -143,6 +143,11 @@ public class ServerMessageHandler {
 
     }
 
+    //SINGLE PLAYER
+    public void handleSinglePlayer(){
+
+    }
+
     //NEW METHODS
 
     public void handleMarketAction(MarketAction msg){
@@ -216,6 +221,7 @@ public class ServerMessageHandler {
         if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
         controller.nextTurn();
     }
+
 
     public void handleStrongboxModify(StrongboxModify msg){
         if(!controlAuthority(new TurnState[]{

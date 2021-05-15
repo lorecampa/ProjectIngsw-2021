@@ -6,6 +6,7 @@ package it.polimi.ingsw.controller;
 public enum TurnState {
     LEADER_MANAGE_BEFORE,
 
+
     //market
     MARKET_ACTION,
     WHITE_MARBLE_CONVERSION,

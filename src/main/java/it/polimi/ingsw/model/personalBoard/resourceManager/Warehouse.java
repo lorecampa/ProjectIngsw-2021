@@ -130,20 +130,4 @@ public class Warehouse implements Cloneable{
         else return getLeaderDepot(index);
     }
 
-    /**
-     * Made for testing purposes!*/
-    public void print(){
-        System.out.println("===================WAREHOUSE======================");
-
-        System.out.println("Normal depot:");
-        for(Depot  dep: depots){
-            System.out.println(dep);
-        }
-        System.out.println("Leader depot:");
-        for(Depot  dep: depotsLeader){
-            System.out.println(dep);
-        }
-        //System.out.println("Resource to manage:"+ resourceToManage.getType()+"("+resourceToManage.getValue()+")");
-        System.out.println("==================================================");
-    }
 }

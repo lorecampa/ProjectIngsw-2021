@@ -217,7 +217,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
 
         try{
-            currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+            if(fromSupportResource.getType() != ResourceType.ANY){
+                currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+            }
         }
         catch(Exception e){
             currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
@@ -225,7 +227,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw e;
         }
         try{
-            currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+            if(toSupportResource.getType() != ResourceType.ANY){
+                currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+            }
         }
         catch(Exception e){
             currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
@@ -446,11 +450,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             discounts.add(resource);
         }
     }
-    public void print(){
-        currWarehouse.print();
-        strongbox.print();
-    }
-
 
     public int getFaithPoint() {
         return faithPoint;

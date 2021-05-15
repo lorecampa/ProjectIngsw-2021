@@ -40,11 +40,4 @@ public class Strongbox {
         return resources;
     }
 
-    public void print(){
-        System.out.println("===================STRONGBOX======================");
-        for(Resource res:resources){
-            System.out.println(res.getType()+" ("+res.getValue()+")");
-        }
-        System.out.println("==================================================");
-    }
 }
