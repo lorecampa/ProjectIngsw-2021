@@ -9,8 +9,7 @@ public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
     private final Integer OFFSET_AllIGN = 2; //2 per 12 ====== 3 per 15
     private final Integer DIM_CELL_CHAR = 14;
-    private final Integer LENGTH_OF_DEV = 9;
-    private final Integer LENGTH_OF_MIN_DEV = 2;
+    private final Integer DIM_OF_LEADER = 7;
 
     private final String username;
     private Integer currentPosOnFaithTrack;
@@ -22,7 +21,7 @@ public class ModelClient {
     //private ArrayList<CardDevData> cardSlotOne=new ArrayList<>();
     //private ArrayList<CardDevData> cardSlotTwo=new ArrayList<>();
     //private ArrayList<CardDevData> cardSlotThree=new ArrayList<>();
-    private ArrayList<CardLeaderData> leader = new ArrayList<>();
+    private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
     //attributes to CLI
     int lengthInChar = DIM_CELL_CHAR*NUMBER_OF_CELL_FAITH;
@@ -119,26 +118,12 @@ public class ModelClient {
         effects.add("Discount SHIELD 1");
         CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,false);
         CardLeaderData cl2=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,true);
-        leader.add(cl);
-        leader.add(cl2);
-        //leader.add(cl);
-        leader.add(cl);
+        leaders.add(cl);
+        //leaders.add(cl2);
+        //leaders.add(cl);
+        leaders.add(cl);
     }
 
-    /*
-    public boolean canAddToCardSlotOne(CardDevData card){
-        return canAddToCardSlot(cardSlotOne, card);
-    }
-
-    public boolean canAddToCardSlotTwo(CardDevData card){
-        return canAddToCardSlot(cardSlotTwo, card);
-    }
-
-    public boolean canAddToCardSlotThree(CardDevData card){
-        return canAddToCardSlot(cardSlotThree, card);
-    }
-
-     */
 
     private boolean canAddToCardSlot(ArrayList<CardDevData> cardSlot, CardDevData cardToAdd){
         return cardSlot.get(cardSlot.size() - 1).getLevel() < cardToAdd.getLevel();
@@ -149,32 +134,6 @@ public class ModelClient {
             cardSlots.get(index).add(card);
     }
 
-    /*
-    public void addToCardSlotOne(CardDevData card){
-        cardSlotOne.add(card);
-    }
-
-    public void addToCardSlotTwo(CardDevData card){
-        cardSlotTwo.add(card);
-    }
-
-    public void addToCardSlotThree(CardDevData card){
-        cardSlotThree.add(card);
-    }
-
-
-    public void setCardSlotOne(ArrayList<CardDevData> cardSlotOne) {
-        this.cardSlotOne = cardSlotOne;
-    }
-
-    public void setCardSlotTwo(ArrayList<CardDevData> cardSlotTwo) {
-        this.cardSlotTwo = cardSlotTwo;
-    }
-
-    public void setCardSlotThree(ArrayList<CardDevData> cardSlotThree) {
-        this.cardSlotThree = cardSlotThree;
-    }
-    */
     public String getUsername() {
         return username;
     }
@@ -199,20 +158,20 @@ public class ModelClient {
         this.strongbox = strongbox;
     }
 
-    public void setLeader(ArrayList<CardLeaderData> leader) {
-        this.leader = leader;
+    public void setLeaders(ArrayList<CardLeaderData> leaders) {
+        this.leaders = leaders;
     }
 
     public void removeLeaderAt(int index){
-        leader.remove(index);
+        leaders.remove(index);
     }
 
     public void setActiveLeaderAt(int index){
-        leader.get(index).setActive(true);
+        leaders.get(index).setActive(true);
     }
 
     public boolean validIndexForLeader(int index){
-        return (index>=0 && index<leader.size());
+        return (index>=0 && index< leaders.size());
     }
 
     public void addToCurrPositionOnFaithTrack(int value){
@@ -223,14 +182,13 @@ public class ModelClient {
         printFaithTrack();
         printResource();
         printCardSlots(true);
-        printLeader();
+        printLeaders();
     }
 
     private void printTitle(String title){
         String titleToPrint =PrintAssistant.instance.stringBetweenChar(title, ' ', lengthInChar, ' ', ' ');
         PrintAssistant.instance.printf(titleToPrint, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
     }
-
 
     public void printFaithTrack(){
         //String titleFaithTrack=PrintAssistant.instance.stringBetweenChar(username+"'s Faith Track", ' ', lengthInChar, ' ', ' ');
@@ -341,7 +299,7 @@ public class ModelClient {
         String row;
         for(int i=0;i<strongbox.size();i++){
             row=(1+i)+")"+strongbox.get(i).getType()+": "+strongbox.get(i).getValue();
-            row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|', OFFSET_AllIGN);
+            row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             rowsOfResources.add(row);
         }
         rowsOfResources.add(PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|','|'));
@@ -349,11 +307,11 @@ public class ModelClient {
         for(i=0; i<standardDepot.size(); i++){
             if(standardDepot.get(i).getType()==ResourceType.ANY){
                 row=(1+i)+")"+"EMPTY";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|', OFFSET_AllIGN);
+                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             }
             else{
                 row=(1+i)+")"+standardDepot.get(i).getType()+": "+standardDepot.get(i).getValue()+"/"+(i+1);
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|', OFFSET_AllIGN);
+                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             }
             rowsOfResources.set(i, rowsOfResources.get(i)+row);
         }
@@ -361,7 +319,7 @@ public class ModelClient {
         if(!leaderDepot.isEmpty()){
             for(i=0; i<leaderDepot.size(); i++){
                 row=(1+i)+")"+leaderDepot.get(i).getType()+": "+leaderDepot.get(i).getValue()+"/"+(2);
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|', OFFSET_AllIGN);
+                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
                 rowsOfResources.set(i, rowsOfResources.get(i)+row);
             }
             rowsOfResources.set(i, rowsOfResources.get(i)+PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|', '|'));
@@ -371,7 +329,7 @@ public class ModelClient {
     }
 
     // METHODS FOR CARD SLOT
-    private void printLegend(){
+    private void printCardSlotLegend(){
         StringBuilder row;
         row = new StringBuilder("Legend resources:");
         row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', lengthInChar, ' ', ' '));
@@ -401,18 +359,18 @@ public class ModelClient {
     }
 
     private String cardCostHeader(){
-        return PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+        return PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|');
     }
 
     private String cardProductionCostHeader(){
-        return PrintAssistant.instance.fitToWidth("To make production you have to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+        return PrintAssistant.instance.fitToWidth("To make production you have to pay:", widthColumn, ' ', '|', '|');
     }
 
     private String cardProductionEarnHeader(){
-        return PrintAssistant.instance.fitToWidth("You will earn from production:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+        return PrintAssistant.instance.fitToWidth("You will earn from production:", widthColumn, ' ', '|', '|');
     }
 
-    private String cardLastRow(){return PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|', OFFSET_AllIGN);}
+    private String cardLastRow(){return PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|');}
 
     private String cardEndRow(){return PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|');}
 
@@ -442,8 +400,10 @@ public class ModelClient {
     private void setUpForCardSlot(ArrayList<String> rowOfCardSlots, int indexOfCardSlot, int indexOfCard, int size, boolean minimize){
         String row = PrintAssistant.instance.generateAStringOf(' ', widthColumn * indexOfCardSlot);
 
+        int LENGTH_OF_DEV = 9;
         if (minimize){
             int numOfRow;
+            int LENGTH_OF_MIN_DEV = 2;
             if (indexOfCard < size - 1)
                 numOfRow = (indexOfCard + 1) * LENGTH_OF_MIN_DEV;
             else
@@ -513,7 +473,7 @@ public class ModelClient {
 
         widthColumn = lengthInChar/3;
 
-        printLegend();
+        printCardSlotLegend();
 
         printCardSlotHeader();
 
@@ -526,167 +486,82 @@ public class ModelClient {
         PrintAssistant.instance.printfMultipleString(rowOfCardSlots);
     }
 
-
-    public void printLeader(){
-        if(leader.isEmpty())
-            return;
-        String titleFaithTrack=PrintAssistant.instance.stringBetweenChar(username+"'s Leaders", ' ', lengthInChar, ' ', ' ');
-        PrintAssistant.instance.printf(titleFaithTrack, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
-        widthColumn = (Integer)(lengthInChar/2);
-        int myOff;
-        if(leader.size()==4)
-            myOff=3;
-        else
-            myOff=2;
-        String row="";
-
+    //METHODS FOR LEADER
+    private void printLeaderLegend(){
         PrintAssistant.instance.printf(PrintAssistant.instance.stringBetweenChar("Legend leader:", ' ', lengthInChar, ' ', ' '));
-        row=PrintAssistant.ANSI_GREEN_BACKGROUND+" Active Leader "+PrintAssistant.ANSI_RESET+" "+PrintAssistant.ANSI_WHITE_BACKGROUND+" Not Active Leader "+PrintAssistant.ANSI_RESET+PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
+        String row=PrintAssistant.ANSI_GREEN_BACKGROUND+" Active Leader "+PrintAssistant.ANSI_RESET+" "+PrintAssistant.ANSI_WHITE_BACKGROUND+" Not Active Leader "+PrintAssistant.ANSI_RESET+PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
         row = PrintAssistant.instance.stringBetweenChar(row, ' ', lengthInChar, ' ', ' ');
         PrintAssistant.instance.printf(row);
+    }
 
-        int writtenRow;
+    private String leaderCostHeader(){
+        return PrintAssistant.instance.fitToWidth("To activate you have to own:", widthColumn, ' ', ' ', ' ');
+    }
+
+    private String leaderEffectHeader(){
+        return PrintAssistant.instance.fitToWidth("Effects:", widthColumn, ' ', ' ', ' ');
+    }
+
+    private void setUpForLeader(ArrayList<String> rowsOfLeaders, int leaderIndex){
+        String row = PrintAssistant.instance.generateAStringOf(' ', (leaderIndex % 2 * widthColumn) - 1);
+        while(rowsOfLeaders.size()<=DIM_OF_LEADER + leaders.get(leaderIndex).getEffects().size()){
+            rowsOfLeaders.add(row);
+        }
+    }
+
+    private void leaderToCli(ArrayList<String> rowsOfLeaders,int leaderIndex, int leadersSize){
+        int writtenRow = 0;
+        setUpForLeader(rowsOfLeaders,leaderIndex);
+
+        rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaders.get(leaderIndex).leaderHeader(widthColumn, leaderIndex, leadersSize));
+        writtenRow++;
+
+        if(!leaders.get(leaderIndex).getCardReq().isEmpty()){
+            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaderCostHeader());
+            writtenRow++;
+
+            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaders.get(leaderIndex).leaderCardReq(widthColumn,leaderIndex,leadersSize));
+            writtenRow++;
+        }
+
+        if(!leaders.get(leaderIndex).getResourceReq().isEmpty()){
+            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaderCostHeader());
+            writtenRow++;
+
+            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaders.get(leaderIndex).leaderResReq(widthColumn,leaderIndex,leadersSize));
+            writtenRow++;
+        }
+
+        if(!leaders.get(leaderIndex).getEffects().isEmpty()){
+            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaderEffectHeader());
+            writtenRow++;
+
+            writtenRow = leaders.get(leaderIndex).leaderEffect(widthColumn,leaderIndex,leadersSize,rowsOfLeaders, writtenRow);
+        }
+
+        rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaders.get(leaderIndex).leaderEnd(widthColumn,leaderIndex,leadersSize));
+    }
+
+    public void printLeaders(){
+        if(leaders.isEmpty())
+            return;
+
+        printTitle(username+"'s Leaders");
+
+        widthColumn = (lengthInChar/2);
+
+        printLeaderLegend();
+
+        int leadersSize = leaders.size();
         ArrayList<String> rowsOfLeaders = new ArrayList<>();
-        for(int i=0;i<2 && i<leader.size(); i++){
-            writtenRow=0;
-            row = PrintAssistant.instance.generateAStringOf(' ', (i*widthColumn) - 1);
-            while(rowsOfLeaders.size()<=7+leader.get(i).getEffects().size()){
-                rowsOfLeaders.add(row);
+
+        for (int i = 0; i < leadersSize; i++) {
+            leaderToCli(rowsOfLeaders,i,leadersSize);
+            if (i == 1 || i == leadersSize - 1){
+                PrintAssistant.instance.printfMultipleString(rowsOfLeaders);
+                rowsOfLeaders.clear();
             }
-            //row=(leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + (i+1)+") LEADER" + PrintAssistant.ANSI_RESET;
-            row =PrintAssistant.instance.stringBetweenChar((i+1)+") LEADER" +" +" + leader.get(i).getVictoryPoint()+"VP", ' ', widthColumn-2, ' ', ' ');
-            row = (leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row +" "+ PrintAssistant.ANSI_RESET+" " ;
-            if(i == leader.size()-1){
-                row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-            }
-            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-            writtenRow++;
-            if(!leader.get(i).getCardReq().isEmpty()){
-                row="To activate you have to own:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(CardDevData d : leader.get(i).getCardReq()){
-                    row+=d.toCLIForLeader();
-                }
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == 1){
-                    row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                }
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-            }
-            if(!leader.get(i).getResourceReq().isEmpty()){
-                row="To activate you have to own:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(ResourceData r : leader.get(i).getResourceReq()){
-                    row+=r.toCli();
-                }
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == 1){
-                    row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                }
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-            }
-            if(!leader.get(i).getEffects().isEmpty()){
-                row="Effects:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(EffectData e : leader.get(i).getEffects()){
-                    row=PrintAssistant.instance.fitToWidth(e.toString(), widthColumn, ' ', ' ', ' ', myOff);
-                    if(i == 1){
-                        row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                    }
-                    rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                    writtenRow++;
-                }
-            }
-            row =PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn-2, ' ', ' ');
-            row =(leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row +" "+ PrintAssistant.ANSI_RESET+" " ;
-            if(i == 1){
-                row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-            }
-            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-            writtenRow++;
         }
-        PrintAssistant.instance.printfMultipleString(rowsOfLeaders);
-        rowsOfLeaders.clear();
-        for(int i=2;i<leader.size(); i++){
-            writtenRow=0;
-            row = PrintAssistant.instance.generateAStringOf(' ', ((i-2)*widthColumn) - 1);
-            while(rowsOfLeaders.size()<=7+leader.get(i).getEffects().size()){
-                rowsOfLeaders.add(row);
-            }
-            row =PrintAssistant.instance.stringBetweenChar((i+1)+") LEADER" +" +" + leader.get(i).getVictoryPoint()+"VP", ' ', widthColumn-2, ' ', ' ');
-            row = (leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row+" " + PrintAssistant.ANSI_RESET+" ";
-            if(i == leader.size()-1){
-                row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-            }
-            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-            writtenRow++;
-            if(!leader.get(i).getCardReq().isEmpty()){
-                row="To activate you have to own:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(CardDevData d : leader.get(i).getCardReq()){
-                    row+=d.toCLIForLeader();
-                }
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == leader.size()-1){
-                    row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                }
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-            }
-            if(!leader.get(i).getResourceReq().isEmpty()){
-                row="To activate you have to own:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(ResourceData r : leader.get(i).getResourceReq()){
-                    row+=r.toCli();
-                }
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                if(i == leader.size()-1){
-                    row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                }
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-            }
-            if(!leader.get(i).getEffects().isEmpty()){
-                row="Effects:";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', ' ', ' ', myOff);
-                rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                writtenRow++;
-                row="";
-                for(EffectData e : leader.get(i).getEffects()){
-                    row=PrintAssistant.instance.fitToWidth(e.toString(), widthColumn, ' ', ' ', ' ', myOff);
-                    if(i == leader.size()-1){
-                        row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-                    }
-                    rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-                    writtenRow++;
-                }
-            }
-            row =PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn-2, ' ', ' ');
-            row =(leader.get(i).isActive()? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row +" "+ PrintAssistant.ANSI_RESET+" " ;
-            if(i == leader.size()-1){
-                row+=PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
-            }
-            rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+row);
-            writtenRow++;
-        }
-        PrintAssistant.instance.printfMultipleString(rowsOfLeaders);
     }
 
 /*

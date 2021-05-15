@@ -95,7 +95,7 @@ public class PrintAssistant {
         return string;
     }
 
-    public String fitToWidth(String originalString, int width, char spacing, char starChar, char endChar, int offSet){
+    public String fitToWidth(String originalString, int width, char spacing, char starChar, char endChar){
         String s=starChar+"";
         s+=originalString;
         int numContained = howManyColorContain(originalString);
@@ -119,7 +119,7 @@ public class PrintAssistant {
     public static void main(String[] args) {
         String s= ANSI_RED+"1234"+ANSI_RESET+"5678"+ ANSI_GREEN_BACKGROUND+"9"+ANSI_RESET;
         System.out.println(s.length()+" Red:"+ANSI_RED.length()+" rese:"+ANSI_RESET.length());
-        instance.printf(instance.fitToWidth(s, 40, ' ', ' ', ' ',0));
+        instance.printf(instance.fitToWidth(s, 40, ' ', ' ', ' '));
     }
 
     private int howManyColorContain(String s){

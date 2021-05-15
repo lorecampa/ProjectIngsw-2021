@@ -100,15 +100,15 @@ public class CardDevData {
         for(ResourceData resReq : resourceReq){
             row.append(resReq.toCli());
         }
-        return PrintAssistant.instance.fitToWidth(row.toString(), width, ' ', '|', '|', offSet);
+        return PrintAssistant.instance.fitToWidth(row.toString(), width, ' ', '|', '|');
     }
 
     public String cardProductionCost(int width, int offSet){
-        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceBeforeToCli(), width, ' ', '|', '|', offSet);
+        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceBeforeToCli(), width, ' ', '|', '|');
     }
 
     public String cardProductionEarn(int width, int offSet){
-        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceAfterToCli(), width, ' ', '|', '|', offSet);
+        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceAfterToCli(), width, ' ', '|', '|');
     }
 
     public String cardEnd(int width){
@@ -117,8 +117,6 @@ public class CardDevData {
         return end;
     }
     public String toCLIForLeader(){
-        String s;
-        s=colorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";
-        return s;
+        return colorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";
     }
 }

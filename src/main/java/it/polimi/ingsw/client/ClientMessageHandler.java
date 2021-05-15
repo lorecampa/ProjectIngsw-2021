@@ -10,7 +10,6 @@ import it.polimi.ingsw.message.clientMessage.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class ClientMessageHandler {
 
@@ -102,8 +101,8 @@ public class ClientMessageHandler {
 
     //leaders message handler
     public void leaderSetUp(LeaderSetUpMessage message){
-        client.getModelOf(client.getMyName()).setLeader(message.getLeaders());
-        client.getModelOf(client.getMyName()).printLeader();
+        client.getModelOf(client.getMyName()).setLeaders(message.getLeaders());
+        client.getModelOf(client.getMyName()).printLeaders();
         PrintAssistant.instance.printf("Please choose 2 leader to discard!");
     }
 
@@ -170,7 +169,7 @@ public class ClientMessageHandler {
     public void discardUpdate(LeaderDiscard message){
         if (message.getUsername().equals(client.getMyName())){
             client.getModelOf(client.getMyName()).removeLeaderAt(message.getLeaderIndex());
-            client.getModelOf(client.getMyName()).printLeader();
+            client.getModelOf(client.getMyName()).printLeaders();
         }else{
             PrintAssistant.instance.printf(message.getUsername() + " has discarded a leader!");
         }

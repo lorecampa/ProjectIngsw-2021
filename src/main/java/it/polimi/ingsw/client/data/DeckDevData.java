@@ -141,14 +141,14 @@ public class DeckDevData {
 
             for(int j=0; j<deck.get(i).size(); j++) {
                 if (i == 0) {
-                    firstLine += PrintAssistant.instance.fitToWidth("", widthCard, '_', ' ', ' ', OFFSET_AllIGN);
+                    firstLine += PrintAssistant.instance.fitToWidth("", widthCard, '_', ' ', ' ');
                     if (j == deck.get(i).size() - 1)
                         PrintAssistant.instance.printf(firstLine);
                 }
                 writtenRow = i * 9;
                 if (deck.get(i).get(j).isEmpty()) {
                     for (int k = 0; k < 8; k++) {
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                     }
@@ -159,7 +159,7 @@ public class DeckDevData {
                     rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                     writtenRow++;
                     if (!deck.get(i).get(j).get(0).getResourceReq().isEmpty()) {
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                         row = new StringBuilder();
@@ -167,13 +167,13 @@ public class DeckDevData {
 
                             row.append(s.toCli());
                         }
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                     }
                     if (!deck.get(i).get(j).get(0).getEffects().get(0).getResourcesBefore().isEmpty()) {
                         row = new StringBuilder("To make production you have to pay:");
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                         row = new StringBuilder();
@@ -183,13 +183,13 @@ public class DeckDevData {
                         }
                         */
                         row=new StringBuilder(deck.get(i).get(j).get(0).getEffects().get(0).resourceBeforeToCli());
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                     }
                     if (!deck.get(i).get(j).get(0).getEffects().get(0).getResourcesAfter().isEmpty()) {
                         row = new StringBuilder("You will earn from production:");
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                         row = new StringBuilder();
@@ -200,7 +200,7 @@ public class DeckDevData {
                         */
                         row=new StringBuilder(deck.get(i).get(j).get(0).getEffects().get(0).resourceAfterToCli());
 
-                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                        row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthCard, ' ', '|', '|'));
                         rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow)) + row);
                         writtenRow++;
                     }
@@ -211,9 +211,9 @@ public class DeckDevData {
                 }
 
                 if(i==deck.size()-1)
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, '_', '|', '|', OFFSET_AllIGN));
+                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, '_', '|', '|'));
                 else
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, ' ', '|', '|', OFFSET_AllIGN));
+                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthCard, ' ', '|', '|'));
 
                 rowsDeck.set(indexCardSlot(i, writtenRow), rowsDeck.get(indexCardSlot(i, writtenRow))+row);
                 //writtenRow++;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientInput;
-import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
 
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class ShowCMD implements Command{
                     client.getModelOf(split[0]).printCardSlots(false);
                     break;
                 case "l":
-                    client.getModelOf(split[0]).printLeader();
+                    client.getModelOf(split[0]).printLeaders();
                     break;
             }
         }
