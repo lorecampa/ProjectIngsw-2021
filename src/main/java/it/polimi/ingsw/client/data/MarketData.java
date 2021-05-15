@@ -15,6 +15,8 @@ public class MarketData {
     private final int numRow;
     private final int numCol;
 
+    private final int WIDTH_MARBLE = 8;
+
     @JsonCreator
     public MarketData(@JsonProperty("marketTray") ArrayList<ArrayList<ColorData>> marketTray,
                       @JsonProperty("extraMarble") ColorData extraMarble,
@@ -50,71 +52,62 @@ public class MarketData {
     public boolean validCol(int col){
         return col >= 0 && col < numCol;
     }
-/*
-    public static void main(String[] args) {
-        MarketData market;
-        int col=4;
-        int rig=3;
-        ArrayList<ArrayList<ColorData>> theTray = new ArrayList<>();
-        for(int i=0;i<rig;i++){
-            ArrayList<ColorData> rowOfRes= new ArrayList<>();
-            for(int j=0; j<col; j++){
-                if(i==1)
-                    rowOfRes.add( ColorData.YELLOW);
-                if(i==0)
-                    rowOfRes.add( ColorData.BLUE);
-                if(i==2)
-                    rowOfRes.add( ColorData.PURPLE);
-                if(i==3)
-                    rowOfRes.add( ColorData.BLUE);
-            }
-            theTray.add(rowOfRes);
-        }
-        market = new MarketData(theTray, ColorData.PURPLE, rig, col);
-        PrintAssistant.instance.printf(market.toString());
-        //market.insertMarbleInCol(0);
-        market.insertMarbleInCol(2);
-        PrintAssistant.instance.printf(market.toString());
+
+    private void printTitle(int width) {
+        String titleDeckDev = PrintAssistant.instance.stringBetweenChar("Market", ' ', width, ' ', ' ');
+        PrintAssistant.instance.printf(titleDeckDev, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+
     }
-*/
+
+    private String marble(ColorData marble){
+        return marble.toColor() +
+                PrintAssistant.instance.generateAStringOf(' ', WIDTH_MARBLE) +
+                PrintAssistant.ANSI_RESET + " ";
+    }
+
     @Override
     public String toString() {
-        int WIDTH_MARBLE = 8;
-        int width=(WIDTH_MARBLE +1)*numCol+ WIDTH_MARBLE *2;
+        final int width=(WIDTH_MARBLE +1)*numCol+ WIDTH_MARBLE *2;
+
+        printTitle(width);
+
         StringBuilder row;
-        row = new StringBuilder("Market");
         ArrayList<String> rowsMarket=new ArrayList<>();
-        String titleMarket=PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', width, ' ', ' ');
-        PrintAssistant.instance.printf(titleMarket, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
         rowsMarket.add("");
         row = new StringBuilder();
+
         int HEIGHT_MARBLE = 3;
-        Integer middleHeightMarble=(Integer)(HEIGHT_MARBLE /2);
-        Integer middleHeightRow=(Integer)(numRow/2);
+        int middleHeightMarble= HEIGHT_MARBLE /2;
+        int middleHeightRow= numRow/2;
+
         for(int i=0; i<numRow; i++){
             for(int k = 0; k< HEIGHT_MARBLE; k++){
+
                 row = new StringBuilder();
                 for(int j=0; j<numCol; j++){
-                    row.append(marketTray.get(i).get(j).toColor());
-                    row.append(PrintAssistant.instance.generateAStringOf(' ', WIDTH_MARBLE));
-                    row.append(PrintAssistant.ANSI_RESET + " ");
+                    row.append(marble(marketTray.get(i).get(j)));
                 }
+
                 if(k==middleHeightMarble)
-                    row.append("ROW N").append(i).append(" ");
-                else
-                    row.append("       ");
-                if(i==middleHeightRow){
-                    row.append(extraMarble.toColor());
-                    row.append(PrintAssistant.instance.generateAStringOf(' ', WIDTH_MARBLE));
-                    row.append(PrintAssistant.ANSI_RESET + " ");
+                    row.append(i).append("  ");
+                else {
+                    row.append(PrintAssistant.ANSI_BLACK + "|");
+                    row.append("  ");
                 }
+
+                if(i==middleHeightRow){
+                    row.append(marble(extraMarble));
+                    row.append(PrintAssistant.ANSI_BLACK + "|");
+                }
+
                 rowsMarket.add(row.toString());
             }
-            rowsMarket.add("");
+            if (i != numRow - 1)
+                rowsMarket.add("");
             row = new StringBuilder();
         }
         for(int j=0; j<numCol; j++){
-            row.append(PrintAssistant.instance.stringBetweenChar("COL N" + (j), ' ', WIDTH_MARBLE + 2, ' ', ' '));
+            row.append(PrintAssistant.instance.stringBetweenChar(String.valueOf(j), ' ', WIDTH_MARBLE + 1 , ' ', ' '));
         }
         rowsMarket.add(row.toString());
         PrintAssistant.instance.printfMultipleString(rowsMarket);
