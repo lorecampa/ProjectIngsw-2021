@@ -89,12 +89,20 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
 
     @Override
+    public void bufferUpdate(ArrayList<Resource> resources, boolean isFromMarket) {
+        match.sendSinglePlayer(getUsername(),
+                new BufferUpdate(resources.stream()
+                        .map(Resource::toClient)
+                        .collect(Collectors.toCollection(ArrayList::new)), isFromMarket));
+
+    }
+
+    @Override
     public void bufferUpdate(ArrayList<Resource> resources) {
         match.sendSinglePlayer(getUsername(),
                 new BufferUpdate(resources.stream()
                         .map(Resource::toClient)
                         .collect(Collectors.toCollection(ArrayList::new))));
-
     }
 
     @Override
@@ -149,8 +157,8 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void leaderActivated(Leader leader) {
-        match.sendAllPlayers(new LeaderActivate(leader.toCardLeaderData(), username));
+    public void leaderActivated(Leader leader, int leaderIndex) {
+        match.sendAllPlayers(new LeaderActivate(leader.toCardLeaderData(), leaderIndex, username));
     }
 
     @Override

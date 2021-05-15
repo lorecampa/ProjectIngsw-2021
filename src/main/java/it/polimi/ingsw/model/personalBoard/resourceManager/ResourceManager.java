@@ -84,8 +84,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void convertAnyRequirement(ArrayList<Resource> resources, boolean isFromBuyDevelopment) throws AnyConversionNotPossible {
         containsAnyOrFaith(resources);
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
-        if (numOfConversion > anyRequired) {
-            throw new AnyConversionNotPossible("Num of any requested to convert is less than the number inserted");
+        if (numOfConversion != anyRequired) {
+            throw new AnyConversionNotPossible("Num of any requested to convert is different than the number of " +
+                    "resources inserted");
         }
 
         ArrayList<Resource> tempBuffer = new ArrayList<>();
@@ -126,8 +127,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void convertAnyProductionProfit(ArrayList<Resource> resources) throws AnyConversionNotPossible {
         containsAnyOrFaith(resources);
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
-        if (anyToProduce < numOfConversion){
-            throw new AnyConversionNotPossible("Num of any requested to convert is less than the number inserted");
+        if (anyToProduce != numOfConversion){
+            throw new AnyConversionNotPossible("Num of any requested to convert is different than the number of " +
+                    "resources inserted");
         }
 
         addToResourcesToProduce(resources);
@@ -146,8 +148,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
         fromResourceToConcreteResource(resourcesSent, false, false, true);
         resourcesSent.forEach(this::addToBuffer);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer, true));
         notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_RESOURCE_POSITIONING));
-
     }
 
 
@@ -249,7 +251,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         else{
             resourcesBuffer.add(res);
         }
-        //notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 
 
@@ -268,6 +269,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }else{
             throw new Exception("Resource not present in buffer");
         }
+
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 

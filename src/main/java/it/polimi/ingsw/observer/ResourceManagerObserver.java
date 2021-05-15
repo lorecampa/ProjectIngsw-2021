@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public interface ResourceManagerObserver {
 
 
+    void bufferUpdate(ArrayList<Resource> resources, boolean isFromMarket);
+
     void bufferUpdate(ArrayList<Resource> resources);
 
     void anyConversionRequest(ArrayList<Resource> optionOfConversion,

@@ -39,6 +39,6 @@ public class DevelopmentAction implements ServerMessage {
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("DevelopmentAction Handler");
+        handler.handleDevelopmentAction(this);
     }
 }

@@ -12,8 +12,10 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ServerMessageHandler {
     private Controller controller;
@@ -141,6 +143,12 @@ public class ServerMessageHandler {
     }
 
 
+    public void handleDevelopmentAction(DevelopmentAction msg){
+        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
+        controller.developmentAction(msg.getRow(), msg.getColumn(), msg.getLocateSlot());
+    }
+
+
 
     public void handleProduction(ProductionAction msg){
         if(!controlAuthority(new TurnState[]{
@@ -158,7 +166,8 @@ public class ServerMessageHandler {
     }
 
     public void handleAnyResponse(AnyResponse msg){
-        //TODO resources can be null attention
+        if (msg.getResources() == null) return;
+
         ArrayList<Resource> resources = msg.getResources().stream()
                 .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
