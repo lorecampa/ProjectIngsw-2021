@@ -18,13 +18,13 @@ public class ShowCMD implements Command{
 
     @Override
     public void doCommand() {
-        /*
-        if(client.getState()!= ClientState.IN_GAME){
+
+        if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME) && CommandsUtility.clientStateNot(client, ClientState.WAITING)){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }
-        */
-        if(param.isBlank() || param.isEmpty()){
+
+        if(CommandsUtility.emptyString(param)){
             client.getModelOf(client.getMyName()).printAll();
             return;
         }

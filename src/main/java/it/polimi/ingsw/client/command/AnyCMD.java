@@ -22,45 +22,27 @@ public class AnyCMD implements Command{
 
     @Override
     public void doCommand() {
-        if(client.getState()!= ClientState.IN_GAME && client.getState()!=ClientState.ENTERING_LOBBY){
+        if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME) && CommandsUtility.clientStateNot(client, ClientState.ENTERING_LOBBY)){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }
-        if(param.isEmpty() || param.isBlank()){
+        if(CommandsUtility.emptyString(param)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
         String[] split= param.split(" ");
         ArrayList<ResourceData> resourceToSend=new ArrayList<>();
         for(int i=0;i<split.length; i+=3){
-            if(!split[i].equals("co") && !split[i].equals("se") && !split[i].equals("sh") && !split[i].equals("st")){
+            if(CommandsUtility.isNotAResource(split[i])){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }
-            int num;
-            try{
-                num= Integer.parseInt(split[i+1]);
-            } catch(Exception e){
+            int num = CommandsUtility.stringToInt(split[i+1]);
+            if(num==-1){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }
-            ResourceData rs;
-            switch (split[i]){
-                case "co":
-                    rs=new ResourceData(ResourceType.COIN, num);
-                    break;
-                case "se":
-                    rs=new ResourceData(ResourceType.SERVANT, num);
-                    break;
-                case "sh":
-                    rs=new ResourceData(ResourceType.SHIELD, num);
-                    break;
-                case "st":
-                    rs=new ResourceData(ResourceType.STONE, num);
-                    break;
-                default:
-                    rs=new ResourceData(ResourceType.ANY, num); //will never happen
-            }
+            ResourceData rs = CommandsUtility.stringToResource(split[i], num);
             resourceToSend.add(rs);
         }
         client.writeToStream(new AnyResponse(resourceToSend));

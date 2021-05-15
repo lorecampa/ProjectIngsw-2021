@@ -92,7 +92,6 @@ class WarehouseTest {
                 break;
             case 1:
                 assertDoesNotThrow(()->w.subDepotResourceAt(1,ResourceFactory.createResource(ResourceType.SHIELD, 1), true));
-                w.print();
                 break;
         }
 

@@ -20,18 +20,16 @@ class GameMasterTest {
     GameSetting gs;
     GameSetting gsSinglePlayer;
     ArrayList<String> players = new ArrayList<>();
-
     int numOfPlayer;
     @BeforeEach
     void setUp() throws IOException, JsonFileModificationError {
         assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
+        players.add("Lorenzo");
         gmSinglePlayer = new GameMaster(gsSinglePlayer, players);
 
-        numOfPlayer = 4;
-        players.add("player4");
-        players.add("player2");
-        players.add("player1");
-        players.add("player3");
+        numOfPlayer = 3;
+        players.add("Matteo");
+        players.add("Davide");
         assertDoesNotThrow(()-> gs = new GameSetting(numOfPlayer));
         gm = new GameMaster(gs, players);
         gm.nextPlayer();
@@ -39,26 +37,16 @@ class GameMasterTest {
 
     }
 
-    @Test
-    void nextPlayer() {
-        gm.nextPlayer();
-        assertEquals("player2", gm.getCurrentPlayer());
-        gm.nextPlayer();
-        assertEquals("player3", gm.getCurrentPlayer());
-        gm.nextPlayer();
-        assertEquals("player4", gm.getCurrentPlayer());
-        gm.nextPlayer();
-        assertEquals("player1", gm.getCurrentPlayer());
-    }
+
 
     @Test
     void nextPlayerSinglePlayer() {
         gmSinglePlayer.nextPlayer();
-        assertEquals("player1", gm.getCurrentPlayer());
+        assertEquals("Lorenzo", gm.getCurrentPlayer());
         gmSinglePlayer.nextPlayer();
-        assertEquals("player1", gm.getCurrentPlayer());
+        assertEquals("Lorenzo", gm.getCurrentPlayer());
         gmSinglePlayer.nextPlayer();
-        assertEquals("player1", gm.getCurrentPlayer());
+        assertEquals("Lorenzo", gm.getCurrentPlayer());
 
     }
 
@@ -128,18 +116,10 @@ class GameMasterTest {
     @Test
     void updateFromResourceManager() {
         gm.discardResources(6);
-        assertEquals(0, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
-        assertEquals(2, gm.getPlayerPersonalBoard("player2").getFaithTrack().getVictoryPoints());
-        assertEquals(2, gm.getPlayerPersonalBoard("player3").getFaithTrack().getVictoryPoints());
-        assertEquals(2, gm.getPlayerPersonalBoard("player4").getFaithTrack().getVictoryPoints());
+        assertEquals(0, gm.getPlayerPersonalBoard("Lorenzo").getFaithTrack().getVictoryPoints());
+        assertEquals(2, gm.getPlayerPersonalBoard("Davide").getFaithTrack().getVictoryPoints());
+        assertEquals(2, gm.getPlayerPersonalBoard("Matteo").getFaithTrack().getVictoryPoints());
+
     }
 
-    @Test
-    void updateFromCardManager() {
-        gm.discardLeader();
-        assertEquals(1, gm.getPlayerPersonalBoard("player1").getFaithTrack().getCurrentPositionOnTrack());
-        gm.getPlayerPersonalBoard("player1").getFaithTrack().movePlayer(4);
-        gm.discardLeader();
-        assertEquals(2, gm.getPlayerPersonalBoard("player1").getFaithTrack().getVictoryPoints());
-    }
 }

@@ -122,8 +122,4 @@ public class Depot {
         }
     }
 
-    @Override
-    public String toString() {
-        return resource.getType()+" ("+resource.getValue()+"/"+maxStorable+")";
-    }
 }

@@ -1,4 +1,10 @@
 package it.polimi.ingsw.message.serverMessage;
 
-public class DrawToken {
+import it.polimi.ingsw.server.ServerMessageHandler;
+
+public class DrawToken implements ServerMessage{
+    @Override
+    public void process(ServerMessageHandler handler) {
+        handler.handleDrawSinglePlayer();
+    }
 }

@@ -29,6 +29,6 @@ public class WhiteMarbleConversionRequest implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("WhiteMarbleConvertedHandler");
+        handler.whiteMarbleConversion(this);
     }
 }

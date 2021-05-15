@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 public class ManageResourcesRequest implements ClientMessage{
     private final ArrayList<ResourceData> resources;
-    private final boolean isFromMarket;
+    private final boolean fromMarket;
 
     @JsonCreator
     public ManageResourcesRequest(@JsonProperty("resources") ArrayList<ResourceData> resources,
-                                  @JsonProperty("isFromMarket") boolean isFromMarket) {
+                                  @JsonProperty("fromMarket") boolean fromMarket) {
         this.resources = resources;
-        this.isFromMarket = isFromMarket;
+        this.fromMarket = fromMarket;
     }
 
     public ArrayList<ResourceData> getResources() {
@@ -22,11 +22,11 @@ public class ManageResourcesRequest implements ClientMessage{
     }
 
     public boolean isFromMarket() {
-        return isFromMarket;
+        return fromMarket;
     }
 
     @Override
     public void process(ClientMessageHandler handler) {
-
+        handler.manageResourceRequest(this);
     }
 }

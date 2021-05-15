@@ -30,6 +30,13 @@ public class ServerMessageHandler {
         this.state = HandlerState.FIRST_CONTACT;
     }
 
+    private boolean isSinglePlayerGame(){
+        int numOfPlayer = controller.getNumberOfPlayer();
+        if (numOfPlayer == 1){
+            client.writeToStream(new ErrorMessage(ErrorType.NOT_SINGLE_PLAYER_MODE));
+        }
+        return numOfPlayer == 1;
+    }
 
     private boolean areYouAllowed(TurnState turnState){
         boolean result;
@@ -143,6 +150,12 @@ public class ServerMessageHandler {
 
     }
 
+    //SINGLE PLAYER
+    public void handleDrawSinglePlayer(){
+        if (!controlAuthority(TurnState.LEADER_MANAGE_BEFORE) || !isSinglePlayerGame()){ return; }
+        controller.drawTokenSinglePlayer();
+    }
+
     //NEW METHODS
 
     public void handleMarketAction(MarketAction msg){
@@ -189,7 +202,11 @@ public class ServerMessageHandler {
             controller.insertSetUpResources(resources, virtualClient.getUsername());
             return;
         }
+        if(state == HandlerState.IN_MATCH){
+            return;
+        }
 
+        //crush if controller doesn't exist!
         if(!isYourTurn()){ return; }
 
         switch (controller.getTurnState()){
@@ -212,6 +229,7 @@ public class ServerMessageHandler {
         if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
         controller.nextTurn();
     }
+
 
     public void handleStrongboxModify(StrongboxModify msg){
         if(!controlAuthority(new TurnState[]{

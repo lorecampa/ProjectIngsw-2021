@@ -174,6 +174,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResource(resource);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
@@ -186,6 +187,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
     public void addToWarehouse(boolean isNormalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         currWarehouse.addDepotResourceAt(index, resource, isNormalDepot);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         sendDepotUpdate(isNormalDepot, index);
     }
 
@@ -198,6 +200,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         sendDepotUpdate(isNormalDepot, index);
 
     }
@@ -214,7 +217,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
 
         try{
-            currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+            if(fromSupportResource.getType() != ResourceType.ANY){
+                currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+            }
         }
         catch(Exception e){
             currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
@@ -222,7 +227,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw e;
         }
         try{
-            currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+            if(toSupportResource.getType() != ResourceType.ANY){
+                currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
+            }
         }
         catch(Exception e){
             currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
@@ -271,7 +278,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new Exception("Resource not present in buffer");
         }
 
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+
     }
 
     public int getBufferSize(){
@@ -443,11 +450,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             discounts.add(resource);
         }
     }
-    public void print(){
-        currWarehouse.print();
-        strongbox.print();
-    }
-
 
     public int getFaithPoint() {
         return faithPoint;

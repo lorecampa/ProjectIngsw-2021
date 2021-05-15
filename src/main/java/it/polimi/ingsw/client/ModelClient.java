@@ -24,8 +24,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        setUpForDebug();
-        //realSetUp();
+        //setUpForDebug();
+        realSetUp();
     }
 
     private void realSetUp(){
@@ -156,6 +156,11 @@ public class ModelClient {
 
     public void setActiveLeaderAt(int index){
         leaders.get(index).setActive(true);
+    }
+
+    public void putAsActiveInLeader(CardLeaderData card){
+        leader.add(card);
+        leader.get(leader.size()-1).setActive(true);
     }
 
     public boolean validIndexForLeader(int index){
