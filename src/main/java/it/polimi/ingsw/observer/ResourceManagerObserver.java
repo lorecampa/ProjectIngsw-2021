@@ -7,9 +7,9 @@ import java.util.ArrayList;
 public interface ResourceManagerObserver {
 
 
-    void bufferUpdate(ArrayList<Resource> resources, boolean isFromMarket);
-
     void bufferUpdate(ArrayList<Resource> resources);
+
+    void manageResourceRequest(ArrayList<Resource> resources, boolean isFromMarket);
 
     void anyConversionRequest(ArrayList<Resource> optionOfConversion,
                               ArrayList<Resource> optionOfDiscount,

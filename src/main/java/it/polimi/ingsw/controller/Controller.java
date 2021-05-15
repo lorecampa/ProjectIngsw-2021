@@ -247,7 +247,8 @@ public class Controller {
     }
 
     public void stopProductionCardSelection(){
-        changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        resourceManager.doProduction();
     }
 
     //ANY MANAGING
@@ -347,7 +348,6 @@ public class Controller {
             sendError(e.getMessage());
         }
         controlBufferStatus();
-
 
     }
 

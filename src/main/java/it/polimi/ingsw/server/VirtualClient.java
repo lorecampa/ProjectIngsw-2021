@@ -89,12 +89,11 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
 
     @Override
-    public void bufferUpdate(ArrayList<Resource> resources, boolean isFromMarket) {
+    public void manageResourceRequest(ArrayList<Resource> resources, boolean isFromMarket) {
         match.sendSinglePlayer(getUsername(),
-                new BufferUpdate(resources.stream()
+                new ManageResourcesRequest(resources.stream()
                         .map(Resource::toClient)
                         .collect(Collectors.toCollection(ArrayList::new)), isFromMarket));
-
     }
 
     @Override

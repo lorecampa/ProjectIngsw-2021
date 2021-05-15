@@ -44,6 +44,19 @@ public class ServerMessageHandler {
         return result;
     }
 
+    private boolean areYouAllowed(TurnState[] turnStates){
+        boolean result;
+        if (getController().isPresent() && getVirtualClient().isPresent()){
+            result = Arrays.stream(turnStates).anyMatch(x -> x == controller.getTurnState());
+        }else{
+            result = false;
+        }
+        if (!result){
+            client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+        }
+        return result;
+    }
+
     private boolean isYourTurn(){
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
@@ -63,7 +76,7 @@ public class ServerMessageHandler {
     }
 
     private boolean controlAuthority(TurnState[] turnStates){
-        return isYourTurn() && Arrays.stream(turnStates).anyMatch(this::areYouAllowed);
+        return isYourTurn() && areYouAllowed(turnStates);
     }
 
 
@@ -160,7 +173,7 @@ public class ServerMessageHandler {
         }
     }
 
-    public void handleEndCardSelection(EndProductionSelection msg){
+    public void handleEndCardSelection(){
         if(!controlAuthority(TurnState.PRODUCTION_ACTION)) return;
         controller.stopProductionCardSelection();
     }
@@ -210,8 +223,8 @@ public class ServerMessageHandler {
 
     public void handleDepotModify(DepotModify msg){
         if(!isYourTurn()) { return; }
-        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
 
+        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
         switch (controller.getTurnState()){
             case MARKET_RESOURCE_POSITIONING:
                 controller.addToWarehouse(resource, msg.getDepotIndex(), msg.isNormalDepot());

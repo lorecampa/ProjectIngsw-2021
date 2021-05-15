@@ -148,7 +148,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
         fromResourceToConcreteResource(resourcesSent, false, false, true);
         resourcesSent.forEach(this::addToBuffer);
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer, true));
+        notifyAllObservers(x -> x.manageResourceRequest(resourcesBuffer, true));
         notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_RESOURCE_POSITIONING));
     }
 
@@ -159,6 +159,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void doProduction(){
         resourcesToProduce.forEach(this::addToStrongbox);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
+        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_RESOURCE_REMOVING));
     }
 
     /**
@@ -363,6 +364,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     "transform the any resources required in your card");
         }
         resources.forEach(this::addToBuffer);
+
 
         if (anyRequired > 0){
             if(checkDiscount){
