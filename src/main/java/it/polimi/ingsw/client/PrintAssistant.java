@@ -81,18 +81,13 @@ public class PrintAssistant {
 
     public String stringBetweenChar(String s, char charToFill, int numberOfCharTot, char startChar, char endChar){
         int numContained = howManyColorContain(s);
-        int numReset=howManyResetContain(s);
-        int widthRealColumn = numberOfCharTot -s.length()-2+ (numContained*5)+(numReset*4);
-        String string=startChar+"";
-        for(int i=0; i<(widthRealColumn/2);i++){
-            string+=charToFill;
-        }
-        string+=s;
-        for(int i=0; i<(widthRealColumn/2);i++){
-            string+=charToFill;
-        }
-        string+=endChar;
-        return string;
+        int numReset = howManyResetContain(s);
+        int widthRealColumn = numberOfCharTot - s.length() + (numContained*5)+(numReset*4) - 2;
+        int rest = widthRealColumn % 2;
+        return startChar + String.valueOf(charToFill).repeat(Math.max(0, (widthRealColumn / 2) + rest)) +
+                s +
+                String.valueOf(charToFill).repeat(Math.max(0, (widthRealColumn / 2))) +
+                endChar;
     }
 
     public String fitToWidth(String originalString, int width, char spacing, char starChar, char endChar){
@@ -100,7 +95,7 @@ public class PrintAssistant {
         s+=originalString;
         int numContained = howManyColorContain(originalString);
         int numResetCont= howManyResetContain(originalString);
-        int numberOfSpaces=width-1-s.length()+ (numContained*5)+(numResetCont*4)/*+(numContained==0?0:1)*/;
+        int numberOfSpaces=width - s.length() + (numContained*5)+(numResetCont*4) - 1;
         s+= generateAStringOf(spacing, numberOfSpaces);
         s+=endChar;
         return s;
@@ -111,7 +106,7 @@ public class PrintAssistant {
         s+=originalString;
         int numContained = howManyColorContain(originalString);
         int numResetCont= howManyResetContain(originalString);
-        int numberOfSpaces=width-s.length() + (numContained*5)+(numResetCont*4)/*+(numContained==0?0:1)*/;
+        int numberOfSpaces=width-s.length() + (numContained*5)+(numResetCont*4);
         s+= generateAStringOf(' ', numberOfSpaces);
         return s;
     }
@@ -152,7 +147,7 @@ public class PrintAssistant {
         Pattern p= Pattern.compile(color, Pattern.LITERAL);
         Matcher m= p.matcher(s);
         int index=0;
-        while(index<s.length() && m.find(index)){
+        while(m.find(index)){
             num++;
             index=m.start()+1;
         }
@@ -160,13 +155,11 @@ public class PrintAssistant {
     }
 
     public String generateAStringOf(char c, int num){
-        String string= "";
+        StringBuilder string= new StringBuilder();
         if(num<=0)
-            return string;
-        for(int i=0;i<num;i++){
-            string+=c;
-        }
-        return string;
+            return string.toString();
+        string.append(String.valueOf(c).repeat(num));
+        return string.toString();
     }
 
     public void invalidParamCommand(String command){

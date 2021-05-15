@@ -24,8 +24,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        //setUpForDebug();
-        realSetUp();
+        setUpForDebug();
+        //realSetUp();
     }
 
     private void realSetUp(){
@@ -92,10 +92,10 @@ public class ModelClient {
 
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
-        cardSlots.get(0).add(cdd);
-        cardSlots.get(0).add(cdd1);
+        //cardSlots.get(0).add(cdd);
+        //cardSlots.get(0).add(cdd1);
         cardSlots.get(1).add(cdd);
-        cardSlots.get(1).add(cdd1);
+        //cardSlots.get(1).add(cdd1);
         cardSlots.get(2).add(cdd);
         cardSlots.get(2).add(cdd1);
 
@@ -159,8 +159,8 @@ public class ModelClient {
     }
 
     public void putAsActiveInLeader(CardLeaderData card){
-        leader.add(card);
-        leader.get(leader.size()-1).setActive(true);
+        leaders.add(card);
+        leaders.get(leaders.size()-1).setActive(true);
     }
 
     public boolean validIndexForLeader(int index){

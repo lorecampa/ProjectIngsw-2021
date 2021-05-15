@@ -11,7 +11,7 @@ class ModelClientTest {
 
         mc.printFaithTrack();
         mc.printResources();
-        mc.printCardSlots(true);
+        mc.printCardSlots(false);
         mc.printLeaders();
     }
 }
