@@ -88,6 +88,34 @@ public class CardDevData {
         return effects;
     }
 
+    public String cardHeader(int width){
+        String header = "CARD LV" + level +" +" +victoryPoints+"VP ";
+        header = PrintAssistant.instance.stringBetweenChar(header, ' ', width - 2, ' ', ' ');
+        header = "|" + colorToColor() + header + PrintAssistant.ANSI_RESET + "|";
+        return header;
+    }
+
+    public String cardCost(int width, int offSet){
+        StringBuilder row = new StringBuilder();
+        for(ResourceData resReq : resourceReq){
+            row.append(resReq.toCli());
+        }
+        return PrintAssistant.instance.fitToWidth(row.toString(), width, ' ', '|', '|', offSet);
+    }
+
+    public String cardProductionCost(int width, int offSet){
+        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceBeforeToCli(), width, ' ', '|', '|', offSet);
+    }
+
+    public String cardProductionEarn(int width, int offSet){
+        return PrintAssistant.instance.fitToWidth(effects.get(0).resourceAfterToCli(), width, ' ', '|', '|', offSet);
+    }
+
+    public String cardEnd(int width){
+        String end = PrintAssistant.instance.stringBetweenChar("END CARD", ' ', width - 2, ' ', ' ');
+        end = "|" + colorToColor() + end + PrintAssistant.ANSI_RESET + "|";
+        return end;
+    }
     public String toCLIForLeader(){
         String s;
         s=colorToColor()+PrintAssistant.ANSI_BLACK+" DEV LV"+getLevel()+" "+PrintAssistant.ANSI_RESET+" ";

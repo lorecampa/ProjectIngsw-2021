@@ -122,7 +122,7 @@ public class ServerMessageHandler {
             controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
             return;
         }
-        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) { return; }
+        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
 
         controller.leaderManage(msg.getIndex(), msg.isDiscard());
 
@@ -143,8 +143,7 @@ public class ServerMessageHandler {
 
 
     public void handleProduction(ProductionAction msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+        if(!controlAuthority(new TurnState[]{ TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})) return;
         if (msg.isLeader()){
             controller.leaderProductionAction(msg.getSlotsIndex());
         }else {
@@ -168,7 +167,7 @@ public class ServerMessageHandler {
             return;
         }
 
-        if(!isYourTurn()){ return; }
+        if(!isYourTurn()) return;
 
         switch (controller.getTurnState()){
             case ANY_PRODUCE_COST_CONVERSION:
@@ -192,15 +191,14 @@ public class ServerMessageHandler {
     }
 
     public void handleStrongboxModify(StrongboxModify msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING})){ return; }
+        if(!controlAuthority(new TurnState[]{ TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING})) return;
 
         Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
         controller.subToStrongbox(resource);
     }
 
     public void handleDepotModify(DepotModify msg){
-        if(!isYourTurn()) { return; }
+        if(!isYourTurn()) return;
         Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
 
         switch (controller.getTurnState()){
@@ -218,9 +216,8 @@ public class ServerMessageHandler {
     }
 
     public void handleSwitch(DepotSwitch msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
-        TurnState.MARKET_RESOURCE_POSITIONING})){ return; }
+        if(!controlAuthority(new TurnState[]{ TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
+                TurnState.MARKET_RESOURCE_POSITIONING})) return;
 
         controller.switchDepots(msg.getFrom(), msg.isFromLeader(), msg.getTo(), msg.isToLeader());
     }

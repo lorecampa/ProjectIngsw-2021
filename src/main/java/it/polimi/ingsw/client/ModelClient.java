@@ -9,6 +9,8 @@ public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
     private final Integer OFFSET_AllIGN = 2; //2 per 12 ====== 3 per 15
     private final Integer DIM_CELL_CHAR = 14;
+    private final Integer LENGTH_OF_DEV = 9;
+    private final Integer LENGTH_OF_MIN_DEV = 2;
 
     private final String username;
     private Integer currentPosOnFaithTrack;
@@ -16,9 +18,10 @@ public class ModelClient {
     private ArrayList<ResourceData> standardDepot = new ArrayList<>();
     private ArrayList<ResourceData> leaderDepot = new ArrayList<>();
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
-    private ArrayList<CardDevData> cardSlotOne=new ArrayList<>();
-    private ArrayList<CardDevData> cardSlotTwo=new ArrayList<>();
-    private ArrayList<CardDevData> cardSlotThree=new ArrayList<>();
+    private ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
+    //private ArrayList<CardDevData> cardSlotOne=new ArrayList<>();
+    //private ArrayList<CardDevData> cardSlotTwo=new ArrayList<>();
+    //private ArrayList<CardDevData> cardSlotThree=new ArrayList<>();
     private ArrayList<CardLeaderData> leader = new ArrayList<>();
 
     //attributes to CLI
@@ -27,8 +30,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        //setUpForDebug();
-        realSetUp();
+        setUpForDebug();
+        //realSetUp();
     }
 
     private void realSetUp(){
@@ -40,6 +43,10 @@ public class ModelClient {
         strongbox.add(new ResourceData(ResourceType.SERVANT, 0));
         strongbox.add(new ResourceData(ResourceType.STONE, 0));
         strongbox.add(new ResourceData(ResourceType.SHIELD, 0));
+
+        for (int i = 0; i < 3; i++) {
+            cardSlots.add(new ArrayList<>());
+        }
     }
 
     private void setUpForDebug(){
@@ -79,7 +86,7 @@ public class ModelClient {
 
 
         EffectData effData = new EffectData("Prod", cost, earn);
-        EffectData effData2 = new EffectData("Disocunt", cost, null);
+        EffectData effData2 = new EffectData("Discount", cost, null);
         EffectData effData3 = new EffectData("Market", cost, earn1);
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
@@ -88,14 +95,19 @@ public class ModelClient {
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, cost, earn );
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, cost, earn );
          */
+
+        for (int i = 0; i < 3; i++) {
+            cardSlots.add(new ArrayList<>());
+        }
+
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
-        cardSlotOne.add(cdd);
-        cardSlotOne.add(cdd1);
-        cardSlotTwo.add(cdd);
-        cardSlotTwo.add(cdd1);
-        cardSlotThree.add(cdd);
-        cardSlotThree.add(cdd1);
+        cardSlots.get(0).add(cdd);
+        //cardSlots.get(0).add(cdd1);
+        cardSlots.get(1).add(cdd);
+        cardSlots.get(1).add(cdd1);
+        //cardSlots.get(2).add(cdd);
+        //cardSlots.get(2).add(cdd1);
 
         ArrayList<EffectData> effectsL= new ArrayList<>();
         effectsL.add(effData2);
@@ -105,14 +117,15 @@ public class ModelClient {
         ArrayList<String> effects=new ArrayList<>();
         effects.add("Extra Depot COIN 2");
         effects.add("Discount SHIELD 1");
-        CardLeaderData cl=new CardLeaderData(4, cardSlotOne, cost, effectsL,false);
-        CardLeaderData cl2=new CardLeaderData(4, cardSlotOne, cost, effectsL,true);
+        CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,false);
+        CardLeaderData cl2=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,true);
         leader.add(cl);
         leader.add(cl2);
         //leader.add(cl);
         leader.add(cl);
     }
 
+    /*
     public boolean canAddToCardSlotOne(CardDevData card){
         return canAddToCardSlot(cardSlotOne, card);
     }
@@ -125,10 +138,18 @@ public class ModelClient {
         return canAddToCardSlot(cardSlotThree, card);
     }
 
-    private boolean canAddToCardSlot(ArrayList<CardDevData> slot, CardDevData cardToAdd){
-        return slot.get(slot.size() - 1).getLevel() < cardToAdd.getLevel();
+     */
+
+    private boolean canAddToCardSlot(ArrayList<CardDevData> cardSlot, CardDevData cardToAdd){
+        return cardSlot.get(cardSlot.size() - 1).getLevel() < cardToAdd.getLevel();
     }
 
+    public void addToCardSlot(int index, CardDevData card){
+        if (canAddToCardSlot(cardSlots.get(index), card))
+            cardSlots.get(index).add(card);
+    }
+
+    /*
     public void addToCardSlotOne(CardDevData card){
         cardSlotOne.add(card);
     }
@@ -141,7 +162,7 @@ public class ModelClient {
         cardSlotThree.add(card);
     }
 
-    /*
+
     public void setCardSlotOne(ArrayList<CardDevData> cardSlotOne) {
         this.cardSlotOne = cardSlotOne;
     }
@@ -201,13 +222,22 @@ public class ModelClient {
     public void printAll() {
         printFaithTrack();
         printResource();
-        printCardSlots();
+        printCardSlots(true);
         printLeader();
     }
 
+    private void printTitle(String title){
+        String titleToPrint =PrintAssistant.instance.stringBetweenChar(title, ' ', lengthInChar, ' ', ' ');
+        PrintAssistant.instance.printf(titleToPrint, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+    }
+
+
     public void printFaithTrack(){
-        String titleFaithTrack=PrintAssistant.instance.stringBetweenChar(username+"'s Faith Track", ' ', lengthInChar, ' ', ' ');
-        PrintAssistant.instance.printf(titleFaithTrack, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+        //String titleFaithTrack=PrintAssistant.instance.stringBetweenChar(username+"'s Faith Track", ' ', lengthInChar, ' ', ' ');
+        //PrintAssistant.instance.printf(titleFaithTrack, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+
+        printTitle(username+"'s Faith Track");
+
         int num = faithTrack.size();
         int cellAlreadyDraw=0;
         String colorBorderOut;
@@ -289,8 +319,11 @@ public class ModelClient {
     }
 
     public void printResource(){
-        String titleResource=username+"'s Resources";
-        PrintAssistant.instance.printf(String.format("%-" + lengthInChar  + "s", String.format("%" + (titleResource.length() + (lengthInChar - titleResource.length()) / 2) + "s", titleResource)), PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+        //String titleResource=username+"'s Resources";
+        //PrintAssistant.instance.printf(String.format("%-" + lengthInChar  + "s", String.format("%" + (titleResource.length() + (lengthInChar - titleResource.length()) / 2) + "s", titleResource)), PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
+
+        printTitle(username+"'s Resources");
+
         ArrayList<String> rowsOfResources=new ArrayList<>();
 
         String titleLeaderDepot="";
@@ -337,15 +370,13 @@ public class ModelClient {
         PrintAssistant.instance.printfMultipleString(rowsOfResources);
     }
 
-    public void printCardSlots(){
-        String titleResource=username+"'s Developments ";
-        PrintAssistant.instance.printf(String.format("%-" + lengthInChar  + "s", String.format("%" + (titleResource.length() + (lengthInChar - titleResource.length()) / 2) + "s", titleResource)), PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
-        widthColumn = (Integer)(lengthInChar/3);
-
+    // METHODS FOR CARD SLOT
+    private void printLegend(){
         StringBuilder row;
         row = new StringBuilder("Legend resources:");
         row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', lengthInChar, ' ', ' '));
         PrintAssistant.instance.printf(row.toString());
+
         ArrayList<ResourceData> resourceToShow=new ArrayList<>();
         resourceToShow.add(new ResourceData(ResourceType.COIN, 1));
         resourceToShow.add(new ResourceData(ResourceType.SHIELD, 1));
@@ -353,221 +384,148 @@ public class ModelClient {
         resourceToShow.add(new ResourceData(ResourceType.SERVANT, 1));
         resourceToShow.add(new ResourceData(ResourceType.FAITH, 1));
         resourceToShow.add(new ResourceData(ResourceType.ANY, 1));
+
         row = new StringBuilder();
         for(ResourceData r : resourceToShow){
-            row.append(r.toCli()).append("=").append(r.getType()).append("  ");
+            row.append(r.toCli()).append("= ").append(r.getType()).append("  ");
         }
         row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', lengthInChar, ' ', ' '));
         PrintAssistant.instance.printf(row.toString());
+    }
 
+    private void printCardSlotHeader(){
         String title=PrintAssistant.instance.stringBetweenChar("CARD SLOT1", '_', widthColumn, ' ', ' ');
         title+=PrintAssistant.instance.stringBetweenChar("CARD SLOT2", '_', widthColumn, ' ', ' ');
         title+=PrintAssistant.instance.stringBetweenChar("CARD SLOT3", '_', widthColumn, ' ', ' ');
         PrintAssistant.instance.printf(title);
+    }
+
+    private String cardCostHeader(){
+        return PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+    }
+
+    private String cardProductionCostHeader(){
+        return PrintAssistant.instance.fitToWidth("To make production you have to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+    }
+
+    private String cardProductionEarnHeader(){
+        return PrintAssistant.instance.fitToWidth("You will earn from production:", widthColumn, ' ', '|', '|', OFFSET_AllIGN);
+    }
+
+    private String cardLastRow(){return PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|', OFFSET_AllIGN);}
+
+    private String cardEndRow(){return PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|');}
+
+    private void emptyCardSlot(ArrayList<String> rowOfCardSlots){
+        StringBuilder row;
+        int writtenRow = 0;
+        while (rowOfCardSlots.size() < 2){
+            rowOfCardSlots.add("");
+        }
+
+        row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("Empty*", ' ', widthColumn, '|', '|'));
+        rowOfCardSlots.set(0, rowOfCardSlots.get(0)+row);
+        writtenRow++;
+        row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
+        rowOfCardSlots.set(1, rowOfCardSlots.get(1)+row);
+        writtenRow++;
+
+        fillRestOfRows(rowOfCardSlots,writtenRow);
+    }
+
+    private void fillRestOfRows(ArrayList<String> rowOfCardSlots, int start){
+        for (int i = start; i < rowOfCardSlots.size(); i++) {
+            rowOfCardSlots.set(i, rowOfCardSlots.get(i) + PrintAssistant.instance.generateAStringOf(' ', widthColumn));
+        }
+    }
+
+    private void setUpForCardSlot(ArrayList<String> rowOfCardSlots, int indexOfCardSlot, int indexOfCard, int size, boolean minimize){
+        String row = PrintAssistant.instance.generateAStringOf(' ', widthColumn * indexOfCardSlot);
+
+        if (minimize){
+            int numOfRow;
+            if (indexOfCard < size - 1)
+                numOfRow = (indexOfCard + 1) * LENGTH_OF_MIN_DEV;
+            else
+                numOfRow = indexOfCard * LENGTH_OF_MIN_DEV + LENGTH_OF_DEV;
+            while(rowOfCardSlots.size() <= numOfRow){
+                rowOfCardSlots.add(row);
+            }
+        }else {
+            while (rowOfCardSlots.size() <= (indexOfCard + 1) * LENGTH_OF_DEV) {
+                rowOfCardSlots.add(row);
+            }
+        }
+    }
+
+    private void cardSlotToCli(ArrayList<String> rowOfCardSlots,int indexOfCardSlot, ArrayList<CardDevData> cardSlot, boolean minimize){
+        int totalWrittenRow = 0;
+        if(cardSlot.isEmpty()){
+            emptyCardSlot(rowOfCardSlots);
+        }
+        else{
+            for(int i=0; i < cardSlot.size(); i++) {
+                setUpForCardSlot(rowOfCardSlots, indexOfCardSlot, i, cardSlot.size(), minimize);
+
+                rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardHeader(widthColumn));
+                totalWrittenRow++;
+
+                if (!minimize || i == cardSlot.size() - 1) {
+                    if (!cardSlot.get(i).getResourceReq().isEmpty()) {
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardCostHeader());
+                        totalWrittenRow++;
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardCost(widthColumn, OFFSET_AllIGN));
+                        totalWrittenRow++;
+                    }
+                    if (!cardSlot.get(i).getEffects().get(0).getResourcesBefore().isEmpty()) {
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardProductionCostHeader());
+                        totalWrittenRow++;
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionCost(widthColumn, OFFSET_AllIGN));
+                        totalWrittenRow++;
+                    }
+                    if (!cardSlot.get(i).getEffects().get(0).getResourcesAfter().isEmpty()) {
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardProductionEarnHeader());
+                        totalWrittenRow++;
+
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionEarn(widthColumn, OFFSET_AllIGN));
+                        totalWrittenRow++;
+                    }
+                    rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardEnd(widthColumn));
+                    totalWrittenRow++;
+                }
+                rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardLastRow());
+                totalWrittenRow++;
+                //totalWrittenRow += totalWrittenRow;
+            }
+            rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow)+cardEndRow());
+            totalWrittenRow ++;
+            fillRestOfRows(rowOfCardSlots,totalWrittenRow);
+        }
+    }
+
+    public void printCardSlots(boolean minimize){
+        printTitle(username+"'s Developments");
+
+        widthColumn = lengthInChar/3;
+
+        printLegend();
+
+        printCardSlotHeader();
+
         ArrayList<String> rowOfCardSlots=new ArrayList<>(); //parte dalla prima riga utile!!!
-        if(cardSlotOne.isEmpty()){
-            rowOfCardSlots.add(PrintAssistant.instance.stringBetweenChar("Empty*", ' ',  widthColumn, '|', '|'));
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.add(row.toString());
+
+        for (int i = 0; i < cardSlots.size(); i++) {
+            cardSlotToCli(rowOfCardSlots,i,cardSlots.get(i),minimize);
         }
-        else{
-            for(int i=0; i<cardSlotOne.size(); i++){
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("CARD LV" + cardSlotOne.get(i).getLevel() +" +" + cardSlotOne.get(i).getVictoryPoints()+"VP ", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotOne.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.add(row.toString());
-                if(!cardSlotOne.get(i).getResourceReq().isEmpty()){
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                    row = new StringBuilder();
-                    for(ResourceData s : cardSlotOne.get(i).getResourceReq()){
-                        row.append(s.toCli());
-                    }
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                }
-                if(!cardSlotOne.get(i).getEffects().get(0).getResourcesBefore().isEmpty()){
-                    row = new StringBuilder("To make production you have to pay:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                    row = new StringBuilder();
-                    /*
-                    for(ResourceData s : cardSlotOne.get(i).getProductionCost()){
-                        row.append(s.toCli());
-                    }*/
-                    row=new StringBuilder(cardSlotOne.get(i).getEffects().get(0).resourceBeforeToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                }
-                if(!cardSlotOne.get(i).getEffects().get(0).getResourcesAfter().isEmpty()){
-                    row = new StringBuilder("You will earn from production:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                    row = new StringBuilder();
-                    /*
-                    for(ResourceData s : cardSlotOne.get(i).getProductionEarn()){
-                        row.append(s.toCli());
-                    }
-                    */
-                    row=new StringBuilder(cardSlotOne.get(i).getEffects().get(0).resourceAfterToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.add(row.toString());
-                }
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotOne.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.add(row.toString());
-                row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                rowOfCardSlots.add(row.toString());
-            }
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.add(row.toString());
-        }
-        int writtenRow=0;
-        if(cardSlotTwo.isEmpty()){
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("Empty*", ' ', widthColumn, '|', '|'));
-            rowOfCardSlots.set(0, rowOfCardSlots.get(0)+row);
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.set(1, rowOfCardSlots.get(1)+row);
-        }
-        else{
-            for(int i=0; i<cardSlotTwo.size(); i++){
-                writtenRow=0;
-                if(rowOfCardSlots.size()<=(i+1)*9){
-                    row = new StringBuilder(PrintAssistant.instance.generateAStringOf(' ', widthColumn - 1));
-                    while(rowOfCardSlots.size()<=(i+1)*9){
-                        rowOfCardSlots.add(row.toString());
-                    }
-                }
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("CARD LV" + cardSlotTwo.get(i).getLevel()+" +" + cardSlotTwo.get(i).getVictoryPoints()+"VP ", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotTwo.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-                if(!cardSlotTwo.get(i).getResourceReq().isEmpty()){
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();
-                    for(ResourceData s : cardSlotTwo.get(i).getResourceReq()){
-                        row.append(s.toCli());
-                    }
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                if(!cardSlotTwo.get(i).getEffects().get(0).getResourcesBefore().isEmpty()){
-                    row = new StringBuilder("To make production you have to pay:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();/*
-                    for(ResourceData s : cardSlotTwo.get(i).getProductionCost()){
-                        row.append(s.toCli());
-                    }*/
-                    row=new StringBuilder(cardSlotTwo.get(i).getEffects().get(0).resourceBeforeToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                if(!cardSlotTwo.get(i).getEffects().get(0).getResourcesAfter().isEmpty()){
-                    row = new StringBuilder("You will earn from production:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();
-                    /*
-                    for(ResourceData s : cardSlotTwo.get(i).getProductionEarn()){
-                        row.append(s.toCli());
-                    }*/
-                    row=new StringBuilder(cardSlotTwo.get(i).getEffects().get(0).resourceAfterToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotTwo.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-                row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-            }
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.set(indexCardSlot(cardSlotTwo.size()-1, writtenRow), rowOfCardSlots.get(indexCardSlot(cardSlotTwo.size()-1, writtenRow))+row);
-            writtenRow++;
-        }
-        if(cardSlotThree.isEmpty()){
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("Empty*", ' ', widthColumn, '|', '|'));
-            rowOfCardSlots.set(0, rowOfCardSlots.get(0)+row);
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.set(1, rowOfCardSlots.get(1)+row);
-        }
-        else{
-            for(int i=0; i<cardSlotThree.size(); i++){
-                writtenRow=0;
-                if(rowOfCardSlots.size()<=(i+1)*9){
-                    row = new StringBuilder(PrintAssistant.instance.generateAStringOf(' ', (widthColumn - 1) * 2));
-                    while(rowOfCardSlots.size()<=(i+1)*9){
-                        rowOfCardSlots.add(row.toString());
-                    }
-                }
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("CARD LV" + cardSlotThree.get(i).getLevel()+" +" + cardSlotThree.get(i).getVictoryPoints()+"VP ", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotThree.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-                if(!cardSlotThree.get(i).getResourceReq().isEmpty()){
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();
-                    for(ResourceData s : cardSlotThree.get(i).getResourceReq()){
-                        row.append(s.toCli());
-                    }
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                if(!cardSlotThree.get(i).getEffects().get(0).getResourcesBefore().isEmpty()){
-                    row = new StringBuilder("To make production you have to pay:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();
-                    /*
-                    for(ResourceData s : cardSlotThree.get(i).getProductionCost()){
-                        row.append(s.toCli());
-                    }*/
-                    row=new StringBuilder(cardSlotThree.get(i).getEffects().get(0).resourceBeforeToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                if(!cardSlotThree.get(i).getEffects().get(0).getResourcesAfter().isEmpty()){
-                    row = new StringBuilder("You will earn from production:");
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                    row = new StringBuilder();
-                    /*
-                    for(ResourceData s : cardSlotThree.get(i).getProductionEarn()){
-                        row.append(s.toCli());
-                    }*/
-                    row=new StringBuilder(cardSlotThree.get(i).getEffects().get(0).resourceAfterToCli());
-                    row = new StringBuilder(PrintAssistant.instance.fitToWidth(row.toString(), widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                    rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                    writtenRow++;
-                }
-                row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", ' ', widthColumn - 2, ' ', ' '));
-                row = new StringBuilder("|" + cardSlotThree.get(i).colorToColor() + row + PrintAssistant.ANSI_RESET + "|");
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-                row = new StringBuilder(PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|', OFFSET_AllIGN));
-                rowOfCardSlots.set(indexCardSlot(i, writtenRow), rowOfCardSlots.get(indexCardSlot(i, writtenRow))+row);
-                writtenRow++;
-            }
-            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|'));
-            rowOfCardSlots.set(indexCardSlot(cardSlotThree.size()-1, writtenRow), rowOfCardSlots.get(indexCardSlot(cardSlotThree.size()-1, writtenRow))+row);
-        }
+
         PrintAssistant.instance.printfMultipleString(rowOfCardSlots);
     }
+
 
     public void printLeader(){
         if(leader.isEmpty())
@@ -754,10 +712,5 @@ public class ModelClient {
         if(!(obj instanceof ModelClient))
             return false;
         return ((ModelClient) obj).getUsername().equalsIgnoreCase(username);
-    }
-
-    //manage index in print card slot
-    private int indexCardSlot(int i, int writtenRow){
-        return (i*9)+writtenRow;
     }
 }

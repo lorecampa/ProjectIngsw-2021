@@ -183,19 +183,25 @@ public class ClientMessageHandler {
 
     //CardSlotUpdate message handler
     public void cardSlotUpdate(CardSlotUpdate message){
-        CardDevData c=client.getDeckDevData().getCard(message.getRowDeckDevelopment(), message.getColDeckDevelopment());
+        CardDevData card = client.getDeckDevData().getCard(message.getRowDeckDevelopment(), message.getColDeckDevelopment());
+        int cardSlotIndex = message.getSlotIndex();
         if(message.getUsername().equals(client.getMyName())){
+            if (cardSlotIndex >= 0 && cardSlotIndex < 3)
+                client.getModelOf(client.getMyName()).addToCardSlot(message.getSlotIndex(), card);
+            /*
             switch (message.getSlotIndex()){
                 case 0:
-                    client.getModelOf(client.getMyName()).addToCardSlotOne(c);
+                    client.getModelOf(client.getMyName()).addToCardSlotOne(card);
                     break;
                 case 1:
-                    client.getModelOf(client.getMyName()).addToCardSlotTwo(c);
+                    client.getModelOf(client.getMyName()).addToCardSlotTwo(card);
                     break;
                 case 2:
-                    client.getModelOf(client.getMyName()).addToCardSlotThree(c);
+                    client.getModelOf(client.getMyName()).addToCardSlotThree(card);
                     break;
             }
+
+             */
         }
     }
 }

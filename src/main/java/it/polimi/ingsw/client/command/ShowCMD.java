@@ -71,7 +71,7 @@ public class ShowCMD implements Command{
                     client.getModelOf(split[0]).printResource();
                     break;
                 case "d":
-                    client.getModelOf(split[0]).printCardSlots();
+                    client.getModelOf(split[0]).printCardSlots(false);
                     break;
                 case "l":
                     client.getModelOf(split[0]).printLeader();

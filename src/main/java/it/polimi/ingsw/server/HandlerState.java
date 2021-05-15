@@ -8,5 +8,5 @@ public enum HandlerState {
     WAITING_MATCH,
     LEADER_SETUP,
     RESOURCE_SETUP,
-    IN_MATCH;
+    IN_MATCH
 }
