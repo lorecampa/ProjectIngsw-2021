@@ -142,6 +142,10 @@ public class ModelClient {
         leaderDepot.add(depotToAdd);
     }
 
+    public boolean isValidIndexDepotLeader(int index){
+        return index>=0 && index<leaderDepot.size();
+    }
+
     public void setStrongbox(ArrayList<ResourceData> strongbox) {
         this.strongbox = strongbox;
     }

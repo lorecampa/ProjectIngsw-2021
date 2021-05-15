@@ -18,6 +18,8 @@ public class ClientInput implements Runnable{
 
     private final static Map<String, Class<? extends Command>> commands = new HashMap<>() {
         {
+            put("endturn", EndTurnCMD.class);
+            put("switch", SwitchCMD.class);
             put("depot", DepotCMD.class);
             put("discard", DiscardCMD.class);
             put("any", AnyCMD.class);

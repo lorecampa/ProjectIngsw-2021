@@ -65,4 +65,8 @@ public class CommandsUtility {
     public static boolean isAValidCardInDeck(Client client, int level, int column){
         return client.getDeckDevData().rowColValid(level, column);
     }
+
+    public static boolean isValidIndexDepotLeader(Client client, int index){
+        return client.getModelOf(client.getMyName()).isValidIndexDepotLeader(index);
+    }
 }

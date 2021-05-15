@@ -12,10 +12,8 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ServerMessageHandler {
     private Controller controller;
@@ -262,7 +260,7 @@ public class ServerMessageHandler {
                 TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
         TurnState.MARKET_RESOURCE_POSITIONING})){ return; }
 
-        controller.switchDepots(msg.getFrom(), msg.isFromLeader(), msg.getTo(), msg.isToLeader());
+        controller.switchDepots(msg.getFrom(), msg.isFromNormal(), msg.getTo(), msg.isToNormal());
     }
 
 

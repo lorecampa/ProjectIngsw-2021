@@ -5,15 +5,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.MarketData;
-import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
-import it.polimi.ingsw.message.serverMessage.AnyResponse;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,11 +74,6 @@ public class Client{
                 }
                 client.writeToStream(new LeaderManage(0,true));
                 client.writeToStream(new LeaderManage(0,true));
-                /*
-                ArrayList<ResourceData> resources= new ArrayList<>();
-                resources.add(new ResourceData(ResourceType.SHIELD, 1));
-                client.writeToStream(new AnyResponse(resources));
-*/
             }
             else if(args[0].equals("secondo")){
                 client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
@@ -90,11 +82,6 @@ public class Client{
                 client.setMyName("Lollo");
                 client.writeToStream(new LeaderManage(0,true));
                 client.writeToStream(new LeaderManage(0,true));
-/*
-                ArrayList<ResourceData> resources= new ArrayList<>();
-                resources.add(new ResourceData(ResourceType.SHIELD, 1));
-                client.writeToStream(new AnyResponse(resources));
-*/
 
             }
         }
