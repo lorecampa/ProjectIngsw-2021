@@ -174,7 +174,7 @@ public class ActionCMD implements Command{
                 catch(Exception e){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                 }
-                if(client.getMarketData().validCol(indexCol)){
+                if(!client.getMarketData().validCol(indexCol)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
@@ -188,7 +188,7 @@ public class ActionCMD implements Command{
                 catch(Exception e){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                 }
-                if(client.getMarketData().validRow(indexRow)){
+                if(!client.getMarketData().validRow(indexRow)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }

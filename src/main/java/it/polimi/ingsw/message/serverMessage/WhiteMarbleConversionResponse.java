@@ -2,8 +2,9 @@ package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.server.ServerMessageHandler;
 
-public class WhiteMarbleConversionResponse {
+public class WhiteMarbleConversionResponse implements ServerMessage{
     private final int leaderIndex;
     private final int numOfWhiteMarble;
 
@@ -20,5 +21,10 @@ public class WhiteMarbleConversionResponse {
 
     public int getNumOfWhiteMarble() {
         return numOfWhiteMarble;
+    }
+
+    @Override
+    public void process(ServerMessageHandler handler) {
+        handler.handleWhiteMarbleConversion(this);
     }
 }

@@ -93,7 +93,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leader.doCreationEffects();
         leader.setActive(true);
 
-        notifyAllObservers(x -> x.leaderActivated(leader));
+        notifyAllObservers(x -> x.leaderActivated(leader, leaderIndex));
 
     }
 

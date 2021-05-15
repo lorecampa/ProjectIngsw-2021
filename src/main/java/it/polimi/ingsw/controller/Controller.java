@@ -1,9 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.message.clientMessage.AnyConversionRequest;
-import it.polimi.ingsw.message.clientMessage.ErrorMessage;
-import it.polimi.ingsw.message.clientMessage.ErrorType;
-import it.polimi.ingsw.message.clientMessage.MatchStart;
+import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
@@ -151,12 +148,9 @@ public class Controller {
             resourceManager.resourceFromMarket(market.getResourceToSend());
             market.reset();
         }else{
-            System.out.println("WhiteMarbleConversionRequest sent to " + getCurrentPlayer());
-            /*
             match.sendSinglePlayer(getCurrentPlayer(),
                     new WhiteMarbleConversionRequest(whiteMarbleDrew, cardManager.listOfMarbleEffect()));
 
-             */
         }
 
 
@@ -253,7 +247,8 @@ public class Controller {
     }
 
     public void stopProductionCardSelection(){
-        changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        resourceManager.doProduction();
     }
 
     //ANY MANAGING
@@ -353,7 +348,6 @@ public class Controller {
             sendError(e.getMessage());
         }
         controlBufferStatus();
-
 
     }
 

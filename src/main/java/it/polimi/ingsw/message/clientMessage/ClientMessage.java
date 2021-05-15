@@ -25,6 +25,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = LeaderDiscard.class, name = "LeaderDiscard"),
         @JsonSubTypes.Type(value = LeaderSetUpMessage.class, name ="LeaderSetUpMessage"),
         @JsonSubTypes.Type(value = MainMenuMessage.class, name = "MainMenuMessage"),
+        @JsonSubTypes.Type(value = ManageResourcesRequest.class, name = "ManageResourcesRequest"),
         @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
         @JsonSubTypes.Type(value = MatchStart.class, name = "MatchStart"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
@@ -33,6 +34,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = StrongboxUpdate.class, name = "StrongboxUpdate"),
         @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConverted"),
 })
+
 public interface ClientMessage extends Message{
     void process (ClientMessageHandler handler);
 }

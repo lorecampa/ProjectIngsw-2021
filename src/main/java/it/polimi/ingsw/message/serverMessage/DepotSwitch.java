@@ -45,6 +45,6 @@ public class DepotSwitch implements ServerMessage {
 
     @Override
     public void process(ServerMessageHandler handler) {
-        System.out.println("DepotSwitchHandler");
+        handler.handleSwitch(this);
     }
 }

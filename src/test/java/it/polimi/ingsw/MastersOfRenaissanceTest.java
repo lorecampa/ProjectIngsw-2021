@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class MastersOfRenaissanceTest
@@ -93,21 +96,9 @@ public class MastersOfRenaissanceTest
 
     @Test
     void gameStartForSetUpServer(){
-        Server server = new Server();
-        String[] s= new String[2];
-        s[0]="pippo";
-        s[1]="pluto";
-        Server.main(s);
+        ArrayList<String> ciao = null;
 
     }
 
-    @Test
-    void gameStartForSetUpClient(){
-        String[] s= new String[2];
-        s[0]="pippo";
-        s[1]="pluto";
-        Client.main(s);
-        //Client.main(s);
-    }
 
 }

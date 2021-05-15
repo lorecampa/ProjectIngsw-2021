@@ -14,10 +14,10 @@ public class BufferUpdate implements ClientMessage{
         this.bufferUpdated = bufferUpdated;
     }
 
-
     public ArrayList<ResourceData> getBufferUpdated() {
         return bufferUpdated;
     }
+
 
     @Override
     public void process(ClientMessageHandler handler) {
