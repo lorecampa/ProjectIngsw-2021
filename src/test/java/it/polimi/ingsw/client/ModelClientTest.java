@@ -10,7 +10,7 @@ class ModelClientTest {
         mc=new ModelClient("Teo");
 
         mc.printFaithTrack();
-        mc.printResource();
+        mc.printResources();
         mc.printCardSlots(true);
         mc.printLeaders();
     }

@@ -7,9 +7,7 @@ import java.util.ArrayList;
 
 public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
-    private final Integer OFFSET_AllIGN = 2; //2 per 12 ====== 3 per 15
     private final Integer DIM_CELL_CHAR = 14;
-    private final Integer DIM_OF_LEADER = 7;
 
     private final String username;
     private Integer currentPosOnFaithTrack;
@@ -18,9 +16,6 @@ public class ModelClient {
     private ArrayList<ResourceData> leaderDepot = new ArrayList<>();
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
     private ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
-    //private ArrayList<CardDevData> cardSlotOne=new ArrayList<>();
-    //private ArrayList<CardDevData> cardSlotTwo=new ArrayList<>();
-    //private ArrayList<CardDevData> cardSlotThree=new ArrayList<>();
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
     //attributes to CLI
@@ -53,10 +48,12 @@ public class ModelClient {
         for(int i=0;i<3;i++){
             standardDepot.add(new ResourceData(ResourceType.COIN, i+1));
         }
-        /*
+/*
         for(int i=0;i<3;i++){
-            leaderDepot.add(ResourceFactory.createResource(ResourceType.STONE, i+1));
-        }*/
+            leaderDepot.add(new ResourceData(ResourceType.STONE, i+1));
+        }
+
+ */
         for(int i=0; i<25; i++){
             faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: 0), (i==3||i==4||i==5||i==15||i==16||i==17)?true:false, (i==5||i==17)?true:false, i));
         }
@@ -180,7 +177,7 @@ public class ModelClient {
 
     public void printAll() {
         printFaithTrack();
-        printResource();
+        printResources();
         printCardSlots(true);
         printLeaders();
     }
@@ -191,9 +188,6 @@ public class ModelClient {
     }
 
     public void printFaithTrack(){
-        //String titleFaithTrack=PrintAssistant.instance.stringBetweenChar(username+"'s Faith Track", ' ', lengthInChar, ' ', ' ');
-        //PrintAssistant.instance.printf(titleFaithTrack, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
-
         printTitle(username+"'s Faith Track");
 
         int num = faithTrack.size();
@@ -276,56 +270,80 @@ public class ModelClient {
         }
     }
 
-    public void printResource(){
-        //String titleResource=username+"'s Resources";
-        //PrintAssistant.instance.printf(String.format("%-" + lengthInChar  + "s", String.format("%" + (titleResource.length() + (lengthInChar - titleResource.length()) / 2) + "s", titleResource)), PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
-
-        printTitle(username+"'s Resources");
-
-        ArrayList<String> rowsOfResources=new ArrayList<>();
-
+    //METHODS FOR PRINT RESOURCE
+    private void printResourceHeader(){
         String titleLeaderDepot="";
         if(!leaderDepot.isEmpty()){
-            widthColumn  = (Integer)(lengthInChar/3);
+            widthColumn  = lengthInChar/3;
             titleLeaderDepot=PrintAssistant.instance.stringBetweenChar("LE.DEPOT", '_', widthColumn, ' ', ' ');
         }
         else{
-            widthColumn =(Integer)(lengthInChar/2);
+            widthColumn = (lengthInChar/2);
         }
+
         String title=PrintAssistant.instance.stringBetweenChar("STRONBOX", '_', widthColumn, ' ', ' ');
         title+=PrintAssistant.instance.stringBetweenChar("ST.DEPOT", '_', widthColumn, ' ', ' ');
         title+=titleLeaderDepot;
         PrintAssistant.instance.printf(title);
+    }
+
+    private String resourceBoxEnd(){
+        return PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|','|');
+    }
+
+    private void strongboxToCli(ArrayList<String> rowsOfResources){
         String row;
         for(int i=0;i<strongbox.size();i++){
             row=(1+i)+")"+strongbox.get(i).getType()+": "+strongbox.get(i).getValue();
             row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             rowsOfResources.add(row);
         }
-        rowsOfResources.add(PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|','|'));
+        rowsOfResources.add(resourceBoxEnd());
+    }
+
+    private void standardDepotToCli(ArrayList<String> rowsOfResources){
+        String row;
         int i;
         for(i=0; i<standardDepot.size(); i++){
             if(standardDepot.get(i).getType()==ResourceType.ANY){
                 row=(1+i)+")"+"EMPTY";
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             }
             else{
                 row=(1+i)+")"+standardDepot.get(i).getType()+": "+standardDepot.get(i).getValue()+"/"+(i+1);
-                row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             }
+            row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
             rowsOfResources.set(i, rowsOfResources.get(i)+row);
         }
-        rowsOfResources.set(i, rowsOfResources.get(i)+PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|', '|'));
+        rowsOfResources.set(i, rowsOfResources.get(i)+resourceBoxEnd());
+    }
+
+    private void leaderDepotToCli(ArrayList<String> rowsOfResources){
+        String row;
+        int i;
         if(!leaderDepot.isEmpty()){
             for(i=0; i<leaderDepot.size(); i++){
                 row=(1+i)+")"+leaderDepot.get(i).getType()+": "+leaderDepot.get(i).getValue()+"/"+(2);
                 row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
                 rowsOfResources.set(i, rowsOfResources.get(i)+row);
             }
-            rowsOfResources.set(i, rowsOfResources.get(i)+PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|', '|'));
+            rowsOfResources.set(i, rowsOfResources.get(i)+resourceBoxEnd());
         }
 
         PrintAssistant.instance.printfMultipleString(rowsOfResources);
+    }
+
+    public void printResources(){
+        printTitle(username+"'s Resources");
+
+        ArrayList<String> rowsOfResources=new ArrayList<>();
+
+        printResourceHeader();
+
+        strongboxToCli(rowsOfResources);
+
+        standardDepotToCli(rowsOfResources);
+
+        leaderDepotToCli(rowsOfResources);
     }
 
     // METHODS FOR CARD SLOT
@@ -436,7 +454,7 @@ public class ModelClient {
                         rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardCostHeader());
                         totalWrittenRow++;
 
-                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardCost(widthColumn, OFFSET_AllIGN));
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardCost(widthColumn));
                         totalWrittenRow++;
                     }
                     if (!cardSlot.get(i).getEffects().get(0).getResourcesBefore().isEmpty()) {
@@ -444,7 +462,7 @@ public class ModelClient {
                         rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardProductionCostHeader());
                         totalWrittenRow++;
 
-                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionCost(widthColumn, OFFSET_AllIGN));
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionCost(widthColumn));
                         totalWrittenRow++;
                     }
                     if (!cardSlot.get(i).getEffects().get(0).getResourcesAfter().isEmpty()) {
@@ -452,7 +470,7 @@ public class ModelClient {
                         rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardProductionEarnHeader());
                         totalWrittenRow++;
 
-                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionEarn(widthColumn, OFFSET_AllIGN));
+                        rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardProductionEarn(widthColumn));
                         totalWrittenRow++;
                     }
                     rowOfCardSlots.set(totalWrittenRow, rowOfCardSlots.get(totalWrittenRow) + cardSlot.get(i).cardEnd(widthColumn));
@@ -504,7 +522,8 @@ public class ModelClient {
 
     private void setUpForLeader(ArrayList<String> rowsOfLeaders, int leaderIndex){
         String row = PrintAssistant.instance.generateAStringOf(' ', (leaderIndex % 2 * widthColumn) - 1);
-        while(rowsOfLeaders.size()<=DIM_OF_LEADER + leaders.get(leaderIndex).getEffects().size()){
+        int DIM_OF_LEADER = 7;
+        while(rowsOfLeaders.size()<= DIM_OF_LEADER + leaders.get(leaderIndex).getEffects().size()){
             rowsOfLeaders.add(row);
         }
     }
@@ -563,18 +582,6 @@ public class ModelClient {
             }
         }
     }
-
-/*
-    public static void main(String[] args){
-        ModelClient mc;
-        mc=new ModelClient("Teo");
-
-        mc.printFaithTrack();
-        mc.printResource();
-        mc.printCardSlots();
-        mc.printLeader();
-    }
-*/
 
     @Override
     public boolean equals(Object obj) {

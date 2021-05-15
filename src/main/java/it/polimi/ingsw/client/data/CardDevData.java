@@ -95,7 +95,7 @@ public class CardDevData {
         return header;
     }
 
-    public String cardCost(int width, int offSet){
+    public String cardCost(int width){
         StringBuilder row = new StringBuilder();
         for(ResourceData resReq : resourceReq){
             row.append(resReq.toCli());
@@ -103,11 +103,11 @@ public class CardDevData {
         return PrintAssistant.instance.fitToWidth(row.toString(), width, ' ', '|', '|');
     }
 
-    public String cardProductionCost(int width, int offSet){
+    public String cardProductionCost(int width){
         return PrintAssistant.instance.fitToWidth(effects.get(0).resourceBeforeToCli(), width, ' ', '|', '|');
     }
 
-    public String cardProductionEarn(int width, int offSet){
+    public String cardProductionEarn(int width){
         return PrintAssistant.instance.fitToWidth(effects.get(0).resourceAfterToCli(), width, ' ', '|', '|');
     }
 
