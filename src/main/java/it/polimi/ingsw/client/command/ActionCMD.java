@@ -21,11 +21,11 @@ public class ActionCMD implements Command{
     @Override
     public void doCommand() {
 
-        if(client.getState()!= ClientState.IN_GAME){
+        if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME)){
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }
-        if(param.isEmpty() || param.isBlank()){
+        if(CommandsUtility.emptyString(param)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
@@ -88,14 +88,8 @@ public class ActionCMD implements Command{
     public void produce(String[] split){
         switch(split[1]){
             case "cs":
-                int cardSlot=0;
-                try{
-                    cardSlot=Integer.parseInt(split[2]);
-                }
-                catch(Exception e){
-                    PrintAssistant.instance.invalidParamCommand(cmd);
-                }
-                if(cardSlot>3 || cardSlot<1){
+                int cardSlot=CommandsUtility.stringToInt(split[2]);
+                if(!CommandsUtility.isACardSlotIndex(cardSlot)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
@@ -103,15 +97,9 @@ public class ActionCMD implements Command{
                 client.writeToStream(new ProductionAction(cardSlot,false, false));
                 break;
             case "le":
-                int leaderIndex=0;
-                try{
-                    leaderIndex=Integer.parseInt(split[2]);
-                }
-                catch(Exception e){
-                    PrintAssistant.instance.invalidParamCommand(cmd);
-                }
+                int leaderIndex=CommandsUtility.stringToInt(split[2]);
                 leaderIndex--;
-                if(!client.getModelOf(client.getMyName()).validIndexForLeader(leaderIndex)){
+                if(!CommandsUtility.isALeaderIndex(client, leaderIndex)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
@@ -128,28 +116,16 @@ public class ActionCMD implements Command{
     }
 
     public void developer(String[] split){
-        int level=0;
-        try{
-            level=Integer.parseInt(split[1]);
-        }
-        catch(Exception e){
+        int level=CommandsUtility.stringToInt(split[1]);
+
+        int column=CommandsUtility.stringToInt(split[2]);
+
+        int cardSlot=CommandsUtility.stringToInt(split[3]);
+        if(level==-1 || column==-1){
             PrintAssistant.instance.invalidParamCommand(cmd);
+            return;
         }
-        int column=0;
-        try{
-            column=Integer.parseInt(split[2]);
-        }
-        catch(Exception e){
-            PrintAssistant.instance.invalidParamCommand(cmd);
-        }
-        int cardSlot=0;
-        try{
-            cardSlot=Integer.parseInt(split[3]);
-        }
-        catch(Exception e){
-            PrintAssistant.instance.invalidParamCommand(cmd);
-        }
-        if(cardSlot>3 || cardSlot<1){
+        if(CommandsUtility.isADepotIndex(cardSlot)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
@@ -157,7 +133,7 @@ public class ActionCMD implements Command{
         level--;
         column--;
         cardSlot--;
-        if(!client.getDeckDevData().rowColValid(level, column)){    //need the index value not the real value so i check after decrement
+        if(!CommandsUtility.isAValidCardInDeck(client, level, column)){    //need the index value not the real value so i check after decrement
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
@@ -167,13 +143,8 @@ public class ActionCMD implements Command{
     public void market(String[] split){
         switch (split[1]){
             case "col":
-                int indexCol=0;
-                try{
-                    indexCol=Integer.parseInt(split[2]);
-                }
-                catch(Exception e){
-                    PrintAssistant.instance.invalidParamCommand(cmd);
-                }
+                int indexCol=CommandsUtility.stringToInt(split[2]);
+
                 if(!client.getMarketData().validCol(indexCol)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
@@ -181,13 +152,8 @@ public class ActionCMD implements Command{
                 client.writeToStream(new MarketAction(indexCol,false));
                 break;
             case "row":
-                int indexRow=0;
-                try{
-                    indexRow=Integer.parseInt(split[2]);
-                }
-                catch(Exception e){
-                    PrintAssistant.instance.invalidParamCommand(cmd);
-                }
+                int indexRow=CommandsUtility.stringToInt(split[2]);
+
                 if(!client.getMarketData().validRow(indexRow)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
@@ -200,15 +166,10 @@ public class ActionCMD implements Command{
     }
 
     public void leader(String[] split){
-        int leaderIndex=0;
-        try{
-            leaderIndex=Integer.parseInt(split[1]);
-        }
-        catch (Exception e){
-            PrintAssistant.instance.invalidParamCommand(cmd);
-        }
+        int leaderIndex=CommandsUtility.stringToInt(split[1]);
+
         leaderIndex--;
-        if(!client.getModelOf(client.getMyName()).validIndexForLeader(leaderIndex)){
+        if(!CommandsUtility.isALeaderIndex(client, leaderIndex)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

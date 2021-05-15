@@ -24,7 +24,13 @@ public class ClientMessageHandler {
     }
 
     public void handleError(ErrorMessage message){
-        //TODO no client yet
+        if(message.getCustomError()!=null){
+            PrintAssistant.instance.errorPrint(message.getCustomError());
+        }
+        else{
+            PrintAssistant.instance.errorPrint(message.getErrorType().getMessage());
+        }
+
     }
 
     //Connection message handler
@@ -152,20 +158,6 @@ public class ClientMessageHandler {
         }
     }
 
-    //LeaderStatusUpdate message handler
-    /*
-    public void leaderUpdateState(LeaderDiscard message){
-        if(message.isDiscard()){
-            client.getModelOf(message.getUsername()).removeLeaderAt(message.getLeaderIndex());
-            PrintAssistant.instance.printf("!");
-        }
-        else {
-            client.getModelOf(message.getUsername()).setActiveLeaderAt(message.getLeaderIndex());
-        }
-    }
-
-     */
-
     //leader discard message handler
     public void discardUpdate(LeaderDiscard message){
         if (message.getUsername().equals(client.getMyName())){
@@ -175,6 +167,17 @@ public class ClientMessageHandler {
             PrintAssistant.instance.printf(message.getUsername() + " has discarded a leader!");
         }
     }
+
+    //leaderActivate message handler
+    public void activeLeader(LeaderActivate message){
+        if(message.getUsername().equals(client.getMyName())){
+            client.getModelOf(client.getMyName()).setActiveLeaderAt(message.getLeaderIndex());
+        }
+        else{
+            client.getModelOf(message.getUsername()).putAsActiveInLeader(message.getLeader());
+        }
+    }
+
 
     //MarketUpdate message handler
     public void marketUpdate(MarketUpdate message){
@@ -188,20 +191,34 @@ public class ClientMessageHandler {
         if(message.getUsername().equals(client.getMyName())){
             if (cardSlotIndex >= 0 && cardSlotIndex < 3)
                 client.getModelOf(client.getMyName()).addToCardSlot(message.getSlotIndex(), card);
-            /*
-            switch (message.getSlotIndex()){
-                case 0:
-                    client.getModelOf(client.getMyName()).addToCardSlotOne(card);
-                    break;
-                case 1:
-                    client.getModelOf(client.getMyName()).addToCardSlotTwo(card);
-                    break;
-                case 2:
-                    client.getModelOf(client.getMyName()).addToCardSlotThree(card);
-                    break;
-            }
-
-             */
         }
+    }
+
+    //BufferUpdate message handler
+    public void bufferUpdate(BufferUpdate message){
+        String resource="Buffer: ";
+        for(ResourceData r : message.getBufferUpdated()){
+            resource+=r.toCli();
+        }
+        PrintAssistant.instance.printf(resource);
+    }
+
+    //ManageResourceRequest message handler
+    public void manageResourceRequest(ManageResourcesRequest message){
+        if(message.isFromMarket())
+            PrintAssistant.instance.printf("Insert those resources in your depots!");
+        else
+            PrintAssistant.instance.printf("From where you want to take those resources to pay the production?");
+
+        String resource="Buffer: ";
+        for(ResourceData r : message.getResources()){
+            resource+=r.toCli();
+        }
+        PrintAssistant.instance.printf(resource);
+    }
+
+    //WhiteMarbleConversionRequest message handler
+    public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
+        PrintAssistant.instance.printf("there are "+message.getNumOfWhiteMarbleDrew()+" white marble");
     }
 }

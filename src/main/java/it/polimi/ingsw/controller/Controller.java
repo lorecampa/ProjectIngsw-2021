@@ -79,6 +79,9 @@ public class Controller {
             //card manager
             gameMaster.getPlayerPersonalBoard(username)
                     .getCardManager().attachObserver(virtualClient);
+
+            //market
+            gameMaster.getMarket().attachObserver(virtualClient);
         }
 
     }

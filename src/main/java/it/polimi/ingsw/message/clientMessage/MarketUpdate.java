@@ -19,6 +19,6 @@ public class MarketUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("MarketUpdateClientHandler");
+        handler.marketUpdate(this);
     }
 }

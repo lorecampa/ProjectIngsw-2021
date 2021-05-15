@@ -193,6 +193,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public Map<Integer, ArrayList<ResourceData>> listOfMarbleEffect(){
         return leaders.stream()
+                .filter(Leader::isActive)
                 .filter(x -> x.getOnActivationEffects().stream().anyMatch(effect -> effect instanceof MarbleEffect))
                 .collect(Collectors.toMap(leaders::indexOf,
                         x -> x.getOnActivationEffects().stream()
@@ -206,6 +207,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public int howManyMarbleEffects(){
         return  leaders.stream()
+                .filter(Leader::isActive)
                 .map(Card::getOnActivationEffects)
                 .flatMap(ArrayList::stream)
                 .filter(x -> x instanceof MarbleEffect)
@@ -216,6 +218,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public int howManyProductionEffects(){
         return leaders.stream()
+                .filter(Leader::isActive)
                 .map(Card::getOnActivationEffects)
                 .flatMap(ArrayList::stream)
                 .filter(x -> x instanceof ProductionEffect)

@@ -174,6 +174,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResource(resource);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
@@ -186,6 +187,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
     public void addToWarehouse(boolean isNormalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         currWarehouse.addDepotResourceAt(index, resource, isNormalDepot);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         sendDepotUpdate(isNormalDepot, index);
     }
 
@@ -198,6 +200,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
         sendDepotUpdate(isNormalDepot, index);
 
     }
@@ -271,7 +274,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new Exception("Resource not present in buffer");
         }
 
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+
     }
 
     public int getBufferSize(){

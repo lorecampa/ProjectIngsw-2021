@@ -30,8 +30,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        setUpForDebug();
-        //realSetUp();
+        //setUpForDebug();
+        realSetUp();
     }
 
     private void realSetUp(){
@@ -125,20 +125,6 @@ public class ModelClient {
         leader.add(cl);
     }
 
-    /*
-    public boolean canAddToCardSlotOne(CardDevData card){
-        return canAddToCardSlot(cardSlotOne, card);
-    }
-
-    public boolean canAddToCardSlotTwo(CardDevData card){
-        return canAddToCardSlot(cardSlotTwo, card);
-    }
-
-    public boolean canAddToCardSlotThree(CardDevData card){
-        return canAddToCardSlot(cardSlotThree, card);
-    }
-
-     */
 
     private boolean canAddToCardSlot(ArrayList<CardDevData> cardSlot, CardDevData cardToAdd){
         return cardSlot.get(cardSlot.size() - 1).getLevel() < cardToAdd.getLevel();
@@ -149,32 +135,6 @@ public class ModelClient {
             cardSlots.get(index).add(card);
     }
 
-    /*
-    public void addToCardSlotOne(CardDevData card){
-        cardSlotOne.add(card);
-    }
-
-    public void addToCardSlotTwo(CardDevData card){
-        cardSlotTwo.add(card);
-    }
-
-    public void addToCardSlotThree(CardDevData card){
-        cardSlotThree.add(card);
-    }
-
-
-    public void setCardSlotOne(ArrayList<CardDevData> cardSlotOne) {
-        this.cardSlotOne = cardSlotOne;
-    }
-
-    public void setCardSlotTwo(ArrayList<CardDevData> cardSlotTwo) {
-        this.cardSlotTwo = cardSlotTwo;
-    }
-
-    public void setCardSlotThree(ArrayList<CardDevData> cardSlotThree) {
-        this.cardSlotThree = cardSlotThree;
-    }
-    */
     public String getUsername() {
         return username;
     }
@@ -209,6 +169,11 @@ public class ModelClient {
 
     public void setActiveLeaderAt(int index){
         leader.get(index).setActive(true);
+    }
+
+    public void putAsActiveInLeader(CardLeaderData card){
+        leader.add(card);
+        leader.get(leader.size()-1).setActive(true);
     }
 
     public boolean validIndexForLeader(int index){

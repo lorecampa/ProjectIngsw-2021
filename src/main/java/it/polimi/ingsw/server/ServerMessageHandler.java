@@ -189,7 +189,11 @@ public class ServerMessageHandler {
             controller.insertSetUpResources(resources, virtualClient.getUsername());
             return;
         }
+        if(state == HandlerState.IN_MATCH){
+            return;
+        }
 
+        //crush if controller doesn't exist!
         if(!isYourTurn()){ return; }
 
         switch (controller.getTurnState()){
