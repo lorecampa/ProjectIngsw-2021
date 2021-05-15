@@ -30,6 +30,13 @@ public class ServerMessageHandler {
         this.state = HandlerState.FIRST_CONTACT;
     }
 
+    private boolean isSinglePlayerGame(){
+        int numOfPlayer = controller.getNumberOfPlayer();
+        if (numOfPlayer == 1){
+            client.writeToStream(new ErrorMessage(ErrorType.NOT_SINGLE_PLAYER_MODE));
+        }
+        return numOfPlayer == 1;
+    }
 
     private boolean areYouAllowed(TurnState turnState){
         boolean result;
@@ -144,8 +151,9 @@ public class ServerMessageHandler {
     }
 
     //SINGLE PLAYER
-    public void handleSinglePlayer(){
-
+    public void handleDrawSinglePlayer(){
+        if (!controlAuthority(TurnState.LEADER_MANAGE_BEFORE) || !isSinglePlayerGame()){ return; }
+        controller.drawTokenSinglePlayer();
     }
 
     //NEW METHODS

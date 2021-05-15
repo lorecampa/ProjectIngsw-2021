@@ -33,6 +33,10 @@ public class Controller {
         gameMaster.onTurnStateChange(state);
     }
 
+    public int getNumberOfPlayer(){
+        return gameMaster.getNumberOfPlayer();
+    }
+
     private void sendError(ErrorType errorType){
         System.out.println("SingleErrorMessage: " + errorType);
         //match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(errorType));
@@ -84,6 +88,11 @@ public class Controller {
             gameMaster.getMarket().attachObserver(virtualClient);
         }
 
+    }
+
+    //SINGLE PLAYER
+    public void drawTokenSinglePlayer(){
+        gameMaster.drawToken();
     }
 
 

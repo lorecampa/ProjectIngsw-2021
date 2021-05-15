@@ -399,6 +399,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             }catch (DeckDevelopmentCardException e){
                 rowReached++;
             }
+
             if (rowReached == deckDevelopment.size()){
                 throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
                         color.getDisplayName() + "cards.\n" +
@@ -429,8 +430,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     public void onDeckDevelopmentCardRemove(int row, int col) {
         try {
             removeDeckDevelopmentCard(row, col);
-        } catch (Exception e) {
-            //it will never happen
+        } catch (Exception ignored) {
         }
     }
 

@@ -4,6 +4,7 @@ public enum ErrorType {
     INVALID_MESSAGE ("Message is not valid"),
     INVALID_USERNAME("Username is not valid"),
     NOT_YOUR_TURN("It is not your turn, please wait!"),
+    NOT_SINGLE_PLAYER_MODE("You are not playing in single player mode"),
     ACTION_NOT_PERMITTED("Action not permitted!"),
     FAIL_RECONNECTION("Not able to reconnect"),
     FAIL_GAME_LOADING("Error in match creation");
