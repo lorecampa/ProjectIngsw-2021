@@ -12,10 +12,10 @@ public class ModelClient {
     private final String username;
     private Integer currentPosOnFaithTrack;
     private ArrayList<FaithTrackData> faithTrack = new ArrayList<>();
-    private ArrayList<ResourceData> standardDepot = new ArrayList<>();
-    private ArrayList<ResourceData> leaderDepot = new ArrayList<>();
+    private final ArrayList<ResourceData> standardDepot = new ArrayList<>();
+    private final ArrayList<ResourceData> leaderDepot = new ArrayList<>();
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
-    private ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
+    private final ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
     //attributes to CLI
@@ -48,14 +48,13 @@ public class ModelClient {
         for(int i=0;i<3;i++){
             standardDepot.add(new ResourceData(ResourceType.COIN, i+1));
         }
-/*
+
         for(int i=0;i<3;i++){
             leaderDepot.add(new ResourceData(ResourceType.STONE, i+1));
         }
 
- */
         for(int i=0; i<25; i++){
-            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: 0), (i==3||i==4||i==5||i==15||i==16||i==17)?true:false, (i==5||i==17)?true:false, i));
+            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: 0), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i));
         }
         strongbox.add(new ResourceData(ResourceType.COIN, 12));
         strongbox.add(new ResourceData(ResourceType.SERVANT, 2));
@@ -83,14 +82,9 @@ public class ModelClient {
 
         EffectData effData = new EffectData("Prod", cost, earn);
         EffectData effData2 = new EffectData("Discount", cost, null);
-        EffectData effData3 = new EffectData("Market", cost, earn1);
+        EffectData effData3 = new EffectData("Market", cost1, earn1);
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
-
-        /*
-        CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, cost, earn );
-        CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, cost, earn );
-         */
 
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new ArrayList<>());
@@ -99,25 +93,22 @@ public class ModelClient {
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
         cardSlots.get(0).add(cdd);
-        //cardSlots.get(0).add(cdd1);
+        cardSlots.get(0).add(cdd1);
         cardSlots.get(1).add(cdd);
         cardSlots.get(1).add(cdd1);
-        //cardSlots.get(2).add(cdd);
-        //cardSlots.get(2).add(cdd1);
+        cardSlots.get(2).add(cdd);
+        cardSlots.get(2).add(cdd1);
 
         ArrayList<EffectData> effectsL= new ArrayList<>();
         effectsL.add(effData2);
         effectsL.add(effData);
         effectsL.add(effData3);
 
-        ArrayList<String> effects=new ArrayList<>();
-        effects.add("Extra Depot COIN 2");
-        effects.add("Discount SHIELD 1");
         CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,false);
         CardLeaderData cl2=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,true);
         leaders.add(cl);
-        //leaders.add(cl2);
-        //leaders.add(cl);
+        leaders.add(cl2);
+        leaders.add(cl);
         leaders.add(cl);
     }
 
@@ -190,6 +181,7 @@ public class ModelClient {
     public void printFaithTrack(){
         printTitle(username+"'s Faith Track");
 
+        int CELL_HEIGHT = 7;
         int num = faithTrack.size();
         int cellAlreadyDraw=0;
         String colorBorderOut;
@@ -198,63 +190,38 @@ public class ModelClient {
         String numCell;
         String popeFavor;
         ArrayList<String> rowOfFaith=new ArrayList<>();
-        rowOfFaith.add("");
-        rowOfFaith.add("");
-        rowOfFaith.add("");
-        rowOfFaith.add("");
-        rowOfFaith.add("");
-        rowOfFaith.add("");
-        rowOfFaith.add("");
+        for (int i = 0; i < CELL_HEIGHT; i++) {
+            rowOfFaith.add("");
+        }
 
         while (num!=0){
-            rowOfFaith.set(0, "");
-            rowOfFaith.set(1, "");
-            rowOfFaith.set(2, "");
-            rowOfFaith.set(3, "");
-            rowOfFaith.set(4, "");
-            rowOfFaith.set(5, "");
-            rowOfFaith.set(6, "");
+            for (int i = 0; i < CELL_HEIGHT; i++) {
+                rowOfFaith.set(i,"");
+            }
             int cellToDraw;
             if(num>NUMBER_OF_CELL_FAITH){
                 cellToDraw=NUMBER_OF_CELL_FAITH;
                 num-=NUMBER_OF_CELL_FAITH;
             }
             else{
-                cellToDraw=num;
-                num-=cellToDraw;
+                cellToDraw = num;
+                num = 0;
             }
             for(int i=0; i<cellToDraw; i++){
+                FaithTrackData cell = faithTrack.get(i+cellAlreadyDraw);
 
-                if(faithTrack.get(i+cellAlreadyDraw).getVictoryPoints()==0){
-                    victoryPoint="      ";
-                }
-                else{
-                    victoryPoint="VP: "+PrintAssistant.instance.padRight(faithTrack.get(i+cellAlreadyDraw).getVictoryPoints()+"", 2);
-                }
+                victoryPoint = cell.cardVictoryPoint();
 
-                if(faithTrack.get(i+cellAlreadyDraw).isPopeFavor()){
-                    colorBorderIn=PrintAssistant.ANSI_RED;
-                    popeFavor="PoFa("+PrintAssistant.instance.padRight(faithTrack.get(i+cellAlreadyDraw).getVictoryPopeFavor()+"", 2)+")";
-                }
-                else{
-                    colorBorderIn=PrintAssistant.ANSI_RESET;
-                    popeFavor="        ";
-                }
+                colorBorderIn = cell.cardPopeFavorColor();
 
-                if(faithTrack.get(i+cellAlreadyDraw).isVaticanReport()){
-                    colorBorderOut=PrintAssistant.ANSI_YELLOW;
-                }
-                else{
-                    colorBorderOut=PrintAssistant.ANSI_RESET;
-                }
+                popeFavor = cell.cardPopeFavor();
 
-                if(faithTrack.get(i+cellAlreadyDraw).getNumberofCell()==currentPosOnFaithTrack){
+                colorBorderOut = cell.cardVaticanReportColor();
+
+                if(cell.getNumberofCell()==currentPosOnFaithTrack)
                     numCell=PrintAssistant.ANSI_PURPLE_BACKGROUND +PrintAssistant.ANSI_BLACK + PrintAssistant.instance.padRight(username.substring(0,1), 2) +PrintAssistant.ANSI_RESET+ colorBorderIn;
-
-                }
-                else{
+                else
                     numCell=PrintAssistant.instance.padRight(faithTrack.get(i+cellAlreadyDraw).getNumberofCell()+"", 2);
-                }
 
                 rowOfFaith.set(0, rowOfFaith.get(0)+colorBorderOut+" ____________ ");
                 rowOfFaith.set(1, rowOfFaith.get(1)+colorBorderOut+"| "+colorBorderIn+" ________ "+colorBorderOut+" |");
@@ -265,7 +232,6 @@ public class ModelClient {
                 rowOfFaith.set(6, rowOfFaith.get(6)+colorBorderOut+"|____________|");
             }
             cellAlreadyDraw+=cellToDraw;
-            rowOfFaith.set(6, rowOfFaith.get(6)+"\n");
             PrintAssistant.instance.printfMultipleString(rowOfFaith);
         }
     }
@@ -281,7 +247,7 @@ public class ModelClient {
             widthColumn = (lengthInChar/2);
         }
 
-        String title=PrintAssistant.instance.stringBetweenChar("STRONBOX", '_', widthColumn, ' ', ' ');
+        String title=PrintAssistant.instance.stringBetweenChar("STRONGBOX", '_', widthColumn, ' ', ' ');
         title+=PrintAssistant.instance.stringBetweenChar("ST.DEPOT", '_', widthColumn, ' ', ' ');
         title+=titleLeaderDepot;
         PrintAssistant.instance.printf(title);
@@ -495,7 +461,7 @@ public class ModelClient {
 
         printCardSlotHeader();
 
-        ArrayList<String> rowOfCardSlots=new ArrayList<>(); //parte dalla prima riga utile!!!
+        ArrayList<String> rowOfCardSlots=new ArrayList<>(); //start from first useful line!!!
 
         for (int i = 0; i < cardSlots.size(); i++) {
             cardSlotToCli(rowOfCardSlots,i,cardSlots.get(i),minimize);
