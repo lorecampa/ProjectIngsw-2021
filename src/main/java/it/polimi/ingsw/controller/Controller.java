@@ -38,12 +38,12 @@ public class Controller {
     }
 
     private void sendError(ErrorType errorType){
-        System.out.println("SingleErrorMessage: " + errorType);
-        //match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(errorType));
+        //System.out.println("SingleErrorMessage: " + errorType);
+        match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(errorType));
     }
     private void sendError(String customMessage){
-        System.out.println("SingleErrorMessage: " + customMessage);
-        //match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
+        //System.out.println("SingleErrorMessage: " + customMessage);
+        match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
     }
 
     private void sendErrorTo(String customMessage, String username){
@@ -382,6 +382,10 @@ public class Controller {
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
                     case 0: match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
+                            if(isFinishSetUp()){
+                                match.sendAllPlayers(new MatchStart());
+                                gameMaster.nextPlayer();
+                            }
                             break;
                     case 1: match.sendSinglePlayer(username,new AnyConversionRequest(1));
                             match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));

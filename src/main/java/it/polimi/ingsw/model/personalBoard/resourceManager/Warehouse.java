@@ -38,7 +38,7 @@ public class Warehouse implements Cloneable{
      * call the private modifyDepotValue with the leader depots list
      * @param indexDepot the index i want to modify in the normal depot list
      * @param resource the resource to sum*/
-    public void addDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws TooMuchResourceDepotException, IndexOutOfBoundsException, InvalidOrganizationWarehouseException {
+    public void addDepotResourceAt(int indexDepot, Resource resource, boolean isNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         Depot depot = getDepot(indexDepot, isNormalDepot);
 
         if(depot.getResourceType()!=resource.getType() && depot.getResourceType() != ResourceType.ANY){
@@ -67,6 +67,8 @@ public class Warehouse implements Cloneable{
      * @param type: the type i'm looking at
      * @return true if i already have one, false if i don't*/
     public boolean doIHaveADepotWith(ResourceType type){
+        if(type==ResourceType.ANY)
+            return false;
         for(Depot dep: depots){
             if(dep.getResourceType()==type){
                 return true;

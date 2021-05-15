@@ -140,7 +140,7 @@ public class Match {
                         inactivePlayers.remove(virtualClient);
                         activePlayers.add(virtualClient);
 
-                        virtualClient.getClient().writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,"Reconnected"));
+                        virtualClient.getClient().writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,virtualClient.getUsername()));
 
                         return true;
                     }

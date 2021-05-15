@@ -2,27 +2,23 @@ package it.polimi.ingsw.message.serverMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.client.ClientMessageHandler;
-import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.server.ServerMessageHandler;
-
-import java.util.Optional;
 
 public class DepotSwitch implements ServerMessage {
     private final int from;
-    private final boolean fromLeader;
+    private final boolean fromNormal;
     private final int to;
-    private final boolean toLeader;
+    private final boolean toNormal;
 
     @JsonCreator
     public DepotSwitch(@JsonProperty("from")int from,
-                       @JsonProperty("fromLeader")boolean fromLeader,
+                       @JsonProperty("fromNormal")boolean fromNormal,
                        @JsonProperty("to")int to,
-                       @JsonProperty("toLeader")boolean toLeader) {
+                       @JsonProperty("toNormal")boolean toNormal) {
         this.from = from;
-        this.fromLeader = fromLeader;
+        this.fromNormal = fromNormal;
         this.to = to;
-        this.toLeader = toLeader;
+        this.toNormal = toNormal;
     }
 
     public int getFrom() {
@@ -35,12 +31,12 @@ public class DepotSwitch implements ServerMessage {
         return to;
     }
 
-    public boolean isFromLeader() {
-        return fromLeader;
+    public boolean isFromNormal() {
+        return fromNormal;
     }
 
-    public boolean isToLeader() {
-        return toLeader;
+    public boolean isToNormal() {
+        return toNormal;
     }
 
     @Override

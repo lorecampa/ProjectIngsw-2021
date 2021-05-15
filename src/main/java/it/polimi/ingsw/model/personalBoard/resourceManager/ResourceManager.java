@@ -114,6 +114,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         if (anyRequired == 0){
             if (isFromBuyDevelopment){
                 notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
+                notifyAllObservers(x->x.bufferUpdate(resourcesBuffer));
             }else{
                 if(anyToProduce > 0){
                     notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
@@ -122,6 +123,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 }
             }
         }
+
     }
 
     public void convertAnyProductionProfit(ArrayList<Resource> resources) throws AnyConversionNotPossible {
@@ -381,6 +383,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             }
             notifyAllObservers(x -> x.anyConversionRequest(myResources, myDiscounts,
                     anyRequired, false));
+        }
+        else if(anyRequired==0 && checkDiscount){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
+            notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
         }
 
     }

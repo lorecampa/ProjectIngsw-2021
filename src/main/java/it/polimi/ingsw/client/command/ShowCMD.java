@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientInput;
+import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
 
 import java.util.ArrayList;

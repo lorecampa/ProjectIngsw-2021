@@ -49,6 +49,11 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printf(message.getMessage());
     }
 
+    public void validReconnect(ConnectionMessage message){
+        client.setMyName(message.getMessage());
+        PrintAssistant.instance.printf("Reconnected as "+message.getMessage()+"!");
+    }
+
     public void connectInfo(ConnectionMessage message){PrintAssistant.instance.printf(message.getMessage());}
 
     //Reconnect message handler
@@ -195,9 +200,16 @@ public class ClientMessageHandler {
 
     //BufferUpdate message handler
     public void bufferUpdate(BufferUpdate message){
-        String resource="Buffer: ";
-        for(ResourceData r : message.getBufferUpdated()){
-            resource+=r.toCli();
+        String resource;
+        if(message.getBufferUpdated().isEmpty()){
+            resource="You have just end your operations with the resources!";
+
+        }
+        else{
+            resource="Buffer: ";
+            for(ResourceData r : message.getBufferUpdated()){
+                resource+=r.toCli();
+            }
         }
         PrintAssistant.instance.printf(resource);
     }

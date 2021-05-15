@@ -92,7 +92,7 @@ public class Depot {
     /**       
      *Add a value to the value of my resource
      */
-    public void addResource(Resource newRes) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+    public void addResource(Resource newRes) throws TooMuchResourceDepotException{
         if (newRes.getValue() + resource.getValue() > maxStorable){
             throw new TooMuchResourceDepotException("Adding too much res in this depot");
         }

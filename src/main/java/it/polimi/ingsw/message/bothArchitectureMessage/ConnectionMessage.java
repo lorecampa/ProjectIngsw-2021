@@ -61,6 +61,10 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
                 break;
             case INFO:
                 handler.connectInfo(this);
+                break;
+            case RECONNECTION:
+                handler.validReconnect(this);
+                break;
             default:
         }
         //handler.handleConnectionMessage(this);
