@@ -20,7 +20,7 @@ class ResourceReqTest {
         rm.addToStrongbox(ResourceFactory.createResource(ResourceType.SHIELD, 2));
         assertDoesNotThrow(()->rm.addToWarehouse(true, 1, ResourceFactory.createResource(ResourceType.COIN, 2)));
         assertDoesNotThrow(()->rm.addToWarehouse(true, 2, ResourceFactory.createResource(ResourceType.SERVANT, 3)));
-        rm.newTurn();
+        rm.restoreRM();
     }
     @Test
     void Normal() {

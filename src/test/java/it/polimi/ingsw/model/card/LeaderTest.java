@@ -119,13 +119,13 @@ class LeaderTest {
 
     @Test
     void checkRequirements() {
-        rm.newTurn();
+        rm.restoreRM();
         assertThrows(NotEnoughRequirementException.class, ()->warehouseLeader.checkRequirements());
-        rm.newTurn();
+        rm.restoreRM();
         assertDoesNotThrow(()-> discountLeader.checkRequirements());
-        rm.newTurn();
+        rm.restoreRM();
         assertThrows(NotEnoughRequirementException.class, ()->marbleLeader.checkRequirements());
-        rm.newTurn();
+        rm.restoreRM();
         assertThrows(NotEnoughRequirementException.class, ()->productionLeader.checkRequirements());
 
     }

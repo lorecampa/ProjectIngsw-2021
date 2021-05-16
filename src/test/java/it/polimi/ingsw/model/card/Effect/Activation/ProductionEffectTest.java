@@ -60,7 +60,7 @@ class ProductionEffectTest {
     @Test
     @Order(1)
     void normalProduction1() {
-        rm.newTurn();
+        rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 6) (Shield 1) (Servant 2) (Stone 2)
         //warehouse (0 -> ) (1 -> ) (2 -> 2 servant)
@@ -89,7 +89,7 @@ class ProductionEffectTest {
     @Test
     @Order(2)
     void normalProduction2() {
-        rm.newTurn();
+        rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 8) (Shield 0) (Servant 2) (Stone 0)
         //warehouse (0 -> ) (1 -> ) (2 -> 1 servant)
@@ -118,7 +118,7 @@ class ProductionEffectTest {
     @Test
     @Order(3)
     void notEnoughResources() {
-        rm.newTurn();
+        rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
         //warehouse (0 -> ) (1 -> ) (2 -> )
@@ -135,7 +135,7 @@ class ProductionEffectTest {
     @Test
     @Order(4)
     void notResourceEffect() {
-        rm.newTurn();
+        rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
         //warehouse (0 -> ) (1 -> ) (2 -> )
@@ -157,7 +157,7 @@ class ProductionEffectTest {
     @Test
     @Order(5)
     void normalProduction3() {
-        rm.newTurn();
+        rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
         //warehouse (0 -> ) (1 -> ) (2 -> )

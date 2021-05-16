@@ -71,7 +71,7 @@ public class SwitchCMD implements Command{
         }
         if(toIsLeader){
             //indexTo--;
-            if(!CommandsUtility.isValidIndexDepotLeader(client, indexFrom)){
+            if(!CommandsUtility.isValidIndexDepotLeader(client, indexTo)){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }

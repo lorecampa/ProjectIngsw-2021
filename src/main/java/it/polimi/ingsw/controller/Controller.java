@@ -15,7 +15,6 @@ import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class Controller {
     private final GameMaster gameMaster;
@@ -108,8 +107,8 @@ public class Controller {
     public void nextTurn() {
         gameMaster.nextPlayer();
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        personalBoard.getResourceManager().newTurn();
-        personalBoard.getCardManager().newTurn();
+        personalBoard.getResourceManager().restoreRM();
+        personalBoard.getCardManager().restoreCM();
     }
 
 
@@ -118,12 +117,17 @@ public class Controller {
     //LEADER MANAGING
 
     public void leaderManage(int leaderIndex, boolean discard){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
+        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
+        CardManager cardManager = personalBoard.getCardManager();
+        ResourceManager resourceManager = personalBoard.getResourceManager();
         try{
-            if(discard)
+            if(discard){
                 cardManager.discardLeader(leaderIndex);
-            else
+            }else{
                 cardManager.activateLeader(leaderIndex);
+                resourceManager.restoreRM();
+            }
+
         }catch (Exception e){
             sendError(e.getMessage());
         }
@@ -338,9 +342,11 @@ public class Controller {
             case PRODUCTION_RESOURCE_REMOVING:
                 resourceManager.doProduction();
                 resourceManager.applyFaithPoints();
+                cardManager.restoreCM();
                 break;
 
         }
+        resourceManager.restoreRM();
         changeTurnState(TurnState.LEADER_MANAGE_AFTER);
     }
 

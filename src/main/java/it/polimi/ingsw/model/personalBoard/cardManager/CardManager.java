@@ -50,7 +50,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     /**
      * Method to set up the card manager to be ready for the current turn
      */
-    public void newTurn(){
+    public void restoreCM(){
         devCardsUsed.clear();
         leadersUsed.clear();
     }

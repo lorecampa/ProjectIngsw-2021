@@ -163,7 +163,7 @@ public class ClientMessageHandler {
 
     //Strongbox message handler
     public void strongboxUpdate(StrongboxUpdate message){
-        client.getModelOf(client.getMyName()).setStrongbox(message.getStrongboxUpdated());
+        client.getModelOf(message.getUsername()).setStrongbox(message.getStrongboxUpdated());
     }
 
     //leader discard message handler

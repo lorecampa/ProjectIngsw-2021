@@ -55,7 +55,7 @@ class DiscountEffectTest {
             rm.addToStrongbox(res);
         }
 
-        rm.newTurn();
+        rm.restoreRM();
     }
 
 

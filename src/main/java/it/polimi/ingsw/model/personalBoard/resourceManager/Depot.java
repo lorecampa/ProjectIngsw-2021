@@ -114,11 +114,16 @@ public class Depot {
         if(resource.getType() != newRes.getType()){
             throw new InvalidOrganizationWarehouseException("You try to sub a resource type different from his own");
         }
-
-        if(resource.getValue() - newRes.getValue() < 0){
+        int delta = resource.getValue() - newRes.getValue();
+        if(delta < 0){
             throw new NegativeResourceException("You can't sub more resources than are present");
         }else{
-            resource.subValue(newRes.getValue());
+            if (delta == 0){
+                setEmptyResource();
+            }else{
+                resource.subValue(newRes.getValue());
+            }
+
         }
     }
 

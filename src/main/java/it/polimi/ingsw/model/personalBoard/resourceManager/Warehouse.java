@@ -112,6 +112,12 @@ public class Warehouse implements Cloneable{
         return num;
     }
 
+    public void restoreDepot(int depotIndex, boolean isNormalDepot){
+        Depot depot = getDepot(depotIndex, isNormalDepot);
+        depot.setEmptyResource();
+    }
+
+
     /**
      * Get a specific standard depot
      * @param index of the depot i want

@@ -35,21 +35,15 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Set up the resource manager to be ready for the curr turn
      * */
-    public void newTurn(){
-        clearBuffers();
-        allMyResources();
-        allMyDiscounts();
-    }
-    /**
-     * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
-    private void clearBuffers(){
+    public void restoreRM(){
         anyRequired =0;
         anyToProduce = 0;
         faithPoint=0;
         resourcesBuffer.clear();
         resourcesToProduce.clear();
+        allMyResources();
+        allMyDiscounts();
     }
-
 
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
@@ -220,38 +214,35 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Switch the resource from fromDepot to toDepot
-     * @param fromDepot the first depot
-     * @param toDepot the second depot
+     * @param fromIndex the first depot
+     * @param toIndex the second depot
      * */
-    public void switchResourceFromDepotToDepot(int fromDepot, boolean isFromNormalDepot,
-                                               int toDepot, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+    public void switchResourceFromDepotToDepot(int fromIndex, boolean isFromNormalDepot,
+                                               int toIndex, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
 
-        Resource fromSupportResource = currWarehouse.popResourceFromDepotAt(fromDepot, isFromNormalDepot);
-        Resource toSupportResource = currWarehouse.popResourceFromDepotAt(toDepot, isToNormalDepot);
+        Resource from = currWarehouse.popResourceFromDepotAt(fromIndex, isFromNormalDepot);
+        Resource to = currWarehouse.popResourceFromDepotAt(toIndex, isToNormalDepot);
 
         try{
-            if(fromSupportResource.getType() != ResourceType.ANY){
-                currWarehouse.addDepotResourceAt(toDepot, fromSupportResource, isToNormalDepot);
+            if(from.getType() != ResourceType.ANY && !(!isFromNormalDepot && from.getValue() == 0)){
+                currWarehouse.addDepotResourceAt(toIndex, from, isToNormalDepot);
+            }
+
+            if(to.getType() != ResourceType.ANY && !(!isToNormalDepot && to.getValue() == 0)){
+                currWarehouse.addDepotResourceAt(fromIndex, to, isFromNormalDepot);
             }
         }
         catch(Exception e){
-            currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
-            currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
-            throw e;
-        }
-        try{
-            if(toSupportResource.getType() != ResourceType.ANY){
-                currWarehouse.addDepotResourceAt(fromDepot, toSupportResource, isFromNormalDepot);
-            }
-        }
-        catch(Exception e){
-            currWarehouse.addDepotResourceAt(fromDepot, fromSupportResource, isFromNormalDepot);
-            currWarehouse.addDepotResourceAt(toDepot, toSupportResource, isToNormalDepot);
+            currWarehouse.restoreDepot(fromIndex, isFromNormalDepot);
+            currWarehouse.addDepotResourceAt(fromIndex, from, isFromNormalDepot);
+
+            currWarehouse.restoreDepot(toIndex, isToNormalDepot);
+            currWarehouse.addDepotResourceAt(toIndex, to, isToNormalDepot);
             throw e;
         }
 
-        sendDepotUpdate(isFromNormalDepot, fromDepot);
-        sendDepotUpdate(isToNormalDepot, toDepot);
+        sendDepotUpdate(isFromNormalDepot, fromIndex);
+        sendDepotUpdate(isToNormalDepot, toIndex);
     }
 
     private void sendDepotUpdate(boolean isNormalDepot, int index){
@@ -470,9 +461,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Add resource to the list of discount i have
-     * @param discounts that i have "discount"*/
-    public void addDiscount(ArrayList<Resource> discounts) {
-        for(Resource dis : discounts){
+     * @param cardDiscounts that i have "discount"*/
+    public void addDiscount(ArrayList<Resource> cardDiscounts) {
+        for(Resource dis : cardDiscounts){
             if(discounts.contains(dis)){
                 discounts.get(discounts.indexOf(dis)).addValue(dis.getValue());
             }

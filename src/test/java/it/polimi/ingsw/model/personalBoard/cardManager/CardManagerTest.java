@@ -152,7 +152,7 @@ class CardManagerTest {
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
 
 
-        cardManager.newTurn();
+        cardManager.restoreCM();
 
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.WHITE_MARBLE_CONVERSION));
         assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
@@ -185,7 +185,7 @@ class CardManagerTest {
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.developmentProduce(1));
 
 
-        cardManager.newTurn();
+        cardManager.restoreCM();
 
         assertDoesNotThrow(()-> cardManager.developmentProduce(0));
         assertDoesNotThrow(()-> cardManager.developmentProduce(1));
@@ -196,8 +196,8 @@ class CardManagerTest {
     void baseProductionProduce() {
         assertDoesNotThrow(()->cardManager.baseProductionProduce());
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.baseProductionProduce());
-        cardManager.newTurn();
-        personalBoard.getResourceManager().newTurn();
+        cardManager.restoreCM();
+        personalBoard.getResourceManager().restoreRM();
         assertDoesNotThrow(()-> cardManager.baseProductionProduce());
     }
 }

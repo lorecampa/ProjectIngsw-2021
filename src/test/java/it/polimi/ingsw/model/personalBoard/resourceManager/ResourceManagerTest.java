@@ -146,7 +146,7 @@ class ResourceManagerTest {
         ArrayList<Resource> disc=new ArrayList<>();
         disc.add(ResourceFactory.createResource(ResourceType.COIN,1));
         rs.addDiscount(disc);
-        rs.newTurn();
+        rs.restoreRM();
         switch (index){
             case 0:
                 ArrayList<Resource> resourcesCosts1 = new ArrayList<>();

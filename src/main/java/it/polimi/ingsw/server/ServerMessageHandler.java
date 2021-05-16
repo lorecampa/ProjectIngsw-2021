@@ -217,6 +217,10 @@ public class ServerMessageHandler {
 
     //PRODUCTION
 
+    /**
+     * handleProduction method handle the normal production action
+     * @param msg of type ProductionAction - the message that contains the information
+     */
     public void handleProduction(ProductionAction msg){
         if(!controlAuthority(new TurnState[]{
                 TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
@@ -228,19 +232,29 @@ public class ServerMessageHandler {
         }
     }
 
+    /**
+     * handleBaseProduction method handle the base production action
+     */
     public void handleBaseProduction(){
         if(!controlAuthority(new TurnState[]{
                 TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
         controller.baseProduction();
     }
 
+    /**
+     * handleEndCardSelection method handle the stop of production in order to continue with the
+     * resources positioning
+     */
     public void handleEndCardSelection(){
         if(!controlAuthority(TurnState.PRODUCTION_ACTION)) return;
         controller.stopProductionCardSelection();
     }
 
     //ANY
-
+    /**
+     * handleAnyResponse method handle the response of a specific any conversion request sent to the user
+     * @param msg of type AnyResponse - the message that contains the information
+     */
     public void handleAnyResponse(AnyResponse msg){
         if (msg.getResources() == null) return;
         ArrayList<Resource> resources = msg.getResources().stream()
@@ -273,6 +287,10 @@ public class ServerMessageHandler {
 
     //WAREHOUSE
 
+    /**
+     * handleStrongboxModify method handle the strongbox resources removing
+     * @param msg of type StrongboxModify - the message that contains the information
+     */
     public void handleStrongboxModify(StrongboxModify msg){
         if(!controlAuthority(new TurnState[]{
                 TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING})){ return; }
@@ -281,6 +299,10 @@ public class ServerMessageHandler {
         controller.subToStrongbox(resource);
     }
 
+    /**
+     * handleDepotModify method handle the depot resources insertion and deletion
+     * @param msg of type DepotModify - the message that contains the information
+     */
     public void handleDepotModify(DepotModify msg){
         if(!isYourTurn()) { return; }
 
@@ -299,6 +321,10 @@ public class ServerMessageHandler {
         }
     }
 
+    /**
+     * handleSwitch method handle the depot switch
+     * @param msg of type DepotSwitch - the message that contains the information
+     */
     public void handleSwitch(DepotSwitch msg){
         if(!controlAuthority(new TurnState[]{
                 TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,

@@ -120,7 +120,7 @@ class BuyDevelopmentControllerTest {
 
 
         controller = new Controller(gameMaster, new Match(3, new Server(), 1));
-        resourceManager.newTurn();
+        resourceManager.restoreRM();
 
     }
 

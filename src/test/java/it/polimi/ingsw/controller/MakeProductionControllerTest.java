@@ -184,7 +184,7 @@ class MakeProductionControllerTest {
         cardManager.emptyCardSlotBuffer();
 
         controller = new Controller(gameMaster, new Match(3, new Server(), 1));
-        resourceManager.newTurn();
+        resourceManager.restoreRM();
         controller.changeTurnState(TurnState.LEADER_MANAGE_BEFORE);
     }
 
