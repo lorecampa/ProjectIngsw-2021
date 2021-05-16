@@ -107,7 +107,7 @@ public class ClientMessageHandler {
         client.setModels(message.getUsernames());
         client.setMarketData(message.getMarket());
         client.setDeckDevData(message.getDeckDev());
-        //deve mandare anche il faith track se no come faccio ad iniziallizarlo????
+        client.setFaithTrackData(message.getFaithTrack());
     }
 
     //leaders message handler

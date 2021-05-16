@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
+import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -180,7 +181,7 @@ public class Match {
                 for (VirtualClient player: allPlayers){
                     player.getClient().getServerMessageHandler().setController(controller);
                 }
-                sendSetUp(gameMaster);
+                sendSetUp(gameMaster, gameSetting);
 
                 sendLeader(gameMaster);
             } catch (IOException | JsonFileModificationError e) {
@@ -191,12 +192,12 @@ public class Match {
         }
     }
 
-    public void sendSetUp(GameMaster gameMaster){
+    public void sendSetUp(GameMaster gameMaster, GameSetting gameSetting){
         sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
         ArrayList<String> usernames = allPlayers.stream()
                 .map(VirtualClient::getUsername)
                 .collect(Collectors.toCollection(ArrayList::new));
-        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData()));
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData()));
     }
 
     public void sendLeader(GameMaster gameMaster){

@@ -29,8 +29,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        setUpForDebug();
-        //realSetUp();
+        //setUpForDebug();
+        realSetUp();
     }
 
     private void realSetUp(){

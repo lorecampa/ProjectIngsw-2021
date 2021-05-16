@@ -4,6 +4,7 @@ package it.polimi.ingsw.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
+import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
@@ -220,5 +221,11 @@ public class Client{
 
     public void setDeckDevData(DeckDevData deckDevData) {
         this.deckDevData = deckDevData;
+    }
+
+    public void setFaithTrackData(ArrayList<FaithTrackData> faithTrackData){
+        for (ModelClient modelClient: models){
+            modelClient.setFaithTrack(faithTrackData);
+        }
     }
 }
