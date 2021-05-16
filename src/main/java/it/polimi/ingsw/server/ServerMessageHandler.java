@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -15,6 +16,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * ServerMessageHandler class
+ */
 public class ServerMessageHandler {
     private Controller controller;
     private final Server server;
@@ -22,13 +26,28 @@ public class ServerMessageHandler {
     private VirtualClient virtualClient;
     private HandlerState setupState;
 
+    /**
+     * ServerMessageHandler constructor creates a new class instance
+     * @param server
+     * @param client
+     */
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
         this.server = server;
         this.client = client;
         this.setupState = HandlerState.FIRST_CONTACT;
     }
 
+    private boolean isSetUpPhaseFinished(){
+        if (setupState != HandlerState.IN_MATCH){
+            client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+            return false;
+        }
+        return true;
+    }
+
     private boolean isSinglePlayerGame(){
+        if(!isSetUpPhaseFinished()) return false;
+
         int numOfPlayer = controller.getNumberOfPlayer();
         if (numOfPlayer == 1){
             client.writeToStream(new ErrorMessage(ErrorType.NOT_SINGLE_PLAYER_MODE));
@@ -37,6 +56,8 @@ public class ServerMessageHandler {
     }
 
     private boolean areYouAllowed(TurnState turnState){
+        if(!isSetUpPhaseFinished()) return false;
+
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
             result = controller.getTurnState() == turnState;
@@ -50,6 +71,7 @@ public class ServerMessageHandler {
     }
 
     private boolean areYouAllowed(TurnState[] turnStates){
+        if(!isSetUpPhaseFinished()) return false;
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
             result = Arrays.stream(turnStates).anyMatch(x -> x == controller.getTurnState());
@@ -63,6 +85,7 @@ public class ServerMessageHandler {
     }
 
     private boolean isYourTurn(){
+        if(!isSetUpPhaseFinished()) return false;
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
             result = controller.isYourTurn(virtualClient.getUsername());
@@ -220,7 +243,6 @@ public class ServerMessageHandler {
 
     public void handleAnyResponse(AnyResponse msg){
         if (msg.getResources() == null) return;
-
         ArrayList<Resource> resources = msg.getResources().stream()
                 .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -229,10 +251,6 @@ public class ServerMessageHandler {
             controller.insertSetUpResources(resources, virtualClient.getUsername());
             return;
         }
-
-        //TODO change message error in case someone send any conversion before entering in game
-        //we don't need it actually
-        if (setupState != HandlerState.IN_MATCH) return;
 
         if(!isYourTurn()){ return; }
 

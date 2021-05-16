@@ -58,8 +58,6 @@ public class Controller {
 
 
     public boolean isYourTurn(String username){
-        if (getCurrentPlayer() == null) return false;
-
         return getCurrentPlayer().equals(username);
     }
 
@@ -427,8 +425,9 @@ public class Controller {
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
                     case 0:
-                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
+                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.WAITING_TO_BE_IN_MATCH));
                         if(isFinishedSetup()){
+                            match.getAllPlayers().forEach(x -> x.getClient().setState(HandlerState.IN_MATCH));
                             match.sendAllPlayers(new MatchStart());
                             gameMaster.nextPlayer();
                         }
@@ -459,7 +458,7 @@ public class Controller {
     //TODO ask: should only be active players due to disconnections?
     private boolean isFinishedSetup(){
         for(VirtualClient player : match.getAllPlayers()){
-            if(player.getClient().getState()!=HandlerState.IN_MATCH)
+            if(player.getClient().getState()!=HandlerState.WAITING_TO_BE_IN_MATCH)
                 return false;
         }
         return true;
@@ -468,7 +467,6 @@ public class Controller {
     public void insertSetUpResources(ArrayList<Resource> resources, String username){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(username).getResourceManager();
         int sizeResponse = resources.stream().mapToInt(Resource::getValue).sum();
-
         try{
             switch (gameMaster.getPlayerPosition(username)){
                 case 1:
@@ -477,6 +475,7 @@ public class Controller {
                         resourceManager.addToWarehouse(true, 0, resources.get(0));
                     }else{
                         sendErrorTo("Too many resources sent", username);
+                        return;
                     }
                     break;
                 case 3:
@@ -487,11 +486,13 @@ public class Controller {
                         resourceManager.addToWarehouse(true, 1, resources.get(1));
                     }else{
                         sendErrorTo("Too many resources sent", username);
+                        return;
                     }
                     break;
             }
-            match.getPlayer(username).ifPresent(y -> y.getClient().setState(HandlerState.IN_MATCH));
+            match.getPlayer(username).ifPresent(y -> y.getClient().setState(HandlerState.WAITING_TO_BE_IN_MATCH));
             if(isFinishedSetup()){
+                match.getAllPlayers().forEach(x -> x.getClient().setState(HandlerState.IN_MATCH));
                 match.sendAllPlayers(new MatchStart());
                 nextTurn();
             }

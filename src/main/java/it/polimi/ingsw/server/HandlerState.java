@@ -5,8 +5,8 @@ public enum HandlerState {
     NUM_OF_PLAYER,
     USERNAME,
     WAITING_LOBBY,
-    WAITING_MATCH,
     LEADER_SETUP,
     RESOURCE_SETUP,
+    WAITING_TO_BE_IN_MATCH,
     IN_MATCH
 }
