@@ -125,7 +125,6 @@ public class ClientMessageHandler {
         //da qui sono in game
     }
 
-
     //AnyConversionRequest message handler
     public void anyConversionRequest(AnyConversionRequest message){
         ArrayList<String> textToPrint = new ArrayList<>();
@@ -162,6 +161,11 @@ public class ClientMessageHandler {
         }
     }
 
+    //Strongbox message handler
+    public void strongboxUpdate(StrongboxUpdate message){
+        client.getModelOf(client.getMyName()).setStrongbox(message.getStrongboxUpdated());
+    }
+
     //leader discard message handler
     public void discardUpdate(LeaderDiscard message){
         if (message.getUsername().equals(client.getMyName())){
@@ -181,7 +185,6 @@ public class ClientMessageHandler {
             client.getModelOf(message.getUsername()).putAsActiveInLeader(message.getLeader());
         }
     }
-
 
     //MarketUpdate message handler
     public void marketUpdate(MarketUpdate message){
@@ -230,6 +233,7 @@ public class ClientMessageHandler {
 
     //WhiteMarbleConversionRequest message handler
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
+        //TODO:da stampare un messaggio un po piu decente
         PrintAssistant.instance.printf("there are "+message.getNumOfWhiteMarbleDrew()+" white marble");
     }
 }

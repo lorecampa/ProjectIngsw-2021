@@ -27,6 +27,6 @@ public class StrongboxUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("StrongboxUpdate Handler");
+        handler.strongboxUpdate(this);
     }
 }
