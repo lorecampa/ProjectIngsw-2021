@@ -102,7 +102,7 @@ public class ActionCMD implements Command{
                 }
                 client.writeToStream(new ProductionAction(leaderIndex, true));
                 break;
-            case "bs":
+            case "bp":
                 if(split.length>2)
                     PrintAssistant.instance.invalidParamCommand(cmd);
                 client.writeToStream(new BaseProduction());
@@ -122,7 +122,7 @@ public class ActionCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        if(CommandsUtility.isADepotIndex(cardSlot)){
+        if(!CommandsUtility.isADepotIndex(cardSlot)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

@@ -58,6 +58,8 @@ public class Controller {
 
 
     public boolean isYourTurn(String username){
+        if (getCurrentPlayer() == null) return false;
+
         return getCurrentPlayer().equals(username);
     }
 
@@ -227,13 +229,6 @@ public class Controller {
             return;
         }
 
-        try{
-            card.checkRequirements();
-        }catch (Exception e){
-            sendError(e.getMessage());
-            return;
-        }
-
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         CardManager cardManager = personalBoard.getCardManager();
         try {
@@ -241,7 +236,16 @@ public class Controller {
             cardManager.setDeckBufferInfo(row, col);
         } catch (Exception e) {
             sendError(e.getMessage());
+            return;
         }
+
+        try{
+            card.checkRequirements();
+        }catch (Exception e){
+            sendError(e.getMessage());
+            return;
+        }
+
 
         //control in case you can buy instantly the card without paying (buffer is empty)
         controlBufferStatus();
@@ -289,8 +293,10 @@ public class Controller {
 
 
     public void stopProductionCardSelection(){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        resourceManager.sendBufferUpdate();
         changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
-        controlBufferStatus();
+
     }
 
     //ANY
@@ -487,7 +493,7 @@ public class Controller {
             match.getPlayer(username).ifPresent(y -> y.getClient().setState(HandlerState.IN_MATCH));
             if(isFinishedSetup()){
                 match.sendAllPlayers(new MatchStart());
-                gameMaster.nextPlayer();
+                nextTurn();
             }
         }catch (Exception e){
             sendErrorTo(e.getMessage(), username);

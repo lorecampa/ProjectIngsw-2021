@@ -148,7 +148,8 @@ public class ServerMessageHandler {
     //UTIL
 
     public void handleEndTurn(){
-        if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
+        //TODO uncheck
+        //if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
         controller.nextTurn();
     }
 
@@ -160,7 +161,8 @@ public class ServerMessageHandler {
             controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
             return;
         }
-        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) { return; }
+        if(!controlAuthority(new TurnState[]{
+                TurnState.LEADER_MANAGE_BEFORE, TurnState.LEADER_MANAGE_AFTER})){ return; }
 
         controller.leaderManage(msg.getIndex(), msg.isDiscard());
     }
@@ -227,9 +229,10 @@ public class ServerMessageHandler {
             controller.insertSetUpResources(resources, virtualClient.getUsername());
             return;
         }
-        if(setupState == HandlerState.IN_MATCH){
-            return;
-        }
+
+        //TODO change message error in case someone send any conversion before entering in game
+        //we don't need it actually
+        if (setupState != HandlerState.IN_MATCH) return;
 
         if(!isYourTurn()){ return; }
 

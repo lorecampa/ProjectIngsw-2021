@@ -38,6 +38,6 @@ public class CardSlotUpdate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("CardSlotUpdate Handler");
+        handler.cardSlotUpdate(this);
     }
 }

@@ -119,6 +119,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             }else{
                 if(anyToProduce > 0){
                     notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
+                    notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
                 }else{
                     notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
                 }
@@ -186,7 +187,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResource(resource);
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+        sendBufferUpdate();
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
 
@@ -199,7 +200,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
     public void addToWarehouse(boolean isNormalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         currWarehouse.addDepotResourceAt(index, resource, isNormalDepot);
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+        sendBufferUpdate();
         sendDepotUpdate(isNormalDepot, index);
     }
 
@@ -212,7 +213,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
-        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
+        sendBufferUpdate();
         sendDepotUpdate(isNormalDepot, index);
 
     }
@@ -448,8 +449,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void discardResourcesFromMarket(){
         notifyGameMasterObserver(x -> x.discardResources(numberOfResourceInBuffer()));
         resourcesBuffer.clear();
+        sendBufferUpdate();
+    }
+
+    public void sendBufferUpdate(){
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
+
 
 
 

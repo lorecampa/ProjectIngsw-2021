@@ -30,9 +30,10 @@ public class AnyCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        String[] split= param.split(" ");
+        String temp = param.trim().replaceAll(",", "");
+        String[] split= temp.split(" ");
         ArrayList<ResourceData> resourceToSend=new ArrayList<>();
-        for(int i=0;i<split.length; i+=3){
+        for(int i=0;i<split.length; i+=2){
             if(CommandsUtility.isNotAResource(split[i])){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;

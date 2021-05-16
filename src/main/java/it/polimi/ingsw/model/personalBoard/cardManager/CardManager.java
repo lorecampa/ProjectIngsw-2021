@@ -107,6 +107,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void addDevCardTo(Development development, int indexCardSlot) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException {
         cardSlots.get(indexCardSlot).insertCard(development);
         indexCardSlotBuffer = indexCardSlot;
+
     }
 
     public void setDeckBufferInfo(int row, int col){

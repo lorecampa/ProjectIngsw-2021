@@ -72,6 +72,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
         //setting up  players
         Collections.shuffle(players);
+        int i = 0;
         for (String player: players){
             addPlayer(player);
             playersTurn.add(player);

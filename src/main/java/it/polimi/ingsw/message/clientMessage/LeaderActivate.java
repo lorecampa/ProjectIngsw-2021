@@ -34,6 +34,6 @@ public class LeaderActivate implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-
+        handler.activeLeader(this);
     }
 }

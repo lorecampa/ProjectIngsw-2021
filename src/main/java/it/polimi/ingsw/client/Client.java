@@ -68,7 +68,7 @@ public class Client{
                 client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
                 client.setMyName("Teo");
                 try{
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(5);
                 }
                 catch(Exception e){
                     e.printStackTrace();

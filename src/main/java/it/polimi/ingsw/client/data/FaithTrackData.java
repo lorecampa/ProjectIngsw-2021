@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 
 public class FaithTrackData {
@@ -10,7 +12,13 @@ public class FaithTrackData {
     private final int victoryPopeFavor;
     private boolean acquired;
 
-    public FaithTrackData(int numberofCell, int victoryPoints, boolean vaticanReport, boolean popeFavor, int victoryPopeFavor, boolean acquired) {
+    @JsonCreator
+    public FaithTrackData(@JsonProperty("numberofCell") int numberofCell,
+                          @JsonProperty("victoryPoints") int victoryPoints,
+                          @JsonProperty("vaticanReport") boolean vaticanReport,
+                          @JsonProperty("popeFavor") boolean popeFavor,
+                          @JsonProperty("victoryPopeFavor") int victoryPopeFavor,
+                          @JsonProperty("acquired") boolean acquired) {
         this.numberofCell = numberofCell;
         this.victoryPoints = victoryPoints;
         this.vaticanReport = vaticanReport;

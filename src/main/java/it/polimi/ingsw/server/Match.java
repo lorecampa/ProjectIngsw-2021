@@ -181,8 +181,8 @@ public class Match {
                 for (VirtualClient player: allPlayers){
                     player.getClient().getServerMessageHandler().setController(controller);
                 }
-                sendSetUp(gameMaster, gameSetting);
 
+                sendSetUp(gameMaster, gameSetting);
                 sendLeader(gameMaster);
             } catch (IOException | JsonFileModificationError e) {
                 e.printStackTrace();
