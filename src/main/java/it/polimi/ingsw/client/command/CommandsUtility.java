@@ -2,7 +2,9 @@ package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientState;
+import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 public class CommandsUtility {
@@ -68,5 +70,16 @@ public class CommandsUtility {
 
     public static boolean isValidIndexDepotLeader(Client client, int index){
         return client.getModelOf(client.getMyName()).isValidIndexDepotLeader(index);
+    }
+
+    public static ResourceData fromTypeAndValueToResource(String type, String value) throws CliException{
+        if(CommandsUtility.isNotAResource(type)){
+            throw new CliException("Error type");
+        }
+        int amount=CommandsUtility.stringToInt(value);
+        if(amount==-1){
+            throw new CliException("Error amount");
+        }
+        return CommandsUtility.stringToResource(type, amount);
     }
 }
