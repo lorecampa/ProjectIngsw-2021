@@ -231,6 +231,14 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printf(resource);
     }
 
+    public void faithTrackPositionIncreased(FaithTrackIncrement message){
+        client.getModelOf(message.getUsername()).increaseCurrentPosOnFaithTrack();
+    }
+
+    public void popeFavorActivation(PopeFavorActivated message){
+        client.getModelOf(message.getUsername()).popeFavorActivation(message.getPopeSpaceCell(),message.isDiscard());
+    }
+
     //WhiteMarbleConversionRequest message handler
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
         //TODO:da stampare un messaggio un po piu decente

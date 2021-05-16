@@ -135,6 +135,18 @@ public class ModelClient {
         this.faithTrack = faithTrack;
     }
 
+    public void increaseCurrentPosOnFaithTrack(){currentPosOnFaithTrack++;}
+
+    public void popeFavorActivation(int idVaticanReport, boolean activated){
+        int num = 0;
+        if (activated) {
+            for (FaithTrackData cell : faithTrack) {
+                if (cell.isPopeFavor()) num++;
+                if (num == idVaticanReport) cell.setAcquired(true);
+            }
+        }
+    }
+
     public void setStandardDepotAt(int index, ResourceData newDepot) {
         standardDepot.set(index, newDepot);
     }

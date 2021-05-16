@@ -18,6 +18,6 @@ public class FaithTrackIncrement implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("FaithTrackPositionHandler");
+        handler.faithTrackPositionIncreased(this);
     }
 }

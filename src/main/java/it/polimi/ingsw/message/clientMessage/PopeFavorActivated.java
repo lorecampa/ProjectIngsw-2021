@@ -36,6 +36,6 @@ public class PopeFavorActivated implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("PopeFavorActivated Handler");
+        handler.popeFavorActivation(this);
     }
 }
