@@ -10,12 +10,17 @@ public class ModelClient {
     private final Integer DIM_CELL_CHAR = 14;
 
     private final String username;
+
     private Integer currentPosOnFaithTrack;
     private ArrayList<FaithTrackData> faithTrack = new ArrayList<>();
+
     private final ArrayList<ResourceData> standardDepot = new ArrayList<>();
     private final ArrayList<ResourceData> leaderDepot = new ArrayList<>();
+
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
+
     private final ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
+
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
     //attributes to CLI
@@ -24,8 +29,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        //setUpForDebug();
-        realSetUp();
+        setUpForDebug();
+        //realSetUp();
     }
 
     private void realSetUp(){
@@ -54,7 +59,7 @@ public class ModelClient {
         }
 
         for(int i=0; i<25; i++){
-            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: 0), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i));
+            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: -1), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i,true));
         }
         strongbox.add(new ResourceData(ResourceType.COIN, 12));
         strongbox.add(new ResourceData(ResourceType.SERVANT, 2));
@@ -236,7 +241,7 @@ public class ModelClient {
                 rowOfFaith.set(1, rowOfFaith.get(1)+colorBorderOut+"| "+colorBorderIn+" ________ "+colorBorderOut+" |");
                 rowOfFaith.set(2, rowOfFaith.get(2)+colorBorderOut+"| "+colorBorderIn+"| "+victoryPoint+" |"+colorBorderOut+" |");
                 rowOfFaith.set(3, rowOfFaith.get(3)+colorBorderOut+"| "+colorBorderIn+"|   "+numCell+"   |"+colorBorderOut+" |");
-                rowOfFaith.set(4, rowOfFaith.get(4)+colorBorderOut+"| "+colorBorderIn+"|"+ popeFavor+"|"+colorBorderOut+" |");
+                rowOfFaith.set(4, rowOfFaith.get(4)+colorBorderOut+"| "+colorBorderIn+"|"+ popeFavor+colorBorderIn+"|"+colorBorderOut+" |");
                 rowOfFaith.set(5, rowOfFaith.get(5)+colorBorderOut+"| "+colorBorderIn+"|________|"+colorBorderOut+" |");
                 rowOfFaith.set(6, rowOfFaith.get(6)+colorBorderOut+"|____________|");
             }

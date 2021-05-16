@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.FaithTrackData;
 
 public class NormalCell implements Cell{
 
@@ -37,5 +38,9 @@ public class NormalCell implements Cell{
         return idVaticanReport;
     }
 
-
+    @Override
+    public FaithTrackData toData() {
+        boolean vaticanRep = idVaticanReport != -1;
+        return new FaithTrackData(0,-1,vaticanRep,false,0,false);
+    }
 }

@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.GameMasterObservable;
-import it.polimi.ingsw.observer.GameMasterObserver;
 import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
@@ -17,12 +18,15 @@ import java.util.function.Consumer;
  */
 public class FaithTrack extends GameMasterObservable  implements Observable<FaithTrackObserver>{
     List<FaithTrackObserver> faithTrackObserverList = new ArrayList<>();
+
     private int victoryPoints;
     private int popeFavorVP;
     private int currentPositionOnTrack;
     private final ArrayList<Integer> popeFavor;
     private final ArrayList<Cell> track;
 
+    @JsonIgnore
+    private final ArrayList<Boolean> popeFavorAcquired = new ArrayList<>();
 
     @JsonCreator
     public FaithTrack(@JsonProperty("victoryPoints") int victoryPoints,
@@ -35,8 +39,15 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
         this.currentPositionOnTrack = currentPositionOnTrack;
         this.popeFavor = popeFavor;
         this.track = track;
+
+        initializePopeFavorAcquired();
     }
 
+    private void initializePopeFavorAcquired(){
+        for (int i = 0; i < popeFavor.size(); i++) {
+            popeFavorAcquired.add(false);
+        }
+    }
 
     /**
      * Method to get the number of victory points acquired from the track
@@ -105,6 +116,7 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
 
         if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport)){
             popeFavorVP += popeFavor.get(idVaticanReport);
+            popeFavorAcquired.set(idVaticanReport, true);
 
             popeSpacePosition.ifPresent(popeIndex ->
                     notifyAllObservers(x -> x.popeFavorReached(popeIndex, false)));
@@ -113,8 +125,29 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
                     notifyAllObservers(x -> x.popeFavorReached(popeIndex, true)));
         }
 
+    }
 
+    public ArrayList<FaithTrackData> toFaithTrackData(){
+        ArrayList<FaithTrackData> faithTrackData = new ArrayList<>();
+        int index = 0;
 
+        for (Cell cell : track){
+            FaithTrackData cellDataRaw = cell.toData();
+
+            boolean isAcquired = false;
+            int popeSpaceVP = 0;
+            if (cellDataRaw.isPopeFavor()) {
+                isAcquired = popeFavorAcquired.get(cell.getIdVaticanReport());
+                popeSpaceVP = popeFavor.get(cell.getIdVaticanReport());
+            }
+
+            FaithTrackData cellData = new FaithTrackData(index,cellDataRaw.getVictoryPoints(),
+                    cellDataRaw.isVaticanReport(),cellDataRaw.isPopeFavor(),popeSpaceVP, isAcquired);
+            faithTrackData.add(cellData);
+            index++;
+        }
+
+        return faithTrackData;
     }
 
 

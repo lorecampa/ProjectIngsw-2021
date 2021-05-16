@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.FaithTrackData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,6 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 class FaithTrackTest {
 
@@ -98,5 +100,10 @@ class FaithTrackTest {
             case 14: assertEquals(3,faithTrack.getPopeFavorVP()); break;
             case 20: assertEquals(4,faithTrack.getPopeFavorVP()); break;
         }
+    }
+
+    @Test
+    public void toDataFaith(){
+        ArrayList<FaithTrackData> faithTrackData = faithTrack.toFaithTrackData();
     }
 }

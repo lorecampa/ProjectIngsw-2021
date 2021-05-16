@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.client.data.FaithTrackData;
 
 public class VictoryCell implements Cell{
 
@@ -42,5 +43,9 @@ public class VictoryCell implements Cell{
         return idVaticanReport;
     }
 
-
+    @Override
+    public FaithTrackData toData() {
+        boolean vaticanRep = idVaticanReport != -1;
+        return new FaithTrackData(0,victoryPoints,vaticanRep,false,0,false);
+    }
 }

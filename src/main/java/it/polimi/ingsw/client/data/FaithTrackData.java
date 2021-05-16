@@ -8,13 +8,15 @@ public class FaithTrackData {
     private final boolean vaticanReport;
     private final boolean popeFavor;
     private final int victoryPopeFavor;
+    private boolean acquired;
 
-    public FaithTrackData(int numberofCell, int victoryPoints, boolean vaticanReport, boolean popeFavor, int victoryPopeFavor) {
+    public FaithTrackData(int numberofCell, int victoryPoints, boolean vaticanReport, boolean popeFavor, int victoryPopeFavor, boolean acquired) {
         this.numberofCell = numberofCell;
         this.victoryPoints = victoryPoints;
         this.vaticanReport = vaticanReport;
         this.popeFavor = popeFavor;
         this.victoryPopeFavor=victoryPopeFavor;
+        this.acquired = acquired;
     }
 
     public int getNumberofCell() {
@@ -32,13 +34,14 @@ public class FaithTrackData {
     public boolean isPopeFavor() {
         return popeFavor;
     }
+
     public int getVictoryPopeFavor() {
         return victoryPopeFavor;
     }
 
     public String cardVictoryPoint(){
         String victoryPointsString;
-        if(victoryPoints==0){
+        if(victoryPoints==-1){
             victoryPointsString="      ";
         }
         else{
@@ -47,10 +50,15 @@ public class FaithTrackData {
         return victoryPointsString;
     }
 
+    public void setAcquired(boolean acquired) { this.acquired = acquired; }
+
     public String cardPopeFavor(){
         String popeFavorString;
         if(popeFavor){
-            popeFavorString="PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")";
+            if (acquired)
+                popeFavorString=PrintAssistant.ANSI_GREEN + "PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")" + PrintAssistant.ANSI_RESET;
+            else
+                popeFavorString="PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")";
         }
         else{
             popeFavorString="        ";

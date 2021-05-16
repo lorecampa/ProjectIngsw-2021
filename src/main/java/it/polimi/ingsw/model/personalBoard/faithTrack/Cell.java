@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import it.polimi.ingsw.client.data.FaithTrackData;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -32,5 +33,6 @@ public interface Cell{
      */
     int getIdVaticanReport();
 
+    FaithTrackData toData();
 
 }
