@@ -7,10 +7,13 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.market.Marble;
+import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
@@ -70,7 +73,23 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //OBSERVER IMPLEMENTATION
 
+    //CREATION EFFECTS
+    @Override
+    public void modifyDepotLeader(ArrayList<Depot> depots, boolean isDiscard) {
+        ArrayList<ResourceData> depotToSend= depots.stream()
+                                                .map(x-> new ResourceData(x.getResourceType(), x.getResourceValue()))
+                                                .collect(Collectors.toCollection(ArrayList::new));
+        match.sendAllPlayers(new DepotLeaderUpdate(depotToSend, isDiscard, username));
+    }
 
+    @Override
+    public void modifyDiscountLeader(ArrayList<Resource> discounts, boolean isDiscard) {
+
+        ArrayList<ResourceData> discountToSend= discounts.stream().map(Resource::toClient)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        match.sendAllPlayers(new DiscountLeaderUpdate( discountToSend,  isDiscard));
+    }
 
     //MODEL OBSERVER
     @Override

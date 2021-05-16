@@ -154,6 +154,7 @@ public class ModelClient {
     }
 
     public void addLeaderDepot(ResourceData depotToAdd){
+        //TODO: maxstorable
         leaderDepot.add(depotToAdd);
     }
 

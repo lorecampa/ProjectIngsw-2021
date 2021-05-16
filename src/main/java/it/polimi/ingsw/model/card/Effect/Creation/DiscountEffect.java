@@ -38,9 +38,11 @@ public class DiscountEffect implements Effect {
     @Override
     public void doEffect(TurnState turnState) {
         if (turnState == TurnState.LEADER_MANAGE_BEFORE){
-            for(Resource res: discounts){
-                resourceManager.addDiscount(ResourceFactory.createResource(res.getType(), res.getValue()));
-            }
+            ArrayList<Resource> disCopy=discounts.stream()
+                                        .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
+                                        .collect(Collectors.toCollection(ArrayList::new));
+
+            resourceManager.addDiscount(disCopy);
         }
 
     }

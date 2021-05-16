@@ -244,4 +244,17 @@ public class ClientMessageHandler {
         //TODO:da stampare un messaggio un po piu decente
         PrintAssistant.instance.printf("there are "+message.getNumOfWhiteMarbleDrew()+" white marble");
     }
+
+    //DepotLeaderUpdate
+    public void depotLeaderUpdate(DepotLeaderUpdate message){
+        for(ResourceData rs : message.getDepots()){
+            client.getModelOf(message.getUsername()).addLeaderDepot(rs);
+        }
+    }
+
+    //DiscountLeadeUpdate
+    public void discountLeaderUpdate(DiscountLeaderUpdate message){
+
+    }
+
 }

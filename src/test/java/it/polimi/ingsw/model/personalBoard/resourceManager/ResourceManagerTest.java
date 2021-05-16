@@ -57,7 +57,11 @@ class ResourceManagerTest {
                 assertDoesNotThrow(() -> rs.addToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
                 assertDoesNotThrow(() -> rs.addToWarehouse(true,2,ResourceFactory.createResource(ResourceType.SERVANT,2)));
                 Resource r1=ResourceFactory.createResource(ResourceType.SERVANT, 2);
-                rs.addLeaderDepot(new Depot(r1, 10));
+
+                ArrayList<Depot> depots=new ArrayList<>();
+                depots.add(new Depot(r1, 10));
+
+                rs.addLeaderDepot(depots);
                 assertDoesNotThrow(() -> rs.addToWarehouse(false,0,ResourceFactory.createResource(ResourceType.SERVANT,2)));
                 break;
         }
@@ -95,7 +99,11 @@ class ResourceManagerTest {
                 assertDoesNotThrow(() -> rs.subToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
 
                 Resource r1=ResourceFactory.createResource(ResourceType.SERVANT, 2);
-                rs.addLeaderDepot(new Depot(r1, 10));
+
+                ArrayList<Depot> depots=new ArrayList<>();
+                depots.add(new Depot(r1, 10));
+
+                rs.addLeaderDepot(depots);
                 assertDoesNotThrow(() -> rs.subToWarehouse(false,0,ResourceFactory.createResource(ResourceType.SERVANT,1)));
                 break;
         }
@@ -135,7 +143,9 @@ class ResourceManagerTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void canIAfford(int index) {
-        rs.addDiscount(ResourceFactory.createResource(ResourceType.COIN,1));
+        ArrayList<Resource> disc=new ArrayList<>();
+        disc.add(ResourceFactory.createResource(ResourceType.COIN,1));
+        rs.addDiscount(disc);
         rs.newTurn();
         switch (index){
             case 0:
@@ -169,7 +179,9 @@ class ResourceManagerTest {
 
     @Test
     void switchLeaderDepot() {
-        rs.addLeaderDepot(new Depot(ResourceFactory.createResource(ResourceType.SHIELD, 2), 4));
+        ArrayList<Depot> depots=new ArrayList<>();
+        depots.add(new Depot(ResourceFactory.createResource(ResourceType.SHIELD, 2), 4));
+        rs.addLeaderDepot(depots);
 
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
     }

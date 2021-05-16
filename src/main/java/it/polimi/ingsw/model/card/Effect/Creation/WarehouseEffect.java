@@ -39,10 +39,12 @@ public class WarehouseEffect  implements Effect {
     @Override
     public void doEffect(TurnState turnState) {
         if (turnState == TurnState.LEADER_MANAGE_BEFORE){
-            for (Resource depot: depots){
-                resourceManager.addLeaderDepot(
-                        new Depot(ResourceFactory.createResource(depot.getType(), 0), depot.getValue()));
-            }
+
+            ArrayList<Depot> disCopy=depots.stream()
+                    .map(x->new Depot(ResourceFactory.createResource(x.getType(), 0), x.getValue()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            resourceManager.addLeaderDepot(disCopy);
         }
     }
 

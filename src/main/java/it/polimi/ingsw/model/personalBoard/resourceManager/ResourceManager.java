@@ -349,7 +349,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
      * @param checkDiscount if u want you resource to be discounted
-     * @return true if u can false if u can't
      * */
 
     public void canIAfford(ArrayList<Resource> resources, boolean checkDiscount) throws NotEnoughRequirementException {
@@ -460,21 +459,28 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
 
     /**Add a depot as a leaderDepot in the warehouse
-     * @param depot i want to add*/
-    public void addLeaderDepot(Depot depot){
-        currWarehouse.addDepotLeader(depot);
+     * @param depots i want to add*/
+    public void addLeaderDepot(ArrayList<Depot> depots){
+        for(Depot dep : depots){
+            currWarehouse.addDepotLeader(dep);
+        }
+
+        notifyAllObservers(x->x.modifyDepotLeader(depots, false));
     }
 
     /**
      * Add resource to the list of discount i have
-     * @param resource that i have "discount"*/
-    public void addDiscount(Resource resource) {
-        if(discounts.contains(resource)){
-            discounts.get(discounts.indexOf(resource)).addValue(resource.getValue());
+     * @param discounts that i have "discount"*/
+    public void addDiscount(ArrayList<Resource> discounts) {
+        for(Resource dis : discounts){
+            if(discounts.contains(dis)){
+                discounts.get(discounts.indexOf(dis)).addValue(dis.getValue());
+            }
+            else{
+                discounts.add(dis);
+            }
         }
-        else{
-            discounts.add(resource);
-        }
+        notifyAllObservers(x->x.modifyDiscountLeader(discounts, false));
     }
 
     public int getFaithPoint() {

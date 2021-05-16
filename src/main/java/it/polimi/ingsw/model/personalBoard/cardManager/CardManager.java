@@ -69,6 +69,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
+        //TODO:delete all the onCreationEffect if leader was active!!!!
         leaders.remove(leaderIndex);
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));

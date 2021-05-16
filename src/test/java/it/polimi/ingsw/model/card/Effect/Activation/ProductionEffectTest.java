@@ -148,7 +148,9 @@ class ProductionEffectTest {
         assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
 
         //create a leader depot with 2 coins
-        rm.addLeaderDepot(new Depot(ResourceFactory.createResource(ResourceType.COIN, 0), 2));
+        ArrayList<Depot> depots=new ArrayList<>();
+        depots.add(new Depot(ResourceFactory.createResource(ResourceType.COIN, 0), 2));
+        rm.addLeaderDepot(depots);
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 2)));
     }
 

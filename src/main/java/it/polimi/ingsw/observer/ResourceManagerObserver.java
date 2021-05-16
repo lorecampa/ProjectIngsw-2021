@@ -1,5 +1,6 @@
 package it.polimi.ingsw.observer;
 
+import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.ArrayList;
@@ -22,5 +23,6 @@ public interface ResourceManagerObserver {
     void strongboxUpdate(ArrayList<Resource> strongboxUpdated);
 
     void depotUpdate(Resource depotUpdated, int index, boolean isNormalDepot);
-
+    void modifyDepotLeader(ArrayList<Depot> depots, boolean isDiscard);
+    void modifyDiscountLeader(ArrayList<Resource> discounts, boolean isDiscard);
 }
