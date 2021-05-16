@@ -208,14 +208,16 @@ public class ClientMessageHandler {
         String resource;
         if(message.getBufferUpdated().isEmpty()){
             resource="You have just end your operations with the resources!";
+            PrintAssistant.instance.printf(resource);
+            printResources(client.getMyName());
         }
         else{
             resource="Buffer: ";
             for(ResourceData r : message.getBufferUpdated()){
                 resource+=r.toCli();
             }
+            PrintAssistant.instance.printf(resource);
         }
-        PrintAssistant.instance.printf(resource);
     }
 
     //ManageResourceRequest message handler
