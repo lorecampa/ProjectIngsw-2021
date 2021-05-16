@@ -170,10 +170,10 @@ public class ClientMessageHandler {
     public void discardUpdate(LeaderDiscard message){
         if (message.getUsername().equals(client.getMyName())){
             client.getModelOf(client.getMyName()).removeLeaderAt(message.getLeaderIndex());
-            client.getModelOf(client.getMyName()).printLeaders();
         }else{
             PrintAssistant.instance.printf(message.getUsername() + " has discarded a leader!");
         }
+        printLeader(message.getUsername());
     }
 
     //leaderActivate message handler
@@ -184,6 +184,7 @@ public class ClientMessageHandler {
         else{
             client.getModelOf(message.getUsername()).putAsActiveInLeader(message.getLeader());
         }
+        printLeader(message.getUsername());
     }
 
     //MarketUpdate message handler
@@ -199,6 +200,7 @@ public class ClientMessageHandler {
             if (cardSlotIndex >= 0 && cardSlotIndex < 3)
                 client.getModelOf(client.getMyName()).addToCardSlot(message.getSlotIndex(), card);
         }
+        printCardSlots(message.getUsername());
     }
 
     //BufferUpdate message handler
@@ -206,7 +208,6 @@ public class ClientMessageHandler {
         String resource;
         if(message.getBufferUpdated().isEmpty()){
             resource="You have just end your operations with the resources!";
-
         }
         else{
             resource="Buffer: ";
@@ -237,6 +238,7 @@ public class ClientMessageHandler {
 
     public void popeFavorActivation(PopeFavorActivated message){
         client.getModelOf(message.getUsername()).popeFavorActivation(message.getPopeSpaceCell(),message.isDiscard());
+        printFaith(message.getUsername());
     }
 
     //WhiteMarbleConversionRequest message handler
@@ -250,6 +252,7 @@ public class ClientMessageHandler {
         for(ResourceData rs : message.getDepots()){
             client.getModelOf(message.getUsername()).addLeaderDepot(rs);
         }
+        printResources(message.getUsername());
     }
 
     //DiscountLeadeUpdate
@@ -257,4 +260,21 @@ public class ClientMessageHandler {
 
     }
 
+    //Print
+    public void printFaith(String username){
+        if(username.equals(client.getMyName()))
+            client.getModelOf(client.getMyName()).printFaithTrack();
+    }
+    public void printCardSlots(String username){
+        if(username.equals(client.getMyName()))
+            client.getModelOf(client.getMyName()).printCardSlots(true);
+    }
+    public void printResources(String username){
+        if(username.equals(client.getMyName()))
+            client.getModelOf(client.getMyName()).printResources();
+    }
+    public void printLeader(String username){
+        if(username.equals(client.getMyName()))
+            client.getModelOf(client.getMyName()).printLeaders();
+    }
 }
