@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
 import it.polimi.ingsw.client.PrintAssistant;
@@ -14,7 +15,7 @@ public class MarketData {
     private ColorData extraMarble;
     private final int numRow;
     private final int numCol;
-
+    @JsonIgnore
     private final int WIDTH_MARBLE = 8;
 
     @JsonCreator

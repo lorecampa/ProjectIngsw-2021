@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 public class DeckDevData {
     private final ArrayList<ArrayList<ArrayList<CardDevData>>> deck;
 
+    @JsonIgnore
     private final int WIDTH = 180;
+    @JsonIgnore
     private final int WIDTH_CARD = WIDTH / 4;
 
     @JsonCreator
