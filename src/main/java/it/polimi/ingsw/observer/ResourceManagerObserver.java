@@ -11,9 +11,13 @@ public interface ResourceManagerObserver {
 
     void manageResourceRequest(ArrayList<Resource> resources, boolean isFromMarket);
 
-    void anyConversionRequest(ArrayList<Resource> optionOfConversion,
-                              ArrayList<Resource> optionOfDiscount,
-                              int numOfAny, boolean isProduction);
+
+
+    void anyRequirementConversionRequest(ArrayList<Resource> optionOfConversion,
+                                         ArrayList<Resource> optionOfDiscount,
+                                         int numOfAny);
+
+    void anyProductionProfitRequest(int numOfAny);
 
     void strongboxUpdate(ArrayList<Resource> strongboxUpdated);
 

@@ -118,7 +118,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Method nextPlayer change the current player in the game when a new turn starts
      */
     public void nextPlayer(){
-
         if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersTurn.get(0);
         }else{
@@ -129,13 +128,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             else{
                 currentPlayer=playersTurn.get(indexOfCurr+1);
             }
-            /*
-            String nextPlayer = playersPersonalBoard.higherKey(currentPlayer);
-            if(nextPlayer == null){
-                this.currentPlayer = playersPersonalBoard.firstKey();
-            }else{
-                this.currentPlayer = nextPlayer;
-            }*/
         }
 
         onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
@@ -179,25 +171,20 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws IOException when creating the personal board causes problem opening the Json files
      */
     public void addPlayer(String username) throws IOException {
-        //depth copy of game faithTrack
         FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
         playerFaithTrack.attachGameMasterObserver(this);
 
-        //resource manager
         ResourceManager playerResourceManager = new ResourceManager();
         playerResourceManager.attachGameMasterObserver(this);
 
-        //depth copy of game base production
         Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         playerBaseProduction.setResourceManager(playerResourceManager);
 
         CardManager playerCardManager = new CardManager(playerBaseProduction);
         playerCardManager.attachGameMasterObserver(this);
 
-        PersonalBoard playerPersonalBoard = new PersonalBoard(username,
-                playerFaithTrack,
-                playerResourceManager,
-                playerCardManager);
+        PersonalBoard playerPersonalBoard = new PersonalBoard(username, playerFaithTrack,
+                playerResourceManager, playerCardManager);
 
         if (playersPersonalBoard.isEmpty())
             playerPersonalBoard.setInkwell(true);
@@ -247,7 +234,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         Development development = deckDevelopment.get(row).get(column).get(0);
         development.attachCardToUser(playersPersonalBoard.get(currentPlayer), market);
 
-        onTurnStateChange(TurnState.BUY_DEVELOPMENT_ACTION);
         return development;
     }
 
@@ -294,18 +280,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Method drawToken draws the token from the deckToken on the top,
      * puts it back in the bottom and then  applies its effect
      */
-    public void drawToken() {
+    public void drawToken() throws DeckDevelopmentCardException {
         Optional<Token> token = Optional.ofNullable(deckToken.poll());
         token.ifPresent(deckToken::offer);
 
-        token.ifPresent(x -> {
-            try {
-                x.doActionToken(this);
-            } catch (DeckDevelopmentCardException e) {
-                //its all okay, just there is no more to delete
-                //with the cardToken effect from the deck of development cards
-            }
-        });
+        if (token.isPresent()){
+            token.get().doActionToken(this);
+        }
+
     }
 
     public boolean isGameEnded() {
@@ -378,6 +360,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(1);
     }
 
+    @Override
+    public void increasePlayerFaithPoint(int faithPoints) {
+        playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(faithPoints);
+    }
 
     /**
      * Method discardDevelopment discard a specific number of card (num) of a certain color (color)
@@ -400,7 +386,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                 rowReached++;
             }
 
-            if (rowReached == deckDevelopment.size()){
+            if (rowReached == deckDevelopment.size() && numDiscarded < num){
                 throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
                         color.getDisplayName() + "cards.\n" +
                         "There are left " + (num - numDiscarded) + " "

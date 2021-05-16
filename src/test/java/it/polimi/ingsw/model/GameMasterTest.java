@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
-import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
-import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,16 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameMasterTest {
 
     GameMaster gm;
-    GameMaster gmSinglePlayer;
+    GameMaster gmSp;
     GameSetting gs;
     GameSetting gsSinglePlayer;
     ArrayList<String> players = new ArrayList<>();
     int numOfPlayer;
     @BeforeEach
-    void setUp() throws IOException, JsonFileModificationError {
+    void setUp() throws IOException {
         assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
         players.add("Lorenzo");
-        gmSinglePlayer = new GameMaster(gsSinglePlayer, players);
+        gmSp = new GameMaster(gsSinglePlayer, players);
 
         numOfPlayer = 3;
         players.add("Matteo");
@@ -41,21 +39,21 @@ class GameMasterTest {
 
     @Test
     void nextPlayerSinglePlayer() {
-        gmSinglePlayer.nextPlayer();
-        assertEquals("Lorenzo", gm.getCurrentPlayer());
-        gmSinglePlayer.nextPlayer();
-        assertEquals("Lorenzo", gm.getCurrentPlayer());
-        gmSinglePlayer.nextPlayer();
-        assertEquals("Lorenzo", gm.getCurrentPlayer());
+        gmSp.nextPlayer();
+        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
+        gmSp.nextPlayer();
+        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
+        gmSp.nextPlayer();
+        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
 
     }
 
     @Test
     void deliverLeaderCard() {
         assertEquals(16, gm.getSizeDeckLeader());
-        assertEquals(4, gm.getNumActivePlayers());
+        assertEquals(3, gm.getNumActivePlayers());
         assertDoesNotThrow(()->gm.deliverLeaderCards());
-        assertEquals(0, gm.getSizeDeckLeader());
+        assertEquals(4, gm.getSizeDeckLeader());
 
     }
 
@@ -75,14 +73,14 @@ class GameMasterTest {
     }
 
     @Test
-    void drawToken() throws IOException, JsonFileModificationError {
+    void drawToken(){
         assertEquals(0, gm.getSizeDeckToken());
 
-        int sizeDeckToken = gmSinglePlayer.getSizeDeckToken();
+        int sizeDeckToken = gmSp.getSizeDeckToken();
         assertEquals(6, sizeDeckToken);
 
-        gmSinglePlayer.drawToken();
-        assertEquals(sizeDeckToken, gmSinglePlayer.getSizeDeckToken());
+        assertDoesNotThrow(()-> gmSp.drawToken());
+        assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
 
     }
 
@@ -100,26 +98,16 @@ class GameMasterTest {
 
     }
 
-    @Test
-    void updateFromFaithTrack() {
-        gm.getPlayerPersonalBoard("player4").getFaithTrack().movePlayer(5);
-        gm.getPlayerPersonalBoard("player3").getFaithTrack().movePlayer(6);
-        gm.getPlayerPersonalBoard("player2").getFaithTrack().movePlayer(7);
-        gm.getPlayerPersonalBoard("player1").getFaithTrack().movePlayer(8);
 
-        assertEquals(2, gm.getPlayerPersonalBoard("player1").getFaithTrack().getPopeFavorVP());
-        assertEquals(2, gm.getPlayerPersonalBoard("player2").getFaithTrack().getPopeFavorVP());
-        assertEquals(2, gm.getPlayerPersonalBoard("player3").getFaithTrack().getPopeFavorVP());
-        assertEquals(2, gm.getPlayerPersonalBoard("player4").getFaithTrack().getPopeFavorVP());
-    }
 
     @Test
     void updateFromResourceManager() {
         gm.discardResources(6);
-        assertEquals(0, gm.getPlayerPersonalBoard("Lorenzo").getFaithTrack().getVictoryPoints());
-        assertEquals(2, gm.getPlayerPersonalBoard("Davide").getFaithTrack().getVictoryPoints());
-        assertEquals(2, gm.getPlayerPersonalBoard("Matteo").getFaithTrack().getVictoryPoints());
-
+        for(String player: players){
+            if (!player.equals(gm.getCurrentPlayer())){
+                assertEquals(6, gm.getPlayerPersonalBoard(player).getFaithTrack().getCurrentPositionOnTrack());
+            }
+        }
     }
 
 }

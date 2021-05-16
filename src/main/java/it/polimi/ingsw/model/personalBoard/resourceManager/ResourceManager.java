@@ -42,7 +42,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
     /**
      * Clear all the buffers in the resource manager, resourceToProduce and resourcesBuffer*/
-    //in teoria non dovrebbero servire a meno di disconnessioni o non completamenti dei turni
     private void clearBuffers(){
         anyRequired =0;
         anyToProduce = 0;
@@ -51,9 +50,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         resourcesToProduce.clear();
     }
 
-    private void restoreMyResources(ArrayList<Resource> tempBuffer){
-        tempBuffer.forEach(x -> myResources.get(myResources.indexOf(x)).addValue(x.getValue()));
-    }
 
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
@@ -81,6 +77,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
+    private void restoreMyResources(ArrayList<Resource> tempBuffer){
+        tempBuffer.forEach(x -> myResources.get(myResources.indexOf(x)).addValue(x.getValue()));
+    }
+
     public void convertAnyRequirement(ArrayList<Resource> resources, boolean isFromBuyDevelopment) throws AnyConversionNotPossible {
         containsAnyOrFaith(resources);
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
@@ -101,12 +101,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     restoreMyResources(tempBuffer);
                     anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                     throw new AnyConversionNotPossible("You can't convert this any, you don't have " +
-                            "enough " + res.getType());
+                            "enough " + res.getType() + "\nPlease try again!");
                 }
             }else{
                 restoreMyResources(tempBuffer);
                 anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
-                throw new AnyConversionNotPossible("You can't convert this any, you don't own " + res.getType());
+                throw new AnyConversionNotPossible("You can't convert this any, you don't own " + res.getType() +
+                        "\nPlease try again!");
             }
         }
         tempBuffer.forEach(this::addToBuffer);
@@ -134,12 +135,22 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     "resources inserted");
         }
 
-        addToResourcesToProduce(resources);
+        for (Resource res: resources){
+            if(resourcesToProduce.contains(res)){
+                resourcesToProduce.get(resourcesToProduce.indexOf(res)).addValue(res.getValue());
+            }else{
+                resourcesToProduce.add(res);
+            }
+        }
         anyToProduce -= numOfConversion;
 
         if(anyToProduce == 0){
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
         }
+    }
+
+    public void applyFaithPoints(){
+        notifyGameMasterObserver(x -> x.increasePlayerFaithPoint(faithPoint));
     }
 
 
@@ -161,7 +172,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void doProduction(){
         resourcesToProduce.forEach(this::addToStrongbox);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
-        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_RESOURCE_REMOVING));
     }
 
     /**
@@ -299,10 +309,12 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 resourcesToProduce.add(res);
             }
         }
+
         if(anyRequired == 0 && anyToProduce == 0){
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
-        }else if (anyToProduce > 0 && anyRequired == 0){
+        }else if (anyRequired == 0 && anyToProduce > 0){
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
+            notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
         }
 
     }
@@ -323,7 +335,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 res.setValueToZero();
                 try {
                     myDiscounts.get(myDiscounts.indexOf(res)).subValue(valueDiscount);
-                } catch (NegativeResourceException negativeResourceException) {
+                } catch (Exception ignored) {
                     //it will never happen because res.getValue is less than the first valueDiscount
                 }
             }
@@ -374,20 +386,19 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
         resources.forEach(this::addToBuffer);
 
+        if(anyRequired == 0 && checkDiscount){
+            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
+            notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
 
-        if (anyRequired > 0){
+        }else if (anyRequired > 0){
             if(checkDiscount){
                 notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_BUY_DEV_CONVERSION));
             }else{
                 notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_COST_CONVERSION));
             }
-            notifyAllObservers(x -> x.anyConversionRequest(myResources, myDiscounts,
-                    anyRequired, false));
+            notifyAllObservers(x -> x.anyRequirementConversionRequest(myResources, myDiscounts, anyRequired));
         }
-        else if(anyRequired==0 && checkDiscount){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
-            notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
-        }
+
 
     }
 
@@ -418,8 +429,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         int value=0;
         ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
         for(Resource res : resources){
-            value+= currWarehouse.howManyDoIHave(res.getType());
-            value+= strongbox.howManyDoIHave(res.getType());
+            value += currWarehouse.howManyDoIHave(res.getType());
+            value += strongbox.howManyDoIHave(res.getType());
         }
         return value;
     }
@@ -433,11 +444,14 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
 
     /**
-     * Discard resources  called by controller CLEARBUFFER MESSAGE methods*/
-    public void discardResources(){
+     * Discard resources  that you don't want to place*/
+    public void discardResourcesFromMarket(){
         notifyGameMasterObserver(x -> x.discardResources(numberOfResourceInBuffer()));
         resourcesBuffer.clear();
+        notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
+
+
 
     /**Add a depot as a leaderDepot in the warehouse
      * @param depot i want to add*/

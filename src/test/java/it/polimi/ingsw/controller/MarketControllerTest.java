@@ -14,6 +14,8 @@ import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.server.Match;
+import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,86 +60,72 @@ class MarketControllerTest {
         market = gameMaster.getMarket();
 
 
-        controller = new Controller(gameMaster);
+        controller = new Controller(gameMaster, new Match(3, new Server(), 1));
 
     }
 
-    private void printState(){
-        System.out.println("State: " + controller.getTurnState());
-    }
+
 
     private void attachLeader(int index){
         Leader leader = leaders.get(index);
         leader.attachCardToUser(personalBoard, gameMaster.getMarket());
+        leader.setActive();
         personalBoard.getCardManager().addLeader(leader);
     }
 
     @Test
     void marketActionWithNoLeaders() {
-        printState();
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
+
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
         controller.marketAction(2, true);
-        System.out.println(gameMaster.getMarket().getWhiteMarbleDrew());
-        printState();
-    }
-
-    private String arrayToString(ArrayList<ResourceData> array){
-        String x = "[";
-        for (ResourceData res: array){
-            x+= res.getType() + ": " + res.getValue();
-        }
-        x += "]";
-        return x;
+        assertEquals(controller.getTurnState(), TurnState.MARKET_RESOURCE_POSITIONING);
 
     }
+
+
 
     @Test
     void marketActionWithTwoLeaders() {
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
+
         assertEquals(0, cardManager.howManyMarbleEffects());
         //1 stone
         attachLeader(10);
         assertEquals(1, cardManager.howManyMarbleEffects());
+
         //1 coin
         attachLeader(11);
         assertEquals(2, cardManager.howManyMarbleEffects());
 
-        Map<Integer, ArrayList<ResourceData>> listOfMarbleEffect = cardManager.listOfMarbleEffect();
-        for (int i: listOfMarbleEffect.keySet()){
-            System.out.println(i + ": " + arrayToString(listOfMarbleEffect.get(i)));
+        controller.marketAction(2, true);
+        int numOfWhiteMarble = market.getWhiteMarbleDrew();
+        if (numOfWhiteMarble > 0){
+            assertEquals(controller.getTurnState(), TurnState.WHITE_MARBLE_CONVERSION);
         }
 
-
-        printState();
-        controller.marketAction(2, true);
-
-        System.out.println(market.getResourceToSend());
-        int whiteMarble = market.getWhiteMarbleDrew();
-        System.out.println("WhiteMarble: " + whiteMarble);
-        printState();
-
-        assertDoesNotThrow(()->
-                controller.leaderWhiteMarbleConversion(0, 1));
-        printState();
-
-        assertDoesNotThrow(()->
-                controller.leaderWhiteMarbleConversion(1, 1));
-        printState();
-
+        controller.leaderWhiteMarbleConversion(0, 1);
+        if (numOfWhiteMarble - 1 > 0){
+            assertEquals(controller.getTurnState(), TurnState.WHITE_MARBLE_CONVERSION);
+            controller.leaderWhiteMarbleConversion(1, numOfWhiteMarble - 1);
+        }
+        assertEquals(controller.getTurnState(), TurnState.MARKET_RESOURCE_POSITIONING);
 
 
     }
 
 
     @Test
-    void marketActionOneTwoLeaders() {
+    void marketActionOneLeader() {
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
+
         assertEquals(0, cardManager.howManyMarbleEffects());
         //1 stone
         attachLeader(10);
         assertEquals(1, cardManager.howManyMarbleEffects());
 
-        printState();
-        controller.marketAction(2, false);
-        printState();
-
+        controller.marketAction(2, true);
+        assertEquals(controller.getTurnState(), TurnState.MARKET_RESOURCE_POSITIONING);
 
     }
 

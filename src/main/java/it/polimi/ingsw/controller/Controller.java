@@ -4,6 +4,7 @@ import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
+import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
@@ -14,6 +15,7 @@ import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Controller {
     private final GameMaster gameMaster;
@@ -25,9 +27,7 @@ public class Controller {
         registerAllVirtualClientObserver();
     }
 
-    public Controller(GameMaster gameMaster){
-        this.gameMaster = gameMaster;
-    }
+
 
     public void changeTurnState(TurnState state){
         gameMaster.onTurnStateChange(state);
@@ -38,16 +38,17 @@ public class Controller {
     }
 
     private void sendError(ErrorType errorType){
-        //System.out.println("SingleErrorMessage: " + errorType);
         match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(errorType));
+
     }
     private void sendError(String customMessage){
-        //System.out.println("SingleErrorMessage: " + customMessage);
         match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
+
     }
 
     private void sendErrorTo(String customMessage, String username){
         match.sendSinglePlayer(username, new ErrorMessage(customMessage));
+
     }
 
 
@@ -90,11 +91,19 @@ public class Controller {
 
     }
 
+
+
     //SINGLE PLAYER
+
     public void drawTokenSinglePlayer(){
-        gameMaster.drawToken();
+        try{
+            gameMaster.drawToken();
+        }catch (Exception e){
+            sendError(e.getMessage());
+        }
     }
 
+    //UTIL
 
     public void nextTurn() {
         gameMaster.nextPlayer();
@@ -105,22 +114,24 @@ public class Controller {
 
 
 
+
     //LEADER MANAGING
-    public void manageLeaderCard(int leaderIndex, boolean discard){
+
+    public void leaderManage(int leaderIndex, boolean discard){
         CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        try {
-            if (discard){
+        try{
+            if(discard)
                 cardManager.discardLeader(leaderIndex);
-            }else{
+            else
                 cardManager.activateLeader(leaderIndex);
-            }
-        } catch (Exception e) {
+        }catch (Exception e){
             sendError(e.getMessage());
         }
     }
 
 
     //MARKET ACTION
+
     public void marketAction(int selection, boolean isRow){
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         Market market = gameMaster.getMarket();
@@ -143,7 +154,9 @@ public class Controller {
             if (numOfMarbleEffects == 1 && whiteMarbleDrew > 0){
                 market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
                 cardManager.getLeaders().stream()
-                        .filter(x -> x.getOnActivationEffects().stream().anyMatch(effect -> effect instanceof MarbleEffect))
+                        .filter(Leader::isActive)
+                        .filter(x -> x.getOnActivationEffects().stream()
+                                .anyMatch(effect -> effect instanceof MarbleEffect))
                         .mapToInt(x -> cardManager.getLeaders().indexOf(x))
                         .findFirst()
                         .ifPresent(x -> {
@@ -151,7 +164,7 @@ public class Controller {
                                 cardManager.activateLeaderEffect(x, getTurnState());
                             } catch (Exception e) {
                                 //it will never occur
-                                sendError(e.getMessage());
+                                e.printStackTrace();
                             }
                         });
             }
@@ -170,7 +183,8 @@ public class Controller {
 
 
     public void leaderWhiteMarbleConversion(int leaderIndex, int numOfWhiteMarble){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
+        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
+        CardManager cardManager = personalBoard.getCardManager();
         int numOfMarbleEffects = cardManager.howManyMarbleEffects();
         if(numOfMarbleEffects <= 0){
             sendError("You don't have leader with marble effects");
@@ -187,14 +201,23 @@ public class Controller {
         }
 
         if(market.getWhiteMarbleDrew() == 0){
-            ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+            ResourceManager resourceManager = personalBoard.getResourceManager();
             resourceManager.resourceFromMarket(market.getResourceToSend());
             market.reset();
         }
     }
 
+    public void clearBufferFromMarket(){
+        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        resourceManager.discardResourcesFromMarket();
+        controlBufferStatus();
+    }
 
-    //BUY DEVELOPMENT CARD ACTION
+
+
+
+
+    //BUY DEVELOPMENT CARD
     public void developmentAction(int row, int col, int locateSlot){
         Development card;
         try{
@@ -219,15 +242,34 @@ public class Controller {
         } catch (Exception e) {
             sendError(e.getMessage());
         }
+
+        //control in case you can buy instantly the card without paying (buffer is empty)
+        controlBufferStatus();
     }
 
-    public void undoBuyDev(){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
-        gameMaster.onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
-        resourceManager.newTurn();
-    }
 
     //PRODUCTION ACTION
+
+    public void normalProductionAction(int cardSlot){
+        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
+        try {
+            cardManager.developmentProduce(cardSlot);
+
+        } catch (Exception e) {
+            sendError(e.getMessage());
+        }
+    }
+
+    public void baseProduction(){
+        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
+        try {
+            cardManager.baseProductionProduce();
+
+        } catch (Exception e) {
+            sendError(e.getMessage());
+        }
+    }
+
 
     public void leaderProductionAction(int leaderIndex){
         CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
@@ -245,25 +287,13 @@ public class Controller {
 
     }
 
-    public void normalProductionAction(int cardSlot, boolean isBaseProduction){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        try {
-            if(isBaseProduction)
-                cardManager.baseProductionProduce();
-            else
-                cardManager.developmentProduce(cardSlot);
-
-        } catch (Exception e) {
-            sendError(e.getMessage());
-        }
-    }
 
     public void stopProductionCardSelection(){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
-        resourceManager.doProduction();
+        changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
+        controlBufferStatus();
     }
 
-    //ANY MANAGING
+    //ANY
 
     public void anyRequirementResponse(ArrayList<Resource> resources, boolean isFromBuyDevelopment){
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
@@ -285,7 +315,8 @@ public class Controller {
     }
 
 
-    //WAREHOUSE MANAGING
+    //WAREHOUSE
+
     private void controlBufferStatus(){
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         ResourceManager resourceManager = personalBoard.getResourceManager();
@@ -294,22 +325,22 @@ public class Controller {
         if (resourceManager.getBufferSize() != 0) return;
 
         switch (getTurnState()){
+            case MARKET_RESOURCE_POSITIONING:
+                resourceManager.applyFaithPoints();
+                break;
             case BUY_DEV_RESOURCE_REMOVING:
                 cardManager.emptyCardSlotBuffer();
                 break;
             case PRODUCTION_RESOURCE_REMOVING:
                 resourceManager.doProduction();
+                resourceManager.applyFaithPoints();
                 break;
 
         }
         changeTurnState(TurnState.LEADER_MANAGE_AFTER);
     }
 
-    private boolean hasFinishedLeaderSetUp(String username){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(username);
-        CardManager cardManager = personalBoard.getCardManager();
-        return cardManager.getLeaders().size() == 2;
-    }
+
 
     public void subToStrongbox(Resource resource){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
@@ -373,69 +404,79 @@ public class Controller {
         }
     }
 
+
+    //SETUP
+
+    private boolean hasFinishedLeaderSetUp(String username){
+        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(username);
+        CardManager cardManager = personalBoard.getCardManager();
+        return cardManager.getLeaders().size() == 2;
+    }
+
     public void discardLeaderSetUp(int leaderIndex, String username){
         CardManager playerCardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         try {
             playerCardManager.discardLeaderSetUp(leaderIndex);
-
             if (hasFinishedLeaderSetUp(username)){
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
-                    case 0: match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
-                            if(isFinishSetUp()){
-                                match.sendAllPlayers(new MatchStart());
-                                gameMaster.nextPlayer();
-                            }
-                            break;
-                    case 1: match.sendSinglePlayer(username,new AnyConversionRequest(1));
-                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
-                            break;
-                    case 2: match.sendSinglePlayer(username,new AnyConversionRequest(1));
-                            playerFaithTrack.movePlayer(1);
-                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
-                            break;
-                    case 3: match.sendSinglePlayer(username,new AnyConversionRequest(2));
-                            playerFaithTrack.movePlayer(1);
-                            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
-                            break;
+                    case 0:
+                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
+                        if(isFinishedSetup()){
+                            match.sendAllPlayers(new MatchStart());
+                            gameMaster.nextPlayer();
+                        }
+                        break;
+                    case 1:
+                        match.sendSinglePlayer(username, new AnyConversionRequest(1));
+                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
+                        break;
+                    case 2:
+                        match.sendSinglePlayer(username, new AnyConversionRequest(1));
+                        playerFaithTrack.movePlayer(1);
+                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
+                        break;
+                    case 3:
+                        match.sendSinglePlayer(username,new AnyConversionRequest(2));
+                        playerFaithTrack.movePlayer(1);
+                        match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.RESOURCE_SETUP));
+                        break;
                 }
             }
+
         }catch (Exception e) {
             sendErrorTo(e.getMessage(), username);
         }
 
     }
 
-    public void leaderManage(int leaderIndex, boolean discard){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        try{
-            if(discard)
-                cardManager.discardLeader(leaderIndex);
-            else
-                cardManager.activateLeader(leaderIndex);
-        }catch (Exception e){
-            sendError(e.getMessage());
+    //TODO ask: should only be active players due to disconnections?
+    private boolean isFinishedSetup(){
+        for(VirtualClient player : match.getAllPlayers()){
+            if(player.getClient().getState()!=HandlerState.IN_MATCH)
+                return false;
         }
+        return true;
     }
 
     public void insertSetUpResources(ArrayList<Resource> resources, String username){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(username).getResourceManager();
-        int size = resources.stream().mapToInt(Resource::getValue).sum();
+        int sizeResponse = resources.stream().mapToInt(Resource::getValue).sum();
 
         try{
             switch (gameMaster.getPlayerPosition(username)){
                 case 1:
                 case 2:
-                    if (size == 1){
+                    if (sizeResponse == 1){
                         resourceManager.addToWarehouse(true, 0, resources.get(0));
                     }else{
                         sendErrorTo("Too many resources sent", username);
                     }
                     break;
                 case 3:
-                    if (size == 2 && resources.size() == 1){
+                    if (sizeResponse == 2 && resources.size() == 1){
                         resourceManager.addToWarehouse(true, 1, resources.get(0));
-                    }else if(size == 2 && resources.size() == 2){
+                    }else if(sizeResponse == 2 && resources.size() == 2){
                         resourceManager.addToWarehouse(true, 0, resources.get(0));
                         resourceManager.addToWarehouse(true, 1, resources.get(1));
                     }else{
@@ -443,8 +484,8 @@ public class Controller {
                     }
                     break;
             }
-            match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.IN_MATCH));
-            if(isFinishSetUp()){
+            match.getPlayer(username).ifPresent(y -> y.getClient().setState(HandlerState.IN_MATCH));
+            if(isFinishedSetup()){
                 match.sendAllPlayers(new MatchStart());
                 gameMaster.nextPlayer();
             }
@@ -454,12 +495,5 @@ public class Controller {
 
     }
 
-    private boolean isFinishSetUp(){
-        for(VirtualClient player : match.getAllPlayers()){
-            if(player.getClient().getState()!=HandlerState.IN_MATCH)
-                return false;
-        }
-        return true;
-    }
 
 }

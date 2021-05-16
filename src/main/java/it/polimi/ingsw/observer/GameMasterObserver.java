@@ -21,6 +21,7 @@ public interface GameMasterObserver {
      */
     void discardResources(int numResources);
 
+    void increasePlayerFaithPoint(int faithPoints);
 
     void onDeckDevelopmentCardRemove(int row, int col);
 

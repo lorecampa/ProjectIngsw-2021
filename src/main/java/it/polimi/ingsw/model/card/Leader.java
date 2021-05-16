@@ -55,10 +55,9 @@ public class Leader extends Card{
     /**
      * Method setActive is a setter method  for setting the attribute active to true when the player
      * decide to activate the leader card during the game
-     * @param status of type boolean defines the new status of the leader card
      */
-    public void setActive(boolean status) {
-        this.active = status;
+    public void setActive() {
+        this.active = true;
     }
 
     public CardLeaderData toCardLeaderData(){

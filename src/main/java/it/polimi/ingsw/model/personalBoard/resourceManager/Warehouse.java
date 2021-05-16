@@ -69,6 +69,7 @@ public class Warehouse implements Cloneable{
     public boolean doIHaveADepotWith(ResourceType type){
         if(type==ResourceType.ANY)
             return false;
+
         for(Depot dep: depots){
             if(dep.getResourceType()==type){
                 return true;

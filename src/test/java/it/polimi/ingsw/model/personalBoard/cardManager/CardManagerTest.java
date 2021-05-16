@@ -144,18 +144,18 @@ class CardManagerTest {
         cardManager.addLeader(leader1);
         cardManager.addLeader(leader2);
 
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, TurnState.MARKET_ACTION));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, TurnState.WHITE_MARBLE_CONVERSION));
         assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(2, TurnState.PRODUCTION_ACTION));
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.WHITE_MARBLE_CONVERSION));
         assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, TurnState.PRODUCTION_ACTION));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
 
 
         cardManager.newTurn();
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.MARKET_ACTION));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.MARKET_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
     }
 
     @Test

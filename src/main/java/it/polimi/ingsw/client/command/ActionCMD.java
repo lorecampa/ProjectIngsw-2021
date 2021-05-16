@@ -1,10 +1,7 @@
 package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.*;
-import it.polimi.ingsw.message.serverMessage.DevelopmentAction;
-import it.polimi.ingsw.message.serverMessage.LeaderManage;
-import it.polimi.ingsw.message.serverMessage.MarketAction;
-import it.polimi.ingsw.message.serverMessage.ProductionAction;
+import it.polimi.ingsw.message.serverMessage.*;
 
 import java.util.ArrayList;
 
@@ -94,7 +91,7 @@ public class ActionCMD implements Command{
                     return;
                 }
                 cardSlot--;
-                client.writeToStream(new ProductionAction(cardSlot,false, false));
+                client.writeToStream(new ProductionAction(cardSlot, false));
                 break;
             case "le":
                 int leaderIndex=CommandsUtility.stringToInt(split[2]);
@@ -103,12 +100,12 @@ public class ActionCMD implements Command{
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
-                client.writeToStream(new ProductionAction(leaderIndex,false, true));
+                client.writeToStream(new ProductionAction(leaderIndex, true));
                 break;
             case "bs":
                 if(split.length>2)
                     PrintAssistant.instance.invalidParamCommand(cmd);
-                client.writeToStream(new ProductionAction(0,true, false));
+                client.writeToStream(new BaseProduction());
                 break;
             default:
                 PrintAssistant.instance.invalidParamCommand(cmd); //should never happen

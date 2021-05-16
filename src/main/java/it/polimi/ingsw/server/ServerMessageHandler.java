@@ -20,12 +20,12 @@ public class ServerMessageHandler {
     private final Server server;
     private ClientConnectionHandler client;
     private VirtualClient virtualClient;
-    private HandlerState state;
+    private HandlerState setupState;
 
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
         this.server = server;
         this.client = client;
-        this.state = HandlerState.FIRST_CONTACT;
+        this.setupState = HandlerState.FIRST_CONTACT;
     }
 
     private boolean isSinglePlayerGame(){
@@ -103,28 +103,28 @@ public class ServerMessageHandler {
         return Optional.ofNullable(controller);
     }
 
-    public void setState(HandlerState state){
-        this.state = state;
+    public void setSetupState(HandlerState setupState){
+        this.setupState = setupState;
     }
 
-    public HandlerState getState() { return state; }
+    public HandlerState getSetupState() { return setupState; }
 
     public void handleConnectionMessage(ConnectionMessage message){
         System.out.println(message.getType() + ": " + message.getMessage());
     }
 
     public void handleFirstContact(){
-        if(state != HandlerState.FIRST_CONTACT) return;
+        if(setupState != HandlerState.FIRST_CONTACT) return;
         server.putInLobby(client);
     }
 
     public void handleMatchCreation(ConnectionMessage message){
-        if (state != HandlerState.NUM_OF_PLAYER) return;
+        if (setupState != HandlerState.NUM_OF_PLAYER) return;
         server.createMatch(message.getNum(),client);
     }
 
     public void handleUsernameInput(ConnectionMessage message){
-        if (state != HandlerState.USERNAME) return;
+        if (setupState != HandlerState.USERNAME) return;
         virtualClient.getMatch().setPlayerUsername(virtualClient, message.getMessage());
     }
 
@@ -137,16 +137,7 @@ public class ServerMessageHandler {
         server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);
     }
 
-    public void handleLeaderManage(LeaderManage msg){
-        if(state == HandlerState.LEADER_SETUP){
-            controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
-            return;
-        }
-        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) { return; }
 
-        controller.leaderManage(msg.getIndex(), msg.isDiscard());
-
-    }
 
     //SINGLE PLAYER
     public void handleDrawSinglePlayer(){
@@ -154,40 +145,76 @@ public class ServerMessageHandler {
         controller.drawTokenSinglePlayer();
     }
 
-    //NEW METHODS
+    //UTIL
 
+    public void handleEndTurn(){
+        if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
+        controller.nextTurn();
+    }
+
+
+
+    //LEADER MANAGE
+    public void handleLeaderManage(LeaderManage msg){
+        if(setupState == HandlerState.LEADER_SETUP){
+            controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
+            return;
+        }
+        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) { return; }
+
+        controller.leaderManage(msg.getIndex(), msg.isDiscard());
+    }
+
+
+    //MARKET
     public void handleMarketAction(MarketAction msg){
         if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
         controller.marketAction(msg.getSelection(), msg.isRow());
     }
-    
+
     public void handleWhiteMarbleConversion(WhiteMarbleConversionResponse msg){
         if(!controlAuthority(TurnState.WHITE_MARBLE_CONVERSION)) return;
         controller.leaderWhiteMarbleConversion(msg.getLeaderIndex(), msg.getNumOfWhiteMarble());
     }
 
+    public void handleDiscardResourcesFromMarket(){
+        if(!controlAuthority(TurnState.MARKET_RESOURCE_POSITIONING)) return;
+        controller.clearBufferFromMarket();
+
+    }
+
+    //BUY DEVELOPMENT
 
     public void handleDevelopmentAction(DevelopmentAction msg){
         if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
         controller.developmentAction(msg.getRow(), msg.getColumn(), msg.getLocateSlot());
     }
 
-
+    //PRODUCTION
 
     public void handleProduction(ProductionAction msg){
         if(!controlAuthority(new TurnState[]{
                 TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+
         if (msg.isLeader()){
             controller.leaderProductionAction(msg.getSlotsIndex());
         }else {
-            controller.normalProductionAction(msg.getSlotsIndex(), msg.isBaseProduction());
+            controller.normalProductionAction(msg.getSlotsIndex());
         }
+    }
+
+    public void handleBaseProduction(){
+        if(!controlAuthority(new TurnState[]{
+                TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+        controller.baseProduction();
     }
 
     public void handleEndCardSelection(){
         if(!controlAuthority(TurnState.PRODUCTION_ACTION)) return;
         controller.stopProductionCardSelection();
     }
+
+    //ANY
 
     public void handleAnyResponse(AnyResponse msg){
         if (msg.getResources() == null) return;
@@ -196,15 +223,14 @@ public class ServerMessageHandler {
                 .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        if(state == HandlerState.RESOURCE_SETUP){
+        if(setupState == HandlerState.RESOURCE_SETUP){
             controller.insertSetUpResources(resources, virtualClient.getUsername());
             return;
         }
-        if(state == HandlerState.IN_MATCH){
+        if(setupState == HandlerState.IN_MATCH){
             return;
         }
 
-        //crush if controller doesn't exist!
         if(!isYourTurn()){ return; }
 
         switch (controller.getTurnState()){
@@ -223,11 +249,8 @@ public class ServerMessageHandler {
         }
     }
 
-    public void handleEndTurn(){
-        if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;
-        controller.nextTurn();
-    }
 
+    //WAREHOUSE
 
     public void handleStrongboxModify(StrongboxModify msg){
         if(!controlAuthority(new TurnState[]{

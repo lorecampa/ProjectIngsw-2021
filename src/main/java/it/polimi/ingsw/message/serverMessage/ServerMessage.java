@@ -14,6 +14,8 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = ReconnectionMessage.class, name = "ReconnectionMessage"),
 
         @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
+        @JsonSubTypes.Type(value = BaseProduction.class, name = "BaseProduction"),
+        @JsonSubTypes.Type(value = DiscardResourcesFromMarket.class, name = "ClearBuffer"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),

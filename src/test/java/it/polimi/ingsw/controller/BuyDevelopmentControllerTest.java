@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.exception.JsonFileModificationError;
@@ -14,9 +15,12 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.server.Match;
+import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -39,6 +43,8 @@ class BuyDevelopmentControllerTest {
     @Test
     void init() throws IOException, JsonFileModificationError, DeckDevelopmentCardException {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        leaders =
+                mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<>() {});
         devCardString = "{\n" +
                 "    \"@class\": \"Development\",\n" +
                 "    \"victoryPoints\": 1,\n" +
@@ -87,6 +93,8 @@ class BuyDevelopmentControllerTest {
                 "    \"color\": \"GREEN\"\n" +
                 "  }";
 
+
+        //cost: 2 shield, 2 any
         devCard = mapper.readValue(devCardString, Development.class);
 
         gameSetting = new GameSetting(3);
@@ -103,7 +111,7 @@ class BuyDevelopmentControllerTest {
         personalBoard = gameMaster.getPlayerPersonalBoard(gameMaster.getCurrentPlayer());
         resourceManager = personalBoard.getResourceManager();
         //3 COIN
-        //2 SERVANT
+        //2 STONE
         //2 SHIELD
         resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 3));
         resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.STONE, 2));
@@ -111,12 +119,16 @@ class BuyDevelopmentControllerTest {
                 ResourceFactory.createResource(ResourceType.SHIELD, 2)));
 
 
-        controller = new Controller(gameMaster);
+        controller = new Controller(gameMaster, new Match(3, new Server(), 1));
+        resourceManager.newTurn();
 
     }
 
-    private void printState(){
-        System.out.println("State: " + controller.getTurnState() + "\n");
+    private void attachLeader(int index){
+        Leader leader = leaders.get(index);
+        leader.attachCardToUser(personalBoard, gameMaster.getMarket());
+        leader.setActive();
+        personalBoard.getCardManager().addLeader(leader);
     }
 
     private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int faith, int any){
@@ -145,44 +157,18 @@ class BuyDevelopmentControllerTest {
 
 
     @Test
-    void test(){
-        printState();
-        resourceManager.newTurn();
-        assertDoesNotThrow(()->controller.developmentAction(0, 0, 0));
-        System.out.println("Any Required: " + resourceManager.getAnyRequired());
-        printState();
-        System.out.println("\n");
+    void normalBuyDev(){
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
+        controller.developmentAction(0, 0, 0);
+        assertEquals(controller.getTurnState(), TurnState.ANY_BUY_DEV_CONVERSION);
 
-        //first any response
-        System.out.println(1);
-        anyConv = resourceArray(0, 0, 0, 0, 1, 0);
-        controller.anyRequirementResponse(anyConv, true);
-        printState();
+        assertDoesNotThrow(()->resourceManager.convertAnyRequirement(
+                resourceArray(1, 0, 0, 1, 0, 0), true));
+        assertEquals(controller.getTurnState(), TurnState.BUY_DEV_RESOURCE_REMOVING);
 
-        //second any response
-        System.out.println(2);
-        anyConv = resourceArray(0, 0, 0, 0, 0, 1);
-        controller.anyRequirementResponse(anyConv, true);
-        printState();
+        controller.clearBufferFromMarket();
+        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_AFTER);
 
-
-        //third any response
-        System.out.println(3);
-        anyConv = resourceArray(0, 2, 0, 0, 0, 0);
-        controller.anyRequirementResponse(anyConv, true);
-        printState();
-
-        //fourth any response
-        System.out.println(4);
-        anyConv = resourceArray(1, 0, 1, 0, 0, 0);
-        controller.anyRequirementResponse(anyConv, true);
-        printState();
-
-        //final true any response
-        System.out.println(5);
-        anyConv = resourceArray(2, 0, 0, 0, 0, 0);
-        controller.anyRequirementResponse(anyConv, true);
-        printState();
 
     }
 }

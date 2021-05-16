@@ -154,7 +154,6 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     }
 
     private void notifyMarketChange(){
-        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_ACTION));
         if (getWhiteMarbleDrew() > 0){
             notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
         }

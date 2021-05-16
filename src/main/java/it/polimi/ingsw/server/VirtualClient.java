@@ -82,7 +82,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     @Override
     public void removeDeckDevelopmentSinglePlayer(int row, int column) {
-        client.writeToStream(new RemoveDeckDevelopmentCard(row, column));
+        match.sendSinglePlayer(getUsername(), new RemoveDeckDevelopmentCard(row, column));
     }
 
     //RESOURCE MANAGER OBSERVER
@@ -105,16 +105,19 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void anyConversionRequest(ArrayList<Resource> optionOfConversion,
-                                     ArrayList<Resource> optionOfDiscount,
-                                     int numOfAny, boolean isProduction) {
+    public void anyRequirementConversionRequest(ArrayList<Resource> optionOfConversion, ArrayList<Resource> optionOfDiscount, int numOfAny) {
+        match.sendSinglePlayer(getUsername(),
+                new AnyConversionRequest(
+                        optionOfConversion.stream().map(Resource::toClient)
+                                .collect(Collectors.toCollection(ArrayList::new)),
+                        optionOfDiscount.stream().map(Resource::toClient)
+                                .collect(Collectors.toCollection(ArrayList<ResourceData>::new)),
+                        numOfAny));
+    }
 
-        client.writeToStream(new AnyConversionRequest(
-                optionOfConversion.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new)),
-                optionOfDiscount.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList<ResourceData>::new)),
-                numOfAny)
-        );
-
+    @Override
+    public void anyProductionProfitRequest(int numOfAny) {
+        match.sendSinglePlayer(getUsername(), new AnyConversionRequest(numOfAny));
     }
 
     //Faith Track OBSERVER
