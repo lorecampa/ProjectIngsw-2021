@@ -181,4 +181,9 @@ public class Server {
         server.startServer();
     }
 
+    public void matchEnd(Match match){
+        matches.remove(match);
+    }
+
+
 }

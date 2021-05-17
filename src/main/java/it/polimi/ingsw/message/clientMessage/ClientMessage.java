@@ -21,7 +21,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = DepotUpdate.class, name = "DepotUpdate"),
         @JsonSubTypes.Type(value = DiscountLeaderUpdate.class, name = "DiscountLeaderUpdate"),
         @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
-        @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
+        @JsonSubTypes.Type(value = GameOver.class, name = "GameOver"),
         @JsonSubTypes.Type(value = GameSetup.class, name = "GameSetup"),
         @JsonSubTypes.Type(value = LeaderActivate.class, name = "LeaderActivate"),
         @JsonSubTypes.Type(value = LeaderDiscard.class, name = "LeaderDiscard"),
@@ -35,6 +35,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
         @JsonSubTypes.Type(value = StrongboxUpdate.class, name = "StrongboxUpdate"),
         @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConverted"),
+        @JsonSubTypes.Type(value = WinningCondition.class, name = "WinningCondition"),
 })
 
 public interface ClientMessage extends Message{

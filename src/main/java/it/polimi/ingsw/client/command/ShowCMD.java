@@ -30,6 +30,10 @@ public class ShowCMD implements Command{
             return;
         }
         String[] split=param.split(" ");
+        if(containsAllPartToShow(split, 0)){
+            toCharToPrint(split,0, client.getMyName());
+            return;
+        }
         if(split[0].equals("market")){
             if(split.length==1)
                 PrintAssistant.instance.printf(client.getMarketData().toString());
@@ -61,23 +65,11 @@ public class ShowCMD implements Command{
                 return;
             }
         }
-
-        for(int i=1;i<split.length;i++){
-            switch(split[i]){
-                case "f":
-                    client.getModelOf(split[0]).printFaithTrack();
-                    break;
-                case "r":
-                    client.getModelOf(split[0]).printResources();
-                    break;
-                case "d":
-                    client.getModelOf(split[0]).printCardSlots(false);
-                    break;
-                case "l":
-                    client.getModelOf(split[0]).printLeaders();
-                    break;
-            }
+        if(!containsAllPartToShow(split, 1)){
+            PrintAssistant.instance.invalidParamCommand(cmd);
+            return;
         }
+        toCharToPrint(split, 1, split[0]);
     }
 
     @Override
@@ -102,5 +94,33 @@ public class ShowCMD implements Command{
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"show on console the Personal Board of a player");
+    }
+
+    public boolean containsAllPartToShow(String[] part, int startPoint){
+        for(int i=startPoint; i<part.length; i++){                                                    //controllo che gli altri campi siano comandi conosciuti
+            if(!part[i].equals("f") && !part[i].equals("r") && !part[i].equals("d") && !part[i].equals("l")){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void toCharToPrint(String[] part, int startPoint, String username){
+        for(int i=startPoint;i<part.length;i++){
+            switch(part[i]){
+                case "f":
+                    client.getModelOf(username).printFaithTrack();
+                    break;
+                case "r":
+                    client.getModelOf(username).printResources();
+                    break;
+                case "d":
+                    client.getModelOf(username).printCardSlots(false);
+                    break;
+                case "l":
+                    client.getModelOf(username).printLeaders();
+                    break;
+            }
+        }
     }
 }

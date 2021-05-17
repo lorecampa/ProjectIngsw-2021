@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -22,12 +23,11 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -94,9 +94,25 @@ public class MastersOfRenaissanceTest
 
     }
 
+
     @Test
     void gameStartForSetUpServer(){
-        ArrayList<String> ciao = null;
+        Map<Integer, String> points= new HashMap<>();
+        points.put(2, "teo");
+        points.put(1, "lollo");
+        points.put(67, "davide");
+
+        //TreeMap<Integer, String> test= new TreeMap<>(points);
+
+        TreeMap<Integer, String> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
+        reverseSortedMap.putAll(points);
+
+        Set<Map.Entry<Integer, String>> entries = reverseSortedMap.entrySet();
+        for(Map.Entry<Integer, String> entry : entries){
+            PrintAssistant.instance.printf(entry.getKey()+": "+entry.getValue());
+        }
+        PrintAssistant.instance.printf(Math.floorDiv(9, 5)+" ", PrintAssistant.ANSI_PURPLE);
+        PrintAssistant.instance.printf(Math.floorDiv(7, 5)+" ");
 
     }
 

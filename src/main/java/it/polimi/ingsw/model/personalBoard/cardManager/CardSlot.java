@@ -43,4 +43,8 @@ public class CardSlot {
     public Development getLastInsertedCard(){
         return developments.get(0);
     }
+
+    public int getVictoryPoint(){
+        return developments.stream().mapToInt(Development::getVictoryPoints).sum();
+    }
 }

@@ -197,7 +197,7 @@ public class Match {
         ArrayList<String> usernames = allPlayers.stream()
                 .map(VirtualClient::getUsername)
                 .collect(Collectors.toCollection(ArrayList::new));
-        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData()));
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData(), gameMaster.toEffectDataBasePro()));
     }
 
     public void sendLeader(GameMaster gameMaster){
@@ -227,6 +227,11 @@ public class Match {
         activePlayers.stream().filter(x -> x.getUsername().equals(username))
                 .findFirst()
                 .ifPresent(y -> y.getClient().writeToStream(message));
+    }
+
+
+    public void removeMatchFromServer(){
+        server.matchEnd(this);
     }
 
 }

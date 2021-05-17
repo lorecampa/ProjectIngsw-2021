@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.DeckDevData;
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
@@ -50,6 +51,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private int vaticanReportReached = 0;
     private int leaderAtStart;
     private boolean gameEnded = false;
+    private boolean isLastTurn;
+
+    private Development playerBaseProduction;
 
 
     /**
@@ -66,7 +70,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         this.numberOfPlayer = players.size();
-
+        isLastTurn=false;
         //game loading
         loadGameSetting(gameSetting);
 
@@ -94,6 +98,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
         baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
+        playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
         deckDevelopment = gameSetting.getDeckDevelopment();
@@ -121,22 +126,53 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     public void nextPlayer(){
         if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersTurn.get(0);
+            normalNextTurn();
         }else{
+            if(playerHasEndGame(currentPlayer)){
+                isLastTurn=true;
+                notifyAllObservers(x->x.getWinningCondition(currentPlayer));
+            }
             int indexOfCurr=playersTurn.indexOf(currentPlayer);
             if(indexOfCurr==numberOfPlayer-1){
-                currentPlayer=playersTurn.get(0);
+                if(isLastTurn){
+                    gameEnded=true;
+                    gameOver();
+                }
+                else{
+                    currentPlayer=playersTurn.get(0);
+                    normalNextTurn();
+                }
             }
             else{
                 currentPlayer=playersTurn.get(indexOfCurr+1);
+                normalNextTurn();
             }
         }
+    }
 
+    private void gameOver(){
+        Map<Integer, String> points= new HashMap<>();
+        int victoryPoints;
+        for (String user : playersTurn){
+            PersonalBoard pb=playersPersonalBoard.get(user);
+            victoryPoints=pb.getCardManager().getVictoryPointsCard()+pb.getFaithTrack().getVictoryPoints()+pb.getResourceManager().getVictoryPointsResource();
+            points.put(victoryPoints, user);
+        }
+        TreeMap<Integer, String> unSortedPlayer = new TreeMap<>(Collections.reverseOrder());
+        unSortedPlayer.putAll(points);
+        notifyAllObservers(x->x.weHaveAWinner(unSortedPlayer));
+    }
+
+    private void normalNextTurn(){
         onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
         notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
     }
 
-
-
+    private boolean playerHasEndGame(String username){
+        //can be modify to manage single player
+        PersonalBoard personaBoard=playersPersonalBoard.get(username);
+        return personaBoard.getCardManager().howManyCardDoIOwn()==7 || personaBoard.getFaithTrack().endFaithTrack();
+    }
 
     /**
      * Method getNumActivePlayers gives the number of players still active in game
@@ -178,7 +214,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         ResourceManager playerResourceManager = new ResourceManager();
         playerResourceManager.attachGameMasterObserver(this);
 
-        Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         playerBaseProduction.setResourceManager(playerResourceManager);
 
         CardManager playerCardManager = new CardManager(playerBaseProduction);
@@ -226,7 +261,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws DeckDevelopmentCardException if the block of cards selected is empty
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
      */
-
     public Development getDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
 
         if(deckDevelopment.get(row).get(column).isEmpty()){
@@ -267,7 +301,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * already full (4 card)
      * @throws IndexOutOfBoundsException when you are not selecting a block of card inside the matrix
      */
-
     //non credo servirà
     public void pushDeckDevelopmentCard(int row, int column, Development development) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
         if (deckDevelopment.get(row).get(column).size() == depthDeckDevelopment){
@@ -313,6 +346,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                         .collect(Collectors.toCollection(ArrayList::new)))
                     .collect(Collectors.toCollection(ArrayList::new)))
                 .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    public ArrayList<EffectData> toEffectDataBasePro(){
+        return playerBaseProduction.toCardDevData().getEffects();
     }
 
     public int getPlayerPosition(String username){
@@ -425,7 +462,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     public void onTurnStateChange(TurnState turnState) {
         this.turnState = turnState;
     }
-
 
     public TurnState getTurnState() {
         return turnState;

@@ -181,8 +181,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param resource i want to subtract */
     public void subToStrongbox(Resource resource) throws NegativeResourceException {
         strongbox.subResource(resource);
-        sendBufferUpdate();
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
+        sendBufferUpdate();
     }
 
     /**
@@ -194,8 +194,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's another one with the same type*/
     public void addToWarehouse(boolean isNormalDepot, int index, Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         currWarehouse.addDepotResourceAt(index, resource, isNormalDepot);
-        sendBufferUpdate();
         sendDepotUpdate(isNormalDepot, index);
+        sendBufferUpdate();
     }
 
     /**
@@ -207,9 +207,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
-        sendBufferUpdate();
         sendDepotUpdate(isNormalDepot, index);
-
+        sendBufferUpdate();
     }
 
     /**
@@ -446,7 +445,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 
-
+    public int getVictoryPointsResource(){
+        int numRes = myResources.stream().mapToInt(Resource::getValue).sum();
+        return Math.floorDiv(numRes, 5);
+    }
 
 
     /**Add a depot as a leaderDepot in the warehouse

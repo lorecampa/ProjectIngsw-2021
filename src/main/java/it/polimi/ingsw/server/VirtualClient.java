@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -73,11 +74,22 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //OBSERVER IMPLEMENTATION
 
+    //WINNER
+    @Override
+    public void weHaveAWinner(TreeMap<Integer, String> players) {
+        match.sendSinglePlayer( username,new GameOver(players));
+    }
+
+    @Override
+    public void getWinningCondition(String user) {
+        match.sendSinglePlayer( username,new WinningCondition(user));
+    }
+
     //CREATION EFFECTS
     @Override
     public void modifyDepotLeader(ArrayList<Depot> depots, boolean isDiscard) {
         ArrayList<ResourceData> depotToSend= depots.stream()
-                                                .map(x-> new ResourceData(x.getResourceType(), x.getResourceValue()))
+                                                .map(x-> new ResourceData(x.getResourceType(), x.getMaxStorable()))
                                                 .collect(Collectors.toCollection(ArrayList::new));
         match.sendAllPlayers(new DepotLeaderUpdate(depotToSend, isDiscard, username));
     }

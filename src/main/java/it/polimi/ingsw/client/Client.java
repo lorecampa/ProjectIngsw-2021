@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -226,6 +228,18 @@ public class Client{
     public void setFaithTrackData(ArrayList<FaithTrackData> faithTrackData){
         for (ModelClient modelClient: models){
             modelClient.setFaithTrack(faithTrackData);
+        }
+    }
+
+    public void setBaseProduction(ArrayList<EffectData> baseProduction){
+        for(ModelClient m : models){
+            m.setBaseProduction(baseProduction);
+        }
+    }
+
+    public void setInkwell(){
+        for(int i=0; i<models.size(); i++){
+            models.get(i).setInkwell(i == 0);
         }
     }
 }

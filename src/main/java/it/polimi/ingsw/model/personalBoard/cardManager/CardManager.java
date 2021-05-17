@@ -123,8 +123,6 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         notifyAllObservers(x -> x.cardSlotUpdate(indexCardSlotBuffer, rowDeckBuffer, colDeckBuffer));
     }
 
-
-
     /**
      * Method to activate a leader effect
      * @param leaderIndex is the index of the leader
@@ -192,6 +190,16 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         throw new NotEnoughRequirementException("You don't have enough card requirement");
     }
 
+    public int howManyCardDoIOwn(){
+        return cardSlots.stream().mapToInt(CardSlot::getLvReached).sum();
+    }
+
+    public int getVictoryPointsCard(){
+        int vp;
+        vp=cardSlots.stream().mapToInt(CardSlot::getVictoryPoint).sum();
+        vp+=leaders.stream().filter(Leader::isActive).mapToInt(Leader::getVictoryPoints).sum();
+        return vp;
+    }
 
     public Map<Integer, ArrayList<ResourceData>> listOfMarbleEffect(){
         return leaders.stream()

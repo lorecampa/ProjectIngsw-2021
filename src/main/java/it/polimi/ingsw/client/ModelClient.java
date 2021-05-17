@@ -4,23 +4,25 @@ import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
     private final Integer DIM_CELL_CHAR = 14;
 
     private final String username;
-
+    private boolean inkwell;
     private Integer currentPosOnFaithTrack;
     private ArrayList<FaithTrackData> faithTrack = new ArrayList<>();
 
     private final ArrayList<ResourceData> standardDepot = new ArrayList<>();
     private final ArrayList<ResourceData> leaderDepot = new ArrayList<>();
+    private final ArrayList<Integer> maxStoreLeaderDepot= new ArrayList<>();
 
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
 
     private final ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
-
+    private ArrayList<EffectData> baseProduction;
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
     //attributes to CLI
@@ -149,13 +151,25 @@ public class ModelClient {
         standardDepot.set(index, newDepot);
     }
 
+    public void setBaseProduction(ArrayList<EffectData> baseProduction) {
+        this.baseProduction = baseProduction;
+    }
+
+    public void setInkwell(boolean inkwell) {
+        this.inkwell = inkwell;
+    }
+
     public void setLeaderDepotAt(int index, ResourceData newDepot) {
         leaderDepot.set(index, newDepot);
     }
 
     public void addLeaderDepot(ResourceData depotToAdd){
-        //TODO: maxstorable
-        leaderDepot.add(depotToAdd);
+        leaderDepot.add(new ResourceData(depotToAdd.getType(), 0));
+        maxStoreLeaderDepot.add(depotToAdd.getValue());
+    }
+    public void removeDepotLeaderAt(int index){
+        leaderDepot.remove(index);
+        maxStoreLeaderDepot.remove(index);
     }
 
     public boolean isValidIndexDepotLeader(int index){
@@ -199,7 +213,11 @@ public class ModelClient {
     }
 
     private void printTitle(String title){
-        String titleToPrint =PrintAssistant.instance.stringBetweenChar(title, ' ', lengthInChar, ' ', ' ');
+        StringBuilder newTitle= new StringBuilder(title);
+        if(inkwell){
+            newTitle.insert(0, "Inkwell | ");
+        }
+        String titleToPrint =PrintAssistant.instance.stringBetweenChar(newTitle.toString(), ' ', lengthInChar, ' ', ' ');
         PrintAssistant.instance.printf(titleToPrint, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
     }
 
@@ -313,7 +331,7 @@ public class ModelClient {
         int i;
         if(!leaderDepot.isEmpty()){
             for(i=0; i<leaderDepot.size(); i++){
-                row=(1+i)+")"+leaderDepot.get(i).getType()+": "+leaderDepot.get(i).getValue()+"/"+(2);
+                row=(1+i)+")"+leaderDepot.get(i).getType()+": "+leaderDepot.get(i).getValue()+"/"+maxStoreLeaderDepot.get(i);
                 row=PrintAssistant.instance.fitToWidth(row, widthColumn, ' ', '|','|');
                 rowsOfResources.set(i, rowsOfResources.get(i)+row);
             }
@@ -358,6 +376,16 @@ public class ModelClient {
         }
         row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', lengthInChar, ' ', ' '));
         PrintAssistant.instance.printf(row.toString());
+
+        //print base production
+        row = new StringBuilder("Base Production");
+        row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(row.toString(), ' ', lengthInChar, ' ', ' '));
+        PrintAssistant.instance.printf(row.toString());
+        for(EffectData ef: baseProduction){
+            row = new StringBuilder(PrintAssistant.instance.stringBetweenChar(ef.resourceBeforeToCli()+">>> "+ef.resourceAfterToCli(), ' ', lengthInChar, ' ', ' '));
+            PrintAssistant.instance.printf(row.toString());
+        }
+
     }
 
     private void printCardSlotHeader(){

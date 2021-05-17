@@ -23,7 +23,6 @@ public enum TurnState {
     //END
     LEADER_MANAGE_AFTER,
 
-
     //NOT USED
     MARKET_ACTION,
     BUY_DEVELOPMENT_ACTION

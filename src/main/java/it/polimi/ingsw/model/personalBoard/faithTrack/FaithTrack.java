@@ -127,6 +127,10 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
 
     }
 
+    public boolean endFaithTrack(){
+        return currentPositionOnTrack==track.size()-1;
+    }
+
     public ArrayList<FaithTrackData> toFaithTrackData(){
         ArrayList<FaithTrackData> faithTrackData = new ArrayList<>();
         int index = 0;

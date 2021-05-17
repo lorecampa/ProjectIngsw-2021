@@ -26,4 +26,6 @@ public interface GameMasterObserver {
     void onDeckDevelopmentCardRemove(int row, int col);
 
     void onTurnStateChange(TurnState turnState);
+
+
 }

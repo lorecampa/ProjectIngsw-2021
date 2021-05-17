@@ -10,6 +10,8 @@ import it.polimi.ingsw.message.clientMessage.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class ClientMessageHandler {
 
@@ -108,6 +110,8 @@ public class ClientMessageHandler {
         client.setMarketData(message.getMarket());
         client.setDeckDevData(message.getDeckDev());
         client.setFaithTrackData(message.getFaithTrack());
+        client.setBaseProduction(message.getBaseProd());
+        client.setInkwell();
     }
 
     //leaders message handler
@@ -249,7 +253,7 @@ public class ClientMessageHandler {
         PrintAssistant.instance.printf("there are "+message.getNumOfWhiteMarbleDrew()+" white marble");
     }
 
-    //DepotLeaderUpdate
+    //DepotLeaderUpdate message handler
     public void depotLeaderUpdate(DepotLeaderUpdate message){
         for(ResourceData rs : message.getDepots()){
             client.getModelOf(message.getUsername()).addLeaderDepot(rs);
@@ -257,10 +261,26 @@ public class ClientMessageHandler {
         printResources(message.getUsername());
     }
 
-    //DiscountLeadeUpdate
+    //DiscountLeadeUpdate message handler
     public void discountLeaderUpdate(DiscountLeaderUpdate message){
 
     }
+
+    //GameOver message handler
+    public void gameOver(GameOver message){
+        PrintAssistant.instance.printf("GAME OVER");
+        Set<Map.Entry<Integer, String>> entries = message.getPlayers().entrySet();
+        for(Map.Entry<Integer, String> entry : entries){
+            PrintAssistant.instance.printf(entry.getKey()+": "+entry.getValue());
+        }
+        client.setState(ClientState.GAME_OVER);
+    }
+
+    //WinningCondition message handler
+    public void winningCondition(WinningCondition message){
+        PrintAssistant.instance.printf(message.getUsername()+" has the winning condition, play until the inkwell player turn!!!");
+    }
+
 
     //Print
     public void printFaith(String username){

@@ -15,6 +15,7 @@ import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Controller {
     private final GameMaster gameMaster;
@@ -109,6 +110,10 @@ public class Controller {
         PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
         personalBoard.getResourceManager().restoreRM();
         personalBoard.getCardManager().restoreCM();
+        if(gameMaster.isGameEnded()){
+            match.getAllPlayers().forEach(x->x.getClient().setState(HandlerState.FIRST_CONTACT));
+            match.removeMatchFromServer();
+        }
     }
 
 

@@ -22,7 +22,7 @@ public class EffectData {
     @Override
     public String toString() {
         StringBuilder row= new StringBuilder();
-        row = new StringBuilder(descriptions + ": ");
+        row = new StringBuilder(descriptions + " ");
         for(ResourceData r : resourcesBefore){
             row.append(r.toCli());
         }
