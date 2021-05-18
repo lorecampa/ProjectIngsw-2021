@@ -50,8 +50,8 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private int depthDeckDevelopment;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
+    private boolean isLastTurn = false;
     private boolean gameEnded = false;
-    private boolean isLastTurn;
 
     private Development playerBaseProduction;
 
@@ -120,33 +120,26 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
 
-    /**
-     * Method nextPlayer change the current player in the game when a new turn starts
-     */
     public void nextPlayer(){
         if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersTurn.get(0);
-            normalNextTurn();
         }else{
-            if(playerHasEndGame(currentPlayer)){
-                isLastTurn=true;
-                notifyAllObservers(x->x.getWinningCondition(currentPlayer));
-            }
             int indexOfCurr=playersTurn.indexOf(currentPlayer);
             if(indexOfCurr==numberOfPlayer-1){
-                if(isLastTurn){
-                    gameEnded=true;
-                    gameOver();
-                }
-                else{
-                    currentPlayer=playersTurn.get(0);
-                    normalNextTurn();
-                }
-            }
-            else{
+                currentPlayer=playersTurn.get(0);
+            }else{
                 currentPlayer=playersTurn.get(indexOfCurr+1);
-                normalNextTurn();
             }
+        }
+
+        if (isLastTurn && currentPlayer.equals(playersTurn.get(0))){
+            gameOver();
+        }else{
+            if (!isLastTurn){
+                checkIsGameEnded();
+            }
+            onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
+            notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
         }
     }
 
@@ -155,23 +148,36 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         int victoryPoints;
         for (String user : playersTurn){
             PersonalBoard pb=playersPersonalBoard.get(user);
-            victoryPoints=pb.getCardManager().getVictoryPointsCard()+pb.getFaithTrack().getVictoryPoints()+pb.getResourceManager().getVictoryPointsResource();
+            victoryPoints=pb.getCardManager().getVictoryPointsCard()+
+                    pb.getFaithTrack().getVictoryPoints()+
+                    pb.getResourceManager().getVictoryPointsResource();
             points.put(victoryPoints, user);
         }
-        TreeMap<Integer, String> unSortedPlayer = new TreeMap<>(Collections.reverseOrder());
-        unSortedPlayer.putAll(points);
-        notifyAllObservers(x->x.weHaveAWinner(unSortedPlayer));
+        TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
+        matchRanking.putAll(points);
+        notifyAllObservers(x->x.weHaveAWinner(matchRanking));
+        this.gameEnded = true;
     }
 
-    private void normalNextTurn(){
-        onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
-        notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
+
+    private void checkIsGameEnded(){
+        if (playersPersonalBoard.get(currentPlayer).getCardManager().howManyCardDoIOwn()==7
+                || playersPersonalBoard.values().stream().anyMatch(x -> x.getFaithTrack().endFaithTrack())
+                || (numberOfPlayer == 1 && isDeckDevEmpty())){
+
+            this.isLastTurn = true;
+        }
     }
 
-    private boolean playerHasEndGame(String username){
-        //can be modify to manage single player
-        PersonalBoard personaBoard=playersPersonalBoard.get(username);
-        return personaBoard.getCardManager().howManyCardDoIOwn()==7 || personaBoard.getFaithTrack().endFaithTrack();
+    private boolean isDeckDevEmpty(){
+        for (int i = 0; i < deckDevelopment.size(); i++){
+            for (int j = 0; j < deckDevelopment.get(i).size(); i++){
+                if (!deckDevelopment.get(i).get(j).isEmpty()){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**

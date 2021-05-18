@@ -95,13 +95,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     restoreMyResources(tempBuffer);
                     anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                     throw new AnyConversionNotPossible("You can't convert this any, you don't have " +
-                            "enough " + res.getType() + "\nPlease try again!");
+                            "enough " + res.getType().getDisplayName() + "\nPlease try again!");
                 }
             }else{
                 restoreMyResources(tempBuffer);
                 anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
-                throw new AnyConversionNotPossible("You can't convert this any, you don't own " + res.getType() +
-                        "\nPlease try again!");
+                throw new AnyConversionNotPossible("You can't convert this any, you don't own "
+                        + res.getType().getDisplayName() + "\nPlease try again!");
             }
         }
         tempBuffer.forEach(this::addToBuffer);
@@ -154,7 +154,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Store the resources i have to manage from the market in the buffer
      * @param resourcesSent contain the array of the resources i got from market*/
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
-        fromResourceToConcreteResource(resourcesSent, false, false, true);
+        fromResourceToConcreteResource(resourcesSent, false, false,
+                true);
         resourcesSent.forEach(this::addToBuffer);
         notifyAllObservers(x -> x.manageResourceRequest(resourcesBuffer, true));
         notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_RESOURCE_POSITIONING));
@@ -458,7 +459,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             currWarehouse.addDepotLeader(dep);
         }
 
-        notifyAllObservers(x->x.modifyDepotLeader(depots, false));
+        notifyAllObservers(x->x.addDepotLeader(depots));
     }
 
     /**
@@ -473,7 +474,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 discounts.add(dis);
             }
         }
-        notifyAllObservers(x->x.modifyDiscountLeader(discounts, false));
+        notifyAllObservers(x->x.addDiscountLeader(discounts));
     }
 
     public int getFaithPoint() {

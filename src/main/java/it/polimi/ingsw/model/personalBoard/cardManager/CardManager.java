@@ -8,6 +8,8 @@ import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
+import it.polimi.ingsw.model.card.Effect.Creation.DiscountEffect;
+import it.polimi.ingsw.model.card.Effect.Creation.WarehouseEffect;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.CardManagerObserver;
@@ -69,10 +71,12 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
-        //TODO:delete all the onCreationEffect if leader was active!!!!
+        Leader leaderToDiscard = leaders.get(leaderIndex);
         leaders.remove(leaderIndex);
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
+
+        deleteAllCreationEffects(leaderToDiscard);
     }
 
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{
@@ -214,6 +218,15 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                                 .collect(Collectors.toCollection(ArrayList::new))));
     }
 
+    private void deleteAllCreationEffects(Leader leader){
+        leader.getOnCreationEffect().stream().filter(eff -> eff instanceof DiscountEffect)
+                .forEach(eff -> notifyAllObservers(x ->
+                        x.discardDiscountsLeader(((DiscountEffect) eff).getDiscounts())));
+
+        leader.getOnCreationEffect().stream().filter(eff -> eff instanceof WarehouseEffect)
+                .forEach(eff -> notifyAllObservers(x ->
+                        x.discardDepotsLeader(((WarehouseEffect) eff).getDepots())));
+    }
 
     public int howManyMarbleEffects(){
         return  leaders.stream()

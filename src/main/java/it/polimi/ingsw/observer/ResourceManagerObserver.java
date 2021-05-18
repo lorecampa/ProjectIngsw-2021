@@ -23,6 +23,7 @@ public interface ResourceManagerObserver {
     void strongboxUpdate(ArrayList<Resource> strongboxUpdated);
 
     void depotUpdate(Resource depotUpdated, int index, boolean isNormalDepot);
-    void modifyDepotLeader(ArrayList<Depot> depots, boolean isDiscard);
-    void modifyDiscountLeader(ArrayList<Resource> discounts, boolean isDiscard);
+
+    void addDepotLeader(ArrayList<Depot> depots);
+    void addDiscountLeader(ArrayList<Resource> discounts);
 }

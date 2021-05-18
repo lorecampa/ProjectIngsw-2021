@@ -87,20 +87,31 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //CREATION EFFECTS
     @Override
-    public void modifyDepotLeader(ArrayList<Depot> depots, boolean isDiscard) {
-        ArrayList<ResourceData> depotToSend= depots.stream()
-                                                .map(x-> new ResourceData(x.getResourceType(), x.getMaxStorable()))
-                                                .collect(Collectors.toCollection(ArrayList::new));
-        match.sendAllPlayers(new DepotLeaderUpdate(depotToSend, isDiscard, username));
+    public void addDepotLeader(ArrayList<Depot> depots) {
+        match.sendAllPlayers(new DepotLeaderUpdate(depots.stream()
+                .map(x-> new ResourceData(x.getResourceType(), x.getMaxStorable()))
+                .collect(Collectors.toCollection(ArrayList::new)), false, username));
     }
 
     @Override
-    public void modifyDiscountLeader(ArrayList<Resource> discounts, boolean isDiscard) {
+    public void discardDepotsLeader(ArrayList<Resource> depots) {
+        match.sendAllPlayers(new DepotLeaderUpdate(depots.stream()
+                .map(Resource::toClient)
+                .collect(Collectors.toCollection(ArrayList::new)),true, username));
+    }
 
-        ArrayList<ResourceData> discountToSend= discounts.stream().map(Resource::toClient)
-                .collect(Collectors.toCollection(ArrayList::new));
+    @Override
+    public void addDiscountLeader(ArrayList<Resource> discounts) {
+        match.sendAllPlayers(new DiscountLeaderUpdate( discounts.stream()
+                .map(Resource::toClient)
+                .collect(Collectors.toCollection(ArrayList::new)), false, username));
+    }
 
-        match.sendAllPlayers(new DiscountLeaderUpdate( discountToSend,  isDiscard));
+    @Override
+    public void discardDiscountsLeader(ArrayList<Resource> discounts) {
+        match.sendAllPlayers(new DiscountLeaderUpdate(discounts.stream()
+                .map(Resource::toClient)
+                .collect(Collectors.toCollection(ArrayList::new)),true, username));
     }
 
     //MODEL OBSERVER

@@ -15,7 +15,6 @@ import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Controller {
     private final GameMaster gameMaster;

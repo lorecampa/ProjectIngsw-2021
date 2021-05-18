@@ -10,12 +10,15 @@ import java.util.ArrayList;
 public class DiscountLeaderUpdate implements ClientMessage{
     private final ArrayList<ResourceData> discounts;
     private final boolean discard;
+    private final String username;
 
     @JsonCreator
     public DiscountLeaderUpdate(@JsonProperty("discount") ArrayList<ResourceData> discounts,
-                                @JsonProperty("discard") boolean discard) {
+                                @JsonProperty("discard") boolean discard,
+                                @JsonProperty("username") String username) {
         this.discounts = discounts;
         this.discard = discard;
+        this.username = username;
     }
 
     public ArrayList<ResourceData> getDiscounts() {
@@ -24,6 +27,10 @@ public class DiscountLeaderUpdate implements ClientMessage{
 
     public boolean isDiscard() {
         return discard;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

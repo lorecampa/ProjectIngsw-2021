@@ -65,6 +65,9 @@ public class WarehouseEffect  implements Effect {
         this.resourceManager = resourceManager;
     }
 
+    public ArrayList<Resource> getDepots() {
+        return depots;
+    }
 
     @Override
     public EffectData toEffectData() {

@@ -71,6 +71,8 @@ public class Leader extends Card{
         }
         return new CardLeaderData(getVictoryPoints(),cardReq,resReq,effectToClient(), false);
     }
+
+
     @Override
     public String toString() {
         String x = super.toString();

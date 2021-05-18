@@ -38,7 +38,7 @@ public class NumOfPlayerCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        if(split.length>1 || num<2 || num>4){
+        if(split.length>1 || num<1 || num>4){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

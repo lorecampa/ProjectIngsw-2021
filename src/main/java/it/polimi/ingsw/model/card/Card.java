@@ -136,6 +136,10 @@ public  abstract class Card {
         return onActivationEffects;
     }
 
+    public ArrayList<Effect> getOnCreationEffect() {
+        return onCreationEffect;
+    }
+
     public ArrayList<EffectData> effectToClient(){
         ArrayList<EffectData> effects = new ArrayList<>();
         if (onActivationEffects != null)

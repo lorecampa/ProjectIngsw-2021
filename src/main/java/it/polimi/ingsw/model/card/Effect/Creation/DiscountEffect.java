@@ -63,6 +63,9 @@ public class DiscountEffect implements Effect {
         this.resourceManager = resourceManager;
     }
 
+    public ArrayList<Resource> getDiscounts() {
+        return discounts;
+    }
 
     @Override
     public EffectData toEffectData() {
