@@ -1,10 +1,13 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.data.*;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
@@ -17,6 +20,7 @@ public class ModelClient {
 
     private final ArrayList<ResourceData> standardDepot = new ArrayList<>();
     private final ArrayList<ResourceData> leaderDepot = new ArrayList<>();
+    private final ArrayList<ResourceData> discounts = new ArrayList<>();
     private final ArrayList<Integer> maxStoreLeaderDepot= new ArrayList<>();
 
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
@@ -163,13 +167,26 @@ public class ModelClient {
         leaderDepot.set(index, newDepot);
     }
 
+
     public void addLeaderDepot(ResourceData depotToAdd){
         leaderDepot.add(new ResourceData(depotToAdd.getType(), 0));
         maxStoreLeaderDepot.add(depotToAdd.getValue());
     }
-    public void removeDepotLeaderAt(int index){
-        leaderDepot.remove(index);
-        maxStoreLeaderDepot.remove(index);
+    public void removeLeaderDepot(ResourceData depotToRemove){
+        OptionalInt depotIndex =  leaderDepot.stream().filter(x -> x.getType() == depotToRemove.getType() &&
+                x.getValue() == depotToRemove.getValue()).mapToInt(leaderDepot::indexOf).findFirst();
+        depotIndex.ifPresent(leaders::remove);
+        depotIndex.ifPresent(maxStoreLeaderDepot::remove);
+    }
+
+    public void addDiscount(ResourceData discountToAdd){
+        discounts.add(discountToAdd);
+    }
+    public void removeDiscount(ResourceData discountToRemove){
+        OptionalInt discountIndex = discounts.stream()
+                .filter(x -> x.getType() == discountToRemove.getType() &&
+                        x.getValue() == discountToRemove.getValue()).mapToInt(discounts::indexOf).findFirst();
+        discountIndex.ifPresent(discounts::remove);
     }
 
     public boolean isValidIndexDepotLeader(int index){

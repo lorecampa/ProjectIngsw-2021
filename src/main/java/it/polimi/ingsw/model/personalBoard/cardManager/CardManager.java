@@ -76,7 +76,9 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
 
-        deleteAllCreationEffects(leaderToDiscard);
+        if (leaderToDiscard.isActive()){
+            deleteAllCreationEffects(leaderToDiscard);
+        }
     }
 
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{

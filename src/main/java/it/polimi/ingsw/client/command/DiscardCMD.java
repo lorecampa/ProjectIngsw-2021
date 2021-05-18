@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
+import it.polimi.ingsw.message.serverMessage.DiscardResourcesFromMarket;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 
 import java.util.ArrayList;
@@ -36,6 +37,11 @@ public class DiscardCMD implements Command{
             return;
         }
         int leaderIndex;
+        //TODO change and make command
+        if (split[0].equals("market")){
+            client.writeToStream(new DiscardResourcesFromMarket());
+            return;
+        }
         try{
             leaderIndex=Integer.parseInt(split[0]);
         }catch(Exception e){

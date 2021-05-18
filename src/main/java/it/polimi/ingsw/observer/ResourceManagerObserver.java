@@ -24,6 +24,6 @@ public interface ResourceManagerObserver {
 
     void depotUpdate(Resource depotUpdated, int index, boolean isNormalDepot);
 
-    void addDepotLeader(ArrayList<Depot> depots);
-    void addDiscountLeader(ArrayList<Resource> discounts);
+    void addLeaderDepot(ArrayList<Depot> depots);
+    void addLeaderDiscount(ArrayList<Resource> discounts);
 }

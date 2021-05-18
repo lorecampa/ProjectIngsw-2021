@@ -25,6 +25,6 @@ public class RemoveDeckDevelopmentCard implements ClientMessage{
 
     @Override
     public void process(ClientMessageHandler handler) {
-        System.out.println("RemoveDeckDevelopmentCard Handler");
+        handler.handleDeckDevCardRemoving(this);
     }
 }

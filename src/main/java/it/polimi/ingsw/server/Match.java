@@ -197,7 +197,11 @@ public class Match {
         ArrayList<String> usernames = allPlayers.stream()
                 .map(VirtualClient::getUsername)
                 .collect(Collectors.toCollection(ArrayList::new));
-        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData(), gameMaster.toEffectDataBasePro()));
+
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),
+                gameMaster.toDeckDevData(),
+                gameSetting.getFaithTrack().toFaithTrackData(),
+                gameMaster.toEffectDataBasePro()));
     }
 
     public void sendLeader(GameMaster gameMaster){

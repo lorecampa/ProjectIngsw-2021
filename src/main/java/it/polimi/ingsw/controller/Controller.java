@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
@@ -439,7 +441,7 @@ public class Controller {
                         if(isFinishedSetup()){
                             match.getAllPlayers().forEach(x -> x.getClient().setState(HandlerState.IN_MATCH));
                             match.sendAllPlayers(new MatchStart());
-                            gameMaster.nextPlayer();
+                            nextTurn();
                         }
                         break;
                     case 1:

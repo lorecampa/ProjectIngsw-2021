@@ -126,6 +126,10 @@ public class Warehouse implements Cloneable{
         return depots.get(index);
     }
 
+    public ArrayList<Depot> getDepotsLeader() {
+        return depotsLeader;
+    }
+
     /**
      * Get a specific leader depot
      * @param index of the depot i want

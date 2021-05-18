@@ -70,7 +70,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         this.numberOfPlayer = players.size();
-        isLastTurn=false;
         //game loading
         loadGameSetting(gameSetting);
 
@@ -121,8 +120,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
 
     public void nextPlayer(){
+        String oldPlayer = currentPlayer;
         if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersTurn.get(0);
+            oldPlayer = currentPlayer;
         }else{
             int indexOfCurr=playersTurn.indexOf(currentPlayer);
             if(indexOfCurr==numberOfPlayer-1){
@@ -136,7 +137,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             gameOver();
         }else{
             if (!isLastTurn){
-                checkIsGameEnded();
+                checkIsGameEnded(oldPlayer);
             }
             onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
             notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
@@ -144,6 +145,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     private void gameOver(){
+        this.gameEnded = true;
         Map<Integer, String> points= new HashMap<>();
         int victoryPoints;
         for (String user : playersTurn){
@@ -156,15 +158,15 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
         matchRanking.putAll(points);
         notifyAllObservers(x->x.weHaveAWinner(matchRanking));
-        this.gameEnded = true;
     }
 
 
-    private void checkIsGameEnded(){
-        if (playersPersonalBoard.get(currentPlayer).getCardManager().howManyCardDoIOwn()==7
+    private void checkIsGameEnded(String player){
+        if (playersPersonalBoard.get(player).getCardManager().howManyCardDoIOwn()==1
                 || playersPersonalBoard.values().stream().anyMatch(x -> x.getFaithTrack().endFaithTrack())
                 || (numberOfPlayer == 1 && isDeckDevEmpty())){
 
+            notifyAllObservers(x -> x.winningCondition(player));
             this.isLastTurn = true;
         }
     }
@@ -425,12 +427,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         while(numDiscarded < num){
             try{
                 removeDeckDevelopmentCard(rowReached, colorColumn);
+                int row = rowReached;
+                notifyAllObservers(x -> x.removeDeckDevelopmentSinglePlayer(row, colorColumn));
                 numDiscarded++;
             }catch (DeckDevelopmentCardException e){
                 rowReached++;
             }
-
             if (rowReached == deckDevelopment.size() && numDiscarded < num){
+                //TODO mandare un messaggio più decente al client
                 throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
                         color.getDisplayName() + "cards.\n" +
                         "There are left " + (num - numDiscarded) + " "
