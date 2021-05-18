@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
@@ -139,4 +140,27 @@ public class Warehouse implements Cloneable{
         else return getLeaderDepot(index);
     }
 
+    public ArrayList<ResourceData> toStandardDepotData(){
+        ArrayList<ResourceData> standardDepots = new ArrayList<>();
+        for (Depot depot: depots){
+            standardDepots.add(depot.getResource().toClient());
+        }
+        return standardDepots;
+    }
+
+    public ArrayList<ResourceData> toLeaderDepotData(){
+        ArrayList<ResourceData> leaderDepots = new ArrayList<>();
+        for (Depot depot: depotsLeader){
+            leaderDepots.add(depot.getResource().toClient());
+        }
+        return leaderDepots;
+    }
+
+    public ArrayList<Integer> toLeaderDepotMax(){
+        ArrayList<Integer> maxStorage = new ArrayList<>();
+        for (Depot depot: depotsLeader){
+            maxStorage.add(depot.getMaxStorable());
+        }
+        return maxStorage;
+    }
 }

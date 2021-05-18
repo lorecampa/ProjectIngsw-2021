@@ -45,6 +45,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         allMyDiscounts();
     }
 
+    public Warehouse getWarehouse() {
+        return currWarehouse;
+    }
+
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
      * @param resourcesSent the original list I'll change

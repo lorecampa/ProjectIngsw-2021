@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.card.Card;
@@ -247,6 +249,18 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                 .filter(x -> x instanceof ProductionEffect)
                 .mapToInt(x -> 1)
                 .sum();
+    }
+
+    public ArrayList<ArrayList<CardDevData>> toCardSlotsData(){
+        ArrayList<ArrayList<CardDevData>> cardSlotsData = new ArrayList<>();
+        for (CardSlot cardSlot : cardSlots){
+            cardSlotsData.add(cardSlot.toCardSlotData());
+        }
+        return cardSlotsData;
+    }
+
+    public ArrayList<CardLeaderData> toLeadersData(){
+        return leaders.stream().map(Leader::toCardLeaderData).collect(Collectors.toCollection(ArrayList::new));
     }
 
 

@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CardSlot {
     private final ArrayList<Development> developments = new ArrayList<>();
@@ -34,6 +36,10 @@ public class CardSlot {
             developments.add(buffer);
             buffer = null;
         }
+    }
+
+    public ArrayList<CardDevData> toCardSlotData(){
+        return developments.stream().map(Development::toCardDevData).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Development getDevelopment(int index) {

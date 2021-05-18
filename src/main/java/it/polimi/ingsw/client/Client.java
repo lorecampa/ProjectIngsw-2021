@@ -4,10 +4,7 @@ package it.polimi.ingsw.client;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.data.DeckDevData;
-import it.polimi.ingsw.client.data.EffectData;
-import it.polimi.ingsw.client.data.FaithTrackData;
-import it.polimi.ingsw.client.data.MarketData;
+import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
@@ -152,6 +149,7 @@ public class Client{
         try {
             message = mapper.readValue(serializedMessage, ClientMessage.class);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return null;
         }
         return message;
@@ -186,6 +184,22 @@ public class Client{
         for(String s : usernames){
             this.models.add(new ModelClient(s));
         }
+    }
+
+    public void setUpModel(ModelData model){
+        ModelClient playerModel = getModelOf(model.getUsername());
+        playerModel.setFaithTrack(model.getFaithTrack());
+        playerModel.setCurrentPosOnFaithTrack(model.getCurrentPosOnFaithTrack());
+
+        playerModel.setStandardDepot(model.getStandardDepot());
+        playerModel.setLeaderDepot(model.getLeaderDepot());
+        playerModel.setMaxStoreLeaderDepot(model.getMaxStoreLeaderDepot());
+
+        playerModel.setStrongbox(model.getStrongbox());
+
+        playerModel.setCardSlots(model.getCardSlots());
+
+        playerModel.setLeaders(model.getLeaders());
     }
 
     public ClientState getState() {

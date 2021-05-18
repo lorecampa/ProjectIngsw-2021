@@ -25,6 +25,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     private Controller controller;
     private final Match match;
     private boolean ready;
+    private boolean reconnected = false;
 
     public VirtualClient(String username,
                          ClientConnectionHandler clientConnectionHandler,
@@ -43,6 +44,14 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     public int getClientID() {
         return client.getClientID();
+    }
+
+    public boolean isReconnected() {
+        return reconnected;
+    }
+
+    public void setReconnected(boolean reconnected) {
+        this.reconnected = reconnected;
     }
 
     public String getUsername() {

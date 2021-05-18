@@ -27,6 +27,7 @@ public class Match {
     private final ArrayList<VirtualClient> activePlayers;
     private final ArrayList<VirtualClient> inactivePlayers;
 
+
     private final int matchID;
 
     public Match(int numOfPlayers, Server server, int matchID) {
@@ -62,6 +63,20 @@ public class Match {
     public int getMatchID() { return matchID; }
 
     public Controller getController() { return controller; }
+
+    public boolean isInactive(String username){
+        synchronized (allPlayers){
+            synchronized (inactivePlayers){
+                return inactivePlayers.stream().anyMatch(x -> x.getUsername().equals(username));
+            }
+        }
+    }
+
+    public boolean isReconnected(String username){
+        synchronized (allPlayers){
+            return allPlayers.stream().anyMatch(x -> x.getUsername().equals(username) && x.isReconnected());
+        }
+    }
 
     public void addPlayer(VirtualClient player){
         synchronized (allPlayers) {
@@ -107,7 +122,6 @@ public class Match {
         synchronized (allPlayers){
             synchronized (activePlayers){
                 synchronized (inactivePlayers){
-
                     if (player.isReady()) {
                         player.getClient().setExit(true);
                         inactivePlayers.add(player);
@@ -139,7 +153,8 @@ public class Match {
                         virtualClient.setClient(newClientConnHandler);
 
                         inactivePlayers.remove(virtualClient);
-                        activePlayers.add(virtualClient);
+                        virtualClient.setReconnected(true);
+                        //activePlayers.add(virtualClient);
 
                         virtualClient.getClient().writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,virtualClient.getUsername()));
 
@@ -149,6 +164,14 @@ public class Match {
                 return false;
 
             }
+        }
+    }
+
+    public void playerReturnInGame(String username){
+        Optional<VirtualClient> player = allPlayers.stream().filter(x -> x.getUsername().equals(username)).findFirst();
+        if (player.isPresent()){
+            activePlayers.add(player.get());
+            player.get().setReconnected(false);
         }
     }
 
@@ -194,10 +217,14 @@ public class Match {
 
     public void sendSetUp(GameMaster gameMaster, GameSetting gameSetting){
         sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
-        ArrayList<String> usernames = allPlayers.stream()
+        ArrayList<String> usernames = getUsernames();
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData(), gameMaster.toEffectDataBasePro()));
+    }
+
+    public ArrayList<String> getUsernames(){
+        return allPlayers.stream()
                 .map(VirtualClient::getUsername)
                 .collect(Collectors.toCollection(ArrayList::new));
-        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData(), gameMaster.toEffectDataBasePro()));
     }
 
     public void sendLeader(GameMaster gameMaster){

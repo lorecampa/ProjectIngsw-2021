@@ -15,13 +15,13 @@ public class ModelClient {
     private Integer currentPosOnFaithTrack;
     private ArrayList<FaithTrackData> faithTrack = new ArrayList<>();
 
-    private final ArrayList<ResourceData> standardDepot = new ArrayList<>();
-    private final ArrayList<ResourceData> leaderDepot = new ArrayList<>();
-    private final ArrayList<Integer> maxStoreLeaderDepot= new ArrayList<>();
+    private ArrayList<ResourceData> standardDepot = new ArrayList<>();
+    private ArrayList<ResourceData> leaderDepot = new ArrayList<>();
+    private ArrayList<Integer> maxStoreLeaderDepot= new ArrayList<>();
 
     private ArrayList<ResourceData> strongbox= new ArrayList<>();
 
-    private final ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
+    private ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
     private ArrayList<EffectData> baseProduction;
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
@@ -135,6 +135,10 @@ public class ModelClient {
         this.faithTrack = faithTrack;
     }
 
+    public void setCurrentPosOnFaithTrack(Integer currentPosOnFaithTrack) {
+        this.currentPosOnFaithTrack = currentPosOnFaithTrack;
+    }
+
     public void increaseCurrentPosOnFaithTrack(){currentPosOnFaithTrack++;}
 
     public void popeFavorActivation(int idVaticanReport, boolean activated){
@@ -145,6 +149,22 @@ public class ModelClient {
                 if (num == idVaticanReport) cell.setAcquired(true);
             }
         }
+    }
+
+    public void setStandardDepot(ArrayList<ResourceData> standardDepot) {
+        this.standardDepot = standardDepot;
+    }
+
+    public void setCardSlots(ArrayList<ArrayList<CardDevData>> cardSlots) {
+        this.cardSlots = cardSlots;
+    }
+
+    public void setLeaderDepot(ArrayList<ResourceData> leaderDepot) {
+        this.leaderDepot = leaderDepot;
+    }
+
+    public void setMaxStoreLeaderDepot(ArrayList<Integer> maxStoreLeaderDepot) {
+        this.maxStoreLeaderDepot = maxStoreLeaderDepot;
     }
 
     public void setStandardDepotAt(int index, ResourceData newDepot) {

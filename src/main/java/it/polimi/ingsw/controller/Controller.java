@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
@@ -15,6 +16,7 @@ import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Controller {
     private final GameMaster gameMaster;
@@ -105,16 +107,52 @@ public class Controller {
     //UTIL
 
     public void nextTurn() {
-        gameMaster.nextPlayer();
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        personalBoard.getResourceManager().restoreRM();
-        personalBoard.getCardManager().restoreCM();
+        do {
+            gameMaster.nextPlayer();
+            PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
+            personalBoard.getResourceManager().restoreRM();
+            personalBoard.getCardManager().restoreCM();
+        }while(match.isInactive(gameMaster.getCurrentPlayer()));
+
+        if (match.isReconnected(gameMaster.getCurrentPlayer())){
+            match.playerReturnInGame(gameMaster.getCurrentPlayer());
+            match.sendSinglePlayer(gameMaster.getCurrentPlayer(), reconnectGameMessage());
+        }
+
         if(gameMaster.isGameEnded()){
             match.getAllPlayers().forEach(x->x.getClient().setState(HandlerState.FIRST_CONTACT));
             match.removeMatchFromServer();
         }
     }
 
+    private ReconnectGameMessage reconnectGameMessage(){
+        ArrayList<String> usernames = match.getUsernames();
+        MarketData marketData = gameMaster.getMarket().toMarketData();
+        DeckDevData deckDevData = gameMaster.toDeckDevData();
+        ArrayList<EffectData> baseProdData = gameMaster.toEffectDataBasePro();
+        ArrayList<ModelData> models = new ArrayList<>();
+        for (String username : usernames){
+            models.add(modelData(username));
+        }
+        return new ReconnectGameMessage(usernames,marketData,deckDevData,baseProdData,models);
+    }
+
+    private ModelData modelData(String username){
+        PersonalBoard playerPB = gameMaster.getPlayerPersonalBoard(username);
+        ArrayList<FaithTrackData> playerFaithTrack = playerPB.getFaithTrack().toFaithTrackData();
+        int playerCurrentPos = playerPB.getFaithTrack().getCurrentPositionOnTrack();
+        ArrayList<ResourceData> standardDepots = playerPB.getResourceManager().getWarehouse().toStandardDepotData();
+        ArrayList<ResourceData> leaderDepots = playerPB.getResourceManager().getWarehouse().toLeaderDepotData();
+        ArrayList<Integer> maxStorageLeaderDepots = playerPB.getResourceManager().getWarehouse().toLeaderDepotMax();
+        ArrayList<ResourceData> strongbox = playerPB.getResourceManager().getStrongbox().toStrongboxData();
+        ArrayList<ArrayList<CardDevData>> cardSlots = playerPB.getCardManager().toCardSlotsData();
+        ArrayList<CardLeaderData> leadersData = playerPB.getCardManager().toLeadersData();
+
+        if (!username.equals(gameMaster.getCurrentPlayer()))
+            leadersData = leadersData.stream().filter(CardLeaderData::isActive).collect(Collectors.toCollection(ArrayList::new));
+
+        return new ModelData(username,playerFaithTrack,playerCurrentPos,standardDepots,leaderDepots,maxStorageLeaderDepots,strongbox,cardSlots,leadersData);
+    }
 
 
 

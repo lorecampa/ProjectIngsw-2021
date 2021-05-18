@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 
 import it.polimi.ingsw.client.data.CardDevData;
+import it.polimi.ingsw.client.data.ModelData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
@@ -80,6 +81,18 @@ public class ClientMessageHandler {
         catch(IOException e){
             PrintAssistant.instance.errorPrint("Not able to save the file with your info to reconnect!");
         }
+    }
+
+    public void reconnectGameSetUp(ReconnectGameMessage message){
+        client.setModels(message.getUsernames());
+        client.setMarketData(message.getMarket());
+        client.setDeckDevData(message.getDeckDev());
+        client.setBaseProduction(message.getBaseProd());
+        client.setInkwell();
+        for (ModelData modelData : message.getModels()){
+            client.setUpModel(modelData);
+        }
+        client.setState(ClientState.IN_GAME);
     }
 
     //MainMenu message handler

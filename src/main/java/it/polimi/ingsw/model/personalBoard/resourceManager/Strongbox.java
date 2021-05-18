@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -47,6 +48,13 @@ public class Strongbox {
 
     public ArrayList<Resource> getResources() {
         return resources;
+    }
+
+    public ArrayList<ResourceData> toStrongboxData(){
+        ArrayList<ResourceData> strongboxData = new ArrayList<>();
+        for (Resource resource: resources)
+            strongboxData.add(resource.toClient());
+        return strongboxData;
     }
 
 }
