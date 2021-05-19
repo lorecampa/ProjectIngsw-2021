@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.data.CardLeaderData;
+import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -219,9 +220,13 @@ public class Match {
     public void sendSetUp(GameMaster gameMaster, GameSetting gameSetting){
         sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
         ArrayList<String> usernames = getUsernames();
+        ArrayList<ArrayList<FaithTrackData>> faithTracks = new ArrayList<>();
+        for (int i = 0; i < usernames.size(); i++) {
+            faithTracks.add(gameSetting.getFaithTrack().toFaithTrackData());
+        }
         sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),
                 gameMaster.toDeckDevData(),
-                gameSetting.getFaithTrack().toFaithTrackData(),
+                faithTracks,
                 gameMaster.toEffectDataBasePro()));
     }
 

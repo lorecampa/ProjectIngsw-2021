@@ -67,13 +67,17 @@ public class ModelClient {
         }
 
         for(int i=0; i<25; i++){
-            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: -1), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i,true));
+            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: -1), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i,false));
         }
         strongbox.add(new ResourceData(ResourceType.COIN, 12));
         strongbox.add(new ResourceData(ResourceType.SERVANT, 2));
         strongbox.add(new ResourceData(ResourceType.STONE, 1));
         strongbox.add(new ResourceData(ResourceType.SHIELD, 50));
         ArrayList<ResourceData> resourceReq=new ArrayList<>();
+
+        maxStoreLeaderDepot.add(2);
+        maxStoreLeaderDepot.add(2);
+        maxStoreLeaderDepot.add(2);
 
         ArrayList<ResourceData> cost=new ArrayList<>();
         ArrayList<ResourceData> earn=new ArrayList<>();
@@ -98,6 +102,9 @@ public class ModelClient {
         EffectData effData3 = new EffectData("Market", cost1, earn1);
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
+
+        baseProduction = new ArrayList<EffectData>();
+        baseProduction.add(effData);
 
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new ArrayList<>());
@@ -146,12 +153,14 @@ public class ModelClient {
 
     public void increaseCurrentPosOnFaithTrack(){currentPosOnFaithTrack++;}
 
-    public void popeFavorActivation(int idVaticanReport, boolean activated){
+    public void popeFavorActivation(int idVaticanReport, boolean discard){
         int num = 0;
-        if (activated) {
+        if (!discard) {
             for (FaithTrackData cell : faithTrack) {
-                if (cell.isPopeFavor()) num++;
-                if (num == idVaticanReport) cell.setAcquired(true);
+                if (cell.isPopeFavor()) {
+                    if (num == idVaticanReport){ cell.setAcquired(true); return;}
+                    num++;
+                }
             }
         }
     }

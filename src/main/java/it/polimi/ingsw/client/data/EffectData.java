@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class EffectData {
-    String descriptions;
-    ArrayList<ResourceData> resourcesBefore;
-    ArrayList<ResourceData> resourcesAfter;
+    private final String descriptions;
+    private final ArrayList<ResourceData> resourcesBefore;
+    private final ArrayList<ResourceData> resourcesAfter;
 
     @JsonCreator
     public EffectData(@JsonProperty("descriptions")String descriptions,

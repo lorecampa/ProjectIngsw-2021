@@ -15,19 +15,19 @@ public class GameSetup implements ClientMessage{
     private final ArrayList<String> usernames;
     private final MarketData market;
     private final DeckDevData deckDev;
-    private final ArrayList<FaithTrackData> faithTrack;
+    private final ArrayList<ArrayList<FaithTrackData>> faithTracks;
     private final ArrayList<EffectData> baseProd;
 
     @JsonCreator
     public GameSetup(@JsonProperty("usernames")ArrayList<String> usernames,
                      @JsonProperty("market")MarketData market,
                      @JsonProperty("deckDev")DeckDevData deckDev,
-                     @JsonProperty("faithTrack")ArrayList<FaithTrackData> faithTrack,
+                     @JsonProperty("faithTracks")ArrayList<ArrayList<FaithTrackData>> faithTracks,
                      @JsonProperty("baseProduction")ArrayList<EffectData> baseProd) {
         this.usernames = usernames;
         this.market = market;
         this.deckDev = deckDev;
-        this.faithTrack = faithTrack;
+        this.faithTracks = faithTracks;
         this.baseProd=baseProd;
     }
 
@@ -43,7 +43,7 @@ public class GameSetup implements ClientMessage{
         return deckDev;
     }
 
-    public ArrayList<FaithTrackData> getFaithTrack() { return faithTrack; }
+    public ArrayList<ArrayList<FaithTrackData>> getFaithTracks() { return faithTracks; }
 
     public ArrayList<EffectData> getBaseProd() {
         return baseProd;

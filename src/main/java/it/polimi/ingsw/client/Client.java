@@ -239,9 +239,11 @@ public class Client{
         this.deckDevData = deckDevData;
     }
 
-    public void setFaithTrackData(ArrayList<FaithTrackData> faithTrackData){
+    public void setFaithTrackData(ArrayList<ArrayList<FaithTrackData>> faithTrackData){
+        int i = 0;
         for (ModelClient modelClient: models){
-            modelClient.setFaithTrack(faithTrackData);
+            modelClient.setFaithTrack(faithTrackData.get(i));
+            i++;
         }
     }
 

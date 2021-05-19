@@ -6,24 +6,24 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 
 public class PopeFavorActivated implements ClientMessage{
 
-    private final int popeSpaceCell;
+    private final int idVaticanReport;
     private final boolean discard;
     private final String username;
 
 
     @JsonCreator
-    public PopeFavorActivated(@JsonProperty("popeSpaceCell") int popeSpaceCell,
+    public PopeFavorActivated(@JsonProperty("idVaticanReport") int idVaticanReport,
                               @JsonProperty("discard") boolean discard,
                               @JsonProperty("username") String username) {
 
-        this.popeSpaceCell = popeSpaceCell;
+        this.idVaticanReport = idVaticanReport;
         this.discard = discard;
         this.username = username;
     }
 
 
-    public int getPopeSpaceCell() {
-        return popeSpaceCell;
+    public int getIdVaticanReport() {
+        return idVaticanReport;
     }
 
     public boolean isDiscard() {

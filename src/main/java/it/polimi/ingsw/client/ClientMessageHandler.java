@@ -121,7 +121,7 @@ public class ClientMessageHandler {
         client.setModels(message.getUsernames());
         client.setMarketData(message.getMarket());
         client.setDeckDevData(message.getDeckDev());
-        client.setFaithTrackData(message.getFaithTrack());
+        client.setFaithTrackData(message.getFaithTracks());
         client.setBaseProduction(message.getBaseProd());
         client.setInkwell();
     }
@@ -252,8 +252,8 @@ public class ClientMessageHandler {
     }
 
     public void popeFavorActivation(PopeFavorActivated message){
-        client.getModelOf(message.getUsername()).popeFavorActivation(message.getPopeSpaceCell(),message.isDiscard());
-        PrintAssistant.instance.printf("Activated pope space "+message.getPopeSpaceCell()+"!");
+        client.getModelOf(message.getUsername()).popeFavorActivation(message.getIdVaticanReport(),message.isDiscard());
+        PrintAssistant.instance.printf("Activated pope space "+message.getIdVaticanReport()+"!");
         //printFaith(message.getUsername());
     }
 
