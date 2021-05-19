@@ -40,7 +40,7 @@ public class ResourceReq implements Requirement {
         ArrayList<Resource> newResources= resourceReq.stream()
                 .map(x-> ResourceFactory.createResource(x.getType(),  x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
-        resourceManager.canIAfford(resourceReq, discount);
+        resourceManager.canIAfford(newResources, discount);
     }
 
     /**
