@@ -8,6 +8,8 @@ import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,9 @@ public class ResourceReq implements Requirement {
      */
     @Override
     public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
+        ArrayList<Resource> newResources= resourceReq.stream()
+                .map(x-> ResourceFactory.createResource(x.getType(),  x.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new));
         resourceManager.canIAfford(resourceReq, discount);
     }
 
