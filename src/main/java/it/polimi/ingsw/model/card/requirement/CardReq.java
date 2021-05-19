@@ -39,7 +39,6 @@ public class CardReq implements Requirement {
     /**
      * Method checkRequirement control if the player has enough cards with a specific color
      * @param discount of type boolean - doesn't matter if it is true or false
-     * @return boolean - true if he has them, false if he hasn't
      */
     @Override
     public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
@@ -56,7 +55,7 @@ public class CardReq implements Requirement {
 
     /**
      * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an istance of the card manager of the player
+     * @param cardManager of type CardManager is an instance of the card manager of the player
      */
     @Override
     public void attachCardManager(CardManager cardManager) {

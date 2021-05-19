@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.serverMessage.AnyResponse;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 

@@ -89,15 +89,15 @@ public class ProductionEffect implements Effect {
 
     @Override
     public String toString() {
-        String x = "\nresourceCost= ";
+        StringBuilder x = new StringBuilder("\nresourceCost= ");
         for(Resource res: resourceCost){
-            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        x+= "\nresourceAcquired= ";
+        x.append("\nresourceAcquired= ");
         for(Resource res: resourceAcquired){
-            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        return  x;
+        return x.toString();
 
     }
 }

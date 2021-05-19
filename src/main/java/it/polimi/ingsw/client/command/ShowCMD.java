@@ -85,7 +85,7 @@ public class ShowCMD implements Command{
         rowHelp.add("\t\t\tl -to show the leader");
         rowHelp.add("Write the command followed by those word to show market and the decks of developer:");
         rowHelp.add("\t\t\tmarket\t-to show the market");
-        rowHelp.add("\t\t\tdeckdev\t-to show all the deck of developer cards");
+        rowHelp.add("\t\t\tdeckDev\t-to show all the deck of developer cards");
         rowHelp.add("ex: "+cmd.toLowerCase()+" foo f");
         rowHelp.add("ex: "+cmd.toLowerCase()+" market");
         PrintAssistant.instance.printfMultipleString(rowHelp);

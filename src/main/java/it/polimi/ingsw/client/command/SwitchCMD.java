@@ -29,7 +29,7 @@ public class SwitchCMD implements Command{
             return;
         }
         String[] split= param.split(" ");
-        int currIndexUsed=0;
+        int currIndexUsed;
         if(split.length<2 || split.length>4){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
@@ -45,10 +45,7 @@ public class SwitchCMD implements Command{
         }
         int indexTo=CommandsUtility.stringToInt(split[currIndexUsed]);
         currIndexUsed++;
-        boolean toIsLeader=false;
-        if(split.length==currIndexUsed+1 && split[currIndexUsed].equals("leader")){
-            toIsLeader=true;
-        }
+        boolean toIsLeader= split.length == currIndexUsed + 1 && split[currIndexUsed].equals("leader");
         if(!fromIsLeader && !CommandsUtility.isADepotIndex(indexFrom)){
            PrintAssistant.instance.invalidParamCommand(cmd);
            return;

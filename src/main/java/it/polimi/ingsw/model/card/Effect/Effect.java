@@ -31,7 +31,6 @@ public interface Effect {
      *              (PRODUCTION_STATE -> ProductionEffect)
      *              (MARKET_STATE -> MarbleEffect)
      *              (CREATION_STATE -> DiscountEffect and WarehouseEffect)
-     * @throws NotEnoughRequirementException
      */
     void doEffect(TurnState turnState) throws NotEnoughRequirementException;
 

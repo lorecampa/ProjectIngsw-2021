@@ -82,11 +82,11 @@ public class WarehouseEffect  implements Effect {
 
     @Override
     public String toString() {
-        String x = "\ndepots= ";
+        StringBuilder x = new StringBuilder("\ndepots= ");
         for (Resource res: depots){
-            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        return x;
+        return x.toString();
     }
 }
 

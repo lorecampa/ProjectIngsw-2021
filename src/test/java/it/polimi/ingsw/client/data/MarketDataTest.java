@@ -31,8 +31,8 @@ class MarketDataTest {
         market = new MarketData(theTray, ColorData.PURPLE, rig, col);
         PrintAssistant.instance.printf(market.toString());
         //market.insertMarbleInCol(0);
-        market.insertMarbleInCol(2);
-        PrintAssistant.instance.printf(market.toString());
+        //market.insertMarbleInCol(2);
+        //PrintAssistant.instance.printf(market.toString());
     }
 
 }

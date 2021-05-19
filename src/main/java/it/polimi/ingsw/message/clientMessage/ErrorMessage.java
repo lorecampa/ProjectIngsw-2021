@@ -3,8 +3,6 @@ package it.polimi.ingsw.message.clientMessage;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
-import java.util.Optional;
-
 
 public class ErrorMessage implements ClientMessage {
     private final ErrorType errorType;

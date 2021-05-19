@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PositionToken implements Token {
-    private int position;
+    private final int position;
     private final boolean isShuffle;
 
     @JsonCreator

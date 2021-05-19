@@ -59,7 +59,6 @@ public class Development extends  Card{
     /**
      * Method checkRequirements checks if all requirement of the card are satisfied, leaders discounts
      * are considered in the counting
-     * @return boolean - true if all requirements are satisfied, otherwise false
      */
     public void checkRequirements() throws NotEnoughRequirementException {
         for(Requirement req: requirements){

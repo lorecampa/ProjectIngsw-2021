@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.personalBoard.market;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.ColorData;
-import it.polimi.ingsw.model.card.Color;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

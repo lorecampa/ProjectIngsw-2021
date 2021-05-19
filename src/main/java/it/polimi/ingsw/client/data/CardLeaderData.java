@@ -7,9 +7,9 @@ import it.polimi.ingsw.client.PrintAssistant;
 import java.util.ArrayList;
 
 public class CardLeaderData {
-    private int victoryPoint;
-    private ArrayList<CardDevData> cardReq;
-    private ArrayList<ResourceData> resourceReq;
+    private final int victoryPoint;
+    private final ArrayList<CardDevData> cardReq;
+    private final ArrayList<ResourceData> resourceReq;
 
     private ArrayList<EffectData> effects;
 

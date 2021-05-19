@@ -3,19 +3,15 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.client.data.ResourceData;
-import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.market.Marble;
 import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class VirtualClient implements ModelObserver, ResourceManagerObserver,
@@ -23,7 +19,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     private String username;
     private ClientConnectionHandler client;
-    private Controller controller;
     private final Match match;
     private boolean ready;
     private boolean reconnected = false;
@@ -172,9 +167,9 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     @Override
     public void marketTrayChange(ArrayList<ArrayList<Marble>> marketTray, Marble lastMarble) {
         ArrayList<ArrayList<ColorData>> marketTrayToClient = new ArrayList<>();
-        for (int i = 0; i < marketTray.size(); i++){
+        for (ArrayList<Marble> marbles : marketTray) {
             ArrayList<ColorData> marketCol = new ArrayList<>();
-            for (Marble marble: marketTray.get(i)){
+            for (Marble marble : marbles) {
                 marketCol.add(marble.getColorData());
             }
             marketTrayToClient.add(marketCol);

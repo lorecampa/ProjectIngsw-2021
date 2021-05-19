@@ -1,7 +1,5 @@
 package it.polimi.ingsw.client;
 
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.*;
@@ -36,7 +34,7 @@ public class Client{
 
     private String nameFile;
     private String myName;
-    private ArrayList<ModelClient> models = new ArrayList<>();
+    private final ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
 
@@ -60,37 +58,38 @@ public class Client{
             System.exit(0);
         }
         if (args.length == 1) {
-            if(args[0].equals("primo")){
-                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                client.setState(ClientState.ENTERING_LOBBY);
-                client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 2));
-                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
-                client.setMyName("Teo");
-                try{
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-                client.writeToStream(new LeaderManage(0,true));
-                client.writeToStream(new LeaderManage(0,true));
-            }
-            else if(args[0].equals("secondo")){
-                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                client.setState(ClientState.ENTERING_LOBBY);
-                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Lollo"));
-                client.setMyName("Lollo");
-                client.writeToStream(new LeaderManage(0,true));
-                client.writeToStream(new LeaderManage(0,true));
-
-            }else if (args[0].equals("singlePlayer")){
-                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                client.setState(ClientState.ENTERING_LOBBY);
-                client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 1));
-                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
-                client.setMyName("Teo");
-                client.writeToStream(new LeaderManage(0,true));
-                client.writeToStream(new LeaderManage(0,true));
+            switch (args[0]) {
+                case "primo":
+                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                    client.setState(ClientState.ENTERING_LOBBY);
+                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 2));
+                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
+                    client.setMyName("Teo");
+                    try {
+                        TimeUnit.SECONDS.sleep(5);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    client.writeToStream(new LeaderManage(0, true));
+                    client.writeToStream(new LeaderManage(0, true));
+                    break;
+                case "secondo":
+                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                    client.setState(ClientState.ENTERING_LOBBY);
+                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Lollo"));
+                    client.setMyName("Lollo");
+                    client.writeToStream(new LeaderManage(0, true));
+                    client.writeToStream(new LeaderManage(0, true));
+                    break;
+                case "singlePlayer":
+                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                    client.setState(ClientState.ENTERING_LOBBY);
+                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 1));
+                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
+                    client.setMyName("Teo");
+                    client.writeToStream(new LeaderManage(0, true));
+                    client.writeToStream(new LeaderManage(0, true));
+                    break;
             }
         }
         //to simulate 3 player
@@ -142,12 +141,7 @@ public class Client{
             PrintAssistant.instance.errorPrint("Server disconnected, even Google sometimes went down! Wait until the host re-set up the server please!");
             System.exit(0);
         }
-        /*
-        //da riguardare perchè secondo me non fa quello che dovrebbe
-        if (serializedMessage.equalsIgnoreCase("QUIT")){
-            return;
-        }
-        */
+
         ClientMessage message = deserialize(serializedMessage);
 
         message.process(clientMessageHandler);
@@ -182,7 +176,7 @@ public class Client{
 
     //getter and setter of attributes of Client
     public ModelClient getModelOf(String username) {
-        return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(username)).findFirst().get();
+        return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(username)).findFirst().orElse(null);
     }
 
     public boolean existAModelOf(String username){

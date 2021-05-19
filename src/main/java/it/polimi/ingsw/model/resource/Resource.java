@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 
-import java.util.ArrayList;
-
 public class Resource {
-    private ResourceType type;
+    private final ResourceType type;
     private int value;
 
     @JsonCreator

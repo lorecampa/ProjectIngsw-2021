@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.card;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
-import it.polimi.ingsw.model.card.Effect.Creation.WarehouseEffect;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.requirement.Requirement;
@@ -55,7 +54,6 @@ public  abstract class Card {
 
     /**
      * Method checkRequirements checks if all requirement of the card are satisfied
-     * @return boolean - true if all requirements are satisfied, otherwise false
      */
     public abstract void checkRequirements() throws NotEnoughRequirementException;
 
@@ -155,37 +153,37 @@ public  abstract class Card {
 
     @Override
     public String toString() {
-        String x = "\n";
+        StringBuilder x = new StringBuilder("\n");
         if(this.getClass() == Leader.class){
-            x += "Leader";
+            x.append("Leader");
         }else{
-            x += "Development";
+            x.append("Development");
         }
-        x+= "\nvictoryPoints= " + victoryPoints;
+        x.append("\nvictoryPoints= ").append(victoryPoints);
 
         for(Requirement req: requirements){
-            x += "\n"+req;
+            x.append("\n").append(req);
 
         }
 
 
         if (!onActivationEffects.isEmpty()){
-            x += "\nOnActivationEffect:";
+            x.append("\nOnActivationEffect:");
             for(Effect onActivationEffect: onActivationEffects){
-                x += onActivationEffect;
-                x += "\n";
+                x.append(onActivationEffect);
+                x.append("\n");
             }
         }
 
         if(!onCreationEffect.isEmpty()){
-            if (onActivationEffects.isEmpty()) x+="\n";
-            x += "OnCreationEffect:";
+            if (onActivationEffects.isEmpty()) x.append("\n");
+            x.append("OnCreationEffect:");
             for(Effect onCreationEffect: onCreationEffect){
-                x += onCreationEffect;
-                x += "\n";
+                x.append(onCreationEffect);
+                x.append("\n");
             }
         }
 
-        return x;
+        return x.toString();
     }
 }

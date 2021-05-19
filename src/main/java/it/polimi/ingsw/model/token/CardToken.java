@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.token;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.model.card.Color;
 
 public class CardToken implements Token{

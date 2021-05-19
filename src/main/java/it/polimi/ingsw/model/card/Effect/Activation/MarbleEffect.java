@@ -86,11 +86,10 @@ public class MarbleEffect implements Effect {
 
     @Override
     public String toString() {
-        String x = "\ntrasformIn= ";
+        StringBuilder x = new StringBuilder("\ntransformIn= ");
         for(Resource res: transformIn){
-            x += "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        return x;
+        return x.toString();
     }
-
 }

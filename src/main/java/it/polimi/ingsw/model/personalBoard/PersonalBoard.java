@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.personalBoard;
 
-import it.polimi.ingsw.model.GameMaster;
-import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;

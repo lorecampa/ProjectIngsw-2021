@@ -40,7 +40,7 @@ public class PrintAssistant {
     }
 
     public void printfMultipleString(ArrayList<String>texts, String txColor, String bkColor){
-        int maxSize = findMaxLengh(texts);
+        int maxSize = findMaxLength(texts);
         for(String text : texts){
             System.out.println(bkColor + txColor+padRight(text, maxSize)+ANSI_RESET);
         }
@@ -62,7 +62,7 @@ public class PrintAssistant {
 
     }
 
-    private int findMaxLengh(ArrayList<String> texts){
+    private int findMaxLength(ArrayList<String> texts){
         int max=texts.get(0).length();
         for(String text : texts){
             if(max<text.length())
@@ -113,36 +113,36 @@ public class PrintAssistant {
 
     public static void main(String[] args) {
         String s= ANSI_RED+"1234"+ANSI_RESET+"5678"+ ANSI_GREEN_BACKGROUND+"9"+ANSI_RESET;
-        System.out.println(s.length()+" Red:"+ANSI_RED.length()+" rese:"+ANSI_RESET.length());
+        System.out.println(s.length()+" Red:"+ANSI_RED.length()+" reset:"+ANSI_RESET.length());
         instance.printf(instance.fitToWidth(s, 40, ' ', ' ', ' '));
     }
 
     private int howManyColorContain(String s){
         int num=0;
-        num+=howManyXCotain(ANSI_WHITE_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_WHITE, s);
-        num+=howManyXCotain(ANSI_PURPLE_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_PURPLE, s);
-        num+=howManyXCotain(ANSI_RED_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_RED, s);
-        num+=howManyXCotain(ANSI_CYAN_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_CYAN, s);
-        num+=howManyXCotain(ANSI_YELLOW_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_YELLOW, s);
-        num+=howManyXCotain(ANSI_BLACK, s);
-        num+=howManyXCotain(ANSI_BLACK_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_BLUE, s);
-        num+=howManyXCotain(ANSI_BLUE_BACKGROUND, s);
-        num+=howManyXCotain(ANSI_GREEN, s);
-        num+=howManyXCotain(ANSI_GREEN_BACKGROUND, s);
+        num+= howManyXContain(ANSI_WHITE_BACKGROUND, s);
+        num+= howManyXContain(ANSI_WHITE, s);
+        num+= howManyXContain(ANSI_PURPLE_BACKGROUND, s);
+        num+= howManyXContain(ANSI_PURPLE, s);
+        num+= howManyXContain(ANSI_RED_BACKGROUND, s);
+        num+= howManyXContain(ANSI_RED, s);
+        num+= howManyXContain(ANSI_CYAN_BACKGROUND, s);
+        num+= howManyXContain(ANSI_CYAN, s);
+        num+= howManyXContain(ANSI_YELLOW_BACKGROUND, s);
+        num+= howManyXContain(ANSI_YELLOW, s);
+        num+= howManyXContain(ANSI_BLACK, s);
+        num+= howManyXContain(ANSI_BLACK_BACKGROUND, s);
+        num+= howManyXContain(ANSI_BLUE, s);
+        num+= howManyXContain(ANSI_BLUE_BACKGROUND, s);
+        num+= howManyXContain(ANSI_GREEN, s);
+        num+= howManyXContain(ANSI_GREEN_BACKGROUND, s);
         return num;
     }
 
     private int howManyResetContain(String s){
-        return howManyXCotain(ANSI_RESET, s);
+        return howManyXContain(ANSI_RESET, s);
     }
 
-    private int howManyXCotain(String color, String s){
+    private int howManyXContain(String color, String s){
         int num=0;
         Pattern p= Pattern.compile(color, Pattern.LITERAL);
         Matcher m= p.matcher(s);
@@ -163,11 +163,11 @@ public class PrintAssistant {
     }
 
     public void invalidParamCommand(String command){
-        command.toUpperCase();
+        command = command.toUpperCase();
         errorPrint("Invalid param of "+command+", pls type help "+command+" to know the right one!");
     }
     public void invalidStateCommand(String command){
-        command.toUpperCase();
+        command = command.toUpperCase();
         errorPrint("You can't call the command "+command+" now, you haven't the permissions!");
     }
 }

@@ -3,16 +3,14 @@ package it.polimi.ingsw.client.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
 import it.polimi.ingsw.client.PrintAssistant;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 
 
 public class MarketData {
     private final ArrayList<ArrayList<ColorData>> marketTray;
-    private ColorData extraMarble;
+    private final ColorData extraMarble;
     private final int numRow;
     private final int numCol;
     @JsonIgnore
@@ -27,24 +25,6 @@ public class MarketData {
         this.extraMarble = extraMarble;
         this.numRow = numRow;
         this.numCol = numCol;
-    }
-
-    public void insertMarbleInRow(int row) throws IndexOutOfBoundsException{
-        ColorData tempMarble = marketTray.get(row).get(0);
-        marketTray.get(row).remove(0);
-        marketTray.get(row).add(numCol - 1 , extraMarble);
-        extraMarble = tempMarble;
-    }
-
-    public void insertMarbleInCol(int col){
-        ColorData tempMarble = marketTray.get(0).get(col);
-        for (int i = 0; i < numRow - 1; i++) {
-            marketTray.get(i).remove(col);
-            marketTray.get(i).add(col,marketTray.get(i+1).get(col));
-        }
-        marketTray.get(numRow - 1).remove(col);
-        marketTray.get(numRow - 1).add( col, extraMarble);//ho aggiunto col per index
-        extraMarble = tempMarble;
     }
 
     public boolean validRow(int row){

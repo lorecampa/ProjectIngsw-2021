@@ -18,7 +18,5 @@ public class PingPongMessage implements ClientMessage, ServerMessage {
     }
 
     @Override
-    public void process(ServerMessageHandler handler) {
-
-    }
+    public void process(ServerMessageHandler handler) {}
 }

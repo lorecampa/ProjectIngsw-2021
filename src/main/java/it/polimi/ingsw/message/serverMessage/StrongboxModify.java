@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
-import java.util.ArrayList;
-
 public class StrongboxModify implements ServerMessage {
     private final ResourceData resource;
 

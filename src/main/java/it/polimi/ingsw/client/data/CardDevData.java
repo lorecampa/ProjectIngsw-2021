@@ -3,14 +3,13 @@ package it.polimi.ingsw.client.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
-import it.polimi.ingsw.model.card.Color;
 
 import java.util.ArrayList;
 
 public class CardDevData {
-    private int level;
+    private final int level;
     private int victoryPoints;
-    private ColorData color;
+    private final ColorData color;
     private ArrayList<ResourceData> resourceReq;
 
     private ArrayList<EffectData> effects;

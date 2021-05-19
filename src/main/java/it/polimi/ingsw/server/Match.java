@@ -12,7 +12,6 @@ import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
-import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 
 import java.io.IOException;
 import java.util.ArrayList;

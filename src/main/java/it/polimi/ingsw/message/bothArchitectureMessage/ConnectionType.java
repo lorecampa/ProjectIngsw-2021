@@ -7,5 +7,4 @@ public enum ConnectionType {
     WAIT_PLAYERS,
     RECONNECTION,
     CONNECT        //il client si connette al server
-
 }

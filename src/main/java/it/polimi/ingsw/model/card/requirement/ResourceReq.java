@@ -33,7 +33,6 @@ public class ResourceReq implements Requirement {
      * Method checkRequirement control if the player has enough resources
      * @param discount of type boolean - if you want to consider the leader discount effect then it
      *                 must be true, otherwise false
-     * @return boolean - true if he has them,  false if he hasn't
      */
     @Override
     public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
@@ -71,10 +70,10 @@ public class ResourceReq implements Requirement {
 
     @Override
     public String toString() {
-        String x = "resourceReq= ";
+        StringBuilder x = new StringBuilder("resourceReq= ");
         for(Resource res: resourceReq){
-            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        return x;
+        return x.toString();
     }
 }

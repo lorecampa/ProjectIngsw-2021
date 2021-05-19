@@ -1,12 +1,9 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.data.*;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.OptionalInt;
 
 public class ModelClient {
@@ -103,7 +100,7 @@ public class ModelClient {
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
 
-        baseProduction = new ArrayList<EffectData>();
+        baseProduction = new ArrayList<>();
         baseProduction.add(effData);
 
         for (int i = 0; i < 3; i++) {
@@ -112,10 +109,10 @@ public class ModelClient {
 
         CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
         CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
-        //cardSlots.get(0).add(cdd);
-        //cardSlots.get(0).add(cdd1);
+        cardSlots.get(0).add(cdd);
+        cardSlots.get(0).add(cdd1);
         cardSlots.get(1).add(cdd);
-        //cardSlots.get(1).add(cdd1);
+        cardSlots.get(1).add(cdd1);
         cardSlots.get(2).add(cdd);
         cardSlots.get(2).add(cdd1);
 
@@ -313,10 +310,10 @@ public class ModelClient {
 
                 colorBorderOut = cell.cardVaticanReportColor();
 
-                if(cell.getNumberofCell()==currentPosOnFaithTrack)
+                if(cell.getNumberOfCell()==currentPosOnFaithTrack)
                     numCell=PrintAssistant.ANSI_PURPLE_BACKGROUND +PrintAssistant.ANSI_BLACK + PrintAssistant.instance.padRight(username.substring(0,1), 2) +PrintAssistant.ANSI_RESET+ colorBorderIn;
                 else
-                    numCell=PrintAssistant.instance.padRight(faithTrack.get(i+cellAlreadyDraw).getNumberofCell()+"", 2);
+                    numCell=PrintAssistant.instance.padRight(faithTrack.get(i+cellAlreadyDraw).getNumberOfCell()+"", 2);
 
                 rowOfFaith.set(0, rowOfFaith.get(0)+colorBorderOut+" ____________ ");
                 rowOfFaith.set(1, rowOfFaith.get(1)+colorBorderOut+"| "+colorBorderIn+" ________ "+colorBorderOut+" |");

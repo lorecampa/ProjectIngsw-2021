@@ -5,7 +5,6 @@ import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
-import it.polimi.ingsw.model.card.Effect.Creation.DiscountEffect;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class Controller {
     private final GameMaster gameMaster;
-    private Match match;
+    private final Match match;
 
     public Controller(GameMaster gameMaster, Match match) {
         this.gameMaster = gameMaster;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.ClientMessageHandler;
 
 public class StarTurn implements ClientMessage{
-    private String username;
+    private final String username;
 
     @JsonCreator
     public StarTurn(@JsonProperty("username") String username) {

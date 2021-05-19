@@ -10,7 +10,6 @@ import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -81,10 +80,10 @@ public class DiscountEffect implements Effect {
 
     @Override
     public String toString() {
-        String x = "\ndiscounts= ";
+        StringBuilder x = new StringBuilder("\ndiscounts= ");
         for (Resource res: discounts){
-            x+= "{"+ res.getType().getDisplayName()+", "+res.getValue()+"}  ";
+            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
         }
-        return x;
+        return x.toString();
     }
 }

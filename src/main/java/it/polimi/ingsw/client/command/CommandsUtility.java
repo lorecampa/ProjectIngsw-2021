@@ -2,9 +2,7 @@ package it.polimi.ingsw.client.command;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientState;
-import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.ResourceData;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 public class CommandsUtility {

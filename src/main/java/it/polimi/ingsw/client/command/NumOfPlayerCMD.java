@@ -31,7 +31,7 @@ public class NumOfPlayerCMD implements Command{
         }
         //System.out.println("--"+param+"---");
         String[] split= param.split(" ", 2);
-        int num=-1;
+        int num;
         try{
             num=Integer.parseInt(split[0]);
         }catch(Exception e){

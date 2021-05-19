@@ -21,8 +21,8 @@ public class EffectData {
 
     @Override
     public String toString() {
-        StringBuilder row= new StringBuilder();
-        row = new StringBuilder(descriptions + " ");
+
+        StringBuilder row = new StringBuilder(descriptions + " ");
         for(ResourceData r : resourcesBefore){
             row.append(r.toCli());
         }
@@ -48,19 +48,19 @@ public class EffectData {
     }
 
     public String resourceBeforeToCli(){
-        String row= "";
+        StringBuilder row= new StringBuilder();
         for(ResourceData r : resourcesBefore){
-            row+=r.toCli();
+            row.append(r.toCli());
         }
-        return row;
+        return row.toString();
     }
 
     public String resourceAfterToCli(){
-        String row= "";
+        StringBuilder row= new StringBuilder();
         for(ResourceData r : resourcesAfter){
-            row+=r.toCli();
+            row.append(r.toCli());
         }
-        return row;
+        return row.toString();
     }
 
 }

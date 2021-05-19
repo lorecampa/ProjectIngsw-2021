@@ -16,7 +16,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     private final Warehouse currWarehouse;
     private final Strongbox strongbox;
-    private ArrayList<Resource> resourcesBuffer = new ArrayList<>();
+    private final ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
 
@@ -208,7 +208,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param isNormalDepot true for default false for leaderDepots
      * @param index of the depot i want to access
      * @param resource i want to subtract to that specific depot
-     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot whene there's onther one with the same type
+     * @throws InvalidOrganizationWarehouseException if i'm trying to add a resource to one depot when there's other one with the same type
      * @throws NegativeResourceException if the value of the resource in depot goes under 0*/
     public void subToWarehouse(boolean isNormalDepot, int index, Resource resource) throws InvalidOrganizationWarehouseException, NegativeResourceException {
         currWarehouse.subDepotResourceAt(index, resource, isNormalDepot);
@@ -274,7 +274,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Used to remove a resource value from the buffer in resource manager
      * @param resource I want to remove from the buffer
-     * @throws NegativeResourceException if resource'll go under value 0*/
+     * @throws NegativeResourceException if resource will go under value 0*/
     public void subToBuffer(Resource resource) throws Exception {
         if(resourcesBuffer.contains(resource)){
             int resourceIndex = resourcesBuffer.indexOf(resource);

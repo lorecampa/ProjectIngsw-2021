@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.token;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,

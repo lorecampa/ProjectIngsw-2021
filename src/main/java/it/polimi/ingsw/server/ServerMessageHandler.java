@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -28,8 +27,8 @@ public class ServerMessageHandler {
 
     /**
      * ServerMessageHandler constructor creates a new class instance
-     * @param server
-     * @param client
+     * @param server is the reference to the server
+     * @param client is the handler of the client socket
      */
     public ServerMessageHandler(Server server, ClientConnectionHandler client) {
         this.server = server;

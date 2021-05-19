@@ -149,8 +149,6 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         marbleToInsert = tempMarble;
 
         notifyMarketChange();
-
-
     }
 
     private void notifyMarketChange(){

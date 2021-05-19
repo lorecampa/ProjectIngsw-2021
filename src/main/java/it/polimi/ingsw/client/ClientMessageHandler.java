@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ModelData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 
@@ -20,7 +21,7 @@ public class ClientMessageHandler {
     }
 
     public void handlePingPong(){
-        //client.writeToStream(new PingPongMessage());
+        client.writeToStream(new PingPongMessage());
     }
 
     public void handleError(ErrorMessage message){

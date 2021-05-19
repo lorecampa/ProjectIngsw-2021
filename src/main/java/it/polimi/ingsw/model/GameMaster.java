@@ -44,7 +44,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private LinkedList<Leader> deckLeader;
     private Market market;
     private String faithTrackSerialized;
-    private String baseProductionSerialized;
     private LinkedList<Token> deckToken;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
@@ -93,7 +92,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws JsonProcessingException if some error occurs in serialization
      */
     private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
-        baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
+        String baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
         playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
@@ -373,9 +372,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private boolean isDeckDevColEmpty(){
         for (int i = 0; i < deckDevelopment.get(0).size(); i++){
             boolean isColEmpty = true;
-            for (int j = 0; j < deckDevelopment.size(); j++){
-                if (!deckDevelopment.get(j).get(i).isEmpty()){
+            for (ArrayList<ArrayList<Development>> arrayLists : deckDevelopment) {
+                if (!arrayLists.get(i).isEmpty()) {
                     isColEmpty = false;
+                    break;
                 }
             }
             if (isColEmpty){

@@ -9,7 +9,7 @@ public enum ResourceType {
     FAITH("Faith"),
     ANY("Any");
 
-    private String displayName;
+    private final String displayName;
 
     ResourceType(String displayName) {
         this.displayName = displayName;

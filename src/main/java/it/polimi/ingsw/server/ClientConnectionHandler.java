@@ -40,7 +40,6 @@ public class ClientConnectionHandler implements Runnable {
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());
         serverMessageHandler = new ServerMessageHandler(server,this);
-
     }
 
     private void startPinging(){
@@ -133,7 +132,7 @@ public class ClientConnectionHandler implements Runnable {
     @Override
     public void run() {
 
-        //startPinging();
+        startPinging();
 
         while (!exit) {
             readFromStream();

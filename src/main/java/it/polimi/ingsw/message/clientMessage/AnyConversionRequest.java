@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.ResourceData;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class AnyConversionRequest implements ClientMessage{
     private final ArrayList<ResourceData> optionConversion;
