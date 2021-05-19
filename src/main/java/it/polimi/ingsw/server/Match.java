@@ -122,6 +122,7 @@ public class Match {
         synchronized (allPlayers){
             synchronized (activePlayers){
                 synchronized (inactivePlayers){
+
                     if (player.isReady()) {
                         player.getClient().setExit(true);
                         inactivePlayers.add(player);
@@ -218,7 +219,10 @@ public class Match {
     public void sendSetUp(GameMaster gameMaster, GameSetting gameSetting){
         sendAllPlayers(new ConnectionMessage(ConnectionType.INFO,"Match successfully created"));
         ArrayList<String> usernames = getUsernames();
-        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),gameMaster.toDeckDevData(),gameSetting.getFaithTrack().toFaithTrackData(), gameMaster.toEffectDataBasePro()));
+        sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),
+                gameMaster.toDeckDevData(),
+                gameSetting.getFaithTrack().toFaithTrackData(),
+                gameMaster.toEffectDataBasePro()));
     }
 
     public ArrayList<String> getUsernames(){

@@ -47,7 +47,7 @@ public class CardSlot {
     }
 
     public Development getLastInsertedCard(){
-        return developments.get(0);
+        return developments.get(getLvReached() - 1);
     }
 
     public int getVictoryPoint(){

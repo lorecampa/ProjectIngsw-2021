@@ -21,12 +21,14 @@ public class DeckDevData {
     }
 
     public CardDevData getCard(int row, int col) {
-        if (deck.get(row).get(col).isEmpty()) {
-            return null;
-        }
         CardDevData cardToSend = deck.get(row).get(col).get(0);
         deck.get(row).get(col).remove(0);
         return cardToSend;
+
+    }
+
+    public void removeCardDevData(int row, int col){
+        deck.get(row).get(col).remove(0);
     }
 
     public void reInsertCard(CardDevData card, int row, int col) {

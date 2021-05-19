@@ -214,6 +214,7 @@ public class ClientMessageHandler {
         CardDevData card = client.getDeckDevData().getCard(message.getRowDeckDevelopment(), message.getColDeckDevelopment());
         int cardSlotIndex = message.getSlotIndex();
         if(message.getUsername().equals(client.getMyName())){
+            //TODO you don't need to check it --> cancel if statement
             if (cardSlotIndex >= 0 && cardSlotIndex < 3)
                 client.getModelOf(client.getMyName()).addToCardSlot(message.getSlotIndex(), card);
         }
@@ -262,21 +263,33 @@ public class ClientMessageHandler {
 
     //WhiteMarbleConversionRequest message handler
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
-        //TODO:da stampare un messaggio un po piu decente
-        PrintAssistant.instance.printf("there are "+message.getNumOfWhiteMarbleDrew()+" white marble");
+        //TODO:da stampare un messaggio un po piu decente usando l'attributo listOfConversion del messaggio
+        PrintAssistant.instance.printf("There are "+message.getNumOfWhiteMarbleDrew()+" white marble");
     }
 
     //DepotLeaderUpdate message handler
     public void depotLeaderUpdate(DepotLeaderUpdate message){
         for(ResourceData rs : message.getDepots()){
-            client.getModelOf(message.getUsername()).addLeaderDepot(rs);
+            if (message.isDiscard()){
+                client.getModelOf(message.getUsername()).removeLeaderDepot(rs);
+            }else{
+                client.getModelOf(message.getUsername()).addLeaderDepot(rs);
+            }
+
         }
         printResources(message.getUsername());
     }
 
     //DiscountLeadeUpdate message handler
     public void discountLeaderUpdate(DiscountLeaderUpdate message){
-
+        for (ResourceData rs: message.getDiscounts()){
+            if (message.isDiscard()){
+                client.getModelOf(message.getUsername()).removeDiscount(rs);
+            }else{
+                client.getModelOf(message.getUsername()).addDiscount(rs);
+            }
+        }
+        printResources(message.getUsername());
     }
 
     //GameOver message handler
@@ -292,6 +305,12 @@ public class ClientMessageHandler {
     //WinningCondition message handler
     public void winningCondition(WinningCondition message){
         PrintAssistant.instance.printf(message.getUsername()+" has the winning condition, play until the inkwell player turn!!!");
+    }
+
+    //single player
+    public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message){
+        //TODO think how to print the deck dev after all the removing messages
+        client.getDeckDevData().removeCardDevData(message.getRow(), message.getColumn());
     }
 
 

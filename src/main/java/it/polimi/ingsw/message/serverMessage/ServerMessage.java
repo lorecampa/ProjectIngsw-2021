@@ -15,10 +15,10 @@ import it.polimi.ingsw.server.ServerMessageHandler;
 
         @JsonSubTypes.Type(value = AnyResponse.class, name = "AnyResponse"),
         @JsonSubTypes.Type(value = BaseProduction.class, name = "BaseProduction"),
-        @JsonSubTypes.Type(value = DiscardResourcesFromMarket.class, name = "ClearBuffer"),
         @JsonSubTypes.Type(value = DepotModify.class, name = "DepotModify"),
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
+        @JsonSubTypes.Type(value = DiscardResourcesFromMarket.class, name = "DiscardResourcesFromMarket"),
         @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
         @JsonSubTypes.Type(value = EndProductionSelection.class, name = "EndProductionSelection"),
         @JsonSubTypes.Type(value = EndTurn.class, name = "EndTurn"),
@@ -26,7 +26,7 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = MarketAction.class, name = "MarketAction"),
         @JsonSubTypes.Type(value = ProductionAction.class, name = "ProductionAction"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
-        @JsonSubTypes.Type(value = WhiteMarbleConversionResponse.class, name = "WhiteMarbleForLeader")
+        @JsonSubTypes.Type(value = WhiteMarbleConversionResponse.class, name = "WhiteMarbleConversionResponse")
 })
 
 public interface ServerMessage extends Message {

@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class ResourceManager extends GameMasterObservable implements Observable<ResourceManagerObserver> {
@@ -297,7 +298,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Used to add a resource value or the resource itself in the resource to produce
      * @param resources I want to add */
     public void addToResourcesToProduce(ArrayList<Resource> resources) {
-        fromResourceToConcreteResource(resources, false, true, true);
+        fromResourceToConcreteResource(resources, false, true,
+                true);
         for (Resource res: resources){
             if(resourcesToProduce.contains(res)){
                 resourcesToProduce.get(resourcesToProduce.indexOf(res)).addValue(res.getValue());
@@ -462,8 +464,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         for(Depot dep : depots){
             currWarehouse.addDepotLeader(dep);
         }
-
-        notifyAllObservers(x->x.addDepotLeader(depots));
+        notifyAllObservers(x -> x.addLeaderDepot(depots));
     }
 
     /**
@@ -478,7 +479,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 discounts.add(dis);
             }
         }
-        notifyAllObservers(x->x.addDiscountLeader(discounts));
+        notifyAllObservers(x->x.addLeaderDiscount(discounts));
     }
 
     public int getFaithPoint() {

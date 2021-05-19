@@ -85,21 +85,23 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //WINNER
     @Override
-    public void weHaveAWinner(TreeMap<Integer, String> players) {
-        match.sendSinglePlayer( username,new GameOver(players));
+    public void weHaveAWinner(TreeMap<Integer, String> matchRanking) {
+        match.sendSinglePlayer( username,new GameOver(matchRanking));
     }
 
     @Override
-    public void getWinningCondition(String user) {
+    public void winningCondition(String user) {
         match.sendSinglePlayer( username,new WinningCondition(user));
     }
 
     //CREATION EFFECTS
+
+
     @Override
-    public void addDepotLeader(ArrayList<Depot> depots) {
+    public void addLeaderDepot(ArrayList<Depot> depots) {
         match.sendAllPlayers(new DepotLeaderUpdate(depots.stream()
                 .map(x-> new ResourceData(x.getResourceType(), x.getMaxStorable()))
-                .collect(Collectors.toCollection(ArrayList::new)), false, username));
+                .collect(Collectors.toCollection(ArrayList::new)), false,username));
     }
 
     @Override
@@ -110,7 +112,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void addDiscountLeader(ArrayList<Resource> discounts) {
+    public void addLeaderDiscount(ArrayList<Resource> discounts) {
         match.sendAllPlayers(new DiscountLeaderUpdate( discounts.stream()
                 .map(Resource::toClient)
                 .collect(Collectors.toCollection(ArrayList::new)), false, username));
