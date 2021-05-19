@@ -168,14 +168,8 @@ public class ServerMessageHandler {
     }
 
 
-    //SINGLE PLAYER
-    public void handleDrawSinglePlayer(){
-        if (!controlAuthority(TurnState.LEADER_MANAGE_BEFORE) || !isSinglePlayerGame()){ return; }
-        controller.drawTokenSinglePlayer();
-    }
 
     //UTIL
-
     public void handleEndTurn(){
         //TODO uncheck
         //if(!controlAuthority(TurnState.LEADER_MANAGE_AFTER)) return;

@@ -9,4 +9,5 @@ public interface ModelObserver {
     void removeDeckDevelopmentSinglePlayer(int row, int column);
     void weHaveAWinner(Map<Integer, String> matchRanking);
     void winningCondition();
+
 }

@@ -83,6 +83,14 @@ public class Client{
                 client.writeToStream(new LeaderManage(0,true));
                 client.writeToStream(new LeaderManage(0,true));
 
+            }else if (args[0].equals("singlePlayer")){
+                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                client.setState(ClientState.ENTERING_LOBBY);
+                client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 1));
+                client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
+                client.setMyName("Teo");
+                client.writeToStream(new LeaderManage(0,true));
+                client.writeToStream(new LeaderManage(0,true));
             }
         }
         //to simulate 3 player

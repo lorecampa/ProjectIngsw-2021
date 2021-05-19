@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.controller.TurnState;
@@ -121,6 +120,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public void nextPlayer(){
         if (currentPlayer == null || numberOfPlayer == 1) {
+            if(currentPlayer!= null){
+                drawToken();
+            }
             this.currentPlayer = playersTurn.get(0);
         }else{
             int indexOfCurr=playersTurn.indexOf(currentPlayer);
@@ -368,15 +370,19 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(faithPoints);
     }
 
-    private boolean isDeckDevEmpty(){
-        for (int i = 0; i < deckDevelopment.size(); i++){
-            for (int j = 0; j < deckDevelopment.get(i).size(); i++){
-                if (!deckDevelopment.get(i).get(j).isEmpty()){
-                    return false;
+    private boolean isDeckDevColEmpty(){
+        for (int i = 0; i < deckDevelopment.get(0).size(); i++){
+            boolean isColEmpty = true;
+            for (int j = 0; j < deckDevelopment.size(); j++){
+                if (!deckDevelopment.get(j).get(i).isEmpty()){
+                    isColEmpty = false;
                 }
             }
+            if (isColEmpty){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -401,7 +407,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                 rowReached++;
             }
         }
-        if (isDeckDevEmpty()){
+        if (isDeckDevColEmpty()){
             winningCondition();
         }
     }
@@ -422,6 +428,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     public void increaseLorenzoFaithPosition(int pos) {
         this.playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().movePlayer(pos);
     }
+
 
     @Override
     public void onDeckDevelopmentCardRemove(int row, int col) {

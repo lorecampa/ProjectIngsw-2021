@@ -80,14 +80,8 @@ public class MastersOfRenaissanceTest
         System.out.println(message22);
          */
 
-        ClientMessage errorMessage1 = new ErrorMessage(ErrorType.INVALID_USERNAME);
-        ClientMessage errorMessage2 = new ErrorMessage("Custom error");
 
-        String cm1 = mapper.writeValueAsString(errorMessage1);
-        String cm2 = mapper.writeValueAsString(errorMessage2);
 
-        ClientMessage errorMessage11 = mapper.readValue(cm1, ClientMessage.class);
-        ClientMessage errorMessage22 = mapper.readValue(cm2, ClientMessage.class);
 
 
 

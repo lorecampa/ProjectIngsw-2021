@@ -120,13 +120,6 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      * @param idVaticanReport is the id of the Vatican Report activated
      */
     public void popeFavorActivated(int idVaticanReport){
-    /*
-        Optional<Integer> popeSpacePosition = track.stream()
-                .filter(x -> (x instanceof PopeSpaceCell) && (x.isInVaticanReport(idVaticanReport)))
-                .map(track::indexOf)
-                .findFirst();
-
-     */
 
         if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport)){
             popeFavorVP += popeFavor.get(idVaticanReport);

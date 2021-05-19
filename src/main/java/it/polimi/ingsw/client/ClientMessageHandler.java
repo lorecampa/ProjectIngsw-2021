@@ -249,6 +249,7 @@ public class ClientMessageHandler {
 
     public void faithTrackPositionIncreased(FaithTrackIncrement message){
         client.getModelOf(message.getUsername()).increaseCurrentPosOnFaithTrack();
+        PrintAssistant.instance.printf(message.getUsername() + "andato avanti");
     }
 
     public void popeFavorActivation(PopeFavorActivated message){
@@ -305,8 +306,8 @@ public class ClientMessageHandler {
 
     //single player
     public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message){
-        //TODO think how to print the deck dev after all the removing messages
         client.getDeckDevData().removeCardDevData(message.getRow(), message.getColumn());
+        PrintAssistant.instance.printf("I have discarded some development cards");
     }
 
 

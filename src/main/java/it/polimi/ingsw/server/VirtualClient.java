@@ -160,6 +160,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
 
+
     @Override
     public void popeFavorReached(int idVaticanReport, boolean isDiscard) {
         match.sendAllPlayers(new PopeFavorActivated(idVaticanReport, isDiscard, username));

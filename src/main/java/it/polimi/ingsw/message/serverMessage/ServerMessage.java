@@ -19,7 +19,6 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = DepotSwitch.class, name = "DepotSwitch"),
         @JsonSubTypes.Type(value = DevelopmentAction.class, name = "DevelopmentAction"),
         @JsonSubTypes.Type(value = DiscardResourcesFromMarket.class, name = "DiscardResourcesFromMarket"),
-        @JsonSubTypes.Type(value = DrawToken.class, name = "DrawToken"),
         @JsonSubTypes.Type(value = EndProductionSelection.class, name = "EndProductionSelection"),
         @JsonSubTypes.Type(value = EndTurn.class, name = "EndTurn"),
         @JsonSubTypes.Type(value = LeaderManage.class, name = "LeaderManage"),
