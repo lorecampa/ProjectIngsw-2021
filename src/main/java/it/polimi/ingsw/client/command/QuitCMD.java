@@ -21,10 +21,12 @@ public class QuitCMD implements Command{
     @Override
     public void doCommand() {
         if(client.getState() == ClientState.MAIN_MENU){
+            client.writeToStream(new QuitGame(false));
             client.setState(ClientState.QUIT);
+            System.exit(0);
         }
         else{
-            client.writeToStream(new QuitGame(client.getMyName()));
+            client.writeToStream(new QuitGame(true));
             client.messageToMainMenu();
             client.setState(ClientState.MAIN_MENU);
         }

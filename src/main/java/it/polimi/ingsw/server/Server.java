@@ -30,7 +30,7 @@ public class Server {
 
 
     public  Server(){
-        port = 2020;
+        port = 1010;
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();

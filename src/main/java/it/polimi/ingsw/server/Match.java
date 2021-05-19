@@ -119,15 +119,27 @@ public class Match {
         }
     }
 
-    public void playerDisconnection(VirtualClient player){
+
+
+    public void playerDisconnection(VirtualClient player, boolean haveToExit){
         synchronized (allPlayers){
             synchronized (activePlayers){
                 synchronized (inactivePlayers){
 
                     if (player.isReady()) {
-                        player.getClient().setExit(true);
+                        if(haveToExit)
+                            player.getClient().setExit(true);
+                        else
+                            player.getClient().setState(HandlerState.FIRST_CONTACT);
                         inactivePlayers.add(player);
                         activePlayers.remove(player);
+                        if(activePlayers.size()==0){
+                            removeMatchFromServer();
+                        }
+                        else if(player.getUsername().equals(controller.getCurrentPlayer())){
+
+                            controller.nextTurn();
+                        }
                     }
                     else {
                         allPlayers.remove(player);
@@ -265,8 +277,12 @@ public class Match {
                 .ifPresent(y -> y.getClient().writeToStream(message));
     }
 
+    public ArrayList<VirtualClient> getActivePlayers() {
+        return activePlayers;
+    }
 
     public void removeMatchFromServer(){
+        System.out.println("Match with deleted!");
         server.matchEnd(this);
     }
 

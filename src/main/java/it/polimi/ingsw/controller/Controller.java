@@ -65,7 +65,7 @@ public class Controller {
     }
 
 
-    private String getCurrentPlayer(){
+    public String getCurrentPlayer(){
         return gameMaster.getCurrentPlayer();
     }
 
@@ -107,10 +107,11 @@ public class Controller {
     public void nextTurn() {
         do {
             gameMaster.nextPlayer();
-            PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-            personalBoard.getResourceManager().restoreRM();
-            personalBoard.getCardManager().restoreCM();
         }while(match.isInactive(gameMaster.getCurrentPlayer()));
+
+        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
+        personalBoard.getResourceManager().restoreRM();
+        personalBoard.getCardManager().restoreCM();
 
         if (match.isReconnected(gameMaster.getCurrentPlayer())){
             match.playerReturnInGame(gameMaster.getCurrentPlayer());
@@ -118,9 +119,14 @@ public class Controller {
         }
 
         if(gameMaster.isGameEnded()){
-            match.getAllPlayers().forEach(x->x.getClient().setState(HandlerState.FIRST_CONTACT));
-            match.removeMatchFromServer();
+            endGame();
         }
+    }
+
+
+    public void endGame(){
+        match.getAllPlayers().forEach(x->x.getClient().setState(HandlerState.FIRST_CONTACT));
+        match.removeMatchFromServer();
     }
 
     private ReconnectGameMessage reconnectGameMessage(){

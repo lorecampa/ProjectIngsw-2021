@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Client{
     private static final String ipHost ="127.0.0.1";
-    private static final int portNumber = 2020;
+    private static final int portNumber = 1010;
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in ;
@@ -98,6 +98,7 @@ public class Client{
         while(client.state!=ClientState.QUIT){
             client.readFromStream();
         }
+        System.exit(0);
     }
 
     private void startClient() throws IOException {

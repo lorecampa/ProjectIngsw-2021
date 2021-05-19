@@ -152,18 +152,21 @@ public class ServerMessageHandler {
     }
 
     public void handleDisconnection(){
-        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
+        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient,true),
                 ()->server.clientDisconnect(client));
     }
+
+    public void handleGameQuit(){
+        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient,false),
+                ()->server.clientDisconnect(client));
+
+    }
+
 
     public void handleReconnection(ReconnectionMessage msg){
         server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);
     }
 
-    public void handleQuitGame(QuitGame msg){
-        if(!isYourTurn()) return;
-        getVirtualClient().ifPresent(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient));
-    }
 
     //SINGLE PLAYER
     public void handleDrawSinglePlayer(){

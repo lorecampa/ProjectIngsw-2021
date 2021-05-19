@@ -5,19 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
 public class QuitGame implements ServerMessage{
-    private final String username;
+    private final boolean inGame;
 
     @JsonCreator
-    public QuitGame(@JsonProperty("username") String username) {
-        this.username = username;
+    public QuitGame(@JsonProperty("inGame") boolean inGame) {
+        this.inGame = inGame;
     }
 
-    public String getUsername() {
-        return username;
+    public boolean isInGame() {
+        return inGame;
     }
 
     @Override
     public void process(ServerMessageHandler handler) {
-
+        if(inGame){
+            handler.handleGameQuit();
+        }else{
+            handler.handleDisconnection();
+        }
     }
 }

@@ -130,8 +130,8 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
         notifyGameMasterObserver(x -> x.onDeckDevelopmentCardRemove(rowDeckBuffer, colDeckBuffer));
         notifyAllObservers(x -> x.cardSlotUpdate(indexCardSlotBuffer, rowDeckBuffer, colDeckBuffer));
-
-        if (howManyCardDoIOwn() == 1){
+        //TODO real number is 7!!!!!!
+        if (howManyCardDoIOwn() == 4){
             notifyGameMasterObserver(GameMasterObserver::winningCondition);
         }
     }
