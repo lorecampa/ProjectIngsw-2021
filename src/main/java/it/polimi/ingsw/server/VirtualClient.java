@@ -91,40 +91,19 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void winningCondition(String user) {
-        match.sendSinglePlayer( username,new WinningCondition(user));
+    public void winningCondition() {
+        match.sendSinglePlayer( username,new WinningCondition());
     }
 
     //CREATION EFFECTS
 
-
     @Override
-    public void addLeaderDepot(ArrayList<Depot> depots) {
+    public void updateLeaderDepot(ArrayList<Depot> depots, boolean isDiscard){
         match.sendAllPlayers(new DepotLeaderUpdate(depots.stream()
                 .map(x-> new ResourceData(x.getResourceType(), x.getMaxStorable()))
-                .collect(Collectors.toCollection(ArrayList::new)), false,username));
+                .collect(Collectors.toCollection(ArrayList::new)), isDiscard,username));
     }
 
-    @Override
-    public void discardDepotsLeader(ArrayList<Resource> depots) {
-        match.sendAllPlayers(new DepotLeaderUpdate(depots.stream()
-                .map(Resource::toClient)
-                .collect(Collectors.toCollection(ArrayList::new)),true, username));
-    }
-
-    @Override
-    public void addLeaderDiscount(ArrayList<Resource> discounts) {
-        match.sendAllPlayers(new DiscountLeaderUpdate( discounts.stream()
-                .map(Resource::toClient)
-                .collect(Collectors.toCollection(ArrayList::new)), false, username));
-    }
-
-    @Override
-    public void discardDiscountsLeader(ArrayList<Resource> discounts) {
-        match.sendAllPlayers(new DiscountLeaderUpdate(discounts.stream()
-                .map(Resource::toClient)
-                .collect(Collectors.toCollection(ArrayList::new)),true, username));
-    }
 
     //MODEL OBSERVER
     @Override

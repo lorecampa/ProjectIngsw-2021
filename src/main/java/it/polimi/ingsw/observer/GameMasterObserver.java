@@ -14,6 +14,7 @@ public interface GameMasterObserver {
      */
     void discardLeader();
 
+    void winningCondition();
 
     /**
      * Method to get an update from the Resource Manager

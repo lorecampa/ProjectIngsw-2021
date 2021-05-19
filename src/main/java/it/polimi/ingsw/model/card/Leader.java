@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
+import it.polimi.ingsw.model.card.Effect.Creation.WarehouseEffect;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
@@ -42,6 +43,8 @@ public class Leader extends Card{
             req.checkRequirement(false);
         }
     }
+
+
 
     /**
      * Method isActive is a getter method for knowing is the leader card has been already activated

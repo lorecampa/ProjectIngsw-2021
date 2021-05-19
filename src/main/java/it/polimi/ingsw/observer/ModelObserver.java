@@ -8,5 +8,5 @@ public interface ModelObserver {
     void currentPlayerChange(String nextPlayer);
     void removeDeckDevelopmentSinglePlayer(int row, int column);
     void weHaveAWinner(Map<Integer, String> matchRanking);
-    void winningCondition(String user);
+    void winningCondition();
 }

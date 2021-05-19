@@ -7,6 +7,7 @@ import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
+import java.util.OptionalInt;
 
 public class Warehouse implements Cloneable{
     private ArrayList<Depot> depots = new ArrayList<>();
@@ -32,6 +33,16 @@ public class Warehouse implements Cloneable{
     public void addDepotLeader(Depot depot){
         depotsLeader.add(depot);
     }
+
+    public void removeDepotLeader(Depot depotToRemove){
+        OptionalInt index = depotsLeader.stream()
+                .filter(x -> x.getResourceType() == depotToRemove.getResourceType() &&
+                        x.getMaxStorable() == depotToRemove.getMaxStorable())
+                .mapToInt(depotsLeader::indexOf).findFirst();
+
+        index.ifPresent(depotsLeader::remove);
+    }
+
 
 
 

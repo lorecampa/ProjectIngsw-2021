@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.observer.FaithTrackObserver;
 import it.polimi.ingsw.observer.GameMasterObservable;
+import it.polimi.ingsw.observer.GameMasterObserver;
 import it.polimi.ingsw.observer.Observable;
 
 import java.util.ArrayList;
@@ -83,8 +84,10 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      */
     public void movePlayer(int positions){
         for (int i = 0; i < positions; i++) {
-            increasePlayerPosition();
-            track.get(currentPositionOnTrack).doAction(this);
+            if(!hasReachedEnd()){
+                increasePlayerPosition();
+                track.get(currentPositionOnTrack).doAction(this);
+            }
         }
     }
 
@@ -92,8 +95,17 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      * Method to increase the player's position on track
      */
     public void increasePlayerPosition(){
-        currentPositionOnTrack++;
-        notifyAllObservers(FaithTrackObserver::positionIncrease);
+        if (!hasReachedEnd()){
+            currentPositionOnTrack++;
+            notifyAllObservers(FaithTrackObserver::positionIncrease);
+            if (hasReachedEnd()){
+                notifyGameMasterObserver(GameMasterObserver::winningCondition);
+            }
+        }
+    }
+
+    private boolean hasReachedEnd(){
+        return currentPositionOnTrack == track.size() - 1;
     }
 
     /**
@@ -127,9 +139,6 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
 
     }
 
-    public boolean endFaithTrack(){
-        return currentPositionOnTrack==track.size()-1;
-    }
 
     public ArrayList<FaithTrackData> toFaithTrackData(){
         ArrayList<FaithTrackData> faithTrackData = new ArrayList<>();

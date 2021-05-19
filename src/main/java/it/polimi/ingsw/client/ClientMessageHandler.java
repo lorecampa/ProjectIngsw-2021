@@ -284,17 +284,6 @@ public class ClientMessageHandler {
         printResources(message.getUsername());
     }
 
-    //DiscountLeadeUpdate message handler
-    public void discountLeaderUpdate(DiscountLeaderUpdate message){
-        for (ResourceData rs: message.getDiscounts()){
-            if (message.isDiscard()){
-                client.getModelOf(message.getUsername()).removeDiscount(rs);
-            }else{
-                client.getModelOf(message.getUsername()).addDiscount(rs);
-            }
-        }
-        printResources(message.getUsername());
-    }
 
     //GameOver message handler
     public void gameOver(GameOver message){
@@ -309,8 +298,9 @@ public class ClientMessageHandler {
     }
 
     //WinningCondition message handler
-    public void winningCondition(WinningCondition message){
-        PrintAssistant.instance.printf(message.getUsername()+" has the winning condition, play until the inkwell player turn!!!");
+    public void winningCondition(){
+        PrintAssistant.instance.printf("Winning condition has been reached, " +
+                "all players will play the last turn until the inkwell player !!", PrintAssistant.ANSI_GREEN);
     }
 
     //single player

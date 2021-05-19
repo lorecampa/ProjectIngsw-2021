@@ -75,12 +75,13 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
         Leader leaderToDiscard = leaders.get(leaderIndex);
         leaders.remove(leaderIndex);
+
+        if (leaderToDiscard.isActive()){
+            leaderToDiscard.discardCreationEffects();
+        }
         notifyGameMasterObserver(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
 
-        if (leaderToDiscard.isActive()){
-            deleteAllCreationEffects(leaderToDiscard);
-        }
     }
 
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{
@@ -129,6 +130,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
         notifyGameMasterObserver(x -> x.onDeckDevelopmentCardRemove(rowDeckBuffer, colDeckBuffer));
         notifyAllObservers(x -> x.cardSlotUpdate(indexCardSlotBuffer, rowDeckBuffer, colDeckBuffer));
+
+        if (howManyCardDoIOwn() == 1){
+            notifyGameMasterObserver(GameMasterObserver::winningCondition);
+        }
     }
 
     /**
@@ -198,7 +203,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         throw new NotEnoughRequirementException("You don't have enough card requirement");
     }
 
-    public int howManyCardDoIOwn(){
+    private int howManyCardDoIOwn(){
         return cardSlots.stream().mapToInt(CardSlot::getLvReached).sum();
     }
 
@@ -222,15 +227,6 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                                 .collect(Collectors.toCollection(ArrayList::new))));
     }
 
-    private void deleteAllCreationEffects(Leader leader){
-        leader.getOnCreationEffect().stream().filter(eff -> eff instanceof DiscountEffect)
-                .forEach(eff -> notifyAllObservers(x ->
-                        x.discardDiscountsLeader(((DiscountEffect) eff).getDiscounts())));
-
-        leader.getOnCreationEffect().stream().filter(eff -> eff instanceof WarehouseEffect)
-                .forEach(eff -> notifyAllObservers(x ->
-                        x.discardDepotsLeader(((WarehouseEffect) eff).getDepots())));
-    }
 
     public int howManyMarbleEffects(){
         return  leaders.stream()

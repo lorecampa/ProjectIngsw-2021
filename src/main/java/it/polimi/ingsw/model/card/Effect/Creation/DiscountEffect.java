@@ -38,13 +38,18 @@ public class DiscountEffect implements Effect {
     @Override
     public void doEffect(TurnState turnState) {
         if (turnState == TurnState.LEADER_MANAGE_BEFORE){
-            ArrayList<Resource> disCopy=discounts.stream()
-                                        .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
-                                        .collect(Collectors.toCollection(ArrayList::new));
-
-            resourceManager.addDiscount(disCopy);
+            resourceManager.addDiscount(discounts.stream()
+                    .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
+                    .collect(Collectors.toCollection(ArrayList::new)));
         }
 
+    }
+
+    @Override
+    public void discardEffect() {
+        resourceManager.removeDiscount(discounts.stream()
+                .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new)));
     }
 
     /**

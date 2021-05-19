@@ -19,7 +19,6 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = CardSlotUpdate.class, name = "CardSlotUpdate"),
         @JsonSubTypes.Type(value = DepotLeaderUpdate.class, name = "DepotLeaderUpdate"),
         @JsonSubTypes.Type(value = DepotUpdate.class, name = "DepotUpdate"),
-        @JsonSubTypes.Type(value = DiscountLeaderUpdate.class, name = "DiscountLeaderUpdate"),
         @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
         @JsonSubTypes.Type(value = GameOver.class, name = "GameOver"),

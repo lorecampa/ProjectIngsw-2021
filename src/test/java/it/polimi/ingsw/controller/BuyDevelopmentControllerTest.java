@@ -106,7 +106,6 @@ class BuyDevelopmentControllerTest {
         gameMaster = new GameMaster(gameSetting, players);
         gameMaster.nextPlayer();
         gameMaster.onDeckDevelopmentCardRemove(0, 0);
-        gameMaster.pushDeckDevelopmentCard(0, 0, devCard);
 
         personalBoard = gameMaster.getPlayerPersonalBoard(gameMaster.getCurrentPlayer());
         resourceManager = personalBoard.getResourceManager();

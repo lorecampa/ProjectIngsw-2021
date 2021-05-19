@@ -39,13 +39,17 @@ public class WarehouseEffect  implements Effect {
     @Override
     public void doEffect(TurnState turnState) {
         if (turnState == TurnState.LEADER_MANAGE_BEFORE){
-
-            ArrayList<Depot> disCopy=depots.stream()
+            resourceManager.addLeaderDepot(depots.stream()
                     .map(x->new Depot(ResourceFactory.createResource(x.getType(), 0), x.getValue()))
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            resourceManager.addLeaderDepot(disCopy);
+                    .collect(Collectors.toCollection(ArrayList::new)));
         }
+    }
+
+    @Override
+    public void discardEffect() {
+        resourceManager.removeLeaderDepot(depots.stream()
+                .map(x->new Depot(ResourceFactory.createResource(x.getType(), 0), x.getValue()))
+                .collect(Collectors.toCollection(ArrayList::new)));
     }
 
     /**

@@ -5,6 +5,7 @@ import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
+import it.polimi.ingsw.model.card.Effect.Creation.DiscountEffect;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
@@ -98,11 +99,7 @@ public class Controller {
     //SINGLE PLAYER
 
     public void drawTokenSinglePlayer(){
-        try{
-            gameMaster.drawToken();
-        }catch (Exception e){
-            sendError(e.getMessage());
-        }
+        gameMaster.drawToken();
     }
 
     //UTIL
@@ -170,7 +167,6 @@ public class Controller {
                 cardManager.activateLeader(leaderIndex);
                 resourceManager.restoreRM();
             }
-
         }catch (Exception e){
             sendError(e.getMessage());
         }

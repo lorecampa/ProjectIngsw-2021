@@ -48,6 +48,11 @@ public class MarbleEffect implements Effect {
         }
     }
 
+    @Override
+    public void discardEffect() {
+
+    }
+
     /**
      * Method attachMarket attach the market
      * @param market of type Market is the instance of the market of the game

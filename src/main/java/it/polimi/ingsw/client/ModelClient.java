@@ -194,10 +194,14 @@ public class ModelClient {
         maxStoreLeaderDepot.add(depotToAdd.getValue());
     }
     public void removeLeaderDepot(ResourceData depotToRemove){
-        OptionalInt depotIndex =  leaderDepot.stream().filter(x -> x.getType() == depotToRemove.getType() &&
-                x.getValue() == depotToRemove.getValue()).mapToInt(leaderDepot::indexOf).findFirst();
-        depotIndex.ifPresent(leaders::remove);
+        OptionalInt depotIndex =  leaderDepot.stream()
+                .filter(x -> x.getType() == depotToRemove.getType() &&
+                maxStoreLeaderDepot.get(leaderDepot.indexOf(x)) == depotToRemove.getValue())
+                .mapToInt(leaderDepot::indexOf).findFirst();
+
+        depotIndex.ifPresent(leaderDepot::remove);
         depotIndex.ifPresent(maxStoreLeaderDepot::remove);
+
     }
 
     public void addDiscount(ResourceData discountToAdd){

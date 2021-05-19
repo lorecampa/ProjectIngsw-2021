@@ -47,7 +47,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private String faithTrackSerialized;
     private String baseProductionSerialized;
     private LinkedList<Token> deckToken;
-    private int depthDeckDevelopment;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
     private boolean isLastTurn = false;
@@ -75,7 +74,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
         //setting up  players
         Collections.shuffle(players);
-        int i = 0;
         for (String player: players){
             addPlayer(player);
             playersTurn.add(player);
@@ -101,7 +99,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
         deckDevelopment = gameSetting.getDeckDevelopment();
-        depthDeckDevelopment = deckDevelopment.get(0).get(0).size();
         deckDevelopment.stream().flatMap(ArrayList::stream).forEach(Collections::shuffle);
 
         deckLeader = gameSetting.getDeckLeader();
@@ -123,10 +120,8 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Method nextPlayer change the current player in the game when a new turn starts
      */
     public void nextPlayer(){
-        String oldPlayer = currentPlayer;
         if (currentPlayer == null || numberOfPlayer == 1) {
             this.currentPlayer = playersTurn.get(0);
-            oldPlayer = currentPlayer;
         }else{
             int indexOfCurr=playersTurn.indexOf(currentPlayer);
             if(indexOfCurr==numberOfPlayer-1){
@@ -136,12 +131,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             }
         }
 
-        if (isLastTurn && currentPlayer.equals(playersTurn.get(0))){
+        if (isLastTurn &&  currentPlayer.equals(playersTurn.get(0))){
             gameOver();
         }else{
-            if (!isLastTurn){
-                checkIsGameEnded(oldPlayer);
-            }
             onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
             notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
         }
@@ -162,26 +154,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
 
-    private void checkIsGameEnded(String player){
-        if (playersPersonalBoard.get(player).getCardManager().howManyCardDoIOwn()==4
-                || playersPersonalBoard.values().stream().anyMatch(x -> x.getFaithTrack().endFaithTrack())
-                || (numberOfPlayer == 1 && isDeckDevEmpty())){
-
-            notifyAllObservers(x -> x.winningCondition(player));
+    @Override
+    public void winningCondition() {
+        if(!isLastTurn){
+            notifyAllObservers(ModelObserver::winningCondition);
             this.isLastTurn = true;
         }
     }
 
-    private boolean isDeckDevEmpty(){
-        for (int i = 0; i < deckDevelopment.size(); i++){
-            for (int j = 0; j < deckDevelopment.get(i).size(); i++){
-                if (!deckDevelopment.get(i).get(j).isEmpty()){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     /**
      * Method getNumActivePlayers gives the number of players still active in game
@@ -296,41 +276,17 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                     " Column: " + column + ")");
         }
         deckDevelopment.get(row).get(column).remove(0);
-
     }
 
-
-    /**
-     * Method pushDeckDevelopmentCard insert ,in the first position of the block of card
-     * selected (row, col), the development card (development)
-     * @param row of type int - the row to select
-     * @param column of type int - the column to select
-     * @param development of type Development - the Development card to insert
-     * @throws DeckDevelopmentCardException when you are trying to insert the card in a block that's
-     * already full (4 card)
-     * @throws IndexOutOfBoundsException when you are not selecting a block of card inside the matrix
-     */
-    //non credo servirà
-    public void pushDeckDevelopmentCard(int row, int column, Development development) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
-        if (deckDevelopment.get(row).get(column).size() == depthDeckDevelopment){
-            throw new DeckDevelopmentCardException("Too much card at selection (Row: " + row +
-                    "Column: " + column + ")");
-        }
-        deckDevelopment.get(row).get(column).add(0, development);
-    }
 
     /**
      * Method drawToken draws the token from the deckToken on the top,
      * puts it back in the bottom and then  applies its effect
      */
-    public void drawToken() throws DeckDevelopmentCardException {
+    public void drawToken(){
         Optional<Token> token = Optional.ofNullable(deckToken.poll());
         token.ifPresent(deckToken::offer);
-
-        if (token.isPresent()){
-            token.get().doActionToken(this);
-        }
-
+        token.ifPresent(value -> value.doActionToken(this));
     }
 
     public boolean isGameEnded() {
@@ -412,35 +368,41 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(faithPoints);
     }
 
+    private boolean isDeckDevEmpty(){
+        for (int i = 0; i < deckDevelopment.size(); i++){
+            for (int j = 0; j < deckDevelopment.get(i).size(); i++){
+                if (!deckDevelopment.get(i).get(j).isEmpty()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Method discardDevelopment discard a specific number of card (num) of a certain color (color)
      * in the development deck starting from the cards of level 1 to the cards of level 3
      * @param color of type Color - target color
      * @param num of type int - number of cards to delete
-     * @throws DeckDevelopmentCardException if it fails on deleting all the card required
      */
     @Override
-    public void discardDevelopmentSinglePlayer(Color color, int num) throws DeckDevelopmentCardException {
+    public void discardDevelopmentSinglePlayer(Color color, int num) {
         int rowReached = 0;
         int colorColumn = color.getColumnDeckDevelopment();
         int numDiscarded = 0;
 
-        while(numDiscarded < num){
+        while(numDiscarded < num && rowReached < deckDevelopment.size()){
             try{
                 removeDeckDevelopmentCard(rowReached, colorColumn);
-                int row = rowReached;
-                notifyAllObservers(x -> x.removeDeckDevelopmentSinglePlayer(row, colorColumn));
+                int finalRowReached = rowReached;
+                notifyAllObservers(x -> x.removeDeckDevelopmentSinglePlayer(finalRowReached, colorColumn));
                 numDiscarded++;
             }catch (DeckDevelopmentCardException e){
                 rowReached++;
             }
-            if (rowReached == deckDevelopment.size() && numDiscarded < num){
-                //TODO mandare un messaggio più decente al client
-                throw new DeckDevelopmentCardException("You have removed " + numDiscarded +
-                        color.getDisplayName() + "cards.\n" +
-                        "There are left " + (num - numDiscarded) + " "
-                        +color.getDisplayName()+" cards to discard");
-            }
+        }
+        if (isDeckDevEmpty()){
+            winningCondition();
         }
     }
 

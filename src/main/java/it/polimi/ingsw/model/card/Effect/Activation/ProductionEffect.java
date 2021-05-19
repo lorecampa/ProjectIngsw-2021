@@ -57,6 +57,10 @@ public class ProductionEffect implements Effect {
         }
     }
 
+    @Override
+    public void discardEffect() {
+
+    }
 
     /**
      * Method attachMarket does nothing because the production effect doesn't need it

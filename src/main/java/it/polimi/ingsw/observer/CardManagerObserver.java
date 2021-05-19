@@ -10,8 +10,5 @@ public interface CardManagerObserver {
 
     void leaderActivated(Leader leader, int leaderIndex);
     void leaderDiscard(int leaderIndex);
-    void discardDepotsLeader(ArrayList<Resource> depots);
-    void discardDiscountsLeader(ArrayList<Resource> discounts);
-    
 
 }

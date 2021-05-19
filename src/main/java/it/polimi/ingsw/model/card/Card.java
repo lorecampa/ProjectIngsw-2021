@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.card;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
+import it.polimi.ingsw.model.card.Effect.Creation.WarehouseEffect;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.controller.TurnState;
 import it.polimi.ingsw.model.card.requirement.Requirement;
@@ -69,6 +70,9 @@ public  abstract class Card {
         }
     }
 
+    public void discardCreationEffects(){
+        onCreationEffect.forEach(Effect::discardEffect);
+    }
     /**
      * Method doEffects does all the effect of type activation
      */

@@ -17,7 +17,7 @@ public class CardToken implements Token{
     }
 
     @Override
-    public void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico) throws DeckDevelopmentCardException {
+    public void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico){
         lorenzoIlMagnifico.discardDevelopmentSinglePlayer(cardColor, numDiscard);
     }
 

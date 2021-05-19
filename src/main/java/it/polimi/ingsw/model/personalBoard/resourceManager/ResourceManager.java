@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
 public class ResourceManager extends GameMasterObservable implements Observable<ResourceManagerObserver> {
@@ -464,8 +463,17 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         for(Depot dep : depots){
             currWarehouse.addDepotLeader(dep);
         }
-        notifyAllObservers(x -> x.addLeaderDepot(depots));
+        notifyAllObservers(x -> x.updateLeaderDepot(depots, false));
     }
+
+    public void removeLeaderDepot(ArrayList<Depot> depots){
+        for(Depot dep: depots){
+            currWarehouse.removeDepotLeader(dep);
+        }
+        notifyAllObservers(x -> x.updateLeaderDepot(depots, true));
+    }
+
+
 
     /**
      * Add resource to the list of discount i have
@@ -479,7 +487,17 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 discounts.add(dis);
             }
         }
-        notifyAllObservers(x->x.addLeaderDiscount(discounts));
+    }
+
+    public void removeDiscount(ArrayList<Resource> cardDiscounts){
+        for(Resource dis: cardDiscounts){
+            if (discounts.contains(dis)){
+                try {
+                    discounts.get(discounts.indexOf(dis)).subValue(dis.getValue());
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 
     public int getFaithPoint() {

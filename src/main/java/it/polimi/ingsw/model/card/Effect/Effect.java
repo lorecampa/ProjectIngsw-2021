@@ -35,6 +35,7 @@ public interface Effect {
      */
     void doEffect(TurnState turnState) throws NotEnoughRequirementException;
 
+    void discardEffect();
     /**
      * Method attachMarket attach the market
      * @param market of type Market is the instance of the market of the game

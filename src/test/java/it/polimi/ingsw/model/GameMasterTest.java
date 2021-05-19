@@ -58,19 +58,7 @@ class GameMasterTest {
     }
 
 
-    @Test
-    void pushDeckDevelopmentCard() throws DeckDevelopmentCardException {
-        Development dev = gm.getDeckDevelopmentCard(1,1);
-        //if size is already 4
-        assertThrows(DeckDevelopmentCardException.class, ()-> gm.pushDeckDevelopmentCard(2, 2, dev));
 
-        assertDoesNotThrow(()-> gm.onDeckDevelopmentCardRemove(2, 3));
-
-        assertDoesNotThrow(()->gm.pushDeckDevelopmentCard(2, 3, dev));
-
-        assertThrows(IndexOutOfBoundsException.class, ()-> gm.pushDeckDevelopmentCard(4, 2, dev));
-
-    }
 
     @Test
     void drawToken(){

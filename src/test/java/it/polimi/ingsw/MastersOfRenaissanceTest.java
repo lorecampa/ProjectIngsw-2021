@@ -98,21 +98,22 @@ public class MastersOfRenaissanceTest
     @Test
     void gameStartForSetUpServer(){
         Map<Integer, String> points= new HashMap<>();
-        points.put(2, "teo");
-        points.put(1, "lollo");
-        points.put(67, "davide");
+        points.put(16, "Lorenzo");
+        points.put(17, "Teo");
+        points.put(2000, "bbbb");
+        points.put(1, "aaaaa");
+
 
         //TreeMap<Integer, String> test= new TreeMap<>(points);
 
         TreeMap<Integer, String> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
         reverseSortedMap.putAll(points);
 
+
         Set<Map.Entry<Integer, String>> entries = reverseSortedMap.entrySet();
         for(Map.Entry<Integer, String> entry : entries){
             PrintAssistant.instance.printf(entry.getKey()+": "+entry.getValue());
         }
-        PrintAssistant.instance.printf(Math.floorDiv(9, 5)+" ", PrintAssistant.ANSI_PURPLE);
-        PrintAssistant.instance.printf(Math.floorDiv(7, 5)+" ");
 
     }
 

@@ -12,6 +12,6 @@ import it.polimi.ingsw.exception.DeckDevelopmentCardException;
         @JsonSubTypes.Type(value = CardToken.class, name = "CardToken")
 })
 public interface Token{
-    void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico) throws DeckDevelopmentCardException;
+    void doActionToken(LorenzoIlMagnifico lorenzoIlMagnifico);
 }
 
