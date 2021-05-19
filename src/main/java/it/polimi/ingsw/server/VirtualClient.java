@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.observer.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -85,7 +86,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //WINNER
     @Override
-    public void weHaveAWinner(TreeMap<Integer, String> matchRanking) {
+    public void weHaveAWinner(Map<Integer, String> matchRanking) {
         match.sendSinglePlayer( username,new GameOver(matchRanking));
     }
 

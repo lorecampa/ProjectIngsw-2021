@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.PrintAssistant;
+import it.polimi.ingsw.message.serverMessage.QuitGame;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class QuitCMD implements Command{
             client.setState(ClientState.QUIT);
         }
         else{
+            client.writeToStream(new QuitGame(client.getMyName()));
             client.messageToMainMenu();
             client.setState(ClientState.MAIN_MENU);
         }

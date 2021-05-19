@@ -85,6 +85,10 @@ public class ActionCMD implements Command{
     public void produce(String[] split){
         switch(split[1]){
             case "cs":
+                if(split.length!=3){
+                    PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
                 int cardSlot=CommandsUtility.stringToInt(split[2]);
                 if(!CommandsUtility.isACardSlotIndex(cardSlot)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
@@ -94,6 +98,10 @@ public class ActionCMD implements Command{
                 client.writeToStream(new ProductionAction(cardSlot, false));
                 break;
             case "le":
+                if(split.length!=3){
+                    PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
                 int leaderIndex=CommandsUtility.stringToInt(split[2]);
                 leaderIndex--;
                 if(!CommandsUtility.isALeaderIndex(client, leaderIndex)){
@@ -103,7 +111,7 @@ public class ActionCMD implements Command{
                 client.writeToStream(new ProductionAction(leaderIndex, true));
                 break;
             case "bp":
-                if(split.length>2)
+                if(split.length!=2)
                     PrintAssistant.instance.invalidParamCommand(cmd);
                 client.writeToStream(new BaseProduction());
                 break;

@@ -119,6 +119,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
 
+    /**
+     * Method nextPlayer change the current player in the game when a new turn starts
+     */
     public void nextPlayer(){
         String oldPlayer = currentPlayer;
         if (currentPlayer == null || numberOfPlayer == 1) {
@@ -155,14 +158,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                     pb.getResourceManager().getVictoryPointsResource();
             points.put(victoryPoints, user);
         }
-        TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
-        matchRanking.putAll(points);
-        notifyAllObservers(x->x.weHaveAWinner(matchRanking));
+        notifyAllObservers(x->x.weHaveAWinner(points));
     }
 
 
     private void checkIsGameEnded(String player){
-        if (playersPersonalBoard.get(player).getCardManager().howManyCardDoIOwn()==1
+        if (playersPersonalBoard.get(player).getCardManager().howManyCardDoIOwn()==4
                 || playersPersonalBoard.values().stream().anyMatch(x -> x.getFaithTrack().endFaithTrack())
                 || (numberOfPlayer == 1 && isDeckDevEmpty())){
 

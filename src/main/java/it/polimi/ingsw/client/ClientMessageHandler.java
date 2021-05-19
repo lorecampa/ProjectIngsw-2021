@@ -10,9 +10,7 @@ import it.polimi.ingsw.message.clientMessage.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ClientMessageHandler {
 
@@ -71,7 +69,7 @@ public class ClientMessageHandler {
                 myWriter.write(message.getMatchID()+"\n");
                 myWriter.write(message.getClientID()+"");
                 myWriter.close();
-                PrintAssistant.instance.errorPrint("We saved your main data, making sure you can disconnect and reconnect during the game!");
+                PrintAssistant.instance.printf("We saved your main data, making sure you can disconnect and reconnect during the game!");
             /*
             } else {
                 PrintAssistant.instance.errorPrint("Not able to save the file with your info to reconnect!");
@@ -92,6 +90,7 @@ public class ClientMessageHandler {
         for (ModelData modelData : message.getModels()){
             client.setUpModel(modelData);
         }
+        PrintAssistant.instance.printf("It's your turn!");
         client.setState(ClientState.IN_GAME);
     }
 
@@ -212,29 +211,25 @@ public class ClientMessageHandler {
     //CardSlotUpdate message handler
     public void cardSlotUpdate(CardSlotUpdate message){
         CardDevData card = client.getDeckDevData().getCard(message.getRowDeckDevelopment(), message.getColDeckDevelopment());
-        int cardSlotIndex = message.getSlotIndex();
-        if(message.getUsername().equals(client.getMyName())){
-            //TODO you don't need to check it --> cancel if statement
-            if (cardSlotIndex >= 0 && cardSlotIndex < 3)
-                client.getModelOf(client.getMyName()).addToCardSlot(message.getSlotIndex(), card);
-        }
+
+        client.getModelOf(message.getUsername()).addToCardSlot(message.getSlotIndex(), card);
         printCardSlots(message.getUsername());
     }
 
     //BufferUpdate message handler
     public void bufferUpdate(BufferUpdate message){
-        String resource;
+        StringBuilder resource;
         if(message.getBufferUpdated().isEmpty()){
-            resource="You have just end your operations with the resources!";
-            PrintAssistant.instance.printf(resource);
+            resource = new StringBuilder("You have just end your operations with the resources!");
+            PrintAssistant.instance.printf(resource.toString());
             printResources(client.getMyName());
         }
         else{
-            resource="Buffer: ";
+            resource = new StringBuilder("Buffer: ");
             for(ResourceData r : message.getBufferUpdated()){
-                resource+=r.toCli();
+                resource.append(r.toCli());
             }
-            PrintAssistant.instance.printf(resource);
+            PrintAssistant.instance.printf(resource.toString());
         }
     }
 
@@ -245,11 +240,11 @@ public class ClientMessageHandler {
         else
             PrintAssistant.instance.printf("From where you want to take those resources to pay the production?");
 
-        String resource="Buffer: ";
+        StringBuilder resource= new StringBuilder("Buffer: ");
         for(ResourceData r : message.getResources()){
-            resource+=r.toCli();
+            resource.append(r.toCli());
         }
-        PrintAssistant.instance.printf(resource);
+        PrintAssistant.instance.printf(resource.toString());
     }
 
     public void faithTrackPositionIncreased(FaithTrackIncrement message){
@@ -258,13 +253,22 @@ public class ClientMessageHandler {
 
     public void popeFavorActivation(PopeFavorActivated message){
         client.getModelOf(message.getUsername()).popeFavorActivation(message.getPopeSpaceCell(),message.isDiscard());
-        printFaith(message.getUsername());
+        PrintAssistant.instance.printf("Activated pope space "+message.getPopeSpaceCell()+"!");
+        //printFaith(message.getUsername());
     }
 
     //WhiteMarbleConversionRequest message handler
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
-        //TODO:da stampare un messaggio un po piu decente usando l'attributo listOfConversion del messaggio
-        PrintAssistant.instance.printf("There are "+message.getNumOfWhiteMarbleDrew()+" white marble");
+        PrintAssistant.instance.printf("There are "+message.getNumOfWhiteMarbleDrew()+" white marble!");
+        Set<Map.Entry<Integer, ArrayList<ResourceData>>> entries = message.getListOfConversion().entrySet();
+        for(Map.Entry<Integer, ArrayList<ResourceData>> entry : entries){
+            StringBuilder resource= new StringBuilder();
+            for(ResourceData r : entry.getValue()){
+                resource.append(r.toCli());
+            }
+            PrintAssistant.instance.printf("Leader "+entry.getKey()+" option: "+resource);
+        }
+
     }
 
     //DepotLeaderUpdate message handler
@@ -295,7 +299,9 @@ public class ClientMessageHandler {
     //GameOver message handler
     public void gameOver(GameOver message){
         PrintAssistant.instance.printf("GAME OVER");
-        Set<Map.Entry<Integer, String>> entries = message.getPlayers().entrySet();
+        TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
+        matchRanking.putAll(message.getPlayers());
+        Set<Map.Entry<Integer, String>> entries = matchRanking.entrySet();
         for(Map.Entry<Integer, String> entry : entries){
             PrintAssistant.instance.printf(entry.getKey()+": "+entry.getValue());
         }

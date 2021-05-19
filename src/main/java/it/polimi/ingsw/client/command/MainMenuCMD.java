@@ -44,9 +44,11 @@ public class MainMenuCMD implements Command{
         switch (num){
             case 1:
                 client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
+                client.setState(ClientState.ENTERING_LOBBY);
                 break;
             case 2:
                 //single player, how do we connect to that game?
+                client.setState(ClientState.ENTERING_LOBBY);
                 break;
             case 3:
                 int matchID=-1;
@@ -58,13 +60,13 @@ public class MainMenuCMD implements Command{
                     clientID=Integer.parseInt(scanner.nextLine());
                 }
                 catch(IOException e){
-                    PrintAssistant.instance.errorPrint("Some errors with your file where you data to re-log where stored!");
+                    PrintAssistant.instance.errorPrint("Some errors with files where your data to re-log are stored!");
                 }
                 client.writeToStream( new ReconnectionMessage(matchID,clientID));
-                //TODO: dire a davide che in questo momento il server non mi risponde!
+                client.setState(ClientState.ENTERING_LOBBY);
                 break;
         }
-        client.setState(ClientState.ENTERING_LOBBY);
+
     }
 
     @Override

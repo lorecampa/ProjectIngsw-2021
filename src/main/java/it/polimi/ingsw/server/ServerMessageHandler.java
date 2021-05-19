@@ -160,7 +160,10 @@ public class ServerMessageHandler {
         server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);
     }
 
-
+    public void handleQuitGame(QuitGame msg){
+        if(!isYourTurn()) return;
+        getVirtualClient().ifPresent(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient));
+    }
 
     //SINGLE PLAYER
     public void handleDrawSinglePlayer(){
