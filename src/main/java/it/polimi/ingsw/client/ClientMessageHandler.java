@@ -250,7 +250,7 @@ public class ClientMessageHandler {
 
     public void faithTrackPositionIncreased(FaithTrackIncrement message){
         client.getModelOf(message.getUsername()).increaseCurrentPosOnFaithTrack();
-        PrintAssistant.instance.printf(message.getUsername() + "andato avanti");
+        PrintAssistant.instance.printf(message.getUsername() + "è andato avanti");
     }
 
     public void popeFavorActivation(PopeFavorActivated message){

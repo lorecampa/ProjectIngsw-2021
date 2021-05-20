@@ -63,6 +63,10 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
      */
     public int getPopeFavorVP(){return popeFavorVP;}
 
+    public int aLlVP(){
+        return  popeFavorVP+victoryPoints;
+    }
+
     /**
      * Method to set the victory points acquired from the track
      * @param victoryPoints is the number of victory points to set

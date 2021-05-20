@@ -64,7 +64,7 @@ public class FaithTrackData {
         String popeFavorString;
         if(popeFavor){
             if (acquired)
-                popeFavorString=PrintAssistant.ANSI_GREEN + "PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")" + PrintAssistant.ANSI_RESET;
+                popeFavorString=PrintAssistant.ANSI_GREEN_BACKGROUND+ PrintAssistant.ANSI_BLACK + "PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")" + PrintAssistant.ANSI_RESET;
             else
                 popeFavorString="PoFa("+PrintAssistant.instance.padRight(victoryPopeFavor+"", 2)+")";
         }

@@ -97,8 +97,7 @@ public class Controller {
     }
 
     private void registerLorenzoIlMagnificoVC(){
-        VirtualClient lorenzoIlMagnificoVC = new VirtualClient(GameMaster.getNameLorenzo(),
-                match.getAllPlayers().get(0).getClient(), match);
+        VirtualClient lorenzoIlMagnificoVC = new VirtualClient(GameMaster.getNameLorenzo(), match);
 
 
         //faith track observer

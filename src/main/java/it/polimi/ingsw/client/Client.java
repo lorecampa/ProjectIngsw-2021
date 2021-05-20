@@ -187,6 +187,9 @@ public class Client{
         for(String s : usernames){
             this.models.add(new ModelClient(s));
         }
+        if(usernames.size()==1){
+            this.models.add(new ModelClient("lorenzoilmagnifico"));
+        }
     }
 
     public void setUpModel(ModelData model){
@@ -260,5 +263,9 @@ public class Client{
         for(int i=0; i<models.size(); i++){
             models.get(i).setInkwell(i == 0);
         }
+    }
+
+    public void clearModels(){
+        models.clear();
     }
 }

@@ -25,10 +25,16 @@ public class QuitCMD implements Command{
             client.setState(ClientState.QUIT);
             System.exit(0);
         }
+        else if(client.getState()==ClientState.GAME_OVER){
+            client.messageToMainMenu();
+            client.setState(ClientState.MAIN_MENU);
+            client.clearModels();
+        }
         else{
             client.writeToStream(new QuitGame(true));
             client.messageToMainMenu();
             client.setState(ClientState.MAIN_MENU);
+            client.clearModels();
         }
     }
 

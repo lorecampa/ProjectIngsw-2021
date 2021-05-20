@@ -34,6 +34,12 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.ready = false;
     }
 
+    public VirtualClient(String username, Match match) {
+        this.username = username;
+        this.match = match;
+        this.ready = false;
+    }
+
     public ClientConnectionHandler getClient() { return client; }
 
     public void setClient(ClientConnectionHandler client) { this.client = client; }

@@ -235,6 +235,9 @@ public class Match {
         for (int i = 0; i < usernames.size(); i++) {
             faithTracks.add(gameSetting.getFaithTrack().toFaithTrackData());
         }
+        if(usernames.size()==1){
+            faithTracks.add(gameSetting.getFaithTrack().toFaithTrackData());
+        }
         sendAllPlayers(new GameSetup(usernames,gameMaster.getMarket().toMarketData(),
                 gameMaster.toDeckDevData(),
                 faithTracks,

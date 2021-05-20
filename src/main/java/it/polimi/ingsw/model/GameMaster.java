@@ -151,7 +151,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         for (String user : playersTurn){
             PersonalBoard pb=playersPersonalBoard.get(user);
             victoryPoints=pb.getCardManager().getVictoryPointsCard()+
-                    pb.getFaithTrack().getVictoryPoints()+
+                    pb.getFaithTrack().aLlVP() +
                     pb.getResourceManager().getVictoryPointsResource();
             points.put(victoryPoints, user);
         }

@@ -256,9 +256,11 @@ public class ModelClient {
 
     public void printAll() {
         printFaithTrack();
-        printResources();
-        printCardSlots(true);
-        printLeaders();
+        if(!username.equalsIgnoreCase("lorenzoilmagnifico")){
+            printResources();
+            printCardSlots(true);
+            printLeaders();
+        }
     }
 
     private void printTitle(String title){

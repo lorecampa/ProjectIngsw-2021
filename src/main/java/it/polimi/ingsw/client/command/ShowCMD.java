@@ -55,12 +55,16 @@ public class ShowCMD implements Command{
             return;
         }
 
-        if(split.length==1){                                            //ha scritto solo il nome dell'user, stampo tutto
+        if(split.length==1){ //ha scritto solo il nome dell'user, stampo tutto
             client.getModelOf(split[0]).printAll();
             return;
         }
         for(int i=1; i<split.length; i++){                              //controllo che gli altri campi siano comandi conosciuti
             if(!split[i].equals("f") && !split[i].equals("r") && !split[i].equals("d") && !split[i].equals("l")){
+                PrintAssistant.instance.invalidParamCommand(cmd);
+                return;
+            }
+            if(split[0].equalsIgnoreCase("lorenzoilmagnifico") && !split[i].equals("f")){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }
