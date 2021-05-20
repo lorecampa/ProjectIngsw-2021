@@ -99,7 +99,7 @@
             <archive>
               <!--<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>-->
               <manifest>
-                <mainClass>it.polimi.ingsw.client.ModelClient</mainClass>
+                <mainClass>it.polimi.ingsw.server.Server</mainClass>
               </manifest>
             </archive>
           </configuration>

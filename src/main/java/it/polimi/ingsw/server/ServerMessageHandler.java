@@ -91,11 +91,18 @@ public class ServerMessageHandler {
         }else{
             result = false;
         }
-
         if (!result){
             client.writeToStream(new ErrorMessage(ErrorType.NOT_YOUR_TURN));
         }
         return result;
+    }
+
+    private boolean controlSetUpPhase(HandlerState state){
+        if(setupState != state){
+            client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+            return false;
+        }
+        return true;
     }
 
     private boolean controlAuthority(TurnState turnState){
@@ -136,17 +143,17 @@ public class ServerMessageHandler {
     }
 
     public void handleFirstContact(){
-        if(setupState != HandlerState.FIRST_CONTACT) return;
+        if(!controlSetUpPhase(HandlerState.FIRST_CONTACT)) return;
         server.putInLobby(client);
     }
 
     public void handleMatchCreation(ConnectionMessage message){
-        if (setupState != HandlerState.NUM_OF_PLAYER) return;
+        if (!controlSetUpPhase(HandlerState.NUM_OF_PLAYER)) return;
         server.createMatch(message.getNum(),client);
     }
 
     public void handleUsernameInput(ConnectionMessage message){
-        if (setupState != HandlerState.USERNAME) return;
+        if (!controlSetUpPhase(HandlerState.USERNAME)) return;
         virtualClient.getMatch().setPlayerUsername(virtualClient, message.getMessage());
     }
 

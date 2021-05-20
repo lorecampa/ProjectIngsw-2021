@@ -13,8 +13,8 @@ public class Strongbox {
     private ArrayList<Resource> resources;
 
     public Strongbox() {
-        //resources=ResourceFactory.createAllConcreteResource();
-        setUpForDebug();
+        resources=ResourceFactory.createAllConcreteResource();
+        //setUpForDebug();
     }
 
     private void setUpForDebug(){
@@ -24,6 +24,8 @@ public class Strongbox {
         resources.add(ResourceFactory.createResource(ResourceType.SERVANT, 20));
         resources.add(ResourceFactory.createResource(ResourceType.STONE, 20));
     }
+
+
 
     /**
      * change the resource passed in resources adding the value passed

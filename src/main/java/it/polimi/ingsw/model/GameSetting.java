@@ -73,7 +73,7 @@ public class GameSetting {
         final int INITIAL_SIZE_TOKEN_DECK = 7;
 
         deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
-                new TypeReference<LinkedList<Token>>() {});
+                new TypeReference<>() {});
         if (deckToken.size() != INITIAL_SIZE_TOKEN_DECK){
             throw new JsonFileModificationError("Deck token size wrong");
         }

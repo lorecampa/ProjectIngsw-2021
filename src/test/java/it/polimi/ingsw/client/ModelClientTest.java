@@ -9,9 +9,11 @@ class ModelClientTest {
         ModelClient mc;
         mc=new ModelClient("Teo");
 
+        /*
         mc.printFaithTrack();
         mc.printResources();
         mc.printCardSlots(false);
         mc.printLeaders();
+         */
     }
 }

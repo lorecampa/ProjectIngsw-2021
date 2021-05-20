@@ -25,7 +25,7 @@ class GameSettingTest {
         assertEquals(0, gs.getDeckToken().size());
 
         assertDoesNotThrow(()-> gs = new GameSetting(1));
-        assertEquals(6, gs.getDeckToken().size());
+        assertEquals(7, gs.getDeckToken().size());
 
     }
 

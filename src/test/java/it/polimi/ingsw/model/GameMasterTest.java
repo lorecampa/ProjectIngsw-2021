@@ -65,7 +65,7 @@ class GameMasterTest {
         assertEquals(0, gm.getSizeDeckToken());
 
         int sizeDeckToken = gmSp.getSizeDeckToken();
-        assertEquals(6, sizeDeckToken);
+        assertEquals(7, sizeDeckToken);
 
         assertDoesNotThrow(()-> gmSp.drawToken());
         assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
@@ -73,16 +73,14 @@ class GameMasterTest {
     }
 
     @Test
-    void discardDevelopment() throws DeckDevelopmentCardException {
+    void discardDevelopment() {
         gm.discardDevelopmentSinglePlayer(Color.GREEN, 4);
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 5));
-        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 4));
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.BLUE, 9));
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.PURPLE, 12));
-        assertThrows(DeckDevelopmentCardException.class, ()->gm.discardDevelopmentSinglePlayer(Color.YELLOW, 13));
 
     }
 

@@ -188,7 +188,7 @@ public class Client{
             this.models.add(new ModelClient(s));
         }
         if(usernames.size()==1){
-            this.models.add(new ModelClient("lorenzoilmagnifico"));
+            this.models.add(new ModelClient("LorenzoIlMagnifico"));
         }
     }
 

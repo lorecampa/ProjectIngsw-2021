@@ -250,12 +250,16 @@ public class ClientMessageHandler {
 
     public void faithTrackPositionIncreased(FaithTrackIncrement message){
         client.getModelOf(message.getUsername()).increaseCurrentPosOnFaithTrack();
-        PrintAssistant.instance.printf(message.getUsername() + "è andato avanti");
+        PrintAssistant.instance.printf(message.getUsername() + " faith track pushed ahead!");
     }
 
     public void popeFavorActivation(PopeFavorActivated message){
         client.getModelOf(message.getUsername()).popeFavorActivation(message.getIdVaticanReport(),message.isDiscard());
-        PrintAssistant.instance.printf("Activated pope space "+message.getIdVaticanReport()+"!");
+        if(message.isDiscard()){
+            PrintAssistant.instance.printf("Discarded pope space "+message.getIdVaticanReport()+" of " + message.getUsername());
+        }else{
+            PrintAssistant.instance.printf("Activated pope space "+message.getIdVaticanReport()+" of " + message.getUsername());
+        }
         //printFaith(message.getUsername());
     }
 
