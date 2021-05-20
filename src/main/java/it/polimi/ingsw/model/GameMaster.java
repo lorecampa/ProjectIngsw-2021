@@ -53,6 +53,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private Development playerBaseProduction;
 
 
+    public static String getNameLorenzo() {
+        return NAME_LORENZO;
+    }
+
     /**
      * Constructor GameMaster creates a new game. It creates a new Market, deck of Leader and deck of Development card,
      * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player

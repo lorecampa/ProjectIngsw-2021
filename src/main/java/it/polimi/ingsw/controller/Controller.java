@@ -27,6 +27,9 @@ public class Controller {
         this.gameMaster = gameMaster;
         this.match = match;
         registerAllVirtualClientObserver();
+        if (getNumberOfPlayer() == 1){
+            registerLorenzoIlMagnificoVC();
+        }
     }
 
 
@@ -90,6 +93,17 @@ public class Controller {
             //market
             gameMaster.getMarket().attachObserver(virtualClient);
         }
+
+    }
+
+    private void registerLorenzoIlMagnificoVC(){
+        VirtualClient lorenzoIlMagnificoVC = new VirtualClient(GameMaster.getNameLorenzo(),
+                match.getAllPlayers().get(0).getClient(), match);
+
+
+        //faith track observer
+        gameMaster.getPlayerPersonalBoard(GameMaster.getNameLorenzo())
+                .getFaithTrack().attachObserver(lorenzoIlMagnificoVC);
 
     }
 

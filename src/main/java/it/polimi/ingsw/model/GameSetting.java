@@ -70,7 +70,7 @@ public class GameSetting {
     }
 
     private void createDeckToken() throws IOException, JsonFileModificationError {
-        final int INITIAL_SIZE_TOKEN_DECK = 5;
+        final int INITIAL_SIZE_TOKEN_DECK = 7;
 
         deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
                 new TypeReference<LinkedList<Token>>() {});
