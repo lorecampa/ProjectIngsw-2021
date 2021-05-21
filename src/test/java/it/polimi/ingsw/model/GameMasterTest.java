@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
+import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,23 +17,21 @@ class GameMasterTest {
 
     GameMaster gm;
     GameMaster gmSp;
-    GameSetting gs;
-    GameSetting gsSinglePlayer;
-    ArrayList<String> players = new ArrayList<>();
-    int numOfPlayer;
+
+    public static class GameMasterStub extends GameMaster{
+        public GameMasterStub(String ... players) throws IOException, JsonFileModificationError {
+            super(new GameSetting(players.length),
+                    Arrays.stream(players)
+                            .collect(Collectors.toCollection(ArrayList::new)));
+            nextPlayer();
+        }
+    }
+
+
     @BeforeEach
-    void setUp() throws IOException {
-        assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
-        players.add("Lorenzo");
-        gmSp = new GameMaster(gsSinglePlayer, players);
-
-        numOfPlayer = 3;
-        players.add("Matteo");
-        players.add("Davide");
-        assertDoesNotThrow(()-> gs = new GameSetting(numOfPlayer));
-        gm = new GameMaster(gs, players);
-        gm.nextPlayer();
-
+    void setUp() {
+        assertDoesNotThrow(()-> gmSp = new GameMasterStub("Lorenzo"));
+        assertDoesNotThrow(()-> gm = new GameMasterStub("Lorenzo","Matteo", "Davide"));
 
     }
 
@@ -77,23 +77,13 @@ class GameMasterTest {
         gm.discardDevelopmentSinglePlayer(Color.GREEN, 4);
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
-        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 5));
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 3));
+        assertFalse(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
-        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.BLUE, 9));
-        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.PURPLE, 12));
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 1));
+        assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
     }
 
-
-
-    @Test
-    void updateFromResourceManager() {
-        gm.discardResources(6);
-        for(String player: players){
-            if (!player.equals(gm.getCurrentPlayer())){
-                assertEquals(6, gm.getPlayerPersonalBoard(player).getFaithTrack().getCurrentPositionOnTrack());
-            }
-        }
-    }
 
 }

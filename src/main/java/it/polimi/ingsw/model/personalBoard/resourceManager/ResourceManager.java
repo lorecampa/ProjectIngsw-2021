@@ -65,7 +65,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
         resourcesSent.removeIf(x -> (x.getType() == ResourceType.ANY) || (x.getType() == ResourceType.FAITH));
 
-
     }
 
     private void containsAnyOrFaith(ArrayList<Resource> resources) throws AnyConversionNotPossible {
@@ -99,13 +98,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     restoreMyResources(tempBuffer);
                     anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                     throw new AnyConversionNotPossible("You can't convert this any, you don't have " +
-                            "enough " + res.getType().getDisplayName() + "\nPlease try again!");
+                            "enough " + res.getType().getDisplayName() + ". Please try again!");
                 }
             }else{
                 restoreMyResources(tempBuffer);
                 anyRequired += tempBuffer.stream().mapToInt(Resource::getValue).sum();
                 throw new AnyConversionNotPossible("You can't convert this any, you don't own "
-                        + res.getType().getDisplayName() + "\nPlease try again!");
+                        + res.getType().getDisplayName() + ". Please try again!");
             }
         }
         tempBuffer.forEach(this::addToBuffer);
@@ -371,7 +370,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             }
 
         }
-
 
         int numOfDiscountNotUsed =  myDiscounts.stream().mapToInt(Resource::getValue).sum();
 

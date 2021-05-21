@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.client.data.*;
+import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.card.Development;
@@ -42,10 +43,6 @@ public class Controller {
         return gameMaster.getNumberOfPlayer();
     }
 
-    private void sendError(ErrorType errorType){
-        match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(errorType));
-
-    }
     private void sendError(String customMessage){
         match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
 
@@ -99,20 +96,11 @@ public class Controller {
     private void registerLorenzoIlMagnificoVC(){
         VirtualClient lorenzoIlMagnificoVC = new VirtualClient(GameMaster.getNameLorenzo(), match);
 
-
         //faith track observer
         gameMaster.getPlayerPersonalBoard(GameMaster.getNameLorenzo())
                 .getFaithTrack().attachObserver(lorenzoIlMagnificoVC);
-
     }
 
-
-
-    //SINGLE PLAYER
-
-    public void drawTokenSinglePlayer(){
-        gameMaster.drawToken();
-    }
 
     //UTIL
 
@@ -216,17 +204,10 @@ public class Controller {
                 market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
                 cardManager.getLeaders().stream()
                         .filter(Leader::isActive)
-                        .filter(x -> x.getOnActivationEffects().stream()
-                                .anyMatch(effect -> effect instanceof MarbleEffect))
-                        .mapToInt(x -> cardManager.getLeaders().indexOf(x))
-                        .findFirst()
-                        .ifPresent(x -> {
+                        .forEach(x -> {
                             try {
-                                cardManager.activateLeaderEffect(x, getTurnState());
-                            } catch (Exception e) {
-                                //it will never occur
-                                e.printStackTrace();
-                            }
+                                x.doEffects(TurnState.WHITE_MARBLE_CONVERSION);
+                            } catch (Exception ignored) {}
                         });
             }
 

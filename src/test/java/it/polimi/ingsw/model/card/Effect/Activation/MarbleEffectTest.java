@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MarbleEffectTest {
-    //TODO fix test for different leader with marble effect (now it does not work)
-
     private static Market market;
 
     private static final ArrayList<Resource> trasformIn1 = new ArrayList<>();

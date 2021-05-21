@@ -21,11 +21,7 @@ class SwitchTest {
 
     @Test
     void switchResourceFromDepotToDepot() {
-
         assertDoesNotThrow(()->rm.switchResourceFromDepotToDepot(0, true, 1, true));
         assertDoesNotThrow(() -> rm.switchResourceFromDepotToDepot(0, true, 1, true));
-
-
-
     }
 }

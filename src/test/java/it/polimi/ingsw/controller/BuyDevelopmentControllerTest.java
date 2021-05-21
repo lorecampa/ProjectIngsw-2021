@@ -6,38 +6,85 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.exception.JsonFileModificationError;
+import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
-import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.server.VirtualClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BuyDevelopmentControllerTest {
 
-    GameSetting gameSetting;
-    GameMaster gameMaster;
-    PersonalBoard personalBoard;
-    ResourceManager resourceManager;
+    private final static String[] players = new String[]{"Lorenzo", "Matteo", "Davide"};
+    PersonalBoard pb;
+    ResourceManager rm;
     Controller controller;
     ObjectMapper mapper = new ObjectMapper();
     ArrayList<Leader> leaders;
-    String devCardString;
-    Development devCard;
-    ArrayList<Resource> anyConv;
+
+
+
+    public static class GameMasterStub extends GameMaster{
+        public GameMasterStub() throws IOException, JsonFileModificationError {
+            super(new GameSetting(players.length), Arrays.stream(players)
+                    .collect(Collectors.toCollection(ArrayList::new)));
+        }
+
+    }
+
+    public static class MatchStub extends Match{
+        private String messageClass;
+        public MatchStub() {
+            super(players.length, new Server(), 1);
+            registerCustomVC();
+
+        }
+        private void registerCustomVC(){
+            for (String player: players){
+                super.getActivePlayers().add(new VirtualClient(player, this));
+            }
+        }
+
+        @Override
+        public void sendAllPlayers(ClientMessage message) {
+            this.messageClass = message.getClass().getSimpleName();
+            System.out.println(messageClass);
+        }
+
+        @Override
+        public void sendSinglePlayer(String username, ClientMessage message) {
+            this.messageClass = message.getClass().getSimpleName();
+            System.out.println(messageClass);
+        }
+    }
+
+    public static class ControllerStub extends Controller{
+        public ControllerStub(GameMasterStub gm) throws IOException, JsonFileModificationError {
+            super(gm, new MatchStub());
+            nextTurn();
+        }
+    }
+
+    public static class ResourceManagerStub extends ResourceManager{
+        public ResourceManagerStub() {
+            super();
+        }
+    }
 
     @BeforeEach
     @Test
@@ -45,76 +92,36 @@ class BuyDevelopmentControllerTest {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         leaders =
                 mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<>() {});
+        GameMasterStub gm = new GameMasterStub();
+        controller = new ControllerStub(gm);
 
-        gameSetting = new GameSetting(3);
-        ArrayList<String> players = new ArrayList<>();
-        players.add("Lorenzo");
-        players.add("Matteo");
-        players.add("Davide");
-
-        gameMaster = new GameMaster(gameSetting, players);
-        gameMaster.nextPlayer();
-
-        personalBoard = gameMaster.getPlayerPersonalBoard(gameMaster.getCurrentPlayer());
-        resourceManager = personalBoard.getResourceManager();
+        pb = gm.getPlayerPersonalBoard(gm.getCurrentPlayer());
+        rm = pb.getResourceManager();
         //3 COIN
         //2 STONE
         //2 SHIELD
-        resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 3));
-        resourceManager.addToStrongbox(ResourceFactory.createResource(ResourceType.STONE, 2));
-        assertDoesNotThrow(()->resourceManager.addToWarehouse(true, 1,
+        rm.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN, 3));
+        rm.addToStrongbox(ResourceFactory.createResource(ResourceType.STONE, 3));
+        rm.addToStrongbox(ResourceFactory.createResource(ResourceType.SHIELD, 3));
+        rm.addToStrongbox(ResourceFactory.createResource(ResourceType.SERVANT, 3));
+
+        assertDoesNotThrow(()-> rm.addToWarehouse(true, 1,
                 ResourceFactory.createResource(ResourceType.SHIELD, 2)));
 
 
-        controller = new Controller(gameMaster, new Match(3, new Server(), 1));
-        resourceManager.restoreRM();
+
 
     }
 
-    private void attachLeader(int index){
-        Leader leader = leaders.get(index);
-        leader.attachCardToUser(personalBoard, gameMaster.getMarket());
-        leader.setActive();
-        personalBoard.getCardManager().addLeader(leader);
-    }
 
-    private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int faith, int any){
-        ArrayList<Resource> production = new ArrayList<>();
-        if (coin > 0){
-            production.add(ResourceFactory.createResource(ResourceType.COIN, coin));
-        }
-        if (shield > 0){
-            production.add(ResourceFactory.createResource(ResourceType.SHIELD, shield));
-        }
-        if (servant > 0){
-            production.add(ResourceFactory.createResource(ResourceType.SERVANT, servant));
-        }
-        if (stone > 0){
-            production.add(ResourceFactory.createResource(ResourceType.STONE, stone));
-        }
-        if (faith > 0){
-            production.add(ResourceFactory.createResource(ResourceType.FAITH, faith));
-        }
-        if (any > 0){
-            production.add(ResourceFactory.createResource(ResourceType.ANY, any));
-        }
-        return production;
-    }
-
-
-    /*
     @Test
     void normalBuyDev(){
         assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
         controller.developmentAction(0, 0, 0);
-
         assertEquals(controller.getTurnState(), TurnState.BUY_DEV_RESOURCE_REMOVING);
-
-        controller.clearBufferFromMarket();
-        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_AFTER);
 
 
     }
-    */
+
 
 }

@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ResourceManagerTest {
 
     ResourceManager rs = new ResourceManager();
+
+
+
+
     @BeforeEach
     void Init(){
         rs.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN,5));
@@ -30,15 +34,7 @@ class ResourceManagerTest {
     }
 
 
-    @Test
-    void newTurn() {
-        //No idea how to test it
-    }
 
-    @Test
-    void resourceFromMarket() {
-        //No idea how to test it
-    }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
@@ -125,21 +121,6 @@ class ResourceManagerTest {
 
     }
 
-    @Test
-    void addToBuffer() {
-        //No idea how to test it
-    }
-
-    @Test
-    void subtractToBuffer() {
-        //No idea how to test it
-    }
-
-    @Test
-    void addToResourcesToProduce() {
-        //No idea how to test it
-    }
-
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
     void canIAfford(int index) {
@@ -160,7 +141,6 @@ class ResourceManagerTest {
                 ArrayList<Resource> resourcesCosts2 = new ArrayList<>();
                 resourcesCosts2.add(ResourceFactory.createResource(ResourceType.STONE,1));
                 resourcesCosts2.add(ResourceFactory.createResource(ResourceType.ANY,2));
-
                 assertDoesNotThrow(()->rs.canIAfford(resourcesCosts2,false));
                 break;
             case 2:
@@ -186,26 +166,4 @@ class ResourceManagerTest {
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
     }
 
-    @Test
-    void addLeaderDepot() {
-        //Already tested the method it calls
-    }
-
-    @Test
-    void addDiscount() {
-        //No idea how to test it, the discount array is private
-    }
-
-    @Test
-    void clearBuffers() {
-        //No idea how to test it, the buffers are not public
-    }
-
-    @Test
-    void attachObserver() {
-    }
-
-    @Test
-    void notifyAllObservers() {
-    }
 }
