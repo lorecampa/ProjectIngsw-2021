@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.PrintAssistant;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Help implements Command{
     private final String cmd="HELP";
@@ -22,8 +23,8 @@ public class Help implements Command{
 
         PrintAssistant.instance.printf("To know more about a single command type help NAMECOMMAND");
         //helpLines.add(PrintAssistant.instance.fitToWidth("MAINMENU", ClientInput.MAX_CHAR_COMMAND)+"Used to select an option in the main menu");
-
-        for(Map.Entry<String, Class<? extends Command>> obj : ClientInput.getCommandsMap().entrySet()){
+        TreeMap<String, Class<? extends Command>> ordered = new TreeMap<>(ClientInput.getCommandsMap());
+        for(Map.Entry<String, Class<? extends Command>> obj : ordered.entrySet()){
             try{
                 Constructor<? extends Command> constructor = obj.getValue().getConstructor(String.class, Client.class);
                 Command commandToRun = constructor.newInstance("", null);

@@ -29,25 +29,37 @@ public class ActionCMD implements Command{
         String[] split = param.split(" ");
         switch(split[0]){
             case "produce":
-                if(split.length>3 || split.length<2)
+                if(split.length>3 || split.length<2){
                     PrintAssistant.instance.invalidParamCommand(cmd);
-                if(!split[1].equals("cs") && !split[1].equals("le") && !split[1].equals("bp"))
+                    return;
+                }
+                if(!split[1].equals("cs") && !split[1].equals("le") && !split[1].equals("bp")){
                     PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
                 produce(split);
                 break;
             case "developer":
-                if(split.length!=4)
+                if(split.length!=4){
                     PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
+
                 developer(split);
                 break;
             case "market":
-                if(split.length!=3)
+                if(split.length!=3){
                     PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
                 market(split);
                 break;
             case "leader":
-                if(split.length!=2)
+                if(split.length!=2){
                     PrintAssistant.instance.invalidParamCommand(cmd);
+                    return;
+                }
+
                 leader(split);
                 break;
             default:

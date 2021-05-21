@@ -284,7 +284,7 @@ public class Match {
     }
 
     public void removeMatchFromServer(){
-        System.out.println("Match with deleted!");
+        System.out.println("Match with index: "+this.matchID+" deleted!");
         server.matchEnd(this);
     }
 

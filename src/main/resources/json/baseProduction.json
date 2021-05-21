@@ -8,13 +8,33 @@
       "resourceCost": [
         {
           "type" : "ANY",
-          "value": 2
+          "value": 1
         }
       ],
       "resourceAcquired" : [
         {
           "type": "ANY",
           "value": 1
+        },
+        {
+          "type": "COIN",
+          "value": 10
+        },
+        {
+          "type": "FAITH",
+          "value": 10
+        },
+        {
+          "type": "STONE",
+          "value": 10
+        },
+        {
+          "type": "SERVANT",
+          "value": 10
+        },
+        {
+          "type": "SHIELD",
+          "value": 10
         }
       ]
     }

@@ -35,13 +35,13 @@ public class EndTurnCMD implements Command{
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
         rowHelp.add("HELP: "+cmd);
-        rowHelp.add("Write the command to end your turn and let the next player play!");
+        rowHelp.add("Write the command to end your turn and let the next player play");
         rowHelp.add("ex: "+cmd.toLowerCase()+"");
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
     @Override
     public void description() {
-        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to end your turn!");
+        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to end your turn");
     }
 }

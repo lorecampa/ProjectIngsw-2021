@@ -49,8 +49,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private int leaderAtStart;
     private boolean isLastTurn = false;
     private boolean gameEnded = false;
-
-    private Development playerBaseProduction;
+    private String baseProductionSerialized;
 
 
     public static String getNameLorenzo() {
@@ -96,8 +95,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws JsonProcessingException if some error occurs in serialization
      */
     private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
-        String baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
-        playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
+        baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
         deckDevelopment = gameSetting.getDeckDevelopment();
@@ -203,6 +201,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public void addPlayer(String username) throws IOException {
         FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
+        Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         playerFaithTrack.attachGameMasterObserver(this);
 
         ResourceManager playerResourceManager = new ResourceManager();
@@ -319,7 +318,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     public ArrayList<EffectData> toEffectDataBasePro(){
-        return playerBaseProduction.toCardDevData().getEffects();
+        Development playerBaseProduction = null;
+        try {
+            playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
+            return playerBaseProduction.toCardDevData().getEffects();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int getPlayerPosition(String username){

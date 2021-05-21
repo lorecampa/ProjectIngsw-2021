@@ -92,15 +92,6 @@ public class Client{
                     break;
             }
         }
-        //to simulate 3 player
-        /*
-        ArrayList<String> users=new ArrayList<>();
-        client.setMyName("Teo");
-        users.add("Teo");
-        users.add("Davide");
-        users.add("Lollo");
-        client.setModels(users);
-        */
         client.messageToMainMenu();
         while(client.state!=ClientState.QUIT){
             client.readFromStream();
@@ -128,7 +119,7 @@ public class Client{
         synchronized (streamLock) {
             Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
             serializedMessage.ifPresentOrElse(out::println,
-                    () -> out.println("Error in serialization"));
+                    () -> PrintAssistant.instance.errorPrint("Error in serialization"));
             out.flush();
         }
     }

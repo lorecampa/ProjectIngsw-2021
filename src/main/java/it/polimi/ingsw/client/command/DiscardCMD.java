@@ -63,11 +63,14 @@ public class DiscardCMD implements Command{
         rowHelp.add("Write the command followed by the position of the leader on your Personal Board(1-4),");
         rowHelp.add("if you discard an active leader you will loose his effects.");
         rowHelp.add("ex: "+cmd.toLowerCase()+" 2");
+        rowHelp.add("Write the command followed market if you have to discard the resources you earn from market!");
+        rowHelp.add("The number of resources you discard will increase the position of your opponents in the faith track!");
+        rowHelp.add("ex: "+cmd.toLowerCase()+" market");
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
     @Override
     public void description() {
-        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to discard a leader during your turn or at the beginning of the game");
+        PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to discard a leader and the extra resources from market");
     }
 }
