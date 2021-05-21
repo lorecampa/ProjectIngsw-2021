@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card.Effect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.EffectData;
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.observer;
 
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 
 public interface GameMasterObserver {
     /**

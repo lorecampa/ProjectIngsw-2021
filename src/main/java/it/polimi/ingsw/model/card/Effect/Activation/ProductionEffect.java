@@ -6,7 +6,7 @@ import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;

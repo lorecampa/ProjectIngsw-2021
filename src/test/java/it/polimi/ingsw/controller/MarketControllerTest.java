@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 

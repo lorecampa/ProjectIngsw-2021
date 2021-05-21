@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;

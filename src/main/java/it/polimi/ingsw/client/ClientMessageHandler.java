@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.client.GUI.ClientGUI;
+import it.polimi.ingsw.client.GUI.PrimaryController;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ModelData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -15,10 +17,28 @@ import java.util.*;
 
 public class ClientMessageHandler {
 
-    private final Client client;
+    private  Client client;
+    private ClientGUI clientGUI;
+
     public ClientMessageHandler(Client client) {
         this.client =client;
     }
+
+    public ClientMessageHandler(ClientGUI clientGUI) {
+        this.clientGUI = clientGUI;
+    }
+
+    public void provaMessaggioDaServer(){
+        PrimaryController controller = (PrimaryController) clientGUI.getController("primary");
+        controller.prova();
+    }
+
+    public void pr2(){
+        PrimaryController controller = (PrimaryController) clientGUI.getController("primary");
+        controller.prova2();
+    }
+
+
 
     public void handlePingPong(){
         client.writeToStream(new PingPongMessage());

@@ -7,7 +7,7 @@ import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
 import it.polimi.ingsw.model.card.Leader;

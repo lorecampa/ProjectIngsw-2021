@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.controller.TurnState;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;

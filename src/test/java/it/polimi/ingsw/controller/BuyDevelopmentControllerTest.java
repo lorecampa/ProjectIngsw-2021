@@ -9,6 +9,7 @@ import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;

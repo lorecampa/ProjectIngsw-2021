@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
 /**
  * Class State is an enumeration
@@ -26,6 +26,4 @@ public enum TurnState {
     //NOT USED
     MARKET_ACTION,
     BUY_DEVELOPMENT_ACTION
-
-
 }
