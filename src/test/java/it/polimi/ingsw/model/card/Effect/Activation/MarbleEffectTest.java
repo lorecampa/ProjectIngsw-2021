@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.ColorData;
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import java.io.File;
@@ -174,7 +177,16 @@ class MarbleEffectTest {
 
     }
 
+    @Test
+    void toDataTest(){
+        ArrayList<Resource> cost = new ArrayList<>();
+        cost.add(ResourceFactory.createResource(ResourceType.SHIELD, 1));
 
+        MarbleEffect myEffect= new MarbleEffect(cost);
+        EffectData effectData= myEffect.toEffectData();
+
+        assertEquals("Marble effect: ", effectData.getDescriptions());
+    }
 
 
 }

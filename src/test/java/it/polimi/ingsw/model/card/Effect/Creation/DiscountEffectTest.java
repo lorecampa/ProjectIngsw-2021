@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
+import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.TurnState;
@@ -11,7 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DiscountEffectTest {
@@ -95,6 +99,22 @@ class DiscountEffectTest {
 
     }
 
+    @Test
+    void toDataTest(){
+        ArrayList<Resource> cost = resourceArray(2, 0, 0, 0, 0, 0);
+        DiscountEffect myEffect= new DiscountEffect(cost);
+        EffectData effectData= myEffect.toEffectData();
 
+        assertEquals("Discount effect: ", effectData.getDescriptions());
+    }
+
+    @Test
+    void discardEffect(){
+        ArrayList<Resource> cost= resourceArray(0, 2,0,0,0,0);
+        assertDoesNotThrow(()->rm.canIAfford(cost, true));
+        effect.discardEffect();
+        ArrayList<Resource> cost2= resourceArray(0, 2,1,0,0,0);
+        assertThrows(NotEnoughRequirementException.class, ()->rm.canIAfford(cost2,true));
+    }
 
 }

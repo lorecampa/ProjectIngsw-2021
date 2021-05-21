@@ -127,7 +127,10 @@ class LeaderTest {
         assertThrows(NotEnoughRequirementException.class, ()->marbleLeader.checkRequirements());
         rm.restoreRM();
         assertThrows(NotEnoughRequirementException.class, ()->productionLeader.checkRequirements());
-
     }
 
+    @Test
+    void toData(){
+        assertEquals(warehouseLeader.getVictoryPoints(), warehouseLeader.toCardLeaderData().getVictoryPoint());
+    }
 }

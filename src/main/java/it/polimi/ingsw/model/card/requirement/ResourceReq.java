@@ -68,12 +68,4 @@ public class ResourceReq implements Requirement {
         return null;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("resourceReq= ");
-        for(Resource res: resourceReq){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        return x.toString();
-    }
 }

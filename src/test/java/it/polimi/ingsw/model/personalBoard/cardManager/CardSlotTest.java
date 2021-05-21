@@ -39,8 +39,8 @@ class CardSlotTest {
         req = new ArrayList<>();
         req.add(resourceReq);
         devLv1Pv1 = new Development(1, req ,null, null,1, Color.BLUE);
-        devLv2Pv1 = new Development(1, req ,null, null,2, Color.BLUE);
-        devLv3Pv1 = new Development(1, req ,null, null,3, Color.GREEN);
+        devLv2Pv1 = new Development(2, req ,null, null,2, Color.YELLOW);
+        devLv3Pv1 = new Development(3, req ,null, null,3, Color.GREEN);
     }
 
     @Test
@@ -61,9 +61,8 @@ class CardSlotTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2})
+    @ValueSource(ints = {0, 1})
     void insertCard(int index) {
-        //I can't test this methods without a constructor for developers to choose the lv
         switch(index){
             case 0:
                 assertThrows(CardWithHigherOrSameLevelAlreadyIn.class, ()->cs.insertCard(devLv2Pv1));
@@ -71,12 +70,21 @@ class CardSlotTest {
             case 1:
                 assertDoesNotThrow(()->cs.insertCard(devLv1Pv1));
                 break;
-            case 2:
-                assertThrows(CardWithHigherOrSameLevelAlreadyIn.class, () -> cs.insertCard(devLv3Pv1));
-                break;
             default:
         }
 
+    }
+
+    @Test
+    void victoryPoints(){
+        assertDoesNotThrow(()->cs.insertCard(devLv1Pv1));
+        cs.emptyBuffer();
+        assertDoesNotThrow(()->cs.insertCard(devLv2Pv1));
+        cs.emptyBuffer();
+        assertEquals(3, cs.getVictoryPoint());
+        assertDoesNotThrow(()->cs.insertCard(devLv3Pv1));
+        cs.emptyBuffer();
+        assertEquals(6, cs.getVictoryPoint());
     }
 
 

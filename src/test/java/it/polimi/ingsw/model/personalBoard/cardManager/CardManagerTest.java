@@ -200,4 +200,21 @@ class CardManagerTest {
         personalBoard.getResourceManager().restoreRM();
         assertDoesNotThrow(()-> cardManager.baseProductionProduce());
     }
+
+    @Test
+    void howManyCardDoIOwnLeaders(){
+        assertDoesNotThrow(()->cardManager.addLeader(leader1));
+        assertDoesNotThrow(()->cardManager.addLeader(leader2));
+        assertEquals(0, cardManager.howManyMarbleEffects());
+        assertEquals(0, cardManager.howManyProductionEffects());
+
+    }
+
+    @Test
+    void toData(){
+        assertDoesNotThrow(()->cardManager.addLeader(leader1));
+        assertDoesNotThrow(()->cardManager.addLeader(leader2));
+        assertEquals(cardManager.getLeaders().size(), cardManager.toLeadersData().size());
+    }
+
 }

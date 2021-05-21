@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.requirement;
 
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
+import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -93,7 +94,16 @@ class ResourceReqTest {
         assertThrows(NotEnoughRequirementException.class, ()->req3.checkRequirement(true));
     }
 
+    @Test
+    void toData(){
+        ArrayList<Resource> resourceReq = new ArrayList<>();
+        // (2 coin, 2 shield)
+        resourceReq.add(ResourceFactory.createResource(ResourceType.COIN, 2));
+        resourceReq.add(ResourceFactory.createResource(ResourceType.SHIELD, 2));
+        Requirement req = new ResourceReq(resourceReq);
+        assertEquals(2, req.toResourceData().size());
 
+    }
 
 
 }

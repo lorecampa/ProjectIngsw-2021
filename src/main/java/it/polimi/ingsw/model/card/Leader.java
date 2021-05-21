@@ -43,8 +43,6 @@ public class Leader extends Card{
         }
     }
 
-
-
     /**
      * Method isActive is a getter method for knowing is the leader card has been already activated
      * by the player that owns it
@@ -74,11 +72,4 @@ public class Leader extends Card{
         return new CardLeaderData(getVictoryPoints(),cardReq,resReq,effectToClient(), active);
     }
 
-
-    @Override
-    public String toString() {
-        String x = super.toString();
-        x += "Active: " + isActive() +"\n\n";
-        return x;
-    }
 }

@@ -151,39 +151,4 @@ public  abstract class Card {
         return effects;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("\n");
-        if(this.getClass() == Leader.class){
-            x.append("Leader");
-        }else{
-            x.append("Development");
-        }
-        x.append("\nvictoryPoints= ").append(victoryPoints);
-
-        for(Requirement req: requirements){
-            x.append("\n").append(req);
-
-        }
-
-
-        if (!onActivationEffects.isEmpty()){
-            x.append("\nOnActivationEffect:");
-            for(Effect onActivationEffect: onActivationEffects){
-                x.append(onActivationEffect);
-                x.append("\n");
-            }
-        }
-
-        if(!onCreationEffect.isEmpty()){
-            if (onActivationEffects.isEmpty()) x.append("\n");
-            x.append("OnCreationEffect:");
-            for(Effect onCreationEffect: onCreationEffect){
-                x.append(onCreationEffect);
-                x.append("\n");
-            }
-        }
-
-        return x.toString();
-    }
 }

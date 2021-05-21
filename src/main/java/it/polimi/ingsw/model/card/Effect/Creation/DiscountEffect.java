@@ -44,6 +44,8 @@ public class DiscountEffect implements Effect {
 
     }
 
+    /**
+     * Used to discard the effect when a player have a leader active and decide to discard it, we remove the effect that those leades had*/
     @Override
     public void discardEffect() {
         resourceManager.removeDiscount(discounts.stream()
@@ -78,12 +80,4 @@ public class DiscountEffect implements Effect {
         return new EffectData(description,discount,null);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("\ndiscounts= ");
-        for (Resource res: discounts){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        return x.toString();
-    }
 }

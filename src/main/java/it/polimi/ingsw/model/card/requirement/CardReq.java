@@ -72,11 +72,4 @@ public class CardReq implements Requirement {
         return new ArrayList<>(Collections.nCopies(numRequired,new CardDevData(level,color.toColorData())));
     }
 
-    @Override
-    public String toString() {
-        return "cardReq= " +
-                "{" + color+
-                ", level: " + level+
-                ", numRequired: " + numRequired+"}";
-    }
 }

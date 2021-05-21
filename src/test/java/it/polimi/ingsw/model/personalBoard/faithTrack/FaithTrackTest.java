@@ -3,16 +3,15 @@ package it.polimi.ingsw.model.personalBoard.faithTrack;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.data.FaithTrackData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
-import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FaithTrackTest {
 
@@ -102,8 +101,4 @@ class FaithTrackTest {
         }
     }
 
-    @Test
-    public void toDataFaith(){
-        ArrayList<FaithTrackData> faithTrackData = faithTrack.toFaithTrackData();
-    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.card.Effect.Activation;
 
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.TurnState;
@@ -47,14 +48,12 @@ class ProductionEffectTest {
         Resource res2 = ResourceFactory.createResource(ResourceType.COIN, 6);
         Resource res3 = ResourceFactory.createResource(ResourceType.STONE, 2);
         Resource res4 = ResourceFactory.createResource(ResourceType.SERVANT, 2);
-        //strongbox (Coin 6) (Shield 1) (Servant 2) (Stone 2)
+        //strongbox (Coin 6) (Shield 1) (Stone 2)
         //warehouse (0 -> ) (1 -> ) (2 -> 2 servant)
         rm.addToStrongbox(res1);
         rm.addToStrongbox(res2);
         rm.addToStrongbox(res3);
         assertDoesNotThrow(()->rm.addToWarehouse(true, 2, res4));
-
-
     }
 
     @Test
@@ -170,6 +169,17 @@ class ProductionEffectTest {
 
         assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
 
+    }
+
+    @Test
+    void toDataTest(){
+        ArrayList<Resource> cost = resourceArray(2, 0, 0, 0, 0, 0);
+        ArrayList<Resource> earn = resourceArray(0, 2, 0, 0, 0, 0);
+
+        ProductionEffect myEffect= new ProductionEffect(cost, earn);
+        EffectData effectData= myEffect.toEffectData();
+
+        assertEquals("Production effect: ", effectData.getDescriptions());
     }
 
 }

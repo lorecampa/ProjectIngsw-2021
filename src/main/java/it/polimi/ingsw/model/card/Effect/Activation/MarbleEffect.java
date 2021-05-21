@@ -84,12 +84,6 @@ public class MarbleEffect implements Effect {
         return new EffectData(description,whiteMarble,transformInto);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("\ntransformIn= ");
-        for(Resource res: transformIn){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        return x.toString();
-    }
+
+
 }

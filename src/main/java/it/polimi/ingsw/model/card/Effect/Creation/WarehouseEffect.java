@@ -80,13 +80,5 @@ public class WarehouseEffect  implements Effect {
         return new EffectData(description,depot,null);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("\ndepots= ");
-        for (Resource res: depots){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        return x.toString();
-    }
 }
 

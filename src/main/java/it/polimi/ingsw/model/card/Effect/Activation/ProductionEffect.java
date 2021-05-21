@@ -86,18 +86,4 @@ public class ProductionEffect implements Effect {
         ArrayList<ResourceData> productionEarn = resourceAcquired.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
         return new EffectData(description,productionCost, productionEarn);
     }
-
-    @Override
-    public String toString() {
-        StringBuilder x = new StringBuilder("\nresourceCost= ");
-        for(Resource res: resourceCost){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        x.append("\nresourceAcquired= ");
-        for(Resource res: resourceAcquired){
-            x.append("{").append(res.getType().getDisplayName()).append(", ").append(res.getValue()).append("}  ");
-        }
-        return x.toString();
-
-    }
 }

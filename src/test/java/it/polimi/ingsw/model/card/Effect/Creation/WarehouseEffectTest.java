@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
+import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.TurnState;
@@ -49,6 +50,28 @@ class WarehouseEffectTest {
         assertDoesNotThrow(()->rm.subToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
 
+
+    }
+
+    @Test
+    void toDataTest(){
+        ArrayList<Resource> depot = new ArrayList<>();
+        depot.add(ResourceFactory.createResource(ResourceType.SHIELD, 1));
+        WarehouseEffect myEffect= new WarehouseEffect(depot);
+        EffectData effectData= myEffect.toEffectData();
+
+        assertEquals("Warehouse effect: ", effectData.getDescriptions());
+    }
+
+    @Test
+    void discardEffect(){
+        ArrayList<Resource> depot = new ArrayList<>();
+        depot.add(ResourceFactory.createResource(ResourceType.SHIELD, 1));
+        WarehouseEffect myEffect= new WarehouseEffect(depot);
+        myEffect.attachResourceManager(rm);
+        assertDoesNotThrow(()->myEffect.doEffect(TurnState.LEADER_MANAGE_BEFORE));
+        myEffect.discardEffect();
+        assertEquals(0,rm.getWarehouse().getDepotsLeader().size());
 
     }
 }

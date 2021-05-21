@@ -77,9 +77,6 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
         // set the marble to insert with the last marble
         this.marbleToInsert = allMarbles.get(numCol*numRow);
-
-
-
     }
 
     /**

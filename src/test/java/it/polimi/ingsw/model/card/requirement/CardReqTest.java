@@ -95,4 +95,12 @@ class CardReqTest {
         assertThrows(NotEnoughRequirementException.class, ()->req2.checkRequirement(false));
 
     }
+
+    @Test
+    void toData(){
+        Requirement req = new CardReq(Color.BLUE, 3, 1);
+        assertEquals(1, req.toCardDevData().size());
+        Requirement req1 = new CardReq(Color.BLUE, 2, 3);
+        assertEquals(3, req1.toCardDevData().size());
+    }
 }
