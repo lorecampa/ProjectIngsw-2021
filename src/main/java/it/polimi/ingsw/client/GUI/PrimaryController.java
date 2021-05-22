@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.Objects;
 
-public class PrimaryController {
+public class PrimaryController extends Controller{
     @FXML
     private Button primaryButton;
     @FXML
@@ -19,7 +19,8 @@ public class PrimaryController {
         System.out.println("pressed");
         primaryButton.setText("CAMBIATOOO");
 
-        primaryButton.getScene().setRoot(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("secondary.fxml"))));
+        ControllerHandler.getInstance().getSecondaryController().activate();
+        //primaryButton.getScene().setRoot(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("secondary.fxml"))));
     }
 
     @FXML

@@ -4,9 +4,9 @@ import javafx.fxml.FXML;
 
 import java.io.IOException;
 
-public class SecondaryController {
+public class SecondaryController extends Controller{
     @FXML
     private void switchToPrimary() throws IOException {
-        //ClientGUI.setRoot("primary");
+        ControllerHandler.getInstance().getPrimaryController().activate();
     }
 }

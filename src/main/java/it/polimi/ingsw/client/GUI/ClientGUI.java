@@ -10,22 +10,59 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class ClientGUI extends Application {
 
+    private Stage stage;
     private Scene scene;
     private final FXMLLoader fxmlLoader = new FXMLLoader();
 
+    private final ControllerHandler controllerHandler = ControllerHandler.getInstance();
+
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
-        stage.setScene(scene);
+        this.stage = stage;
+        setUpController();
+
+        //scene = new Scene(loadFXML("primary"), 640, 480);
+        //stage.setScene(scene);
+        controllerHandler.getPrimaryController().activate();
         stage.show();
 
-        ClientMessageHandler clientMessageHandler = new ClientMessageHandler(this);
-        clientMessageHandler.provaMessaggioDaServer();
-        clientMessageHandler.pr2();
+        //ClientMessageHandler clientMessageHandler = new ClientMessageHandler(this);
+        //clientMessageHandler.provaMessaggioDaServer();
+        //clientMessageHandler.pr2();
     }
+
+    private void setUpController() throws IOException {
+        primarySetUp();
+        secondarySetUp();
+    }
+
+    private URL getResources(String fxml){
+        // problemi con thread???
+        return getClass().getResource(fxml + ".fxml");
+    }
+
+    private void primarySetUp() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getResources("primary"));
+        Parent root = loader.load(); //Get graphics root
+        PrimaryController controller = loader.getController(); //Get graphics controller
+        controller.setUp(root, stage); //Add root to controller
+        controllerHandler.setPrimaryController(controller);
+    }
+
+    private void secondarySetUp() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getResources("secondary"));
+        Parent root = loader.load(); //Get graphics root
+        SecondaryController controller = loader.getController(); //Get graphics controller
+        controller.setUp(root, stage); //Add root to controller
+        controllerHandler.setSecondaryController(controller);
+    }
+
+
+
 
     private Parent loadFXML(String fxml) throws IOException {
         fxmlLoader.setLocation(ClientGUI.class.getResource(fxml+".fxml"));
