@@ -20,8 +20,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class Client{
-    private static final String ipHost ="127.0.0.1";
-    private static final int portNumber = 1010;
+    private String ipHost;
+    private int portNumber;
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in ;
@@ -38,17 +38,26 @@ public class Client{
     private MarketData marketData;
     private DeckDevData deckDevData;
 
-    public static void main(String[] args){
-        /*
-        if (args.length != 2) {
-            System.err.println(
-                    "Usage: java EchoClient <host name> <port number>");
-            System.exit(1);
+    public Client(String[] args) {
+        if (args.length == 2) {
+            try{
+                ipHost = args[0];
+                portNumber=Integer.parseInt(args[1]);
+            }catch (Exception e){
+                System.out.println("Invalid param to start client!");
+                System.exit(0);
+            }
         }
-        String ipHost = args[0];
-        int portNumber = Integer.parseInt(args[1]);
-        */
-        Client client = new Client();
+        else{
+            ipHost="127.0.0.1";
+            portNumber=3030;
+        }
+
+    }
+
+    public static void main(String[] args){
+
+        Client client = new Client(args);
         try{
             client.startClient();
             System.out.println("Client Started!");
@@ -57,41 +66,7 @@ public class Client{
             PrintAssistant.instance.errorPrint("There's no server ready to answer you! Try again later! Bye :)");
             System.exit(0);
         }
-        if (args.length == 1) {
-            switch (args[0]) {
-                case "primo":
-                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                    client.setState(ClientState.ENTERING_LOBBY);
-                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 2));
-                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
-                    client.setMyName("Teo");
-                    try {
-                        TimeUnit.SECONDS.sleep(5);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    client.writeToStream(new LeaderManage(0, true));
-                    client.writeToStream(new LeaderManage(0, true));
-                    break;
-                case "secondo":
-                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                    client.setState(ClientState.ENTERING_LOBBY);
-                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Lollo"));
-                    client.setMyName("Lollo");
-                    client.writeToStream(new LeaderManage(0, true));
-                    client.writeToStream(new LeaderManage(0, true));
-                    break;
-                case "singlePlayer":
-                    client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
-                    client.setState(ClientState.ENTERING_LOBBY);
-                    client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, 1));
-                    client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Teo"));
-                    client.setMyName("Teo");
-                    client.writeToStream(new LeaderManage(0, true));
-                    client.writeToStream(new LeaderManage(0, true));
-                    break;
-            }
-        }
+
         client.messageToMainMenu();
         while(client.state!=ClientState.QUIT){
             client.readFromStream();

@@ -220,7 +220,7 @@ public class Match {
 
                 sendSetUp(gameMaster, gameSetting);
                 sendLeader(gameMaster);
-            } catch (IOException | JsonFileModificationError e) {
+            } catch ( Exception e) {
                 e.printStackTrace();
                 sendAllPlayers(new ErrorMessage(ErrorType.FAIL_GAME_LOADING));
             }

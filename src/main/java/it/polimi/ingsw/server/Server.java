@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
-    private final int port;
+    private int port;
     private final ExecutorService executorService;
     private ServerSocket serverSocket;
     private int nextClientID;
@@ -29,8 +29,23 @@ public class Server {
     private Match openMatch;
 
 
-    public  Server(){
-        port = 1010;
+    public  Server(String[] args){
+
+        if(args.length==1){
+            try{
+                port=Integer.parseInt(args[0]);
+                if(port<=1024){
+                    System.out.println("Invalid port number!");
+                    System.exit(0);
+                }
+            }
+            catch (Exception e){
+                System.out.println("Invalid port number!");
+                System.exit(0);
+            }
+        }else{
+            port = 3030;
+        }
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
@@ -176,7 +191,10 @@ public class Server {
     }
 
     public static void main(String[] args){
-        Server server = new Server();
+
+
+
+        Server server = new Server(args);
         server.startServer();
     }
 

@@ -19,7 +19,7 @@ class GameMasterTest {
     GameMaster gmSp;
 
     public static class GameMasterStub extends GameMaster{
-        public GameMasterStub(String ... players) throws IOException, JsonFileModificationError {
+        public GameMasterStub(String ... players) throws Exception {
             super(new GameSetting(players.length),
                     Arrays.stream(players)
                             .collect(Collectors.toCollection(ArrayList::new)));
@@ -78,7 +78,7 @@ class GameMasterTest {
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 3));
-        assertFalse(gm.getDeckDevelopment().get(0).get(0).isEmpty());
+        assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 1));
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());

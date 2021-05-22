@@ -257,8 +257,11 @@ public class ModelClient {
     public void printAll() {
         printFaithTrack();
         if(!username.equalsIgnoreCase("lorenzoilmagnifico")){
+            PrintAssistant.instance.printf("\n");
             printResources();
+            PrintAssistant.instance.printf("\n");
             printCardSlots(true);
+            PrintAssistant.instance.printf("\n");
             printLeaders();
         }
     }

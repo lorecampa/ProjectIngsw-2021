@@ -38,7 +38,7 @@ class MarketControllerTest {
 
     @BeforeEach
     @Test
-    void init() throws IOException, JsonFileModificationError {
+    void init() throws  Exception {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         leaders =
                 mapper.readValue(new File("src/main/resources/json/leader.json"), new TypeReference<>() {});
@@ -57,7 +57,7 @@ class MarketControllerTest {
         market = gameMaster.getMarket();
 
 
-        controller = new Controller(gameMaster, new Match(3, new Server(), 1));
+        controller = new Controller(gameMaster, new Match(3, new Server(new String[0]), 1));
 
     }
 

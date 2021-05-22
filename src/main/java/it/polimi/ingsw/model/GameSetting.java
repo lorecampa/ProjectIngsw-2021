@@ -12,6 +12,9 @@ import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.Token;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -39,7 +42,7 @@ public class GameSetting {
      * @throws IOException
      * @throws JsonFileModificationError
      */
-    public GameSetting(int numberOfPlayers) throws IOException, JsonFileModificationError {
+    public GameSetting(int numberOfPlayers) throws IOException, JsonFileModificationError, URISyntaxException {
         //setting up mapper
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -58,21 +61,24 @@ public class GameSetting {
 
 
     private void createDefaultFaithTrack() throws IOException {
-        faithTrack = mapper.readValue(new File("src/main/resources/json/FaithTrack.json"), FaithTrack.class);
+        InputStream inputStream = getClass().getResourceAsStream("/json/FaithTrack.json");
+        faithTrack = mapper.readValue(inputStream, FaithTrack.class);
     }
 
     private void createDefaultBaseProduction() throws IOException {
-        baseProduction = mapper.readValue(new File("src/main/resources/json/baseProduction.json"), Development.class);
+        InputStream inputStream = getClass().getResourceAsStream("/json/baseProduction.json");
+        baseProduction = mapper.readValue(inputStream, Development.class);
     }
 
     private void createDefaultMarket() throws IOException {
-        market = mapper.readValue(new File("src/main/resources/json/market.json"), Market.class);
+        InputStream inputStream = getClass().getResourceAsStream("/json/market.json");
+        market = mapper.readValue(inputStream, Market.class);
     }
 
-    private void createDeckToken() throws IOException, JsonFileModificationError {
+    private void createDeckToken() throws IOException, JsonFileModificationError{
         final int INITIAL_SIZE_TOKEN_DECK = 7;
-
-        deckToken = mapper.readValue(new File("src/main/resources/json/token.json"),
+        InputStream inputStream = getClass().getResourceAsStream("/json/token.json");
+        deckToken = mapper.readValue(inputStream,
                 new TypeReference<>() {});
         if (deckToken.size() != INITIAL_SIZE_TOKEN_DECK){
             throw new JsonFileModificationError("Deck token size wrong");
@@ -83,9 +89,9 @@ public class GameSetting {
 
     private void createDefaultDeckLeader() throws IOException, JsonFileModificationError {
         final int INITIAL_SIZE_LEADER_DECK = 16;
-
+        InputStream inputStream = getClass().getResourceAsStream("/json/leader.json");
         deckLeader = mapper
-                .readValue(new File("src/main/resources/json/leader.json"),
+                .readValue(inputStream,
                         new TypeReference<LinkedList<Leader>>() {});
 
         if (deckLeader.size() != INITIAL_SIZE_LEADER_DECK){
@@ -99,9 +105,9 @@ public class GameSetting {
         final int INITIAL_COLUMN_DECK = 4;
         final int INITIAL_DEPTH_DECK = 4;
         final int INITIAL_SIZE_DECK = INITIAL_ROW_DECK * INITIAL_COLUMN_DECK * INITIAL_DEPTH_DECK;
-
+        InputStream inputStream = getClass().getResourceAsStream("/json/development.json");
         Development[] developmentsJson = mapper
-                .readValue(new File("src/main/resources/json/development.json"), Development[].class);
+                .readValue(inputStream, Development[].class);
 
         if (developmentsJson.length != INITIAL_SIZE_DECK) {
             throw new JsonFileModificationError("Deck Development size wrong");

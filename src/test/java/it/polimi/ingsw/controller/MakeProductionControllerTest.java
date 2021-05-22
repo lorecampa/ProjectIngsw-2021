@@ -44,7 +44,7 @@ class MakeProductionControllerTest {
 
     @BeforeEach
     @Test
-    void init() throws IOException, JsonFileModificationError, DeckDevelopmentCardException {
+    void init() throws Exception {
         mapper= new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
@@ -184,7 +184,7 @@ class MakeProductionControllerTest {
         assertDoesNotThrow(()->cardManager.addDevCardTo(devCard2, 1));
         cardManager.emptyCardSlotBuffer();
 
-        controller = new Controller(gameMaster, new Match(3, new Server(), 1));
+        controller = new Controller(gameMaster, new Match(3, new Server(new String[0]), 1));
         resourceManager.restoreRM();
         controller.changeTurnState(TurnState.LEADER_MANAGE_BEFORE);
     }

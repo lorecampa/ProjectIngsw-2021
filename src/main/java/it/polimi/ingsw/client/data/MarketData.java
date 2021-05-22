@@ -57,7 +57,7 @@ public class MarketData {
         rowsMarket.add("");
         row = new StringBuilder();
 
-        int HEIGHT_MARBLE = 3;
+        int HEIGHT_MARBLE = 4;
         int middleHeightMarble= HEIGHT_MARBLE /2;
         int middleHeightRow= numRow/2;
 
