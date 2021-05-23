@@ -5,12 +5,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.PrimaryController" >
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.PrimaryController">
     <children>
         <Label text="Primary View" />
-        <Button mnemonicParsing="false" text="${secButton.text}" />
-        <Button fx:id="secButton" mnemonicParsing="false" text="adbfuhad" />
         <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
+        <Button fx:id="secButton" mnemonicParsing="false" text="adbfuhad" />
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
