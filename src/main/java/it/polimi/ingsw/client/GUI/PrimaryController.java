@@ -1,12 +1,11 @@
 package it.polimi.ingsw.client.GUI;
 
+import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.command.MainMenuCMD;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class PrimaryController extends Controller{
     @FXML
@@ -14,13 +13,11 @@ public class PrimaryController extends Controller{
     @FXML
     private Button secButton;
 
+    private final Client client = Client.getInstance(new String[0]);
     @FXML
     private void switchToSecondary() throws IOException {
-        System.out.println("pressed");
-        primaryButton.setText("CAMBIATOOO");
-
+        new MainMenuCMD("1", client).doCommand();
         ControllerHandler.getInstance().getSecondaryController().activate();
-        //primaryButton.getScene().setRoot(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("secondary.fxml"))));
     }
 
     @FXML

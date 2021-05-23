@@ -1,8 +1,6 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientMessageHandler;
-import it.polimi.ingsw.controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +13,7 @@ import java.net.URL;
 public class ClientGUI extends Application {
 
     private Stage stage;
+
     private Scene scene;
     private final FXMLLoader fxmlLoader = new FXMLLoader();
 
@@ -29,10 +28,6 @@ public class ClientGUI extends Application {
         //stage.setScene(scene);
         controllerHandler.getPrimaryController().activate();
         stage.show();
-
-        //ClientMessageHandler clientMessageHandler = new ClientMessageHandler(this);
-        //clientMessageHandler.provaMessaggioDaServer();
-        //clientMessageHandler.pr2();
     }
 
     private void setUpController() throws IOException {
@@ -60,18 +55,13 @@ public class ClientGUI extends Application {
         controller.setUp(root, stage); //Add root to controller
         controllerHandler.setSecondaryController(controller);
     }
-
-
-
-
+    /*
     private Parent loadFXML(String fxml) throws IOException {
         fxmlLoader.setLocation(ClientGUI.class.getResource(fxml+".fxml"));
         return fxmlLoader.load();
     }
 
-    public Object getController(String fxml){
-        return fxmlLoader.getController();
-    }
+     */
 
     public static void main(String[] args) {
         launch();

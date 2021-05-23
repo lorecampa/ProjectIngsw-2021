@@ -35,16 +35,6 @@
         <project.mainClass>it.polimi.ingsw.client.Client</project.mainClass>
       </properties>
     </profile>
-    <profile>
-      <id>ClientGUI</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <project.outputName>MORClientGUI</project.outputName>
-        <project.mainClass>it.polimi.ingsw.client.GUI.GUIStarter</project.mainClass>
-      </properties>
-    </profile>
   </profiles>
 
 

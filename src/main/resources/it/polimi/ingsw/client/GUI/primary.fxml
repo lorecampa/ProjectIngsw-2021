@@ -8,6 +8,7 @@
 <VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.PrimaryController">
     <children>
         <Label text="Primary View" />
+      <Button fx:id="prova" mnemonicParsing="false" text="Button" />
         <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
         <Button fx:id="secButton" mnemonicParsing="false" text="adbfuhad" />
     </children>

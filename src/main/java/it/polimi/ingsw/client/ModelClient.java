@@ -25,7 +25,7 @@ public class ModelClient {
     private ArrayList<EffectData> baseProduction;
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
 
-    private ArrayList<ResourceData> discounts = new ArrayList<>();
+    private final ArrayList<ResourceData> discounts = new ArrayList<>();
 
     //attributes to CLI
     int lengthInChar = DIM_CELL_CHAR*NUMBER_OF_CELL_FAITH;
