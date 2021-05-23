@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -70,7 +70,7 @@ class ProductionEffectTest {
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
 
-        assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()->effect.doEffect(PlayerState.PRODUCTION_ACTION));
         assertEquals(1, rm.getAnyRequired());
 
         //subtract production cost
@@ -98,7 +98,7 @@ class ProductionEffectTest {
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
 
-        assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()->effect.doEffect(PlayerState.PRODUCTION_ACTION));
         assertEquals(2, rm.getAnyRequired());
 
         //subtract production cost
@@ -127,7 +127,7 @@ class ProductionEffectTest {
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
 
-        assertThrows(NotEnoughRequirementException.class, ()-> effect.doEffect(TurnState.PRODUCTION_ACTION));
+        assertThrows(NotEnoughRequirementException.class, ()-> effect.doEffect(PlayerState.PRODUCTION_ACTION));
 
     }
 
@@ -144,7 +144,7 @@ class ProductionEffectTest {
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
 
-        assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()->effect.doEffect(PlayerState.PRODUCTION_ACTION));
 
         //create a leader depot with 2 coins
         ArrayList<Depot> depots=new ArrayList<>();
@@ -167,7 +167,7 @@ class ProductionEffectTest {
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
 
-        assertDoesNotThrow(()->effect.doEffect(TurnState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()->effect.doEffect(PlayerState.PRODUCTION_ACTION));
 
     }
 

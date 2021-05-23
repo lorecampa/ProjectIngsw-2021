@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.*;
 import it.polimi.ingsw.model.resource.Resource;
@@ -111,14 +111,14 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
         if (anyRequired == 0){
             if (isFromBuyDevelopment){
-                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
+                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
                 notifyAllObservers(x->x.bufferUpdate(resourcesBuffer));
             }else{
                 if(anyToProduce > 0){
-                    notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
+                    notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
                     notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
                 }else{
-                    notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
+                    notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
                 }
             }
         }
@@ -143,7 +143,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         anyToProduce -= numOfConversion;
 
         if(anyToProduce == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
+            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
         }
     }
 
@@ -161,7 +161,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 true);
         resourcesSent.forEach(this::addToBuffer);
         notifyAllObservers(x -> x.manageResourceRequest(resourcesBuffer, true));
-        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.MARKET_RESOURCE_POSITIONING));
+        notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.MARKET_RESOURCE_POSITIONING));
     }
 
 
@@ -307,9 +307,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
 
         if(anyRequired == 0 && anyToProduce == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.PRODUCTION_ACTION));
+            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
         }else if (anyRequired == 0 && anyToProduce > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_PROFIT_CONVERSION));
+            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
             notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
         }
 
@@ -381,14 +381,14 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         resources.forEach(this::addToBuffer);
 
         if(anyRequired == 0 && checkDiscount){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.BUY_DEV_RESOURCE_REMOVING));
+            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
             notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
 
         }else if (anyRequired > 0){
             if(checkDiscount){
-                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_BUY_DEV_CONVERSION));
+                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_BUY_DEV_CONVERSION));
             }else{
-                notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.ANY_PRODUCE_COST_CONVERSION));
+                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_COST_CONVERSION));
             }
             notifyAllObservers(x -> x.anyRequirementConversionRequest(myResources, myDiscounts, anyRequired));
         }

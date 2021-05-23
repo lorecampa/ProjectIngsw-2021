@@ -1,6 +1,7 @@
 [
   {
     "@class" : "Leader",
+    "id": 49,
     "victoryPoints" : 2,
     "requirements":[
       {
@@ -33,6 +34,7 @@
 
   {
     "@class" : "Leader",
+    "id": 50,
     "victoryPoints" : 2,
     "requirements":[
       {
@@ -65,6 +67,7 @@
 
   {
     "@class" : "Leader",
+    "id": 51,
     "victoryPoints" : 2,
     "requirements":[
       {
@@ -97,6 +100,7 @@
 
   {
     "@class" : "Leader",
+    "id": 52,
     "victoryPoints" : 2,
     "requirements":[
       {
@@ -166,6 +170,7 @@
 
   {
     "@class" : "Leader",
+    "id": 53,
     "victoryPoints" : 3,
     "requirements":[
       {
@@ -195,6 +200,7 @@
 
   {
     "@class" : "Leader",
+    "id": 54,
     "victoryPoints" : 3,
     "requirements":[
       {
@@ -224,6 +230,7 @@
 
   {
     "@class" : "Leader",
+    "id": 55,
     "victoryPoints" : 3,
     "requirements":[
       {
@@ -253,6 +260,7 @@
 
   {
     "@class" : "Leader",
+    "id": 56,
     "victoryPoints" : 3,
     "requirements":[
       {
@@ -324,6 +332,7 @@
 
   {
     "@class" : "Leader",
+    "id": 57,
     "victoryPoints" : 5,
     "requirements":[
       {
@@ -357,6 +366,7 @@
 
   {
     "@class" : "Leader",
+    "id": 58,
     "victoryPoints" : 5,
     "requirements":[
       {
@@ -389,6 +399,7 @@
 
   {
     "@class" : "Leader",
+    "id": 59,
     "victoryPoints" : 5,
     "requirements":[
       {
@@ -421,6 +432,7 @@
 
   {
     "@class" : "Leader",
+    "id": 60,
     "victoryPoints" : 5,
     "requirements":[
       {
@@ -479,6 +491,7 @@
 
   {
     "@class" : "Leader",
+    "id": 61,
     "victoryPoints" : 4,
     "requirements":[
       {
@@ -516,6 +529,7 @@
 
   {
     "@class" : "Leader",
+    "id": 62,
     "victoryPoints" : 4,
     "requirements":[
       {
@@ -553,6 +567,7 @@
 
   {
     "@class" : "Leader",
+    "id": 63,
     "victoryPoints" : 4,
     "requirements":[
       {
@@ -589,6 +604,7 @@
 
   {
     "@class" : "Leader",
+    "id": 64,
     "victoryPoints" : 4,
     "requirements":[
       {

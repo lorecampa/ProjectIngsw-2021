@@ -4,10 +4,10 @@ import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.*;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
 import it.polimi.ingsw.model.card.Leader;
@@ -125,7 +125,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public void emptyCardSlotBuffer(){
         cardSlots.get(indexCardSlotBuffer).emptyBuffer();
-        notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.LEADER_MANAGE_AFTER));
+        notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.LEADER_MANAGE_AFTER));
         notifyGameMasterObserver(x -> x.onDeckDevelopmentCardRemove(rowDeckBuffer, colDeckBuffer));
         notifyAllObservers(x -> x.cardSlotUpdate(indexCardSlotBuffer, rowDeckBuffer, colDeckBuffer));
         if (howManyCardDoIOwn() == 7){
@@ -136,15 +136,15 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     /**
      * Method to activate a leader effect
      * @param leaderIndex is the index of the leader
-     * @param turnState is the current state of the turn
+     * @param playerState is the current state of the turn
      * @throws IndexOutOfBoundsException if the leader selected does not exist
      * @throws CardAlreadyUsed if the card has already been used in this turn
      */
-    public void activateLeaderEffect(int leaderIndex, TurnState turnState) throws IndexOutOfBoundsException, CardAlreadyUsed, NotEnoughRequirementException {
+    public void activateLeaderEffect(int leaderIndex, PlayerState playerState) throws IndexOutOfBoundsException, CardAlreadyUsed, NotEnoughRequirementException {
         Leader leader = leaders.get(leaderIndex);
         if (leadersUsed.contains(leader))
             throw new CardAlreadyUsed("Leader already used");
-        leader.doEffects(turnState);
+        leader.doEffects(playerState);
         leadersUsed.add(leader);
     }
 
@@ -159,7 +159,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
 
-        development.doEffects(TurnState.PRODUCTION_ACTION);
+        development.doEffects(PlayerState.PRODUCTION_ACTION);
         devCardsUsed.add(development);
 
 
@@ -173,7 +173,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
 
-        baseProduction.doEffects(TurnState.PRODUCTION_ACTION);
+        baseProduction.doEffects(PlayerState.PRODUCTION_ACTION);
         devCardsUsed.add(baseProduction);
     }
 

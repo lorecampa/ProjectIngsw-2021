@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.PrintAssistant;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,20 +67,18 @@ public class MastersOfRenaissanceTest
     ObjectMapper mapper;
 
     @Test
-    void test() throws JsonProcessingException {
+    void test() throws IOException {
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        /*
-        ServerMessage message1 = new ConnectionMessage(ConnectionType.CONNECT,"a");
-        String serverSer = mapper.writeValueAsString(message1);
-        System.out.println(serverSer);
+        InputStream inputStream = getClass().getResourceAsStream("/json/leader.json");
+        ArrayList<Leader> leaders = mapper.readValue(inputStream, new TypeReference<>() {});
+        leaders.forEach(System.out::println);
 
-        ResourceData resource1 = new ResourceData(ResourceType.COIN, 2);
-        ServerMessage message2 = new StrongboxModify(resource1);
-        String message22 = mapper.writeValueAsString(message2);
-        System.out.println(message22);
-         */
+
+        inputStream = getClass().getResourceAsStream("/json/development.json");
+        ArrayList<Development> developments = mapper.readValue(inputStream, new TypeReference<>() {});
+        developments.forEach(System.out::println);
 
 
 

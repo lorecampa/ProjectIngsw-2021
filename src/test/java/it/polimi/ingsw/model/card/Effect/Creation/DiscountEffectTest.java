@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
 import it.polimi.ingsw.client.data.EffectData;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -52,7 +51,7 @@ class DiscountEffectTest {
         discounts = resourceArray(3,2,0,0,0,0);
         effect = new DiscountEffect(discounts);
         effect.attachResourceManager(rm);
-        assertDoesNotThrow(()->effect.doEffect(TurnState.LEADER_MANAGE_BEFORE));
+        assertDoesNotThrow(()->effect.doEffect(PlayerState.LEADER_MANAGE_BEFORE));
 
         ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0,0,0,0);
         for (Resource res: resStrongbox){

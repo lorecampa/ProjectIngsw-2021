@@ -3,10 +3,9 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
@@ -70,7 +69,7 @@ class MarbleEffectTest {
         market.reset();
         market.insertMarbleInRow(index);
         market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
-        assertDoesNotThrow(()->me1.doEffect(TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()->me1.doEffect(PlayerState.WHITE_MARBLE_CONVERSION));
 
         int whiteMarble = market.getWhiteMarbleToTransform();
 
@@ -98,7 +97,7 @@ class MarbleEffectTest {
         market.reset();
         market.insertMarbleInCol(index);
         market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
-        assertDoesNotThrow(()->me1.doEffect(TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()->me1.doEffect(PlayerState.WHITE_MARBLE_CONVERSION));
 
         int whiteMarble = market.getWhiteMarbleToTransform();
 
@@ -127,7 +126,7 @@ class MarbleEffectTest {
         market.insertMarbleInCol(index);
         market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
 
-        assertDoesNotThrow(()->me2.doEffect(TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()->me2.doEffect(PlayerState.WHITE_MARBLE_CONVERSION));
 
         int whiteMarble = market.getWhiteMarbleToTransform();
 
@@ -156,7 +155,7 @@ class MarbleEffectTest {
         market.insertMarbleInRow(index);
         market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
 
-        assertDoesNotThrow(()->me3.doEffect(TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()->me3.doEffect(PlayerState.WHITE_MARBLE_CONVERSION));
 
         int whiteMarble = market.getWhiteMarbleToTransform();
 

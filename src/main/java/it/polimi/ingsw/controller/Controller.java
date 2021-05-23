@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
@@ -34,7 +34,7 @@ public class Controller {
 
 
 
-    public void changeTurnState(TurnState state){
+    public void changeTurnState(PlayerState state){
         gameMaster.onTurnStateChange(state);
     }
 
@@ -53,7 +53,7 @@ public class Controller {
     }
 
 
-    public TurnState getTurnState(){
+    public PlayerState getPlayerState(){
         return gameMaster.getTurnState();
     }
 
@@ -205,7 +205,7 @@ public class Controller {
                         .filter(Leader::isActive)
                         .forEach(x -> {
                             try {
-                                x.doEffects(TurnState.WHITE_MARBLE_CONVERSION);
+                                x.doEffects(PlayerState.WHITE_MARBLE_CONVERSION);
                             } catch (Exception ignored) {}
                         });
             }
@@ -235,7 +235,7 @@ public class Controller {
         market.setWhiteMarbleToTransform(numOfWhiteMarble);
 
         try{
-            cardManager.activateLeaderEffect(leaderIndex, getTurnState());
+            cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
         }catch (Exception e){
             sendError(e.getMessage());
             return;
@@ -322,7 +322,7 @@ public class Controller {
             return;
         }
         try {
-            cardManager.activateLeaderEffect(leaderIndex, getTurnState());
+            cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
         } catch (Exception e) {
             sendError(e.getMessage());
         }
@@ -334,7 +334,7 @@ public class Controller {
     public void stopProductionCardSelection(){
         ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
         resourceManager.sendBufferUpdate();
-        changeTurnState(TurnState.PRODUCTION_RESOURCE_REMOVING);
+        changeTurnState(PlayerState.PRODUCTION_RESOURCE_REMOVING);
 
     }
 
@@ -369,7 +369,7 @@ public class Controller {
 
         if (resourceManager.getBufferSize() != 0) return;
 
-        switch (getTurnState()){
+        switch (getPlayerState()){
             case MARKET_RESOURCE_POSITIONING:
                 resourceManager.applyFaithPoints();
                 break;
@@ -384,7 +384,7 @@ public class Controller {
 
         }
         resourceManager.restoreRM();
-        changeTurnState(TurnState.LEADER_MANAGE_AFTER);
+        changeTurnState(PlayerState.LEADER_MANAGE_AFTER);
     }
 
 

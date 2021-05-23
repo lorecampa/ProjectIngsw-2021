@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
@@ -44,22 +44,13 @@ public class ServerMessageHandler {
         return true;
     }
 
-    private boolean isSinglePlayerGame(){
-        if(!isSetUpPhaseFinished()) return false;
 
-        int numOfPlayer = controller.getNumberOfPlayer();
-        if (numOfPlayer == 1){
-            client.writeToStream(new ErrorMessage(ErrorType.NOT_SINGLE_PLAYER_MODE));
-        }
-        return numOfPlayer == 1;
-    }
-
-    private boolean areYouAllowed(TurnState turnState){
+    private boolean areYouAllowed(PlayerState playerState){
         if(!isSetUpPhaseFinished()) return false;
 
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
-            result = controller.getTurnState() == turnState;
+            result = controller.getPlayerState() == playerState;
         }else{
             result = false;
         }
@@ -69,11 +60,11 @@ public class ServerMessageHandler {
         return result;
     }
 
-    private boolean areYouAllowed(TurnState[] turnStates){
+    private boolean areYouAllowed(PlayerState[] playerStates){
         if(!isSetUpPhaseFinished()) return false;
         boolean result;
         if (getController().isPresent() && getVirtualClient().isPresent()){
-            result = Arrays.stream(turnStates).anyMatch(x -> x == controller.getTurnState());
+            result = Arrays.stream(playerStates).anyMatch(x -> x == controller.getPlayerState());
         }else{
             result = false;
         }
@@ -105,12 +96,12 @@ public class ServerMessageHandler {
         return true;
     }
 
-    private boolean controlAuthority(TurnState turnState){
-        return isYourTurn() && areYouAllowed(turnState);
+    private boolean controlAuthority(PlayerState playerState){
+        return isYourTurn() && areYouAllowed(playerState);
     }
 
-    private boolean controlAuthority(TurnState[] turnStates){
-        return isYourTurn() && areYouAllowed(turnStates);
+    private boolean controlAuthority(PlayerState[] playerStates){
+        return isYourTurn() && areYouAllowed(playerStates);
     }
 
 
@@ -190,8 +181,8 @@ public class ServerMessageHandler {
             controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
             return;
         }
-        if(!controlAuthority(new TurnState[]{
-                TurnState.LEADER_MANAGE_BEFORE, TurnState.LEADER_MANAGE_AFTER})){ return; }
+        if(!controlAuthority(new PlayerState[]{
+                PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER})){ return; }
 
         controller.leaderManage(msg.getIndex(), msg.isDiscard());
     }
@@ -199,17 +190,17 @@ public class ServerMessageHandler {
 
     //MARKET
     public void handleMarketAction(MarketAction msg){
-        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
+        if(!controlAuthority(PlayerState.LEADER_MANAGE_BEFORE)) return;
         controller.marketAction(msg.getSelection(), msg.isRow());
     }
 
     public void handleWhiteMarbleConversion(WhiteMarbleConversionResponse msg){
-        if(!controlAuthority(TurnState.WHITE_MARBLE_CONVERSION)) return;
+        if(!controlAuthority(PlayerState.WHITE_MARBLE_CONVERSION)) return;
         controller.leaderWhiteMarbleConversion(msg.getLeaderIndex(), msg.getNumOfWhiteMarble());
     }
 
     public void handleDiscardResourcesFromMarket(){
-        if(!controlAuthority(TurnState.MARKET_RESOURCE_POSITIONING)) return;
+        if(!controlAuthority(PlayerState.MARKET_RESOURCE_POSITIONING)) return;
         controller.clearBufferFromMarket();
 
     }
@@ -217,7 +208,7 @@ public class ServerMessageHandler {
     //BUY DEVELOPMENT
 
     public void handleDevelopmentAction(DevelopmentAction msg){
-        if(!controlAuthority(TurnState.LEADER_MANAGE_BEFORE)) return;
+        if(!controlAuthority(PlayerState.LEADER_MANAGE_BEFORE)) return;
         controller.developmentAction(msg.getRow(), msg.getColumn(), msg.getLocateSlot());
     }
 
@@ -228,8 +219,8 @@ public class ServerMessageHandler {
      * @param msg of type ProductionAction - the message that contains the information
      */
     public void handleProduction(ProductionAction msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+        if(!controlAuthority(new PlayerState[]{
+                PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION})){ return; }
 
         if (msg.isLeader()){
             controller.leaderProductionAction(msg.getSlotsIndex());
@@ -242,8 +233,8 @@ public class ServerMessageHandler {
      * handleBaseProduction method handle the base production action
      */
     public void handleBaseProduction(){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.LEADER_MANAGE_BEFORE, TurnState.PRODUCTION_ACTION})){ return; }
+        if(!controlAuthority(new PlayerState[]{
+                PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION})){ return; }
         controller.baseProduction();
     }
 
@@ -252,7 +243,7 @@ public class ServerMessageHandler {
      * resources positioning
      */
     public void handleEndCardSelection(){
-        if(!controlAuthority(TurnState.PRODUCTION_ACTION)) return;
+        if(!controlAuthority(PlayerState.PRODUCTION_ACTION)) return;
         controller.stopProductionCardSelection();
     }
 
@@ -272,22 +263,23 @@ public class ServerMessageHandler {
             return;
         }
 
-        if(!isYourTurn()){ return; }
-
-        switch (controller.getTurnState()){
-            case ANY_PRODUCE_COST_CONVERSION:
-                controller.anyRequirementResponse(resources, false);
-                break;
-            case ANY_PRODUCE_PROFIT_CONVERSION:
-                controller.anyProductionProfitResponse(resources);
-                break;
-            case ANY_BUY_DEV_CONVERSION:
-                controller.anyRequirementResponse(resources, true);
-                break;
-            default:
-                client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
-                break;
+        if (isYourTurn()){
+            switch (controller.getPlayerState()){
+                case ANY_PRODUCE_COST_CONVERSION:
+                    controller.anyRequirementResponse(resources, false);
+                    break;
+                case ANY_PRODUCE_PROFIT_CONVERSION:
+                    controller.anyProductionProfitResponse(resources);
+                    break;
+                case ANY_BUY_DEV_CONVERSION:
+                    controller.anyRequirementResponse(resources, true);
+                    break;
+                default:
+                    client.writeToStream(new ErrorMessage(ErrorType.ACTION_NOT_PERMITTED));
+                    break;
+            }
         }
+
     }
 
 
@@ -298,8 +290,8 @@ public class ServerMessageHandler {
      * @param msg of type StrongboxModify - the message that contains the information
      */
     public void handleStrongboxModify(StrongboxModify msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING})){ return; }
+        if(!controlAuthority(new PlayerState[]{
+                PlayerState.BUY_DEV_RESOURCE_REMOVING, PlayerState.PRODUCTION_RESOURCE_REMOVING})){ return; }
 
         Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
         controller.subToStrongbox(resource);
@@ -313,7 +305,7 @@ public class ServerMessageHandler {
         if(!isYourTurn()) { return; }
 
         Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
-        switch (controller.getTurnState()){
+        switch (controller.getPlayerState()){
             case MARKET_RESOURCE_POSITIONING:
                 controller.addToWarehouse(resource, msg.getDepotIndex(), msg.isNormalDepot());
                 break;
@@ -332,9 +324,10 @@ public class ServerMessageHandler {
      * @param msg of type DepotSwitch - the message that contains the information
      */
     public void handleSwitch(DepotSwitch msg){
-        if(!controlAuthority(new TurnState[]{
-                TurnState.BUY_DEV_RESOURCE_REMOVING, TurnState.PRODUCTION_RESOURCE_REMOVING,
-        TurnState.MARKET_RESOURCE_POSITIONING})){ return; }
+        if(!controlAuthority(new PlayerState[]{
+                PlayerState.BUY_DEV_RESOURCE_REMOVING,
+                PlayerState.PRODUCTION_RESOURCE_REMOVING,
+                PlayerState.MARKET_RESOURCE_POSITIONING})){ return; }
 
         controller.switchDepots(msg.getFrom(), msg.isFromNormal(), msg.getTo(), msg.isToNormal());
     }

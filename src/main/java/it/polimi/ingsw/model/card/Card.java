@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.card;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = Development.class, name = "Development")
 })
 public  abstract class Card {
-
+    private final int id;
     private final int victoryPoints;
     final ArrayList<Requirement> requirements;
     private final ArrayList<Effect> onCreationEffect;
@@ -41,10 +41,12 @@ public  abstract class Card {
      * @param onCreationEffect of type ArrayList - the card effects of type creation
      * @param onActivationEffects of type ArrayList - the card effects of type activation
      */
-    public Card(int victoryPoints,
+    public Card(int id,
+                int victoryPoints,
                 ArrayList<Requirement> requirements,
                 ArrayList<Effect> onActivationEffects,
                 ArrayList<Effect> onCreationEffect) {
+        this.id = id;
         this.victoryPoints = victoryPoints;
         this.requirements = requirements;
         this.onActivationEffects = onActivationEffects;
@@ -64,7 +66,7 @@ public  abstract class Card {
      */
     public void  doCreationEffects() throws NotEnoughRequirementException {
         for(Effect effect: onCreationEffect) {
-            effect.doEffect(TurnState.LEADER_MANAGE_BEFORE);
+            effect.doEffect(PlayerState.LEADER_MANAGE_BEFORE);
         }
     }
 
@@ -74,9 +76,9 @@ public  abstract class Card {
     /**
      * Method doEffects does all the effect of type activation
      */
-    public  void doEffects(TurnState turnState) throws NotEnoughRequirementException {
+    public  void doEffects(PlayerState playerState) throws NotEnoughRequirementException {
         for (Effect effect: onActivationEffects){
-            effect.doEffect(turnState);
+            effect.doEffect(playerState);
         }
     }
 

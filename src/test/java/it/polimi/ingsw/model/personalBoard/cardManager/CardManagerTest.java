@@ -4,10 +4,10 @@ import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.GameSetting;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
@@ -51,11 +51,14 @@ class CardManagerTest {
 
         cardManager = personalBoard.getCardManager();
         personalBoard.getResourceManager().addToStrongbox(ResourceFactory.createResource(ResourceType.STONE,5));
-        devLv1_1 = new Development(1,requirements,effects,effects,1,Color.BLUE); devLv1_2 = new Development(1,requirements,effects,effects,1,Color.BLUE);
-        devLv2_1 = new Development(1, requirements ,effects,effects, 2, Color.YELLOW); devLv2_2 = new Development(1, requirements ,effects,effects, 2, Color.BLUE);
-        devLv3_1 = new Development(1, requirements ,effects,effects, 3, Color.GREEN); devLv3_2 = new Development(1, requirements ,effects,effects, 3, Color.GREEN);
-        leader1 = new Leader(1,requirements,effects,effects);
-        leader2 = new Leader(1,requirements,effects,effects);
+        devLv1_1 = new Development(1,1,requirements,effects,effects,1,Color.BLUE);
+        devLv1_2 = new Development(2,1,requirements,effects,effects,1,Color.BLUE);
+        devLv2_1 = new Development(3,1, requirements ,effects,effects, 2, Color.YELLOW);
+        devLv2_2 = new Development(4,1, requirements ,effects,effects, 2, Color.BLUE);
+        devLv3_1 = new Development(5,1, requirements ,effects,effects, 3, Color.GREEN);
+        devLv3_2 = new Development(6,1, requirements ,effects,effects, 3, Color.GREEN);
+        leader1 = new Leader(7,1,requirements,effects,effects);
+        leader2 = new Leader(8,1,requirements,effects,effects);
     }
 
     @Test
@@ -144,18 +147,18 @@ class CardManagerTest {
         cardManager.addLeader(leader1);
         cardManager.addLeader(leader2);
 
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, TurnState.WHITE_MARBLE_CONVERSION));
-        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(2, TurnState.PRODUCTION_ACTION));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(-1, PlayerState.WHITE_MARBLE_CONVERSION));
+        assertThrows(IndexOutOfBoundsException.class, ()-> cardManager.activateLeaderEffect(2, PlayerState.PRODUCTION_ACTION));
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.WHITE_MARBLE_CONVERSION));
-        assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, TurnState.PRODUCTION_ACTION));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, PlayerState.WHITE_MARBLE_CONVERSION));
+        assertThrows(CardAlreadyUsed.class, ()-> cardManager.activateLeaderEffect(0, PlayerState.PRODUCTION_ACTION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, PlayerState.WHITE_MARBLE_CONVERSION));
 
 
         cardManager.restoreCM();
 
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, TurnState.WHITE_MARBLE_CONVERSION));
-        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, TurnState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(0, PlayerState.WHITE_MARBLE_CONVERSION));
+        assertDoesNotThrow(()-> cardManager.activateLeaderEffect(1, PlayerState.WHITE_MARBLE_CONVERSION));
     }
 
     @Test

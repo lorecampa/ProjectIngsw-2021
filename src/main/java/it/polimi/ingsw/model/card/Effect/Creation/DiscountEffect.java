@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -32,11 +32,11 @@ public class DiscountEffect implements Effect {
 
     /**
      * Method doEffect is responsible to pass all the discounts to the resource manager
-     * @param turnState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
+     * @param playerState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
      */
     @Override
-    public void doEffect(TurnState turnState) {
-        if (turnState == TurnState.LEADER_MANAGE_BEFORE){
+    public void doEffect(PlayerState playerState) {
+        if (playerState == PlayerState.LEADER_MANAGE_BEFORE){
             resourceManager.addDiscount(discounts.stream()
                     .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
                     .collect(Collectors.toCollection(ArrayList::new)));

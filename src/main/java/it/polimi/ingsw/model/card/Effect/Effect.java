@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card.Effect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.EffectData;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
@@ -26,13 +26,13 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 public interface Effect {
     /**
      * Method doEffect is responsible of doing the effect itself
-     * @param turnState of type State - defines the state of the turn, it controls which effect are going to be
+     * @param playerState of type State - defines the state of the turn, it controls which effect are going to be
      *              executed as mentioned below.
      *              (PRODUCTION_STATE -> ProductionEffect)
      *              (MARKET_STATE -> MarbleEffect)
      *              (CREATION_STATE -> DiscountEffect and WarehouseEffect)
      */
-    void doEffect(TurnState turnState) throws NotEnoughRequirementException;
+    void doEffect(PlayerState playerState) throws NotEnoughRequirementException;
 
     void discardEffect();
     /**

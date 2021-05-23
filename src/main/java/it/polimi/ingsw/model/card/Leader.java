@@ -24,12 +24,13 @@ public class Leader extends Card{
      * @param onActivationEffect of type ArrayList - the leader effects of type activation
      */
     @JsonCreator
-    public Leader(@JsonProperty("victoryPoints") int victoryPoints,
+    public Leader(@JsonProperty("id") int id,
+                  @JsonProperty("victoryPoints") int victoryPoints,
                   @JsonProperty("requirements") ArrayList<Requirement> requirements,
                   @JsonProperty("onActivationEffects") ArrayList<Effect> onActivationEffect,
                   @JsonProperty("onCreationEffects") ArrayList<Effect> onCreationEffects) {
 
-        super(victoryPoints, requirements, onActivationEffect, onCreationEffects);
+        super(id,victoryPoints, requirements, onActivationEffect, onCreationEffects);
         this.active = false;
     }
 

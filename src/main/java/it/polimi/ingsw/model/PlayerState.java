@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 /**
  * Class State is an enumeration
  */
-public enum TurnState {
+public enum PlayerState {
     LEADER_MANAGE_BEFORE,
 
     //MARKET
@@ -21,9 +21,5 @@ public enum TurnState {
     PRODUCTION_RESOURCE_REMOVING,
 
     //END
-    LEADER_MANAGE_AFTER,
-
-    //NOT USED
-    MARKET_ACTION,
-    BUY_DEVELOPMENT_ACTION
+    LEADER_MANAGE_AFTER
 }

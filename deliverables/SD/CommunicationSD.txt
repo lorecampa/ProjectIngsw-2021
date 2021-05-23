@@ -9,5 +9,5 @@ Client --> Server: Pong
 Server -> Client: LogIn
 Server -> Client: Insert username and if first numberOfPlayer
 Client -> Server: Username and if true numberOfPlayer
-Server -> Client: Initial board turnState [default value]
+Server -> Client: Initial board playerState [default value]
 
