@@ -28,13 +28,14 @@ public class Development extends  Card{
      * @param color of type Color - the development card color
      */
     @JsonCreator
-    public Development(@JsonProperty("victoryPoints") int victoryPoints,
+    public Development(@JsonProperty("id") int id,
+                       @JsonProperty("victoryPoints") int victoryPoints,
                        @JsonProperty("requirements") ArrayList<Requirement> requirements,
                        @JsonProperty("onActivationEffects") ArrayList<Effect> onActivationEffects,
                        @JsonProperty("onCreationEffects") ArrayList<Effect> onCreationEffects,
                        @JsonProperty("level") int level,
                        @JsonProperty("color") Color color) {
-        super(victoryPoints, requirements, onActivationEffects, onCreationEffects);
+        super(id, victoryPoints, requirements, onActivationEffects, onCreationEffects);
         this.level = level;
         this.color = color;
     }

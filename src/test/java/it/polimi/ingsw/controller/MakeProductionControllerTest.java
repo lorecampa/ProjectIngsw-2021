@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.exception.DeckDevelopmentCardException;
-import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
@@ -23,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -186,7 +183,7 @@ class MakeProductionControllerTest {
 
         controller = new Controller(gameMaster, new Match(3, new Server(new String[0]), 1));
         resourceManager.restoreRM();
-        controller.changeTurnState(TurnState.LEADER_MANAGE_BEFORE);
+        controller.changeTurnState(PlayerState.LEADER_MANAGE_BEFORE);
     }
 
     private void attachLeader(int index){
@@ -222,15 +219,15 @@ class MakeProductionControllerTest {
 
     @Test
     void normalProduction(){
-        assertEquals(controller.getTurnState(), TurnState.LEADER_MANAGE_BEFORE);
+        assertEquals(controller.getPlayerState(), PlayerState.LEADER_MANAGE_BEFORE);
 
         controller.normalProductionAction(1);
-        assertEquals(controller.getTurnState(), TurnState.PRODUCTION_ACTION);
+        assertEquals(controller.getPlayerState(), PlayerState.PRODUCTION_ACTION);
 
         assertThrows(Exception.class, ()->cardManager.developmentProduce(1));
 
         controller.stopProductionCardSelection();
-        assertEquals(controller.getTurnState(), TurnState.PRODUCTION_RESOURCE_REMOVING);
+        assertEquals(controller.getPlayerState(), PlayerState.PRODUCTION_RESOURCE_REMOVING);
 
     }
 

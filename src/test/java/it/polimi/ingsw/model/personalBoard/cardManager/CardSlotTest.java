@@ -38,9 +38,9 @@ class CardSlotTest {
         resourceReq = new ResourceReq(resources);
         req = new ArrayList<>();
         req.add(resourceReq);
-        devLv1Pv1 = new Development(1, req ,null, null,1, Color.BLUE);
-        devLv2Pv1 = new Development(2, req ,null, null,2, Color.YELLOW);
-        devLv3Pv1 = new Development(3, req ,null, null,3, Color.GREEN);
+        devLv1Pv1 = new Development(1,1, req ,null, null,1, Color.BLUE);
+        devLv2Pv1 = new Development(2,2, req ,null, null,2, Color.YELLOW);
+        devLv3Pv1 = new Development(3,3, req ,null, null,3, Color.GREEN);
     }
 
     @Test

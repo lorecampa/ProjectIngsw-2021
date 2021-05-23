@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
 import it.polimi.ingsw.model.resource.Resource;
@@ -150,7 +150,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
     private void notifyMarketChange(){
         if (getWhiteMarbleDrew() > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(TurnState.WHITE_MARBLE_CONVERSION));
+            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.WHITE_MARBLE_CONVERSION));
         }
         notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
     }

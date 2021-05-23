@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
@@ -35,11 +35,11 @@ public class MarbleEffect implements Effect {
     /**
      * Method doEffect is in charge of pass all the resources to
      * the market based on how many white marble the user haw drawn
-     * @param turnState of type State - defines the state of the turn, in this case must be MARKET_STATE
+     * @param playerState of type State - defines the state of the turn, in this case must be MARKET_STATE
      */
     @Override
-    public void doEffect(TurnState turnState) {
-        if (turnState == TurnState.WHITE_MARBLE_CONVERSION){
+    public void doEffect(PlayerState playerState) {
+        if (playerState == PlayerState.WHITE_MARBLE_CONVERSION){
             int whiteMarble = market.getWhiteMarbleToTransform();
 
             market.insertLeaderResources(transformIn.stream()

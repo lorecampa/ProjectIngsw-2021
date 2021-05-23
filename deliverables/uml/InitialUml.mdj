@@ -6924,7 +6924,7 @@
 											"top": 1227,
 											"width": 405.73583984375,
 											"height": 13,
-											"text": "+doEffect(turnState: State): void",
+											"text": "+doEffect(playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7189,7 +7189,7 @@
 											"top": 980,
 											"width": 405.73583984375,
 											"height": 13,
-											"text": "+doEffect(turnState: State): void",
+											"text": "+doEffect(playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7454,7 +7454,7 @@
 											"top": 1220,
 											"width": 405.73583984375,
 											"height": 13,
-											"text": "+doEffect(turnState: State): void",
+											"text": "+doEffect(playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7719,7 +7719,7 @@
 											"top": 1196,
 											"width": 405.73583984375,
 											"height": 13,
-											"text": "+doEffect(turnState: State): void",
+											"text": "+doEffect(playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -11824,7 +11824,7 @@
 											"top": 1460,
 											"width": 429.583984375,
 											"height": 13,
-											"text": "+activateLeaderEffect(leaderIndex: int, turnState: State): void",
+											"text": "+activateLeaderEffect(leaderIndex: int, playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -20925,7 +20925,7 @@
 											"top": 1019,
 											"width": 405.73583984375,
 											"height": 13,
-											"text": "+doEffect(turnState: State): void",
+											"text": "+doEffect(playerState: State): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -29772,7 +29772,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF4TFhab5Igrlc="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": {
 										"$ref": "AAAAAAF4wwC458277FE="
 									}
@@ -29926,7 +29926,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF4TFjeqpTeDtY="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": {
 										"$ref": "AAAAAAF4wwC458277FE="
 									}
@@ -30238,7 +30238,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF4TFuqiqjkODA="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": {
 										"$ref": "AAAAAAF4wwC458277FE="
 									}
@@ -30405,7 +30405,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF4TGGT4rGzNtg="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": {
 										"$ref": "AAAAAAF4wwC458277FE="
 									}
@@ -33227,7 +33227,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF40dSOf47ItwY="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": {
 										"$ref": "AAAAAAF4wwC458277FE="
 									}
@@ -35131,7 +35131,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF4wv93Msbzs8Q="
 									},
-									"name": "turnState",
+									"name": "playerState",
 									"type": "State"
 								},
 								{

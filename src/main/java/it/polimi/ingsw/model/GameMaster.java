@@ -32,7 +32,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
     List<ModelObserver> modelObserverList = new ArrayList<>();
 
-    private TurnState turnState;
+    private PlayerState playerState;
     ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
@@ -136,7 +136,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         if (isLastTurn &&  currentPlayer.equals(playersTurn.get(0))){
             gameOver();
         }else{
-            onTurnStateChange(TurnState.LEADER_MANAGE_BEFORE);
+            onTurnStateChange(PlayerState.LEADER_MANAGE_BEFORE);
             notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
         }
     }
@@ -448,12 +448,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     @Override
-    public void onTurnStateChange(TurnState turnState) {
-        this.turnState = turnState;
+    public void onTurnStateChange(PlayerState playerState) {
+        this.playerState = playerState;
     }
 
-    public TurnState getTurnState() {
-        return turnState;
+    public PlayerState getTurnState() {
+        return playerState;
     }
 
     @Override

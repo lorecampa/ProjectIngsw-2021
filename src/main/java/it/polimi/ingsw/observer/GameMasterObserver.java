@@ -1,6 +1,6 @@
 package it.polimi.ingsw.observer;
 
-import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.PlayerState;
 
 public interface GameMasterObserver {
     /**
@@ -26,7 +26,7 @@ public interface GameMasterObserver {
 
     void onDeckDevelopmentCardRemove(int row, int col);
 
-    void onTurnStateChange(TurnState turnState);
+    void onTurnStateChange(PlayerState playerState);
 
 
 }
