@@ -29,7 +29,6 @@ public class Client{
     private final Object streamLock = new Object();
 
     private ClientState state;
-
     private static Client instance;
 
     private String nameFile;

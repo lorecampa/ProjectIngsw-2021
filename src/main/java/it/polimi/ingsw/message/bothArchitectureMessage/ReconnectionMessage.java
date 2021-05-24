@@ -34,6 +34,8 @@ public class ReconnectionMessage implements ServerMessage, ClientMessage {
 
     @Override
     public void process(ClientMessageHandler handler) {
-        handler.reconnect(this);
+        try {
+            handler.reconnect(this);
+        }catch (Exception ignored){ }
     }
 }
