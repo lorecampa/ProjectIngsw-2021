@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.ModelData;
+import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.observer.*;
@@ -19,6 +21,7 @@ import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.LorenzoIlMagnifico;
 import it.polimi.ingsw.model.token.Token;
 import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.server.VirtualClient;
 
 import java.io.IOException;
 import java.util.*;
@@ -118,7 +121,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     /**
      * Method nextPlayer change the current player in the game when a new turn starts
      */
-    public void nextPlayer(){
+    public void nextPlayer() throws InvalidStateActionException {
+        //TODO change to LEADER_MANAGE_AFTER and handle next turn during player disconnection in a different state
+        if(currentPlayer != null && !isPlayerInState(PlayerState.LEADER_MANAGE_BEFORE)) {
+            throw new InvalidStateActionException();
+        }
+
         if (currentPlayer == null || numberOfPlayer == 1) {
             if(currentPlayer!= null){
                 drawToken();
@@ -136,7 +144,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         if (isLastTurn &&  currentPlayer.equals(playersTurn.get(0))){
             gameOver();
         }else{
-            onTurnStateChange(PlayerState.LEADER_MANAGE_BEFORE);
+            onPlayerStateChange(PlayerState.LEADER_MANAGE_BEFORE);
             notifyAllObservers(x -> x.currentPlayerChange(currentPlayer));
         }
     }
@@ -200,23 +208,20 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public void addPlayer(String username) throws IOException {
         FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
-        Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
-        playerFaithTrack.attachGameMasterObserver(this);
 
         ResourceManager playerResourceManager = new ResourceManager();
-        playerResourceManager.attachGameMasterObserver(this);
 
+        Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
         playerBaseProduction.setResourceManager(playerResourceManager);
-
         CardManager playerCardManager = new CardManager(playerBaseProduction);
-        playerCardManager.attachGameMasterObserver(this);
 
         PersonalBoard playerPersonalBoard = new PersonalBoard(username, playerFaithTrack,
                 playerResourceManager, playerCardManager);
 
+        playerPersonalBoard.attachGameMasterObserver(this);
+
         if (playersPersonalBoard.isEmpty())
             playerPersonalBoard.setInkwell(true);
-
         playersPersonalBoard.put(username, playerPersonalBoard);
     }
 
@@ -225,8 +230,25 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @param username of type String - player identifier
      * @return PersonalBoard - personal board associated with username, null if username is not in game
      */
-    public PersonalBoard getPlayerPersonalBoard(String username) {
+    public PersonalBoard getPlayerPersonalBoard(String username){
         return playersPersonalBoard.get(username);
+    }
+
+    public PersonalBoard getCurrentPlayerPersonalBoard(){
+        return playersPersonalBoard.get(currentPlayer);
+    }
+
+    public ModelData getPlayerModelData(String username){
+        return playersPersonalBoard.get(username).toClient(username.equals(currentPlayer));
+    }
+
+    public void attachPlayerVC(VirtualClient virtualClient){
+        attachObserver(virtualClient);
+        getMarket().attachObserver(virtualClient);
+        playersPersonalBoard.get(virtualClient.getUsername()).attachVirtualClient(virtualClient);
+    }
+    public void attachLorenzoIlMagnificoVC(VirtualClient lorenzoIlMagnificoVC){
+        playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().attachObserver(lorenzoIlMagnificoVC);
     }
 
     /**
@@ -254,7 +276,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
      */
     public Development getDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
-
         if(deckDevelopment.get(row).get(column).isEmpty()){
             throw new DeckDevelopmentCardException("No development card at selection (Row: "+row+" Column: "+column+")");
         }
@@ -286,7 +307,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Method drawToken draws the token from the deckToken on the top,
      * puts it back in the bottom and then  applies its effect
      */
-    public void drawToken(){
+    private void drawToken(){
         Optional<Token> token = Optional.ofNullable(deckToken.poll());
         token.ifPresent(deckToken::offer);
         token.ifPresent(value -> value.doActionToken(this));
@@ -448,11 +469,16 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     @Override
-    public void onTurnStateChange(PlayerState playerState) {
+    public void onPlayerStateChange(PlayerState playerState) {
         this.playerState = playerState;
     }
 
-    public PlayerState getTurnState() {
+    @Override
+    public boolean isPlayerInState(PlayerState... states) {
+        return Arrays.stream(states).anyMatch(x -> x == playerState);
+    }
+
+    public PlayerState getPlayerState() {
         return playerState;
     }
 

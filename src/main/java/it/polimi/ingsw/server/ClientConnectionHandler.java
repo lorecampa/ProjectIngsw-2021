@@ -64,10 +64,10 @@ public class ClientConnectionHandler implements Runnable {
     }
 
     public void setState(HandlerState state){
-        serverMessageHandler.setSetupState(state);
+        serverMessageHandler.setServerPhase(state);
     }
 
-    public HandlerState getState(){return serverMessageHandler.getSetupState();}
+    public HandlerState getState(){return serverMessageHandler.getServerPhase();}
 
     public void setVirtualClient(VirtualClient virtualClient){
         serverMessageHandler.setVirtualClient(virtualClient);

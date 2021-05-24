@@ -102,7 +102,7 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
             currentPositionOnTrack++;
             notifyAllObservers(FaithTrackObserver::positionIncrease);
             if (hasReachedEnd()){
-                notifyGameMasterObserver(GameMasterObserver::winningCondition);
+                notifyGameMaster(GameMasterObserver::winningCondition);
             }
         }
     }

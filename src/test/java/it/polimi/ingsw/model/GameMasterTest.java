@@ -38,17 +38,6 @@ class GameMasterTest {
 
 
     @Test
-    void nextPlayerSinglePlayer() {
-        gmSp.nextPlayer();
-        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
-        gmSp.nextPlayer();
-        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
-        gmSp.nextPlayer();
-        assertEquals("Lorenzo", gmSp.getCurrentPlayer());
-
-    }
-
-    @Test
     void deliverLeaderCard() {
         assertEquals(16, gm.getSizeDeckLeader());
         assertEquals(3, gm.getNumActivePlayers());
@@ -67,7 +56,7 @@ class GameMasterTest {
         int sizeDeckToken = gmSp.getSizeDeckToken();
         assertEquals(7, sizeDeckToken);
 
-        assertDoesNotThrow(()-> gmSp.drawToken());
+        assertDoesNotThrow(()-> gmSp.nextPlayer());
         assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
 
     }

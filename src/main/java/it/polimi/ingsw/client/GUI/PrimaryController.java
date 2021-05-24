@@ -13,9 +13,9 @@ public class PrimaryController extends Controller{
     @FXML
     private Button secButton;
 
-    private final Client client = Client.getInstance(new String[0]);
+    private final Client client = Client.getInstance();
     @FXML
-    private void switchToSecondary() throws IOException {
+    private void switchToSecondary() {
         new MainMenuCMD("1", client).doCommand();
         ControllerHandler.getInstance().getSecondaryController().activate();
     }

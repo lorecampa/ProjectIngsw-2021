@@ -41,7 +41,6 @@ public class MarbleEffect implements Effect {
     public void doEffect(PlayerState playerState) {
         if (playerState == PlayerState.WHITE_MARBLE_CONVERSION){
             int whiteMarble = market.getWhiteMarbleToTransform();
-
             market.insertLeaderResources(transformIn.stream()
                     .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()*whiteMarble))
                     .collect(Collectors.toCollection(ArrayList::new)));

@@ -34,25 +34,24 @@ class CardReqTest {
         //slot 2 (1: blue   level 1 -  2: blue   level 2)
         //slot 3 (1: yellow level 1 -  2: yellow level 2 - 3: green level 3)
 
-        cm.addDevCardTo(developmentsJson[4], 0);
+        assertDoesNotThrow(()->cm.addDevCardTo(developmentsJson[4], 0));
+        cm.emptyCardSlotBuffer();
+        assertDoesNotThrow(()->cm.addDevCardTo(developmentsJson[30], 0));
         cm.emptyCardSlotBuffer();
 
-        cm.addDevCardTo(developmentsJson[30], 0);
+        assertDoesNotThrow(()-> cm.addDevCardTo(developmentsJson[10], 1));
         cm.emptyCardSlotBuffer();
 
-        cm.addDevCardTo(developmentsJson[10], 1);
+        assertDoesNotThrow(()->cm.addDevCardTo(developmentsJson[24], 1) );
         cm.emptyCardSlotBuffer();
 
-        cm.addDevCardTo(developmentsJson[24], 1);
+        assertDoesNotThrow(()-> cm.addDevCardTo(developmentsJson[15], 2));
         cm.emptyCardSlotBuffer();
 
-        cm.addDevCardTo(developmentsJson[15], 2);
+        assertDoesNotThrow(()-> cm.addDevCardTo(developmentsJson[31], 2));
         cm.emptyCardSlotBuffer();
 
-        cm.addDevCardTo(developmentsJson[31], 2);
-        cm.emptyCardSlotBuffer();
-
-        cm.addDevCardTo(developmentsJson[33], 2);
+        assertDoesNotThrow(()-> cm.addDevCardTo(developmentsJson[33], 2));
         cm.emptyCardSlotBuffer();
 
 

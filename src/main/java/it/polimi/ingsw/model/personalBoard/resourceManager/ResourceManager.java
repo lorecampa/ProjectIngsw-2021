@@ -67,11 +67,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     }
 
-    private void containsAnyOrFaith(ArrayList<Resource> resources) throws AnyConversionNotPossible {
-        if(resources.stream()
-                .anyMatch(x -> x.getType() == ResourceType.ANY || x.getType() == ResourceType.FAITH)){
-            throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
-        }
+    private boolean containsAnyOrFaith(ArrayList<Resource> resources) {
+        return resources.stream()
+                .anyMatch(x -> x.getType() == ResourceType.ANY || x.getType() == ResourceType.FAITH);
     }
 
     private void restoreMyResources(ArrayList<Resource> tempBuffer){
@@ -79,7 +77,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
     public void convertAnyRequirement(ArrayList<Resource> resources, boolean isFromBuyDevelopment) throws AnyConversionNotPossible {
-        containsAnyOrFaith(resources);
+        if(containsAnyOrFaith(resources)){
+            throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
+        }
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
         if (numOfConversion != anyRequired) {
             throw new AnyConversionNotPossible("Num of any requested to convert is different than the number of " +
@@ -111,22 +111,26 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
         if (anyRequired == 0){
             if (isFromBuyDevelopment){
-                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
+                notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
                 notifyAllObservers(x->x.bufferUpdate(resourcesBuffer));
             }else{
                 if(anyToProduce > 0){
-                    notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
+                    notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
                     notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
                 }else{
-                    notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
+                    notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_ACTION));
                 }
             }
         }
 
     }
 
+
+
     public void convertAnyProductionProfit(ArrayList<Resource> resources) throws AnyConversionNotPossible {
-        containsAnyOrFaith(resources);
+        if(containsAnyOrFaith(resources)){
+            throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
+        }
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
         if (anyToProduce != numOfConversion){
             throw new AnyConversionNotPossible("Num of any requested to convert is different than the number of " +
@@ -143,12 +147,12 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         anyToProduce -= numOfConversion;
 
         if(anyToProduce == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
+            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_ACTION));
         }
     }
 
     public void applyFaithPoints(){
-        notifyGameMasterObserver(x -> x.increasePlayerFaithPoint(faithPoint));
+        notifyGameMaster(x -> x.increasePlayerFaithPoint(faithPoint));
     }
 
 
@@ -161,7 +165,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                 true);
         resourcesSent.forEach(this::addToBuffer);
         notifyAllObservers(x -> x.manageResourceRequest(resourcesBuffer, true));
-        notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.MARKET_RESOURCE_POSITIONING));
+        notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.MARKET_RESOURCE_POSITIONING));
     }
 
 
@@ -171,6 +175,11 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     public void doProduction(){
         resourcesToProduce.forEach(this::addToStrongbox);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
+    }
+    public void stopProduction() throws InvalidStateActionException {
+        checkPlayerState(PlayerState.PRODUCTION_ACTION);
+        sendBufferUpdate();
+        notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_RESOURCE_REMOVING));
     }
 
     /**
@@ -183,7 +192,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Subtract to the strongbox the resource
      * @param resource i want to subtract */
-    public void subToStrongbox(Resource resource) throws NegativeResourceException {
+    public void subToStrongbox(Resource resource) throws NegativeResourceException, InvalidStateActionException {
+        checkPlayerState(PlayerState.BUY_DEV_RESOURCE_REMOVING,
+                PlayerState.PRODUCTION_RESOURCE_REMOVING);
+
         strongbox.subResource(resource);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
         sendBufferUpdate();
@@ -221,7 +233,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param toIndex the second depot
      * */
     public void switchResourceFromDepotToDepot(int fromIndex, boolean isFromNormalDepot,
-                                               int toIndex, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
+                                               int toIndex, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, InvalidStateActionException {
+        checkPlayerState(PlayerState.BUY_DEV_RESOURCE_REMOVING,
+                PlayerState.PRODUCTION_RESOURCE_REMOVING,
+                PlayerState.MARKET_RESOURCE_POSITIONING);
 
         Resource from = currWarehouse.popResourceFromDepotAt(fromIndex, isFromNormalDepot);
         Resource to = currWarehouse.popResourceFromDepotAt(toIndex, isToNormalDepot);
@@ -285,7 +300,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             throw new Exception("Resource not present in buffer");
         }
 
-
     }
 
     public int getBufferSize(){
@@ -307,9 +321,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
 
         if(anyRequired == 0 && anyToProduce == 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.PRODUCTION_ACTION));
+            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_ACTION));
         }else if (anyRequired == 0 && anyToProduce > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
+            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
             notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
         }
 
@@ -381,14 +395,14 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         resources.forEach(this::addToBuffer);
 
         if(anyRequired == 0 && checkDiscount){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
+            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
             notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
 
         }else if (anyRequired > 0){
             if(checkDiscount){
-                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_BUY_DEV_CONVERSION));
+                notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_BUY_DEV_CONVERSION));
             }else{
-                notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.ANY_PRODUCE_COST_CONVERSION));
+                notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_PRODUCE_COST_CONVERSION));
             }
             notifyAllObservers(x -> x.anyRequirementConversionRequest(myResources, myDiscounts, anyRequired));
         }
@@ -439,8 +453,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Discard resources  that you don't want to place*/
-    public void discardResourcesFromMarket(){
-        notifyGameMasterObserver(x -> x.discardResources(numberOfResourceInBuffer()));
+    public void discardResourcesFromMarket() throws InvalidStateActionException {
+        checkPlayerState(PlayerState.MARKET_RESOURCE_POSITIONING);
+
+        notifyGameMaster(x -> x.discardResources(numberOfResourceInBuffer()));
         resourcesBuffer.clear();
         sendBufferUpdate();
     }

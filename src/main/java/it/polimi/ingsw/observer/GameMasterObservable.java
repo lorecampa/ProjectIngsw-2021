@@ -1,5 +1,9 @@
 package it.polimi.ingsw.observer;
 
+import it.polimi.ingsw.exception.InvalidStateActionException;
+import it.polimi.ingsw.message.clientMessage.ErrorType;
+import it.polimi.ingsw.model.PlayerState;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -18,7 +22,16 @@ public abstract class GameMasterObservable {
     /**
      * Method to call the update method of all observers
      */
-    public void notifyGameMasterObserver(Consumer<GameMasterObserver> consumer){
+    public void notifyGameMaster(Consumer<GameMasterObserver> consumer){
         gameMasterObserverList.forEach(consumer);
+
+    }
+
+    public void checkPlayerState(PlayerState... states) throws InvalidStateActionException {
+        for(GameMasterObserver gm: gameMasterObserverList){
+            if(!gm.isPlayerInState(states)){
+                throw new InvalidStateActionException();
+            }
+        }
     }
 }

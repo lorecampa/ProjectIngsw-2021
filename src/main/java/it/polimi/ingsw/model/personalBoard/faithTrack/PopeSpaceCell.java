@@ -24,7 +24,7 @@ public class PopeSpaceCell implements Cell{
     public void doAction(FaithTrack faithTrack) {
         if (victoryPoints != -1)
             faithTrack.setVictoryPoints(victoryPoints);
-        faithTrack.notifyGameMasterObserver(x -> x.vaticanReportReached(idVaticanReport));
+        faithTrack.notifyGameMaster(x -> x.vaticanReportReached(idVaticanReport));
     }
 
     /**

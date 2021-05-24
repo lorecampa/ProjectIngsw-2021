@@ -4,6 +4,8 @@ package it.polimi.ingsw.model;
  * Class State is an enumeration
  */
 public enum PlayerState {
+    NOT_IN_TURN,
+
     LEADER_MANAGE_BEFORE,
 
     //MARKET

@@ -108,14 +108,14 @@ class MarketTest {
     @Test
     void testGetResourceToSend(){
         assertEquals(0,market.getResourceToSend().size());
-        market.insertMarbleInRow(0);
+        assertDoesNotThrow(()->market.insertMarbleInRow(0));
         assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test
     void testMarketReset(){
         market.increaseWhiteMarbleDrew();
-        market.insertMarbleInRow(0);
+        assertDoesNotThrow(()->market.insertMarbleInRow(0));
         market.reset();
         assertEquals(0, market.getWhiteMarbleDrew());
         assertEquals(0, market.getResourceToSend().size());

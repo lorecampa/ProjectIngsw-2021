@@ -70,14 +70,16 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @param leaderIndex is the index of the leader to discard
      * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
-    public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException{
+    public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER);
+
         Leader leaderToDiscard = leaders.get(leaderIndex);
         leaders.remove(leaderIndex);
 
         if (leaderToDiscard.isActive()){
             leaderToDiscard.discardCreationEffects();
         }
-        notifyGameMasterObserver(GameMasterObserver::discardLeader);
+        notifyGameMaster(GameMasterObserver::discardLeader);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
 
     }
@@ -92,7 +94,9 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @param leaderIndex is the index of the leader to activate
      * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
-    public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, LeaderCardAlreadyActivatedException, NotEnoughRequirementException {
+    public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, LeaderCardAlreadyActivatedException, NotEnoughRequirementException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER);
+
         Leader leader = leaders.get(leaderIndex);
         if (leader.isActive()){
             throw new LeaderCardAlreadyActivatedException("Leader card is already activated");
@@ -112,7 +116,9 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to its level
      * @throws IndexOutOfBoundsException if the card slot selected does not exist
      */
-    public void addDevCardTo(Development development, int indexCardSlot) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException {
+    public void addDevCardTo(Development development, int indexCardSlot) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
+
         cardSlots.get(indexCardSlot).insertCard(development);
         indexCardSlotBuffer = indexCardSlot;
 
@@ -125,11 +131,11 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     public void emptyCardSlotBuffer(){
         cardSlots.get(indexCardSlotBuffer).emptyBuffer();
-        notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.LEADER_MANAGE_AFTER));
-        notifyGameMasterObserver(x -> x.onDeckDevelopmentCardRemove(rowDeckBuffer, colDeckBuffer));
+        notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER));
+        notifyGameMaster(x -> x.onDeckDevelopmentCardRemove(rowDeckBuffer, colDeckBuffer));
         notifyAllObservers(x -> x.cardSlotUpdate(indexCardSlotBuffer, rowDeckBuffer, colDeckBuffer));
         if (howManyCardDoIOwn() == 7){
-            notifyGameMasterObserver(GameMasterObserver::winningCondition);
+            notifyGameMaster(GameMasterObserver::winningCondition);
         }
     }
 
@@ -140,7 +146,12 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @throws IndexOutOfBoundsException if the leader selected does not exist
      * @throws CardAlreadyUsed if the card has already been used in this turn
      */
-    public void activateLeaderEffect(int leaderIndex, PlayerState playerState) throws IndexOutOfBoundsException, CardAlreadyUsed, NotEnoughRequirementException {
+    public void activateLeaderEffect(int leaderIndex, PlayerState playerState) throws IndexOutOfBoundsException, CardAlreadyUsed, NotEnoughRequirementException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE,
+                PlayerState.WHITE_MARBLE_CONVERSION,
+                PlayerState.PRODUCTION_ACTION,
+                PlayerState.LEADER_MANAGE_AFTER);
+
         Leader leader = leaders.get(leaderIndex);
         if (leadersUsed.contains(leader))
             throw new CardAlreadyUsed("Leader already used");
@@ -154,7 +165,9 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @throws CardAlreadyUsed if the card has already been used in this turn
      * @throws IndexOutOfBoundsException if the card slot selected does not exist
      */
-    public void developmentProduce(int indexCardSlot) throws CardAlreadyUsed, IndexOutOfBoundsException, NotEnoughRequirementException {
+    public void developmentProduce(int indexCardSlot) throws CardAlreadyUsed, IndexOutOfBoundsException, NotEnoughRequirementException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION);
+
         Development development = cardSlots.get(indexCardSlot).getLastInsertedCard();
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
@@ -169,7 +182,9 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * Method to activate the base production of the player board
      * @throws CardAlreadyUsed if the base production has already been used in this turn
      */
-    public void baseProductionProduce() throws CardAlreadyUsed, NotEnoughRequirementException {
+    public void baseProductionProduce() throws CardAlreadyUsed, NotEnoughRequirementException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION);
+
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
 

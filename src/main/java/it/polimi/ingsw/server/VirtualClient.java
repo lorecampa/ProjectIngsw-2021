@@ -85,6 +85,14 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     //OBSERVER IMPLEMENTATION
 
+
+    @Override
+    public void invalidAction(String username) {
+        if (username.equals(this.username)){
+            client.writeToStream(new ErrorMessage(ErrorType.INVALID_ACTION));
+        }
+    }
+
     //WINNER
     @Override
     public void weHaveAWinner(Map<Integer, String> matchRanking) {

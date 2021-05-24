@@ -37,11 +37,11 @@ public class Client{
     private final ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
-
+    private static String[] args;
     private final String CLIParam = "-cli";
     private final String GUIParam = "-gui";
 
-    private Client(String[] args) {
+    private void setUp(String[] args){
         if (args.length == 3) {
             try{
                 ipHost = args[1];
@@ -64,16 +64,17 @@ public class Client{
             ipHost="127.0.0.1";
             portNumber=3030;
         }
-
     }
 
-    public static Client getInstance(String[] args){
-        if (instance == null) instance = new Client(args);
+    public static Client getInstance(){
+        if (instance == null) instance = new Client();
         return instance;
     }
 
+
     public static void main(String[] args){
-        Client client = getInstance(args);
+        Client client = getInstance();
+        client.setUp(args);
         try{
             if (args.length == 0 || args.length == 2){
                 client.startClientCLI();
@@ -107,8 +108,8 @@ public class Client{
         } catch (IOException e) {
             //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
         }
-        state=ClientState.MAIN_MENU;
-        clientMessageHandler = new CLIMessageHandler(getInstance(new String[0]));
+        state = ClientState.MAIN_MENU;
+        clientMessageHandler = new CLIMessageHandler(getInstance());
         new Thread(new ClientInput(this)).start();
         nameFile="MasterOfRenaissance_dataLastGame.txt";
         out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
@@ -123,7 +124,7 @@ public class Client{
             //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
         }
         state=ClientState.MAIN_MENU;
-        clientMessageHandler = new GUIMessageHandler();
+        clientMessageHandler = new GUIMessageHandler(getInstance());
         nameFile="MasterOfRenaissance_dataLastGame.txt";
         out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
@@ -184,6 +185,10 @@ public class Client{
     //getter and setter of attributes of Client
     public ModelClient getModelOf(String username) {
         return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(username)).findFirst().orElse(null);
+    }
+
+    public ModelClient getMyModel(){
+        return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(myName)).findFirst().orElse(null);
     }
 
     public boolean existAModelOf(String username){

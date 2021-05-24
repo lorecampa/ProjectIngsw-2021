@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.command.NumOfPlayerCMD;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,16 +14,18 @@ public class SecondaryController extends Controller{
     @FXML
     TextField textField;
     @FXML
-    javafx.scene.control.Label label;
+    Label label;
+
 
     @FXML
     private void send(){
-        new NumOfPlayerCMD(textField.getText(), Client.getInstance(new String[0]));
+        new NumOfPlayerCMD(textField.getText(), Client.getInstance());
     }
 
     @FXML
     public void numOfPlayerRequest(){
-        label.setText("Insert the number of players");
+        ModelClient model = Client.getInstance().getMyModel();
+        label.setText(model.getUsername());
     }
 
 }

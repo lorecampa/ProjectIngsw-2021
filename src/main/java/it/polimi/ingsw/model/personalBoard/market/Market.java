@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
+import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.exception.WrongMarketDimensionException;
 import it.polimi.ingsw.exception.WrongMarblesNumberException;
@@ -112,7 +113,9 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
      * @param row is the row in which the marble will be insert
      * @throws IndexOutOfBoundsException if the selected row does not exist
      */
-    public void insertMarbleInRow(int row) throws IndexOutOfBoundsException{
+    public void insertMarbleInRow(int row) throws IndexOutOfBoundsException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
+
         for (Marble marble : marketTray.get(row)) {
             marble.doMarbleAction(this);
         }
@@ -132,7 +135,9 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
      * @param col is the column in which the marble will be insert
      * @throws IndexOutOfBoundsException if the selected column does not exist
      */
-    public void insertMarbleInCol(int col) throws IndexOutOfBoundsException{
+    public void insertMarbleInCol(int col) throws IndexOutOfBoundsException, InvalidStateActionException {
+        checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
+
         for (int i = 0; i < numRow; i++) {
             marketTray.get(i).get(col).doMarbleAction(this);
         }
@@ -150,7 +155,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
     private void notifyMarketChange(){
         if (getWhiteMarbleDrew() > 0){
-            notifyGameMasterObserver(x -> x.onTurnStateChange(PlayerState.WHITE_MARBLE_CONVERSION));
+            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.WHITE_MARBLE_CONVERSION));
         }
         notifyAllObservers(x -> x.marketTrayChange(marketTray, marbleToInsert));
     }
@@ -168,10 +173,11 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
     public void insertLeaderResources(ArrayList<Resource> resources){
         resources.forEach(this::addInResourcesToSend);
-
     }
 
-    public void setWhiteMarbleToTransform(int whiteMarbleToTransform) {
+    public void setWhiteMarbleToTransform(int whiteMarbleToTransform) throws InvalidStateActionException {
+        checkPlayerState(PlayerState.WHITE_MARBLE_CONVERSION);
+
         int delta = numOfWhiteMarbleDrew - whiteMarbleToTransform;
         //control that we don't exceed setting leader white marble assignment
         if (delta <= 0){

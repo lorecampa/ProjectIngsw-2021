@@ -23,6 +23,9 @@
   <profiles>
     <profile>
       <id>Server</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <properties>
         <project.outputName>MORServer</project.outputName>
         <project.mainClass>it.polimi.ingsw.server.Server</project.mainClass>

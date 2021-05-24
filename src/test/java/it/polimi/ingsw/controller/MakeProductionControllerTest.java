@@ -175,6 +175,7 @@ class MakeProductionControllerTest {
         assertDoesNotThrow(()->cardManager.addDevCardTo(devCard1, 0));
         cardManager.emptyCardSlotBuffer();
 
+        gameMaster.onPlayerStateChange(PlayerState.LEADER_MANAGE_BEFORE);
 
         //ReqProduction    =  2 coin
         //ProfitProduction =  1 servant, 1 shield, 1 stone
@@ -183,7 +184,7 @@ class MakeProductionControllerTest {
 
         controller = new Controller(gameMaster, new Match(3, new Server(new String[0]), 1));
         resourceManager.restoreRM();
-        controller.changeTurnState(PlayerState.LEADER_MANAGE_BEFORE);
+        gameMaster.onPlayerStateChange(PlayerState.LEADER_MANAGE_BEFORE);
     }
 
     private void attachLeader(int index){

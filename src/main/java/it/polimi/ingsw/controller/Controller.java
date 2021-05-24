@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.client.data.*;
+import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.PlayerState;
@@ -17,7 +18,6 @@ import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Controller {
     private final GameMaster gameMaster;
@@ -34,70 +34,66 @@ public class Controller {
 
 
 
-    public void changeTurnState(PlayerState state){
-        gameMaster.onTurnStateChange(state);
-    }
+
 
     public int getNumberOfPlayer(){
         return gameMaster.getNumberOfPlayer();
-    }
-
-    private void sendError(String customMessage){
-        match.sendSinglePlayer(gameMaster.getCurrentPlayer(), new ErrorMessage(customMessage));
-
     }
 
     private void sendErrorTo(String customMessage, String username){
         match.sendSinglePlayer(username, new ErrorMessage(customMessage));
 
     }
+    private void sendError(String customMessage){
+        match.sendSinglePlayer(getCurrentPlayer(), new ErrorMessage(customMessage));
+    }
 
 
     public PlayerState getPlayerState(){
-        return gameMaster.getTurnState();
+        return gameMaster.getPlayerState();
     }
 
 
-    public boolean isYourTurn(String username){
-        return getCurrentPlayer().equals(username);
-    }
+
 
 
     public String getCurrentPlayer(){
         return gameMaster.getCurrentPlayer();
     }
 
-
     private void registerAllVirtualClientObserver(){
         for (VirtualClient virtualClient: match.getAllPlayers()){
-            String username = virtualClient.getUsername();
-            //model observer
-            gameMaster.attachObserver(virtualClient);
-
-            //resource manager observer
-            gameMaster.getPlayerPersonalBoard(username)
-                    .getResourceManager().attachObserver(virtualClient);
-
-            //faith track observer
-            gameMaster.getPlayerPersonalBoard(username)
-                    .getFaithTrack().attachObserver(virtualClient);
-
-            //card manager
-            gameMaster.getPlayerPersonalBoard(username)
-                    .getCardManager().attachObserver(virtualClient);
-
-            //market
-            gameMaster.getMarket().attachObserver(virtualClient);
+            gameMaster.attachPlayerVC(virtualClient);
         }
 
     }
 
     private void registerLorenzoIlMagnificoVC(){
         VirtualClient lorenzoIlMagnificoVC = new VirtualClient(GameMaster.getNameLorenzo(), match);
+        gameMaster.attachLorenzoIlMagnificoVC(lorenzoIlMagnificoVC);
+    }
 
-        //faith track observer
-        gameMaster.getPlayerPersonalBoard(GameMaster.getNameLorenzo())
-                .getFaithTrack().attachObserver(lorenzoIlMagnificoVC);
+    //UTIL GETTER
+
+    private PersonalBoard getPlayerPB() {
+        return gameMaster.getCurrentPlayerPersonalBoard();
+    }
+    private CardManager getPlayerCM() {
+        return getPlayerPB().getCardManager();
+    }
+    private ResourceManager getPlayerRM() {
+        return getPlayerPB().getResourceManager();
+    }
+    private Market getMarket(){
+        return gameMaster.getMarket();
+    }
+
+    public boolean isYourTurn(String username){
+        if(!username.equals(getCurrentPlayer())){
+            sendErrorTo(ErrorType.NOT_YOUR_TURN.getMessage(), username);
+            return false;
+        }
+        return true;
     }
 
 
@@ -105,16 +101,20 @@ public class Controller {
 
     public void nextTurn() {
         do {
-            gameMaster.nextPlayer();
+            try {
+                gameMaster.nextPlayer();
+            }catch (InvalidStateActionException e){
+                sendError(e.getMessage());
+            }
         }while(match.isInactive(gameMaster.getCurrentPlayer()));
 
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        personalBoard.getResourceManager().restoreRM();
-        personalBoard.getCardManager().restoreCM();
+        getPlayerRM().restoreRM();
+        getPlayerCM().restoreCM();
 
-        if (match.isReconnected(gameMaster.getCurrentPlayer())){
-            match.playerReturnInGame(gameMaster.getCurrentPlayer());
-            match.sendSinglePlayer(gameMaster.getCurrentPlayer(), reconnectGameMessage());
+        String currentPlayer = gameMaster.getCurrentPlayer();
+        if (match.isReconnected(currentPlayer)){
+            match.playerReturnInGame(currentPlayer);
+            match.sendSinglePlayer(currentPlayer, reconnectGameMessage());
         }
 
         if(gameMaster.isGameEnded()){
@@ -141,36 +141,17 @@ public class Controller {
     }
 
     private ModelData modelData(String username){
-        PersonalBoard playerPB = gameMaster.getPlayerPersonalBoard(username);
-        ArrayList<FaithTrackData> playerFaithTrack = playerPB.getFaithTrack().toFaithTrackData();
-        int playerCurrentPos = playerPB.getFaithTrack().getCurrentPositionOnTrack();
-        ArrayList<ResourceData> standardDepots = playerPB.getResourceManager().getWarehouse().toStandardDepotData();
-        ArrayList<ResourceData> leaderDepots = playerPB.getResourceManager().getWarehouse().toLeaderDepotData();
-        ArrayList<Integer> maxStorageLeaderDepots = playerPB.getResourceManager().getWarehouse().toLeaderDepotMax();
-        ArrayList<ResourceData> strongbox = playerPB.getResourceManager().getStrongbox().toStrongboxData();
-        ArrayList<ArrayList<CardDevData>> cardSlots = playerPB.getCardManager().toCardSlotsData();
-        ArrayList<CardLeaderData> leadersData = playerPB.getCardManager().toLeadersData();
-
-        if (!username.equals(gameMaster.getCurrentPlayer()))
-            leadersData = leadersData.stream().filter(CardLeaderData::isActive).collect(Collectors.toCollection(ArrayList::new));
-
-        return new ModelData(username,playerFaithTrack,playerCurrentPos,standardDepots,leaderDepots,maxStorageLeaderDepots,strongbox,cardSlots,leadersData);
+        return gameMaster.getPlayerModelData(username);
     }
 
-
-
     //LEADER MANAGING
-
     public void leaderManage(int leaderIndex, boolean discard){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        CardManager cardManager = personalBoard.getCardManager();
-        ResourceManager resourceManager = personalBoard.getResourceManager();
         try{
             if(discard){
-                cardManager.discardLeader(leaderIndex);
+                getPlayerCM().discardLeader(leaderIndex);
             }else{
-                cardManager.activateLeader(leaderIndex);
-                resourceManager.restoreRM();
+                getPlayerCM().activateLeader(leaderIndex);
+                getPlayerRM().restoreRM();
             }
         }catch (Exception e){
             sendError(e.getMessage());
@@ -181,14 +162,15 @@ public class Controller {
     //MARKET ACTION
 
     public void marketAction(int selection, boolean isRow){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        Market market = gameMaster.getMarket();
-        CardManager cardManager = personalBoard.getCardManager();
+        Market market = getMarket();
+        CardManager cardManager = getPlayerCM();
+        ResourceManager resourceManager = getPlayerRM();
         try{
-            if (isRow)
+            if (isRow){
                 market.insertMarbleInRow(selection);
-            else
+            }else{
                 market.insertMarbleInCol(selection);
+            }
         }catch (Exception e){
             sendError(e.getMessage());
             return;
@@ -198,95 +180,76 @@ public class Controller {
         int whiteMarbleDrew = market.getWhiteMarbleDrew();
 
         if (!(numOfMarbleEffects >= 2 && whiteMarbleDrew > 0)){
-
             if (numOfMarbleEffects == 1 && whiteMarbleDrew > 0){
-                market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
-                cardManager.getLeaders().stream()
-                        .filter(Leader::isActive)
-                        .forEach(x -> {
-                            try {
-                                x.doEffects(PlayerState.WHITE_MARBLE_CONVERSION);
-                            } catch (Exception ignored) {}
-                        });
+                try{
+                    market.setWhiteMarbleToTransform(market.getWhiteMarbleDrew());
+                    cardManager.getLeaders().stream()
+                            .filter(Leader::isActive)
+                            .forEach(x -> {
+                                try {
+                                    x.doEffects(getPlayerState());
+                                } catch (Exception ignored) {}
+                            });
+                }catch (InvalidStateActionException e){
+                    sendError(e.getMessage());
+                }
             }
-
-            ResourceManager resourceManager = personalBoard.getResourceManager();
             resourceManager.resourceFromMarket(market.getResourceToSend());
             market.reset();
         }else{
             match.sendSinglePlayer(getCurrentPlayer(),
                     new WhiteMarbleConversionRequest(whiteMarbleDrew, cardManager.listOfMarbleEffect()));
-
         }
-
-
     }
 
 
     public void leaderWhiteMarbleConversion(int leaderIndex, int numOfWhiteMarble){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        CardManager cardManager = personalBoard.getCardManager();
-        int numOfMarbleEffects = cardManager.howManyMarbleEffects();
-        if(numOfMarbleEffects <= 0){
+        CardManager cardManager = getPlayerCM();
+        Market market = getMarket();
+        if(cardManager.howManyMarbleEffects() <= 0){
             sendError("You don't have leader with marble effects");
             return;
         }
-        Market market = gameMaster.getMarket();
-        market.setWhiteMarbleToTransform(numOfWhiteMarble);
 
         try{
+            market.setWhiteMarbleToTransform(numOfWhiteMarble);
             cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
+
+            if(market.getWhiteMarbleDrew() == 0){
+                getPlayerRM().resourceFromMarket(market.getResourceToSend());
+                market.reset();
+            }
         }catch (Exception e){
             sendError(e.getMessage());
-            return;
         }
 
-        if(market.getWhiteMarbleDrew() == 0){
-            ResourceManager resourceManager = personalBoard.getResourceManager();
-            resourceManager.resourceFromMarket(market.getResourceToSend());
-            market.reset();
-        }
+
     }
 
     public void clearBufferFromMarket(){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
-        resourceManager.discardResourcesFromMarket();
-        controlBufferStatus();
+        try {
+            getPlayerRM().discardResourcesFromMarket();
+            controlBufferStatus();
+        }catch (InvalidStateActionException e){
+            sendError(e.getMessage());
+        }
     }
-
-
 
 
 
     //BUY DEVELOPMENT CARD
     public void developmentAction(int row, int col, int locateSlot){
         Development card;
-        try{
-            card = gameMaster.getDeckDevelopmentCard(row, col);
-        }catch (Exception e){
-            sendError(e.getMessage());
-            return;
-        }
-
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        CardManager cardManager = personalBoard.getCardManager();
+        CardManager cardManager = getPlayerCM();
         try {
+            card = gameMaster.getDeckDevelopmentCard(row, col);
             cardManager.addDevCardTo(card, locateSlot);
             cardManager.setDeckBufferInfo(row, col);
+            card.checkRequirements();
         } catch (Exception e) {
             sendError(e.getMessage());
             return;
         }
-
-        try{
-            card.checkRequirements();
-        }catch (Exception e){
-            sendError(e.getMessage());
-            return;
-        }
-
-
-        //control in case you can buy instantly the card without paying (buffer is empty)
         controlBufferStatus();
     }
 
@@ -294,20 +257,16 @@ public class Controller {
     //PRODUCTION ACTION
 
     public void normalProductionAction(int cardSlot){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
         try {
-            cardManager.developmentProduce(cardSlot);
-
+            getPlayerCM().developmentProduce(cardSlot);
         } catch (Exception e) {
             sendError(e.getMessage());
         }
     }
 
     public void baseProduction(){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
         try {
-            cardManager.baseProductionProduce();
-
+            getPlayerCM().baseProductionProduce();
         } catch (Exception e) {
             sendError(e.getMessage());
         }
@@ -315,82 +274,74 @@ public class Controller {
 
 
     public void leaderProductionAction(int leaderIndex){
-        CardManager cardManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getCardManager();
-        int numOfProductionEffects = cardManager.howManyProductionEffects();
-        if (numOfProductionEffects <= 0){
+        CardManager cardManager = getPlayerCM();
+        if (cardManager.howManyProductionEffects() <= 0){
             sendError("You don't have leader with production effect");
-            return;
+        }else{
+            try {
+                cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
+            } catch (Exception e) {
+                sendError(e.getMessage());
+            }
         }
-        try {
-            cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
-        } catch (Exception e) {
-            sendError(e.getMessage());
-        }
-
-
     }
 
 
     public void stopProductionCardSelection(){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
-        resourceManager.sendBufferUpdate();
-        changeTurnState(PlayerState.PRODUCTION_RESOURCE_REMOVING);
-
+        try {
+            getPlayerRM().stopProduction();
+        } catch (InvalidStateActionException e) {
+            sendError(e.getMessage());
+        }
     }
 
     //ANY
-
-    public void anyRequirementResponse(ArrayList<Resource> resources, boolean isFromBuyDevelopment){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
+    public void anyConversion(ArrayList<Resource> resources){
+        PlayerState state = getPlayerState();
         try {
-            personalBoard.getResourceManager().convertAnyRequirement(resources, isFromBuyDevelopment);
-        } catch (Exception e) {
-            sendError(e.getMessage());
-        }
-
-    }
-
-    public void anyProductionProfitResponse(ArrayList<Resource> resources){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        try {
-            personalBoard.getResourceManager().convertAnyProductionProfit(resources);
-        } catch (Exception e) {
+            if (state == PlayerState.ANY_PRODUCE_COST_CONVERSION){
+                getPlayerRM().convertAnyRequirement(resources, false);
+            }else if (state == PlayerState.ANY_PRODUCE_PROFIT_CONVERSION){
+                getPlayerRM().convertAnyProductionProfit(resources);
+            }else if(state == PlayerState.ANY_BUY_DEV_CONVERSION){
+                getPlayerRM().convertAnyRequirement(resources, true);
+            }else{
+                sendError(ErrorType.INVALID_ACTION.getMessage());
+            }
+        }catch (Exception e){
             sendError(e.getMessage());
         }
     }
 
 
     //WAREHOUSE
-
     private void controlBufferStatus(){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(getCurrentPlayer());
-        ResourceManager resourceManager = personalBoard.getResourceManager();
-        CardManager cardManager = personalBoard.getCardManager();
-
-        if (resourceManager.getBufferSize() != 0) return;
-
-        switch (getPlayerState()){
-            case MARKET_RESOURCE_POSITIONING:
-                resourceManager.applyFaithPoints();
-                break;
-            case BUY_DEV_RESOURCE_REMOVING:
-                cardManager.emptyCardSlotBuffer();
-                break;
-            case PRODUCTION_RESOURCE_REMOVING:
-                resourceManager.doProduction();
-                resourceManager.applyFaithPoints();
-                cardManager.restoreCM();
-                break;
-
+        ResourceManager resourceManager = getPlayerRM();
+        if(resourceManager.getBufferSize() == 0){
+            switch (getPlayerState()){
+                case MARKET_RESOURCE_POSITIONING:
+                    resourceManager.applyFaithPoints();
+                    break;
+                case BUY_DEV_RESOURCE_REMOVING:
+                    getPlayerCM().emptyCardSlotBuffer();
+                    break;
+                case PRODUCTION_RESOURCE_REMOVING:
+                    resourceManager.doProduction();
+                    resourceManager.applyFaithPoints();
+                    getPlayerCM().restoreCM();
+                    break;
+                default:
+                    return;
+            }
+            resourceManager.restoreRM();
+            gameMaster.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         }
-        resourceManager.restoreRM();
-        changeTurnState(PlayerState.LEADER_MANAGE_AFTER);
     }
 
 
 
     public void subToStrongbox(Resource resource){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+        ResourceManager resourceManager = getPlayerRM();
         try {
             resourceManager.subToBuffer(resource);
         } catch (Exception e) {
@@ -406,46 +357,38 @@ public class Controller {
         controlBufferStatus();
     }
 
-    public void addToWarehouse(Resource resource, int index, boolean isNormalDepot) {
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
+    public void depotModify(Resource resource, int index, boolean isNormalDepot){
+        ResourceManager resourceManager = getPlayerRM();
         try {
             resourceManager.subToBuffer(resource);
         } catch (Exception e) {
             sendError(e.getMessage());
             return;
         }
-        try {
-            resourceManager.addToWarehouse(isNormalDepot, index, resource);
-        } catch (Exception e) {
+        try{
+            switch (getPlayerState()){
+                case MARKET_RESOURCE_POSITIONING:
+                    resourceManager.addToWarehouse(isNormalDepot, index, resource);
+                    break;
+                case BUY_DEV_RESOURCE_REMOVING:
+                case PRODUCTION_RESOURCE_REMOVING:
+                    resourceManager.subToWarehouse(isNormalDepot, index, resource);
+                    break;
+                default:
+                    sendError(ErrorType.INVALID_ACTION.getMessage());
+                    break;
+            }
+        }catch (Exception e){
             resourceManager.addToBuffer(resource);
             sendError(e.getMessage());
         }
         controlBufferStatus();
-    }
-
-    public void subToWarehouse(Resource resource, int index, boolean isNormalDepot){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
-        try {
-            resourceManager.subToBuffer(resource);
-        } catch (Exception e) {
-            sendError(e.getMessage());
-            return;
-        }
-        try {
-            resourceManager.subToWarehouse(isNormalDepot, index, resource);
-        } catch (Exception e) {
-            resourceManager.addToBuffer(resource);
-            sendError(e.getMessage());
-        }
-        controlBufferStatus();
-
     }
 
 
     public void switchDepots(int from, boolean isFromLeaderDepot, int to, boolean isToLeaderDepot){
-        ResourceManager resourceManager = gameMaster.getPlayerPersonalBoard(getCurrentPlayer()).getResourceManager();
         try {
-            resourceManager.switchResourceFromDepotToDepot(from, isFromLeaderDepot, to, isToLeaderDepot);
+            getPlayerRM().switchResourceFromDepotToDepot(from, isFromLeaderDepot, to, isToLeaderDepot);
         } catch (Exception e) {
             sendError(e.getMessage());
         }
@@ -455,8 +398,7 @@ public class Controller {
     //SETUP
 
     private boolean hasFinishedLeaderSetUp(String username){
-        PersonalBoard personalBoard = gameMaster.getPlayerPersonalBoard(username);
-        CardManager cardManager = personalBoard.getCardManager();
+        CardManager cardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         return cardManager.getLeaders().size() == 2;
     }
 
@@ -498,7 +440,6 @@ public class Controller {
 
     }
 
-    //TODO ask: should only be active players due to disconnections?
     private boolean isFinishedSetup(){
         for(VirtualClient player : match.getAllPlayers()){
             if(player.getClient().getState()!=HandlerState.WAITING_TO_BE_IN_MATCH)
