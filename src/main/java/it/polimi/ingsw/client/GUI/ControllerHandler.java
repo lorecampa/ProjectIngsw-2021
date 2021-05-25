@@ -4,6 +4,7 @@ package it.polimi.ingsw.client.GUI;
 public class ControllerHandler {
     private PrimaryController primaryController;
     private SecondaryController secondaryController;
+    private MarketController marketController;
 
 
     private static ControllerHandler instance = null;
@@ -28,5 +29,13 @@ public class ControllerHandler {
 
     public void setSecondaryController(SecondaryController secondaryController) {
         this.secondaryController = secondaryController;
+    }
+
+    public MarketController getMarketController() {
+        return marketController;
+    }
+
+    public void setMarketController(MarketController marketController) {
+        this.marketController = marketController;
     }
 }

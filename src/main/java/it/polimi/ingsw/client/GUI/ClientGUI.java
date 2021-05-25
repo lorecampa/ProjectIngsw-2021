@@ -24,15 +24,18 @@ public class ClientGUI extends Application {
         this.stage = stage;
         setUpController();
 
-        //scene = new Scene(loadFXML("primary"), 640, 480);
-        //stage.setScene(scene);
         controllerHandler.getPrimaryController().activate();
+
+        //TODO JUST FOR DEBUG
+        //controllerHandler.getMarketController().setUpMarket();
+        //controllerHandler.getMarketController().activate();
         stage.show();
     }
 
     private void setUpController() throws IOException {
         primarySetUp();
         secondarySetUp();
+        marketSetUp();
     }
 
     private URL getResources(String fxml){
@@ -54,6 +57,14 @@ public class ClientGUI extends Application {
         SecondaryController controller = loader.getController(); //Get graphics controller
         controller.setUp(root, stage); //Add root to controller
         controllerHandler.setSecondaryController(controller);
+    }
+
+    private void marketSetUp() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getResources("market"));
+        Parent root = loader.load(); //Get graphics root
+        MarketController controller = loader.getController(); //Get graphics controller
+        controller.setUp(root, stage); //Add root to controller
+        controllerHandler.setMarketController(controller);
     }
     /*
     private Parent loadFXML(String fxml) throws IOException {

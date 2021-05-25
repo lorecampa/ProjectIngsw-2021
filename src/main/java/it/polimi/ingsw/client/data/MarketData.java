@@ -34,6 +34,14 @@ public class MarketData {
         return col >= 0 && col < numCol;
     }
 
+    public ArrayList<ArrayList<ColorData>> getMarketTray() {
+        return marketTray;
+    }
+
+    public ColorData getExtraMarble() {
+        return extraMarble;
+    }
+
     private void printTitle(int width) {
         String titleDeckDev = PrintAssistant.instance.stringBetweenChar("Market", ' ', width, ' ', ' ');
         PrintAssistant.instance.printf(titleDeckDev, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
