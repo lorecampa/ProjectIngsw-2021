@@ -123,9 +123,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public void nextPlayer() throws InvalidStateActionException {
         //TODO change to LEADER_MANAGE_AFTER and handle next turn during player disconnection in a different state
-        if(currentPlayer != null && !isPlayerInState(PlayerState.LEADER_MANAGE_BEFORE)) {
+        //TODO uncheck comments
+        /*
+
+        if(currentPlayer != null && !isPlayerInState(PlayerState.LEADER_MANAGE_AFTER)) {
             throw new InvalidStateActionException();
         }
+
+         */
 
         if (currentPlayer == null || numberOfPlayer == 1) {
             if(currentPlayer!= null){

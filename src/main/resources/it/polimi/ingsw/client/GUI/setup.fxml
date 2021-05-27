@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="393.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.SetupController">
+   <children>
+      <AnchorPane layoutX="4.0" prefHeight="402.0" prefWidth="602.0">
+         <children>
+            <TextField layoutX="301.0" layoutY="188.0" />
+            <TextField layoutX="301.0" layoutY="247.0" />
+            <Label layoutX="129.0" layoutY="193.0" text="Number of players" />
+            <Label layoutX="151.0" layoutY="252.0" text="Username" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

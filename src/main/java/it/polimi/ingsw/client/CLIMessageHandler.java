@@ -8,12 +8,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class CLIMessageHandler extends ClientMessageHandler {
-    private final Client client;
+    private final Client client = Client.getInstance();
 
-    public CLIMessageHandler(Client client) {
-        super(client);
-        this.client = client;
-    }
 
     @Override
     public void handleError(ErrorMessage message) {

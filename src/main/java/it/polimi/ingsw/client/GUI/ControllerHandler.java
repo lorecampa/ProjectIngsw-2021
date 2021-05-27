@@ -1,41 +1,27 @@
 package it.polimi.ingsw.client.GUI;
 
+import it.polimi.ingsw.client.GUI.controller.Controller;
+import java.util.HashMap;
 
 public class ControllerHandler {
-    private PrimaryController primaryController;
-    private SecondaryController secondaryController;
-    private MarketController marketController;
-
-
-    private static ControllerHandler instance = null;
-    private ControllerHandler() { }
+    HashMap<Views, Controller> controllers = new HashMap<>();
+    private static ControllerHandler instance = new ControllerHandler();
 
     public static ControllerHandler getInstance(){
-        if (instance == null) instance = new ControllerHandler();
         return instance;
     }
 
-    public PrimaryController getPrimaryController() {
-        return primaryController;
+
+    public Controller getController(Views view){
+        return controllers.get(view);
     }
 
-    public void setPrimaryController(PrimaryController primaryController) {
-        this.primaryController = primaryController;
+    public void changeStage(Views view){
+        controllers.get(view).activate();
     }
 
-    public SecondaryController getSecondaryController() {
-        return secondaryController;
+    public void addController(Views view, Controller controller){
+        controllers.put(view, controller);
     }
 
-    public void setSecondaryController(SecondaryController secondaryController) {
-        this.secondaryController = secondaryController;
-    }
-
-    public MarketController getMarketController() {
-        return marketController;
-    }
-
-    public void setMarketController(MarketController marketController) {
-        this.marketController = marketController;
-    }
 }

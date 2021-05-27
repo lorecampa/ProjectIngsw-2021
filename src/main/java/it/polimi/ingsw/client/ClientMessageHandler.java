@@ -14,11 +14,7 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class ClientMessageHandler {
-    private final Client client;
-    public ClientMessageHandler(Client client) {
-        this.client = client;
-    }
-
+    private final Client client = Client.getInstance();
 
 
     public void handlePingPong(){

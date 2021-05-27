@@ -13,7 +13,7 @@ import java.util.Map;
 public class ClientInput implements Runnable{
     public static final int MAX_CHAR_COMMAND=15;
     public static final String ERROR_MSG ="The command you write doesn't exist! Type help to get the list of commands!";
-    private final Client client;
+    private final Client client = Client.getInstance();
     private final BufferedReader stdIn;
 
     private final static Map<String, Class<? extends Command>> commands = new HashMap<>() {
@@ -35,8 +35,7 @@ public class ClientInput implements Runnable{
         }
     };
 
-    public ClientInput(Client client) {
-        this.client = client;
+    public ClientInput() {
         this.stdIn = new BufferedReader(new InputStreamReader(System.in));
     }
 

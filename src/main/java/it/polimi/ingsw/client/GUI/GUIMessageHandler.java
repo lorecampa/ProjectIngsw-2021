@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.GUI;
 
+import it.polimi.ingsw.client.CLIMessageHandler;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
@@ -8,10 +9,10 @@ import it.polimi.ingsw.message.clientMessage.*;
 import javafx.application.Platform;
 
 public class GUIMessageHandler extends ClientMessageHandler {
+    private final Client client = Client.getInstance();
+    private final ControllerHandler controllerHandler = ControllerHandler.getInstance();
 
-    public GUIMessageHandler(Client client) {
-        super(client);
-    }
+
 
     @Override
     public void handleError(ErrorMessage message) {

@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.GUI.ClientGUI;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.GUIMessageHandler;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
@@ -21,26 +22,25 @@ public class Client{
     private String ipHost;
     private int portNumber;
     private Socket clientSocket;
+
     private PrintWriter out;
     private BufferedReader in ;
     private ClientMessageHandler clientMessageHandler;
     private final ObjectMapper mapper = new ObjectMapper();
-
     private final Object streamLock = new Object();
-
     private ClientState state;
-    private static Client instance;
-
+    private static Client clientInstance = new Client();
     private String nameFile;
     private String myName;
     private final ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
-    private static String[] args;
-    private final String CLIParam = "-cli";
-    private final String GUIParam = "-gui";
+    private static final String CLIParam = "-cli";
+    private static final String GUIParam = "-gui";
 
-    private void setUp(String[] args){
+
+
+    private void setUpClient(String[] args) throws IOException {
         if (args.length == 3) {
             try{
                 ipHost = args[1];
@@ -63,26 +63,36 @@ public class Client{
             ipHost="127.0.0.1";
             portNumber=3030;
         }
+
+        try {
+            clientSocket = new Socket(ipHost, portNumber);
+            //clientSocket.setSoTimeout(20000);
+        } catch (IOException e) {
+            //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
+        }
+        state = ClientState.MAIN_MENU;
+        nameFile="MasterOfRenaissance_dataLastGame.txt";
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
     public static Client getInstance(){
-        if (instance == null) instance = new Client();
-        return instance;
+        return clientInstance;
     }
 
 
+
     public static void main(String[] args){
-        Client client = getInstance();
-        client.setUp(args);
         try{
+            clientInstance.setUpClient(args);
             if (args.length == 0 || args.length == 2){
-                client.startClientCLI();
+                clientInstance.startCLI();
                 System.out.println("Client Started!");
-                client.messageToMainMenu();
+                clientInstance.messageToMainMenu();
             }
-            else if (args[0].equals(client.GUIParam)) {
-                client.startClientGUI();
-                new Thread(()->ClientGUI.main(args)).start();
+            else if (args[0].equals(Client.GUIParam)) {
+                new Thread(() -> ClientGUI.main(args)).start();
+                clientInstance.startGUI();
             }
             else{
                 System.out.println("Invalid param to start client!");
@@ -94,41 +104,27 @@ public class Client{
             System.exit(0);
         }
 
-        while(client.state!=ClientState.QUIT){
-            client.readFromStream();
+    }
+
+
+    public void startCLI(){
+        clientMessageHandler = new CLIMessageHandler();
+        new Thread(new ClientInput()).start();
+        startListening();
+    }
+
+    public void startGUI(){
+        clientMessageHandler = new GUIMessageHandler();
+        startListening();
+    }
+
+
+    private void startListening() {
+        while(state!=ClientState.QUIT){
+            readFromStream();
         }
         System.exit(0);
     }
-
-    private void startClientCLI() throws IOException {
-        try {
-            clientSocket = new Socket(ipHost, portNumber);
-            //clientSocket.setSoTimeout(20000);
-        } catch (IOException e) {
-            //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
-        }
-        state = ClientState.MAIN_MENU;
-        clientMessageHandler = new CLIMessageHandler(getInstance());
-        new Thread(new ClientInput(this)).start();
-        nameFile="MasterOfRenaissance_dataLastGame.txt";
-        out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
-    }
-
-    private void startClientGUI() throws IOException {
-        try {
-            clientSocket = new Socket(ipHost, portNumber);
-            //clientSocket.setSoTimeout(20000);
-        } catch (IOException e) {
-            //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
-        }
-        state=ClientState.MAIN_MENU;
-        clientMessageHandler = new GUIMessageHandler(getInstance());
-        nameFile="MasterOfRenaissance_dataLastGame.txt";
-        out = new PrintWriter(clientSocket.getOutputStream(), true);                //i messaggi che mandi al server
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));      //i messaggi che vengono dal server
-    }
-
 
 
     public void writeToStream(ServerMessage message){

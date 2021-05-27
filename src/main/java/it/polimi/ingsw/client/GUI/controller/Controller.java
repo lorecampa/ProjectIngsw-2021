@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.GUI;
+package it.polimi.ingsw.client.GUI.controller;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,12 +9,14 @@ public abstract class Controller {
     private Stage stage;
     private Scene scene;
 
-    public void setUp(@NotNull Parent root,@NotNull Stage stage){
+    public void setUp(@NotNull Scene scene,@NotNull Stage stage){
         this.stage = stage;
-        this.scene = new Scene(root); //Just create a new scene with predefined size
+        this.scene = scene; //Just create a new scene with predefined size
     }
 
     public void activate(){
         stage.setScene(scene);
+        //handle resize
+
     }
 }

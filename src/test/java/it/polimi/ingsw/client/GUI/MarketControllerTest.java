@@ -19,11 +19,11 @@ class MarketControllerTest {
 
         Client.getInstance();
         Client.getInstance().setMarketData(marketData);
-        ClientGUI.main(new String[0]);
+        ClientGUI.main(null);
     }
 
     @Test
     void testMarket() {
-        ClientGUI.main(new String[0]);
+        ClientGUI.main(null);
     }
 }
