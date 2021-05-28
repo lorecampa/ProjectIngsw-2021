@@ -9,15 +9,11 @@ public class ModelData {
     private final String username;
     private final ArrayList<FaithTrackData> faithTrack;
     private final int currentPosOnFaithTrack;
-
     private final ArrayList<ResourceData> standardDepot;
     private final ArrayList<ResourceData> leaderDepot;
     private final ArrayList<Integer> maxStoreLeaderDepot;
-
     private final ArrayList<ResourceData> strongbox;
-
     private final ArrayList<ArrayList<CardDevData>> cardSlots;
-
     private final ArrayList<CardLeaderData> leaders;
 
     @JsonCreator

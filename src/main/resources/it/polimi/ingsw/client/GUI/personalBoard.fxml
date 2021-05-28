@@ -123,17 +123,17 @@
                <children>
                   <ImageView fx:id="card11" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card12" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card13" fitHeight="265.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                </children>
@@ -142,17 +142,17 @@
                <children>
                   <ImageView fx:id="card21" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card22" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card23" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                </children>
@@ -161,17 +161,17 @@
                <children>
                   <ImageView fx:id="card31" fitHeight="265.0" fitWidth="250.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card32" fitHeight="265.0" fitWidth="250.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="card33" fitHeight="265.0" fitWidth="250.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-1-1.png" />
+                        <Image url="@front/1.png" />
                      </image>
                   </ImageView>
                </children>
@@ -461,7 +461,7 @@
          <children>
             <ImageView fx:id="leader1" fitHeight="337.0" fitWidth="288.0" layoutY="-77.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@front/Masters_of_Renaissance_Cards_FRONT_3mmBleed_1-54-1.png" />
+                  <Image url="@front/54.png" />
                </image>
             </ImageView>
             <ImageView fx:id="le_depot_11" fitHeight="49.0" fitWidth="57.0" layoutX="44.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
@@ -480,7 +480,7 @@
          <children>
             <ImageView fx:id="leader2" fitHeight="337.0" fitWidth="288.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-53-1.png" />
+                  <Image url="@front/53.png" />
                </image>
             </ImageView>
             <ImageView fx:id="le_depot_21" fitHeight="49.0" fitWidth="57.0" layoutX="44.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true">

@@ -2,9 +2,7 @@ package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
-import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.command.NumOfPlayerCMD;
-import it.polimi.ingsw.client.command.QuitCMD;
 import it.polimi.ingsw.client.command.UsernameCMD;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

@@ -24,9 +24,7 @@ public class ClientGUI extends Application {
         this.stage = stage;
 
         setUpControllers();
-        PersonalBoardController personalBoardController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-        personalBoardController.setUpAll();
-        controllerHandler.getController(Views.PERSONAL_BOARD).activate();
+        controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
     }
 

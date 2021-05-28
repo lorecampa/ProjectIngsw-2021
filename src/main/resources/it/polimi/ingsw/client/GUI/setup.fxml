@@ -24,7 +24,6 @@
             <AnchorPane layoutX="136.0" layoutY="301.0" prefHeight="59.0" prefWidth="331.0">
                <children>
                   <Button fx:id="playButton" layoutX="210.0" layoutY="1.0" mnemonicParsing="false" onAction="#sendData" text="Next" />
-                  <Button fx:id="exitButton" layoutX="14.0" layoutY="1.0" mnemonicParsing="false" onAction="#goBack" text="Go to Home Page" />
                </children>
             </AnchorPane>
             <Label fx:id="customMessage" layoutX="253.0" layoutY="84.0" text="Custom Message" visible="false" />
