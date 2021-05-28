@@ -38,11 +38,9 @@ public class ClientGUI extends Application {
         }
     }
 
-
     private URL getResources(String fxml){
         return getClass().getResource(fxml + ".fxml");
     }
-
 
     public static void main(String[] args){
         launch(args);

@@ -22,6 +22,11 @@ public class ControllerHandler {
         currentView = view;
     }
 
+    public void addNewView(Views view){
+        controllers.get(view).activateOnNew(view);
+        currentView = view;
+    }
+
     public void addController(Views view, Controller controller){
         controllers.put(view, controller);
     }

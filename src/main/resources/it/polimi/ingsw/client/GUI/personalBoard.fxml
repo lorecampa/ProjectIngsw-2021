@@ -182,7 +182,7 @@
          <children>
             <Button fx:id="btn_back" mnemonicParsing="false" prefHeight="135.0" prefWidth="135.0" text="BACK" />
             <Region prefHeight="135.0" prefWidth="20.0" />
-            <Button fx:id="btn_market" mnemonicParsing="false" prefHeight="135.0" prefWidth="135.0" text="MARKET" />
+            <Button fx:id="btn_market" mnemonicParsing="false" onAction="#marketButton" prefHeight="135.0" prefWidth="135.0" text="MARKET" />
             <Region prefHeight="135.0" prefWidth="20.0" />
             <Button fx:id="btn_prod" mnemonicParsing="false" prefHeight="135.0" prefWidth="135.0" text="PRODUCTION" />
             <Region prefHeight="135.0" prefWidth="20.0" />

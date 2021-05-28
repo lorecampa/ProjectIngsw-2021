@@ -4,34 +4,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CardDevData {
+    private int id;
     private final int level;
     private int victoryPoints;
     private final ColorData color;
     private ArrayList<ResourceData> resourceReq;
-
     private ArrayList<EffectData> effects;
 
-
-
-    public CardDevData(@JsonProperty("level")int level,
-                       @JsonProperty("victoryPoints")int victoryPoints,
-                       @JsonProperty("color")ColorData color,
-                       @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq) {
-        this.level = level;
-        this.victoryPoints = victoryPoints;
-        this.color = color;
-        this.resourceReq = resourceReq;
-    }
-
-    @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
-    public CardDevData(@JsonProperty("level")int level,
+    @JsonCreator
+    public CardDevData(@JsonProperty("id")int id,
+                       @JsonProperty("level")int level,
                        @JsonProperty("victoryPoints")int victoryPoints,
                        @JsonProperty("color")ColorData color,
                        @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
                        @JsonProperty("effects")ArrayList<EffectData> effects){
+        this.id = id;
         this.level = level;
         this.victoryPoints = victoryPoints;
         this.color = color;
@@ -44,6 +35,10 @@ public class CardDevData {
         this.color=color;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public int getLevel() {
         return level;
     }
@@ -54,6 +49,13 @@ public class CardDevData {
 
     public ColorData getColor() {
         return color;
+    }
+
+    public String toResourcePath(){
+        URL url = null;
+        url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/"+id+".png");
+        assert url != null;
+        return url.toString();
     }
 
     public String colorToColor(){

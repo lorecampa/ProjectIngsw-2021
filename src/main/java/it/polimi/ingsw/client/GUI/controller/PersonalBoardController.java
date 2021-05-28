@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
+import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.fxml.FXML;
@@ -176,8 +178,7 @@ public class PersonalBoardController extends Controller{
         popeFavorsAcquired.forEach(image -> image.setVisible(false));
     }
 
-    public void setUpAll(){
-        ModelData model = Client.getInstance().getMyModel().toModelData();
+    private void loadFaithTrack(ModelData model){
         //FAITH TRACK
         ArrayList<FaithTrackData> faithTrackData = model.getFaithTrack();
         track.get(model.getCurrentPosOnFaithTrack()).setVisible(true);
@@ -188,7 +189,9 @@ public class PersonalBoardController extends Controller{
                 popeFavorsDiscard.get(i).setVisible(false);
             }
         }
+    }
 
+    private void loadDepots(ModelData model){
         //DEPOTS
         ArrayList<ResourceData> standardDepots = model.getStandardDepot();
         for (int i = 0; i < standardDepots.size(); i++) {
@@ -197,21 +200,9 @@ public class PersonalBoardController extends Controller{
                 depots.get(i).get(j).setVisible(true);
             }
         }
-
-        //LEADERS
-        ArrayList<CardLeaderData> leadersData = model.getLeaders();
-        for (int i = 0; i < leadersData.size() && i<2; i++) {
-            if (leadersData.get(i).isActive()) {
-                //TODO leader id
-                //leaders.get(i).setImage();
-            }else {
-                //TODO immagine bianco nero per inactive
-                //leaders.get(i).setImage();
-            }
-        }
-
         //LEADER DEPOTS
         ArrayList<ResourceData> le_depots = model.getLeaderDepot();
+        ArrayList<CardLeaderData> leadersData = model.getLeaders();
         switch (le_depots.size()){
             case 1:
                 boolean isWarehouse = leadersData.get(0).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
@@ -234,22 +225,54 @@ public class PersonalBoardController extends Controller{
                 }
                 break;
         }
+    }
 
+    private void loadLeader(ModelData model){
+        //LEADERS
+        ArrayList<CardLeaderData> leadersData = model.getLeaders();
+        for (int i = 0; i < leadersData.size() && i<2; i++) {
+            if (leadersData.get(i).isActive()) {
+                leaders.get(i).setImage(new Image(leadersData.get(i).toResourcePath()));
+            }else {
+                //TODO immagine bianco nero per inactive
+                //leaders.get(i).setImage();
+            }
+        }
 
+    }
+
+    private void loadStrongBox(ModelData model){
         //STRONGBOX
         ArrayList<ResourceData> strongBoxData = model.getStrongbox();
         for (ResourceData resourceData : strongBoxData){
             strongBox.get(resourceData.getType()).setText(String.valueOf(resourceData.getValue()));
         }
+    }
 
+    private void loadCardSlots(ModelData model){
         //CARD SLOTS
         ArrayList<ArrayList<CardDevData>>cardSlotsData = model.getCardSlots();
         for (int i = 0; i < cardSlotsData.size(); i++) {
             for (int j = 0; j < cardSlotsData.get(i).size(); j++) {
-                //TODO inviare id carta al client
-                //cardSlots.get(i).get(j).setImage(cardSlotsData.get(i).get(j));
+                cardSlots.get(i).get(j).setImage(new Image(cardSlotsData.get(i).get(j).toResourcePath()));
                 cardSlots.get(i).get(j).setVisible(true);
             }
         }
     }
+
+    @Override
+    public void setUpAll(){
+        ModelData model = Client.getInstance().getMyModel().toModelData();
+        loadFaithTrack(model);
+        loadDepots(model);
+        loadLeader(model);
+        loadStrongBox(model);
+        loadCardSlots(model);
+    }
+
+    @FXML
+    public void marketButton(){
+        ControllerHandler.getInstance().addNewView(Views.MARKET);
+    }
+
 }

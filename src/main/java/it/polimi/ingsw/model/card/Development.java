@@ -54,7 +54,7 @@ public class Development extends  Card{
             if (requirement.toResourceData() != null)
                 resReq.addAll(requirement.toResourceData());
         }
-        return new CardDevData(level,getVictoryPoints(),color.toColorData(), resReq, effectToClient());
+        return new CardDevData(getId(),level,getVictoryPoints(),color.toColorData(), resReq, effectToClient());
     }
 
     /**

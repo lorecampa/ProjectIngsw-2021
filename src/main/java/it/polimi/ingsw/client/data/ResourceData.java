@@ -56,6 +56,7 @@ public class ResourceData {
     }
 
     public String toResourceImage() {
+        //TODO json per path
         URL s = null;
         switch (type) {
             case STONE:

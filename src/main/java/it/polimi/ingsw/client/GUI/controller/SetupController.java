@@ -47,6 +47,10 @@ public class SetupController extends Controller{
     }
 
 
+    @Override
+    public void setUpAll() {
+
+    }
     public void showInsertUsername(){
         isNumOfPlayer = false;
         usernameBox.setVisible(true);

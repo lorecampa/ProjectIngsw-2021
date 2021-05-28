@@ -26,7 +26,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->{
             controllerHandler.getCurrentController().showErrorMessage(error);
         });
-
     }
 
     @Override

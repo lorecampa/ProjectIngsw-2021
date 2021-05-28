@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.GameSetting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MarketControllerTest {
@@ -17,7 +19,10 @@ class MarketControllerTest {
     void setUp() {
         assertDoesNotThrow(() -> gameSetting = new GameSetting(1));
         MarketData marketData = gameSetting.getMarket().toMarketData();
-
+        Client.getInstance().setMyName("davide");
+        ArrayList<String> usernames = new ArrayList<>();
+        usernames.add("davide");
+        Client.getInstance().setModels(usernames);
         Client.getInstance().setMarketData(marketData);
     }
 

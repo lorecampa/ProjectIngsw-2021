@@ -59,10 +59,6 @@ public class ModelClient {
             standardDepot.add(new ResourceData(ResourceType.STONE, i+1));
         }
 
-        for(int i=0;i<3;i++){
-            leaderDepot.add(new ResourceData(ResourceType.STONE, i+1));
-        }
-
         for(int i=0; i<25; i++){
             faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: -1), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i,false));
         }
@@ -79,6 +75,7 @@ public class ModelClient {
         ArrayList<ResourceData> cost=new ArrayList<>();
         ArrayList<ResourceData> earn=new ArrayList<>();
         ArrayList<ResourceData> cost1=new ArrayList<>();
+        ArrayList<ResourceData> cost2=new ArrayList<>();
         ArrayList<ResourceData> earn1=new ArrayList<>();
         resourceReq.add(new ResourceData(ResourceType.COIN, 2));
         resourceReq.add(new ResourceData(ResourceType.STONE, 2));
@@ -93,11 +90,13 @@ public class ModelClient {
         cost1.add(new ResourceData(ResourceType.ANY,  1));
         earn1.add(new ResourceData(ResourceType.COIN,  2));
 
+        cost2.add(new ResourceData(ResourceType.COIN,  2));
+
 
         EffectData effData = new EffectData(EffectType.PRODUCTION,"Prod", cost, earn);
         EffectData effData2 = new EffectData(EffectType.DISCOUNT,"Discount", cost, null);
         EffectData effData3 = new EffectData(EffectType.MARBLE,"Market", cost1, earn1);
-        EffectData effData4 = new EffectData(EffectType.WAREHOUSE,"Warehouse", cost1, null);
+        EffectData effData4 = new EffectData(EffectType.WAREHOUSE,"Warehouse", cost2, null);
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
 
@@ -108,8 +107,8 @@ public class ModelClient {
             cardSlots.add(new ArrayList<>());
         }
 
-        CardDevData cdd=new CardDevData(1, 2, ColorData.BLUE, resourceReq, effectsD);
-        CardDevData cdd1=new CardDevData(2, 5, ColorData.PURPLE, resourceReq, effectsD);
+        CardDevData cdd=new CardDevData(0,1, 2, ColorData.BLUE, resourceReq, effectsD);
+        CardDevData cdd1=new CardDevData(0,2, 5, ColorData.PURPLE, resourceReq, effectsD);
         cardSlots.get(0).add(cdd);
         cardSlots.get(0).add(cdd1);
         cardSlots.get(1).add(cdd);
@@ -132,6 +131,8 @@ public class ModelClient {
         leaders.add(cl2);
         //leaders.add(cl);
         //leaders.add(cl);
+
+        leaderDepot.add(new ResourceData(ResourceType.COIN,2));
     }
 
 

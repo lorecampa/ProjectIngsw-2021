@@ -121,7 +121,8 @@ public class MarketController extends Controller{
             Client.getInstance().writeToStream(new MarketAction(3,false));
     }
 
-    public void setUpMarket(){
+    @Override
+    public void setUpAll(){
         MarketData marketData = Client.getInstance().getMarketData();
         marble_ins.setImage(new Image(marketData.getExtraMarble().toMarbleResource()));
         ArrayList<ArrayList<ColorData>> marketTray = marketData.getMarketTray();

@@ -92,6 +92,10 @@ public class PreGameSelectionController extends Controller {
 
     }
 
+    @Override
+    public void setUpAll() {
+
+    }
 
     public void showChooseResourcesBox(){
         box1.setVisible(false);

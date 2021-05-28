@@ -48,6 +48,10 @@ public class MainMenuController extends Controller{
         new QuitCMD(null, client).doCommand();
     }
 
+    @Override
+    public void setUpAll() {
+
+    }
 
     //---------------------
     //EXTERNAL METHODS
