@@ -6,7 +6,8 @@ public enum Views {
     PRE_MATCH("preGameSelection"),
     WAITING("waiting"),
     MARKET("market"),
-    PERSONAL_BOARD("personalBoard");
+    PERSONAL_BOARD("personalBoard"),
+    LEADER("leader");
 
     private final String name;
 

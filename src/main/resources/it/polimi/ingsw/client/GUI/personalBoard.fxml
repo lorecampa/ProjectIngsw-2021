@@ -459,7 +459,7 @@
       </Pane>
       <AnchorPane layoutX="1005.0" layoutY="92.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <ImageView fx:id="leader1" fitHeight="337.0" fitWidth="288.0" layoutY="-77.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="leader1" fitHeight="337.0" fitWidth="288.0" layoutY="-77.0" onMouseClicked="#leaderClicked" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@front/54.png" />
                </image>
@@ -478,7 +478,7 @@
       </AnchorPane>
       <AnchorPane layoutX="1005.0" layoutY="431.0" prefHeight="306.0" prefWidth="224.0">
          <children>
-            <ImageView fx:id="leader2" fitHeight="337.0" fitWidth="288.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="leader2" fitHeight="337.0" fitWidth="288.0" layoutY="-32.0" onMouseClicked="#leaderClicked" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@front/53.png" />
                </image>

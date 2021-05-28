@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.LeaderController">
+   <children>
+      <AnchorPane layoutX="170.0" layoutY="182.0" prefHeight="418.0" prefWidth="345.0" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="90.0">
+         <children>
+            <ImageView fx:id="leader" fitHeight="483.0" fitWidth="332.0" layoutX="1.0" layoutY="-70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@front/62.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <HBox layoutX="2.0" layoutY="512.0" prefHeight="182.0" prefWidth="600.0">
+         <children>
+            <Region prefHeight="200.0" prefWidth="150.0" />
+            <Button fx:id="btn_activate" mnemonicParsing="false" onAction="#leaderActivate" prefHeight="180.0" prefWidth="260.0" text="Activate" />
+            <Region prefHeight="200.0" prefWidth="200.0" />
+            <Button fx:id="btn_discard" mnemonicParsing="false" onAction="#leaderDiscard" prefHeight="180.0" prefWidth="260.0" text="Discard" />
+            <Region prefHeight="200.0" prefWidth="150.0" />
+         </children>
+      </HBox>
+      <Button fx:id="btn_back" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#back" prefHeight="100.0" prefWidth="100.0" text="BACK" />
+   </children>
+</AnchorPane>

@@ -1,13 +1,16 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -109,6 +112,8 @@ public class PersonalBoardController extends Controller{
         leadersDepots.add(le_depot_12);
         leadersDepots.add(le_depot_21);
         leadersDepots.add(le_depot_22);
+
+        leadersDepots.forEach(imageView -> imageView.setVisible(false));
 
     }
 
@@ -226,12 +231,7 @@ public class PersonalBoardController extends Controller{
         //LEADERS
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
         for (int i = 0; i < leadersData.size() && i<2; i++) {
-            if (leadersData.get(i).isActive()) {
-                leaders.get(i).setImage(new Image(leadersData.get(i).toResourcePath()));
-            }else {
-                //TODO immagine bianco nero per inactive
-                //leaders.get(i).setImage();
-            }
+            leaders.get(i).setImage(new Image(leadersData.get(i).toResourcePath()));
         }
 
     }
@@ -267,7 +267,17 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void marketButton(){
-        ControllerHandler.getInstance().addNewView(Views.MARKET);
+        ControllerHandler.getInstance().changeView(Views.MARKET);
+    }
+
+    @FXML
+    public void leaderClicked(MouseEvent event){
+        LeaderController leaderController = (LeaderController) ControllerHandler.getInstance().getController(Views.LEADER);
+        if (event.getSource().equals(leader1))
+            leaderController.setLeaderIndex(0);
+        else
+            leaderController.setLeaderIndex(1);
+        ControllerHandler.getInstance().changeView(Views.LEADER);
     }
 
 }

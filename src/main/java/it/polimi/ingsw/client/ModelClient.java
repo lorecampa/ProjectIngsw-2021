@@ -33,8 +33,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        setUpForDebug();
-        //realSetUp();
+        //setUpForDebug();
+        realSetUp();
     }
 
     private void realSetUp(){
@@ -107,8 +107,8 @@ public class ModelClient {
             cardSlots.add(new ArrayList<>());
         }
 
-        CardDevData cdd=new CardDevData(0,1, 2, ColorData.BLUE, resourceReq, effectsD);
-        CardDevData cdd1=new CardDevData(0,2, 5, ColorData.PURPLE, resourceReq, effectsD);
+        CardDevData cdd=new CardDevData(1,1, 2, ColorData.BLUE, resourceReq, effectsD);
+        CardDevData cdd1=new CardDevData(2,2, 5, ColorData.PURPLE, resourceReq, effectsD);
         cardSlots.get(0).add(cdd);
         cardSlots.get(0).add(cdd1);
         cardSlots.get(1).add(cdd);
@@ -125,8 +125,8 @@ public class ModelClient {
         effectsL2.add(effData4);
 
 
-        CardLeaderData cl=new CardLeaderData(1,4, cardSlots.get(0), cost, effectsL,false);
-        CardLeaderData cl2=new CardLeaderData(2, 4, cardSlots.get(0), cost, effectsL,true);
+        CardLeaderData cl=new CardLeaderData(57,4, cardSlots.get(0), cost, effectsL,false);
+        CardLeaderData cl2=new CardLeaderData(58, 4, cardSlots.get(0), cost, effectsL,true);
         leaders.add(cl);
         leaders.add(cl2);
         //leaders.add(cl);
