@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.EffectType;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
@@ -80,7 +81,7 @@ public class MarbleEffect implements Effect {
         whiteMarble.add(new ResourceData(ResourceType.ANY));
 
         ArrayList<ResourceData> transformInto = transformIn.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
-        return new EffectData(description,whiteMarble,transformInto);
+        return new EffectData(EffectType.MARBLE,description,whiteMarble,transformInto);
     }
 
 

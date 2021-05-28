@@ -29,7 +29,7 @@ public class Client{
     private final ObjectMapper mapper = new ObjectMapper();
     private final Object streamLock = new Object();
     private ClientState state;
-    private static Client clientInstance = new Client();
+    private static final Client clientInstance = new Client();
     private String nameFile;
     private String myName;
     private final ArrayList<ModelClient> models = new ArrayList<>();

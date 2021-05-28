@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.card.Effect.Activation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.EffectType;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.PlayerState;
@@ -84,6 +85,6 @@ public class ProductionEffect implements Effect {
         String description = "Production effect: ";
         ArrayList<ResourceData> productionCost = resourceCost.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<ResourceData> productionEarn = resourceAcquired.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
-        return new EffectData(description,productionCost, productionEarn);
+        return new EffectData(EffectType.PRODUCTION,description,productionCost, productionEarn);
     }
 }

@@ -1,6 +1,7 @@
-package it.polimi.ingsw.client.GUI;
+package it.polimi.ingsw.client.GUI.Controllers;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ClientGUI;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.model.GameSetting;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +18,7 @@ class MarketControllerTest {
         assertDoesNotThrow(() -> gameSetting = new GameSetting(1));
         MarketData marketData = gameSetting.getMarket().toMarketData();
 
-        Client.getInstance();
         Client.getInstance().setMarketData(marketData);
-        ClientGUI.main(null);
     }
 
     @Test

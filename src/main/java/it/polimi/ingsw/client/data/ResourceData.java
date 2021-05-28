@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+import java.net.URL;
+
 public class ResourceData {
     private final ResourceType type;
     private final int value;
@@ -51,5 +53,31 @@ public class ResourceData {
         }
         s+=" "+value+" "+PrintAssistant.ANSI_RESET+" ";
         return s;
+    }
+
+    public String toResourceImage() {
+        URL s = null;
+        switch (type) {
+            case STONE:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/stone.png");
+                break;
+            case COIN:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/coin.png");
+                break;
+            case SHIELD:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/shield.png");
+                break;
+            case SERVANT:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/servant.png");
+                break;
+            case FAITH:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/faith_market.png");
+                break;
+            case ANY:
+                s = this.getClass().getResource("/it/polimi/ingsw/client/GUI/punchboard/any.png");
+                break;
+        }
+        assert s != null;
+        return s.toString();
     }
 }

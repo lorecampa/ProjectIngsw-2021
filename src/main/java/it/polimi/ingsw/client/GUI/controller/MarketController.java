@@ -4,14 +4,10 @@ import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.serverMessage.MarketAction;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -122,11 +118,11 @@ public class MarketController extends Controller{
 
     public void setUpMarket(){
         MarketData marketData = Client.getInstance().getMarketData();
-        marble_ins.setImage(new Image(marketData.getExtraMarble().getMarbleResource()));
+        marble_ins.setImage(new Image(marketData.getExtraMarble().toMarbleResource()));
         ArrayList<ArrayList<ColorData>> marketTray = marketData.getMarketTray();
         for (int i = 0; i < marketTray.size(); i++) {
             for (int j = 0; j < marketTray.get(i).size(); j++) {
-                marbles.get(i).get(j).setImage(new Image(marketTray.get(i).get(j).getMarbleResource()));
+                marbles.get(i).get(j).setImage(new Image(marketTray.get(i).get(j).toMarbleResource()));
             }
         }
     }

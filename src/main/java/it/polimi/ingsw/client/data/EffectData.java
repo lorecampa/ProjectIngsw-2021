@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class EffectData {
+    private final EffectType type;
     private final String descriptions;
     private final ArrayList<ResourceData> resourcesBefore;
     private final ArrayList<ResourceData> resourcesAfter;
 
     @JsonCreator
-    public EffectData(@JsonProperty("descriptions")String descriptions,
+    public EffectData(@JsonProperty("type") EffectType type,
+                      @JsonProperty("descriptions")String descriptions,
                       @JsonProperty("resourcesBefore")ArrayList<ResourceData> resourcesBefore,
                       @JsonProperty("resourcesAfter")ArrayList<ResourceData> resourcesAfter) {
+        this.type = type;
         this.descriptions = descriptions;
         this.resourcesBefore = resourcesBefore;
         this.resourcesAfter = resourcesAfter;
@@ -33,6 +36,10 @@ public class EffectData {
             }
         }
         return row.toString();
+    }
+
+    public EffectType getType() {
+        return type;
     }
 
     public String getDescriptions() {

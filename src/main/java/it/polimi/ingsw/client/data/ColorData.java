@@ -50,7 +50,7 @@ public enum ColorData {
         return s;
     }
 
-    public String getMarbleResource(){
+    public String toMarbleResource(){
         URL s = null;
         switch(this){
             case GRAY:

@@ -33,8 +33,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        //setUpForDebug();
-        realSetUp();
+        setUpForDebug();
+        //realSetUp();
     }
 
     private void realSetUp(){
@@ -54,9 +54,9 @@ public class ModelClient {
     }
 
     private void setUpForDebug(){
-        this.currentPosOnFaithTrack=6;
+        this.currentPosOnFaithTrack=8;
         for(int i=0;i<3;i++){
-            standardDepot.add(new ResourceData(ResourceType.COIN, i+1));
+            standardDepot.add(new ResourceData(ResourceType.STONE, i+1));
         }
 
         for(int i=0;i<3;i++){
@@ -94,9 +94,10 @@ public class ModelClient {
         earn1.add(new ResourceData(ResourceType.COIN,  2));
 
 
-        EffectData effData = new EffectData("Prod", cost, earn);
-        EffectData effData2 = new EffectData("Discount", cost, null);
-        EffectData effData3 = new EffectData("Market", cost1, earn1);
+        EffectData effData = new EffectData(EffectType.PRODUCTION,"Prod", cost, earn);
+        EffectData effData2 = new EffectData(EffectType.DISCOUNT,"Discount", cost, null);
+        EffectData effData3 = new EffectData(EffectType.MARBLE,"Market", cost1, earn1);
+        EffectData effData4 = new EffectData(EffectType.WAREHOUSE,"Warehouse", cost1, null);
         ArrayList<EffectData> effectsD= new ArrayList<>();
         effectsD.add(effData);
 
@@ -121,15 +122,16 @@ public class ModelClient {
         effectsL.add(effData);
         effectsL.add(effData3);
 
-        CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,false);
+        ArrayList<EffectData> effectsL2= new ArrayList<>();
+        effectsL2.add(effData4);
+
+        CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL2,false);
         CardLeaderData cl2=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,true);
         leaders.add(cl);
         leaders.add(cl2);
-        leaders.add(cl);
-        leaders.add(cl);
+        //leaders.add(cl);
+        //leaders.add(cl);
     }
-
-
 
 
     public void addToCardSlot(int index, CardDevData card){
@@ -654,6 +656,10 @@ public class ModelClient {
                 rowsOfLeaders.clear();
             }
         }
+    }
+
+    public ModelData toModelData(){
+        return new ModelData(username,faithTrack,currentPosOnFaithTrack,standardDepot,leaderDepot,maxStoreLeaderDepot,strongbox,cardSlots,leaders);
     }
 
     @Override

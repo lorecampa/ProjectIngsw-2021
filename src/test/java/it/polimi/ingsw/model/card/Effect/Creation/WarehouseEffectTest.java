@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.EffectType;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
 import it.polimi.ingsw.model.card.Effect.Effect;
 import it.polimi.ingsw.model.PlayerState;
@@ -53,14 +55,22 @@ class WarehouseEffectTest {
 
     }
 
+    private String effectSer;
+    private EffectData effectData;
     @Test
     void toDataTest(){
         ArrayList<Resource> depot = new ArrayList<>();
         depot.add(ResourceFactory.createResource(ResourceType.SHIELD, 1));
         WarehouseEffect myEffect= new WarehouseEffect(depot);
-        EffectData effectData= myEffect.toEffectData();
+        effectData= myEffect.toEffectData();
 
         assertEquals("Warehouse effect: ", effectData.getDescriptions());
+        assertEquals(EffectType.WAREHOUSE, effectData.getType());
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        assertDoesNotThrow(()->effectSer = mapper.writeValueAsString(effectData));
+        assertDoesNotThrow(()-> effectData = mapper.readValue(effectSer,EffectData.class));
     }
 
     @Test

@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.card.Effect.Creation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
+import it.polimi.ingsw.client.data.EffectType;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.card.Effect.Effect;
@@ -77,7 +78,7 @@ public class WarehouseEffect  implements Effect {
     public EffectData toEffectData() {
         String description = "Warehouse effect: ";
         ArrayList<ResourceData> depot = depots.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
-        return new EffectData(description,depot,null);
+        return new EffectData(EffectType.WAREHOUSE,description,depot,null);
     }
 
 }

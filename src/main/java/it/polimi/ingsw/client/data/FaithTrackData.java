@@ -43,6 +43,10 @@ public class FaithTrackData {
         return popeFavor;
     }
 
+    public boolean isAcquired() {
+        return acquired;
+    }
+
     public int getVictoryPopeFavor() {
         return victoryPopeFavor;
     }
