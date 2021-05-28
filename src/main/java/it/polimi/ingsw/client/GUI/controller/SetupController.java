@@ -37,15 +37,6 @@ public class SetupController extends Controller{
     //---------------------
     //EXTERNAL METHODS
     //--------------------
-    public void showWaitingPlayer(){
-        usernameBox.setVisible(false);
-        numOfPlayerBox.setVisible(false);
-        playButton.setVisible(false);
-
-        customMessage.setText("Waiting for Players....");
-        customMessage.setVisible(true);
-    }
-
 
     @Override
     public void setUpAll() {

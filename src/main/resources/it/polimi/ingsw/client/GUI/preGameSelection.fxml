@@ -8,75 +8,115 @@
 
 <AnchorPane prefHeight="611.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PreGameSelectionController">
    <children>
-      <AnchorPane fx:id="chooseResourcesBox" layoutX="70.0" layoutY="197.0" prefHeight="202.0" prefWidth="581.0" visible="false">
-         <children>
-            <ImageView fx:id="coin" fitHeight="63.0" fitWidth="73.0" layoutX="68.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@punchboard/coin.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="shield" fitHeight="63.0" fitWidth="73.0" layoutX="182.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@punchboard/shield.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="servant" fitHeight="63.0" fitWidth="73.0" layoutX="311.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@punchboard/servant.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="stone" fitHeight="63.0" fitWidth="73.0" layoutX="440.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@punchboard/stone.png" />
-               </image>
-            </ImageView>
-            <Button layoutX="239.0" layoutY="180.0" mnemonicParsing="false" onAction="#sendResources" prefHeight="46.0" prefWidth="100.0" text="Button" />
-            <Label fx:id="howManyResLabel" alignment="CENTER" prefHeight="17.0" prefWidth="581.0" text="You have 2 resource to choose" />
-         </children>
-      </AnchorPane>
       <AnchorPane fx:id="customMessageBox" prefHeight="63.0" prefWidth="721.0">
          <children>
             <Label fx:id="customMessageLabel" alignment="CENTER" layoutY="23.0" prefHeight="17.0" prefWidth="784.0" text="Custom Message" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="box1" layoutX="98.0" layoutY="70.0" prefHeight="254.0" prefWidth="142.0">
+      <AnchorPane fx:id="chooseResourcesBox" layoutX="37.0" layoutY="125.0" prefHeight="437.0" prefWidth="708.0">
          <children>
-            <ImageView fx:id="leader1" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@front/60.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="btn1" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+            <AnchorPane layoutX="51.0" layoutY="100.0" prefHeight="200.0" prefWidth="619.0">
+               <children>
+                  <ImageView fx:id="coin" fitHeight="63.0" fitWidth="73.0" layoutX="35.0" layoutY="69.0" onMouseClicked="#increaseRes" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/coin.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="shield" fitHeight="63.0" fitWidth="73.0" layoutX="208.0" layoutY="69.0" onMouseClicked="#increaseRes" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/shield.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="servant" fitHeight="63.0" fitWidth="73.0" layoutX="351.0" layoutY="69.0" onMouseClicked="#increaseRes" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/servant.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="stone" fitHeight="63.0" fitWidth="73.0" layoutX="503.0" layoutY="69.0" onMouseClicked="#increaseRes" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/stone.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="decreaseCoin" layoutX="59.0" layoutY="146.0" mnemonicParsing="false" onAction="#decreaseRes" prefHeight="22.0" prefWidth="22.0" text="-" visible="false" />
+                  <Button fx:id="decreaseShield" layoutX="218.0" layoutY="145.0" mnemonicParsing="false" onAction="#decreaseRes" prefHeight="22.0" prefWidth="22.0" text="-" visible="false" />
+                  <Button fx:id="decreaseServant" layoutX="374.0" layoutY="144.0" mnemonicParsing="false" onAction="#decreaseRes" prefHeight="22.0" prefWidth="22.0" text="-" visible="false" />
+                  <Button fx:id="decreaseStone" layoutX="522.0" layoutY="147.0" mnemonicParsing="false" onAction="#decreaseRes" prefHeight="22.0" prefWidth="22.0" text="-" visible="false" />
+               </children>
+            </AnchorPane>
+            <Button fx:id="sendResBtn" layoutX="305.0" layoutY="300.0" mnemonicParsing="false" onAction="#sendResources" prefHeight="46.0" prefWidth="100.0" text="START GAME" />
+            <AnchorPane layoutY="26.0" prefHeight="74.0" prefWidth="710.0">
+               <children>
+                  <ImageView fx:id="stone1" fitHeight="26.0" fitWidth="22.0" layoutX="667.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/stone.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="stoneNum" layoutX="644.0" layoutY="33.0" text="0" />
+                  <ImageView fx:id="servant1" fitHeight="26.0" fitWidth="34.0" layoutX="594.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/servant.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="shield1" fitHeight="26.0" fitWidth="26.0" layoutX="526.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/shield.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="coin1" fitHeight="26.0" fitWidth="26.0" layoutX="451.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punchboard/coin.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="servantNum" layoutX="569.0" layoutY="33.0" text="0" />
+                  <Label fx:id="shieldNum" layoutX="498.0" layoutY="33.0" text="0" />
+                  <Label fx:id="coinNum" layoutX="420.0" layoutY="33.0" text="0" />
+               </children>
+            </AnchorPane>
+            <Label fx:id="howManyResLabel" alignment="CENTER" layoutX="224.0" layoutY="11.0" prefHeight="26.0" prefWidth="281.0" text="You have x resource to choose" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="box2" layoutX="459.0" layoutY="70.0" prefHeight="254.0" prefWidth="142.0">
+      <AnchorPane fx:id="leaderBox" prefHeight="611.0" prefWidth="784.0" visible="false">
          <children>
-            <ImageView fx:id="leader2" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@front/62.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="btn2" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="box3" layoutX="98.0" layoutY="343.0" prefHeight="254.0" prefWidth="142.0">
-         <children>
-            <ImageView fx:id="leader3" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@front/63.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="btn3" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="box4" layoutX="459.0" layoutY="343.0" prefHeight="254.0" prefWidth="142.0">
-         <children>
-            <ImageView fx:id="leader4" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@front/55.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="btn4" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+            <AnchorPane fx:id="box1" layoutX="140.0" layoutY="52.0" prefHeight="254.0" prefWidth="142.0">
+               <children>
+                  <ImageView fx:id="leader1" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/60.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btn1" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="box2" layoutX="479.0" layoutY="52.0" prefHeight="254.0" prefWidth="142.0">
+               <children>
+                  <ImageView fx:id="leader2" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/62.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btn2" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="box3" layoutX="140.0" layoutY="319.0" prefHeight="254.0" prefWidth="142.0">
+               <children>
+                  <ImageView fx:id="leader3" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/63.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btn3" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="box4" layoutX="479.0" layoutY="319.0" prefHeight="254.0" prefWidth="142.0">
+               <children>
+                  <ImageView fx:id="leader4" fitHeight="228.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/55.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btn4" layoutX="39.0" layoutY="227.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="3.0" prefWidth="73.0" text="select" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>

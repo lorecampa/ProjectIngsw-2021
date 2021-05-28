@@ -44,10 +44,7 @@ public class MarketController extends Controller{
         setUpBtns();
     }
 
-    @Override
-    public void showErrorMessage(String msg) {
 
-    }
 
     private void setUpMarbles(){
         marbles = new ArrayList<>();

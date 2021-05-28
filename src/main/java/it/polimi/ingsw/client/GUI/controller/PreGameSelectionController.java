@@ -1,39 +1,75 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.message.clientMessage.LeaderDiscard;
+import it.polimi.ingsw.message.serverMessage.AnyResponse;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
+import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class PreGameSelectionController extends Controller {
     private final Client client = Client.getInstance();
-    private int leaderDiscarded = 0;
+
     private int howManyRes = 0;
-    private ArrayList<ResourceData> currResSel = new ArrayList<>();
+    private boolean isSelectionOver = false;
+    private HashMap<ResourceType, Integer> resNumMap = new HashMap<>();
 
     @FXML AnchorPane customMessageBox;
     @FXML Label customMessageLabel;
 
-
+    //resource box
     @FXML AnchorPane chooseResourcesBox;
-    @FXML
-    Label howManyResLabel;
+    @FXML Label howManyResLabel;
+    @FXML ImageView coin;
+    @FXML ImageView coin1;
+    @FXML Button decreaseCoin;
+    @FXML Label coinNum;
 
+    @FXML ImageView shield;
+    @FXML ImageView shield1;
+    @FXML Button decreaseShield;
+    @FXML Label shieldNum;
+
+    @FXML ImageView servant;
+    @FXML ImageView servant1;
+    @FXML Button decreaseServant;
+    @FXML Label servantNum;
+
+    @FXML ImageView stone;
+    @FXML ImageView stone1;
+    @FXML Button decreaseStone;
+    @FXML Label stoneNum;
+
+    @FXML Button sendResBtn;
+
+    //leader box
+    @FXML AnchorPane leaderBox;
     @FXML ImageView leader1;
     @FXML ImageView leader2;
     @FXML ImageView leader3;
     @FXML ImageView leader4;
+
+    @FXML AnchorPane box1;
+    @FXML AnchorPane box2;
+    @FXML AnchorPane box3;
+    @FXML AnchorPane box4;
 
     @FXML Button btn1;
     @FXML Button btn2;
@@ -41,10 +77,6 @@ public class PreGameSelectionController extends Controller {
     @FXML Button btn4;
 
 
-    @FXML AnchorPane box1;
-    @FXML AnchorPane box2;
-    @FXML AnchorPane box3;
-    @FXML AnchorPane box4;
 
     @Override
     public void showErrorMessage(String msg) {
@@ -53,8 +85,101 @@ public class PreGameSelectionController extends Controller {
     }
 
     @FXML
-    public void sendResources(ActionEvent event){
-        System.out.println(event.getSource());
+    public void sendResources(){
+        ArrayList<ResourceData> resources = resNumMap.keySet()
+                .stream().filter(x -> resNumMap.get(x) != 0)
+                .map(x -> new ResourceData(x, resNumMap.get(x)))
+                .collect(Collectors.toCollection(ArrayList::new));
+        client.writeToStream(new AnyResponse(resources));
+    }
+    @FXML
+    public void decreaseRes(ActionEvent event){
+        ResourceType res = null;
+        int oldValue;
+        if (event.getSource().equals(decreaseCoin)){
+            res = ResourceType.COIN;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue - 1);
+            coinNum.setText(Integer.toString(oldValue -1));
+            if (oldValue == 1){
+                decreaseCoin.setVisible(false);
+            }
+        }else if(event.getSource().equals(decreaseShield)){
+            res = ResourceType.SHIELD;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue - 1);
+            shieldNum.setText(Integer.toString(oldValue -1));
+            if (oldValue == 1){
+                decreaseShield.setVisible(false);
+            }
+        }else if(event.getSource().equals(decreaseServant)){
+            res = ResourceType.SERVANT;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue - 1);
+            servantNum.setText(Integer.toString(oldValue -1));
+            if (oldValue == 1){
+                decreaseServant.setVisible(false);
+            }
+        }else if(event.getSource().equals(decreaseStone)){
+            res = ResourceType.STONE;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue - 1);
+            stoneNum.setText(Integer.toString(oldValue -1));
+            if (oldValue == 1){
+                decreaseStone.setVisible(false);
+            }
+        }
+        if (isSelectionOver) {
+            isSelectionOver = false;
+            sendResBtn.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void increaseRes(MouseEvent event){
+        if (isSelectionOver) return;
+        ResourceType res = null;
+        int oldValue;
+        if (event.getSource().equals(coin)){
+            res = ResourceType.COIN;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue + 1);
+            coinNum.setText(Integer.toString(oldValue + 1));
+            if (oldValue == 0){
+                decreaseCoin.setVisible(true);
+            }
+        }else if(event.getSource().equals(shield)){
+            res = ResourceType.SHIELD;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue + 1);
+            shieldNum.setText(Integer.toString(oldValue + 1));
+            if (oldValue == 0){
+                decreaseShield.setVisible(true);
+            }
+        }else if(event.getSource().equals(servant)){
+            res = ResourceType.SERVANT;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue + 1);
+            servantNum.setText(Integer.toString(oldValue + 1));
+            if (oldValue == 0){
+                decreaseServant.setVisible(true);
+            }
+        }else if(event.getSource().equals(stone)){
+            res = ResourceType.STONE;
+            oldValue = resNumMap.get(res);
+            resNumMap.put(res, oldValue + 1);
+            stoneNum.setText(Integer.toString(oldValue + 1));
+            if (oldValue == 0){
+                decreaseStone.setVisible(true);
+            }
+        }else{
+            return;
+        }
+
+        if (resNumMap.values().stream().mapToInt(x -> x).sum() == howManyRes){
+            isSelectionOver = true;
+            sendResBtn.setVisible(true);
+        }
 
     }
 
@@ -74,15 +199,14 @@ public class PreGameSelectionController extends Controller {
             box4.setVisible(false);
         }else{
             showErrorMessage("Invalid selection");
+            return;
         }
-
     }
 
     //---------------------
     //EXTERNAL METHODS
     //--------------------
     public void setLeaderImages(ArrayList<String> paths){
-
         leader1.setImage(new Image(paths.get(0)));
         leader2.setImage(new Image(paths.get(1)));
         leader3.setImage(new Image(paths.get(2)));
@@ -94,16 +218,27 @@ public class PreGameSelectionController extends Controller {
 
     @Override
     public void setUpAll() {
+        Arrays.stream(ResourceType.values())
+                .forEach(x -> {
+                    if (x != ResourceType.FAITH && x != ResourceType.ANY){
+                        resNumMap.put(x, 0);
+                    }
+                });
+
+        showLeaderBox();
+        sendResBtn.setVisible(false);
 
     }
 
     public void showChooseResourcesBox(){
-        box1.setVisible(false);
-        box2.setVisible(false);
-        box3.setVisible(false);
-        box4.setVisible(false);
-
+        howManyResLabel.setText("You have "+ howManyRes + " to choose");
+        leaderBox.setVisible(false);
         chooseResourcesBox.setVisible(true);
+        customMessageBox.setVisible(false);
+    }
+    public void showLeaderBox(){
+        leaderBox.setVisible(true);
+        chooseResourcesBox.setVisible(false);
     }
 
     public void setHowManyRes(int howManyRes) {

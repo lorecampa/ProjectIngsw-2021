@@ -4,6 +4,7 @@ public enum Views {
     MAIN_MENU("mainMenu"),
     SETUP("setup"),
     PRE_MATCH("preGameSelection"),
+    WAITING("waiting"),
     MARKET("market"),
     PERSONAL_BOARD("personalBoard");
 

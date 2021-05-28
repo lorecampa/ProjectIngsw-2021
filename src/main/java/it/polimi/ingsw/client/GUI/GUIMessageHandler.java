@@ -3,13 +3,14 @@ package it.polimi.ingsw.client.GUI;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
+import it.polimi.ingsw.client.GUI.controller.PersonalBoardController;
 import it.polimi.ingsw.client.GUI.controller.PreGameSelectionController;
 import it.polimi.ingsw.client.GUI.controller.SetupController;
+import it.polimi.ingsw.client.GUI.controller.WaitingController;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 import javafx.application.Platform;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -35,18 +36,22 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void waitingPeople(ConnectionMessage message) {
-        SetupController controller = (SetupController) controllerHandler.getController(Views.SETUP);
-        Platform.runLater(controller::showWaitingPlayer);
+        WaitingController controller = (WaitingController) controllerHandler.getController(Views.WAITING);
+        Platform.runLater(()->{
+            controller.setLobbyMessage();
+            controllerHandler.changeView(Views.WAITING);
+        });
     }
 
     @Override
     public void username(ConnectionMessage message) {
         SetupController setupController = (SetupController) controllerHandler.getController(Views.SETUP);
         Platform.runLater(()->{
-            if (controllerHandler.getCurrentView() == Views.MAIN_MENU){
+            setupController.showInsertUsername();
+            if (controllerHandler.getCurrentView() == Views.MAIN_MENU ||
+            controllerHandler.getCurrentView() == Views.WAITING){
                 controllerHandler.changeView(Views.SETUP);
             }
-            setupController.showInsertUsername();
         });
 
     }
@@ -61,16 +66,21 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     }
 
+
+
     @Override
     public void leaderSetUp(LeaderSetUpMessage message) {
         super.leaderSetUp(message);
         PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
         ArrayList<String> paths = message.getLeaders().stream().map(CardLeaderData::toResourcePath)
                 .collect(Collectors.toCollection(ArrayList::new));
+
         Platform.runLater(()->{
             controllerHandler.changeView(Views.PRE_MATCH);
             controller.setLeaderImages(paths);
         });
+
+
 
 
 
@@ -84,21 +94,25 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void startGame() {
-
+        Platform.runLater(()->controllerHandler.changeView(Views.PERSONAL_BOARD));
     }
+
 
     @Override
     public void anyConversionRequest(AnyConversionRequest message) {
         if(client.getState() == ClientState.ENTERING_LOBBY){
-            PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
-
             Platform.runLater(()->{
-                controller.setHowManyRes(message.getNumOfAny());
-                controller.showChooseResourcesBox();
+                if (message.getNumOfAny() == 0){
+                    WaitingController controller = (WaitingController) controllerHandler.getController(Views.WAITING);
+                    controller.setPreMatchMessage();
+                    controllerHandler.changeView(Views.WAITING);
+                }else{
+                    PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
+                    controller.setHowManyRes(message.getNumOfAny());
+                    controller.showChooseResourcesBox();
+                }
             });
-
         }
-
     }
 
     @Override

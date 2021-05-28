@@ -410,6 +410,7 @@ public class Controller {
                 FaithTrack playerFaithTrack = gameMaster.getPlayerPersonalBoard(username).getFaithTrack();
                 switch (gameMaster.getPlayerPosition(username)){
                     case 0:
+                        match.sendSinglePlayer(username, new AnyConversionRequest(0));
                         match.getPlayer(username).ifPresent(x->x.getClient().setState(HandlerState.WAITING_TO_BE_IN_MATCH));
                         if(isFinishedSetup()){
                             match.getAllPlayers().forEach(x -> x.getClient().setState(HandlerState.IN_MATCH));

@@ -26,7 +26,6 @@
                   <Button fx:id="playButton" layoutX="210.0" layoutY="1.0" mnemonicParsing="false" onAction="#sendData" text="Next" />
                </children>
             </AnchorPane>
-            <Label fx:id="customMessage" layoutX="253.0" layoutY="84.0" text="Custom Message" visible="false" />
          </children>
       </AnchorPane>
    </children>

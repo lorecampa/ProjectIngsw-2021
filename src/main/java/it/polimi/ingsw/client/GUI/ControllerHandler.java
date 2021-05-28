@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.GUI.controller.Controller;
+import it.polimi.ingsw.client.GUI.controller.PreGameSelectionController;
+
 import java.util.HashMap;
 
 public class ControllerHandler {

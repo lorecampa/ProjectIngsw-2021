@@ -43,6 +43,10 @@ public abstract class Controller {
     }
 
 
-    public abstract void showErrorMessage(String msg);
+
+
+    public void showErrorMessage(String msg){
+
+    }
 
 }

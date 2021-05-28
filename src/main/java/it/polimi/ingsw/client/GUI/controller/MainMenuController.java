@@ -25,10 +25,6 @@ public class MainMenuController extends Controller{
     @FXML
     Button quitBtn;
 
-    @Override
-    public void showErrorMessage(String msg) {
-
-    }
 
     //---------------------
     //INTERNAL METHODS
