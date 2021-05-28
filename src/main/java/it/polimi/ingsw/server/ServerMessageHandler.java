@@ -90,15 +90,10 @@ public class ServerMessageHandler {
     }
 
     public void handleDisconnection(){
-        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient,true),
+        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
                 ()->server.clientDisconnect(client));
     }
 
-    public void handleGameQuit(){
-        getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient,false),
-                ()->server.clientDisconnect(client));
-
-    }
 
 
     public void handleReconnection(ReconnectionMessage msg){

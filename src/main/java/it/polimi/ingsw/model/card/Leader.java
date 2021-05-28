@@ -70,7 +70,7 @@ public class Leader extends Card{
             else
                 cardReq.addAll(requirement.toCardDevData());
         }
-        return new CardLeaderData(getVictoryPoints(),cardReq,resReq,effectToClient(), active);
+        return new CardLeaderData(getId(), getVictoryPoints(),cardReq,resReq,effectToClient(), active);
     }
 
 }

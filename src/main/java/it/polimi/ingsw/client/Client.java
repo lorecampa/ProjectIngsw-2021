@@ -9,6 +9,7 @@ import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
+import it.polimi.ingsw.server.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -85,22 +86,19 @@ public class Client{
     public static void main(String[] args){
         try{
             clientInstance.setUpClient(args);
-            if (args.length == 0 || args.length == 2){
-                clientInstance.startCLI();
-                System.out.println("Client Started!");
-                clientInstance.messageToMainMenu();
-            }
-            else if (args[0].equals(Client.GUIParam)) {
-                new Thread(() -> ClientGUI.main(args)).start();
-                clientInstance.startGUI();
-            }
-            else{
-                System.out.println("Invalid param to start client!");
-                System.exit(0);
-            }
-        }
-        catch(Exception e){
+        }catch (Exception e){
             PrintAssistant.instance.errorPrint("There's no server ready to answer you! Try again later! Bye :)");
+            System.exit(0);
+        }
+        if (args.length == 0 || args.length == 2){
+            clientInstance.startCLI();
+        }
+        else if (args[0].equals(Client.GUIParam)) {
+            new Thread(() -> ClientGUI.main(args)).start();
+            clientInstance.startGUI();
+        }
+        else{
+            System.out.println("Invalid param to start client!");
             System.exit(0);
         }
 
@@ -108,8 +106,10 @@ public class Client{
 
 
     public void startCLI(){
+        System.out.println("Client Started!");
         clientMessageHandler = new CLIMessageHandler();
         new Thread(new ClientInput()).start();
+        clientInstance.messageToMainMenu();
         startListening();
     }
 

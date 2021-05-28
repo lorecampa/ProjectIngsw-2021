@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class ControllerHandler {
     HashMap<Views, Controller> controllers = new HashMap<>();
+    private Views currentView = null;
     private static ControllerHandler instance = new ControllerHandler();
 
     public static ControllerHandler getInstance(){
@@ -16,12 +17,22 @@ public class ControllerHandler {
         return controllers.get(view);
     }
 
-    public void changeStage(Views view){
+    public void changeView(Views view){
         controllers.get(view).activate();
+        currentView = view;
     }
 
     public void addController(Views view, Controller controller){
         controllers.put(view, controller);
     }
+
+    public Views getCurrentView(){
+        return currentView;
+    }
+
+    public Controller getCurrentController(){
+        return controllers.get(getCurrentView());
+    }
+
 
 }

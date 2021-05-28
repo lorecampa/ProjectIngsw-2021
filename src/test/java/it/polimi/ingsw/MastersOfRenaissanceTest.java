@@ -22,6 +22,7 @@ import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.server.Server;
+import javafx.scene.image.Image;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +46,13 @@ public class MastersOfRenaissanceTest
         assertDoesNotThrow(()-> gsSinglePlayer = new GameSetting(1));
 
     }
+
+    @Test
+    void test1(){
+        InputStream stream = getClass().getResourceAsStream("/front/" + 30 + ".png");
+        Image image = new Image(stream);
+    }
+
     @Test
     public void CardPrintTest() throws IOException, JsonFileModificationError {
 

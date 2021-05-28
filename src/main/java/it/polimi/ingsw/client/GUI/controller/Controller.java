@@ -17,5 +17,10 @@ public abstract class Controller {
     public void activate(){
         stage.setScene(scene);
         //handle resize
+        //TODO
     }
+
+
+    public abstract void showErrorMessage(String msg);
+
 }

@@ -136,6 +136,10 @@ public  abstract class Card {
      */
     public void setOwner(String username) {this.owner = username; }
 
+    public int getId() {
+        return id;
+    }
+
     public ArrayList<Effect> getOnActivationEffects() {
         return onActivationEffects;
     }

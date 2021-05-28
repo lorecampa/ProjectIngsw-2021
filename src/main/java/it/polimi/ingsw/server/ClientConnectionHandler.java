@@ -103,6 +103,7 @@ public class ClientConnectionHandler implements Runnable {
         }catch (Exception e){
             System.out.println("client disconnection");
             serverMessageHandler.handleDisconnection();
+
         }
 
     }

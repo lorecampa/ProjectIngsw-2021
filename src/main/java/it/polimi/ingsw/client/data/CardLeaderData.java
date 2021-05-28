@@ -3,10 +3,11 @@ package it.polimi.ingsw.client.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.PrintAssistant;
-
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CardLeaderData {
+    private final int id;
     private final int victoryPoint;
     private final ArrayList<CardDevData> cardReq;
     private final ArrayList<ResourceData> resourceReq;
@@ -16,16 +17,29 @@ public class CardLeaderData {
     private boolean active;
 
     @JsonCreator(mode= JsonCreator.Mode.PROPERTIES)
-    public CardLeaderData(@JsonProperty("victoryPoint")int victoryPoint,
+    public CardLeaderData(@JsonProperty("id") int id,
+                          @JsonProperty("victoryPoint")int victoryPoint,
                           @JsonProperty("cardReq")ArrayList<CardDevData> cardReq,
                           @JsonProperty("resourceReq")ArrayList<ResourceData> resourceReq,
                           @JsonProperty("effects")ArrayList<EffectData> effects,
                           @JsonProperty("active")boolean active) {
+        this.id = id;
         this.victoryPoint = victoryPoint;
         this.cardReq = cardReq;
         this.resourceReq = resourceReq;
         this.effects = effects;
         this.active = active;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String toResourcePath(){
+        URL url = null;
+        url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/"+id+".png");
+        assert url != null;
+        return url.toString();
     }
 
     public int getVictoryPoint() {

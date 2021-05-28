@@ -125,8 +125,9 @@ public class ModelClient {
         ArrayList<EffectData> effectsL2= new ArrayList<>();
         effectsL2.add(effData4);
 
-        CardLeaderData cl=new CardLeaderData(4, cardSlots.get(0), cost, effectsL2,false);
-        CardLeaderData cl2=new CardLeaderData(4, cardSlots.get(0), cost, effectsL,true);
+
+        CardLeaderData cl=new CardLeaderData(1,4, cardSlots.get(0), cost, effectsL,false);
+        CardLeaderData cl2=new CardLeaderData(2, 4, cardSlots.get(0), cost, effectsL,true);
         leaders.add(cl);
         leaders.add(cl2);
         //leaders.add(cl);

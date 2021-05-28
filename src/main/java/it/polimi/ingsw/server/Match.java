@@ -120,22 +120,21 @@ public class Match {
 
 
 
-    public void playerDisconnection(VirtualClient player, boolean haveToExit){
+    public void playerDisconnection(VirtualClient player){
         synchronized (allPlayers){
             synchronized (activePlayers){
                 synchronized (inactivePlayers){
 
                     if (player.isReady()) {
-                        if(haveToExit)
-                            player.getClient().setExit(true);
-                        else
-                            player.getClient().setState(HandlerState.FIRST_CONTACT);
+                        player.getClient().setExit(true);
+
                         inactivePlayers.add(player);
                         activePlayers.remove(player);
                         if(activePlayers.size()==0){
                             removeMatchFromServer();
                         }
-                        else if(player.getUsername().equals(controller.getCurrentPlayer())){
+                        else if(player.getClient().getState() == HandlerState.IN_MATCH && player.getUsername()
+                                .equals(controller.getCurrentPlayer())){
 
                             controller.nextTurn();
                         }
