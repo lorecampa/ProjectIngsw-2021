@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
+import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -74,6 +75,9 @@ public class PersonalBoardController extends Controller{
     @FXML private Button btn_prod;
     @FXML private Button btn_players;
     @FXML private Button btn_deck;
+    @FXML private Button btn_discard1;
+    @FXML private Button btn_discard2;
+
     @FXML private ImageView leader1;
     @FXML private ImageView leader2;
     @FXML private ImageView le_depot_11;
@@ -337,12 +341,18 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void leaderClicked(MouseEvent event){
-        LeaderController leaderController = (LeaderController) ControllerHandler.getInstance().getController(Views.LEADER);
         if (event.getSource().equals(leader1))
-            leaderController.setLeaderIndex(0);
+            Client.getInstance().writeToStream(new LeaderManage(0, false));
         else
-            leaderController.setLeaderIndex(1);
-        ControllerHandler.getInstance().changeView(Views.LEADER);
+            Client.getInstance().writeToStream(new LeaderManage(1, false));
+    }
+
+    @FXML
+    public void leaderDiscard(ActionEvent actionEvent){
+        if (actionEvent.getSource().equals(btn_discard1))
+            Client.getInstance().writeToStream(new LeaderManage(0, true));
+        else
+            Client.getInstance().writeToStream(new LeaderManage(1, true));
     }
 
     @FXML

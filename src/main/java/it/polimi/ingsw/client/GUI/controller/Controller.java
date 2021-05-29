@@ -46,7 +46,7 @@ public abstract class Controller {
 
 
     public void showErrorMessage(String msg){
-
+        System.out.println(msg);
     }
 
 }
