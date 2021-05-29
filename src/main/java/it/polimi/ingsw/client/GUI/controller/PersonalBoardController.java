@@ -101,6 +101,7 @@ public class PersonalBoardController extends Controller{
         btn_back.setVisible(false);
         btn_back.setDisable(true);
         setUpTrack();
+        setUpPopeFavor();
         setUpDepots();
         setUpStrongbox();
         setUpCardSlots();
@@ -275,6 +276,12 @@ public class PersonalBoardController extends Controller{
     private void setDisableBoard(boolean disable){
         leader1.setDisable(disable);
         leader2.setDisable(disable);
+
+        btn_discard1.setDisable(disable);
+        btn_discard1.setVisible(!disable);
+
+        btn_discard2.setDisable(disable);
+        btn_discard2.setVisible(!disable);
 
         btn_prod.setDisable(disable);
         btn_prod.setVisible(!disable);
