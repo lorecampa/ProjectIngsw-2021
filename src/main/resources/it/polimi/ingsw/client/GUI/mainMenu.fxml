@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
+<AnchorPane id="background" prefHeight="408.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
    <children>
-      <ImageView fitHeight="400.0" fitWidth="600.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="multiBtn" alignment="CENTER" layoutX="254.0" layoutY="191.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" text="Multiplayer" />
-      <Button fx:id="singleBtn" layoutX="254.0" layoutY="253.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="55.0" prefWidth="92.0" text="SinglePlayer" />
-      <Button fx:id="quitBtn" layoutX="254.0" layoutY="315.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="92.0" text="Quit" />
+      <Text fill="#609c66" layoutX="-6.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="2.0" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
+         <font>
+            <Font name="Old English Text MT" size="96.0" />
+         </font>
+         <stroke>
+            <LinearGradient cycleMethod="REFLECT" endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="0.10000000149011612" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke>
+      </Text>
+      <Button fx:id="multiBtn" alignment="CENTER" layoutX="254.0" layoutY="191.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Multiplayer" textAlignment="CENTER" />
+      <Button fx:id="singleBtn" layoutX="254.0" layoutY="253.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="SinglePlayer" />
+      <Button fx:id="quitBtn" layoutX="254.0" layoutY="315.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Quit" />
    </children>
 </AnchorPane>
