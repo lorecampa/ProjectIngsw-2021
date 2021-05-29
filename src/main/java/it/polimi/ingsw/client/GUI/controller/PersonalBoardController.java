@@ -3,11 +3,13 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
+import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -78,6 +80,7 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView le_depot_12;
     @FXML private ImageView le_depot_21;
     @FXML private ImageView le_depot_22;
+    @FXML private ChoiceBox<String> choice_username;
 
 
     private final ArrayList<ImageView> track = new ArrayList<>();
@@ -91,6 +94,8 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void initialize(){
+        btn_back.setVisible(false);
+        btn_back.setDisable(true);
         setUpTrack();
         setUpDepots();
         setUpStrongbox();
@@ -255,6 +260,52 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    private void loadChoiceBox(){
+        choice_username.getItems().clear();
+        ArrayList<String> usernames = Client.getInstance().getModels()
+                .stream().map(ModelClient::getUsername).filter(s -> !s.equals(Client.getInstance().getMyName()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        choice_username.getItems().addAll(usernames);
+    }
+
+    private void setDisableBoard(boolean disable){
+        leader1.setDisable(disable);
+        leader2.setDisable(disable);
+
+        btn_prod.setDisable(disable);
+        btn_prod.setVisible(!disable);
+        btn_market.setDisable(disable);
+        btn_market.setVisible(!disable);
+        btn_deck.setDisable(disable);
+        btn_deck.setVisible(!disable);
+    }
+
+    private void resetBoard(){
+        resetFaithTrack();
+        resetDepots();
+        resetLeader();
+        resetCardSlots();
+    }
+
+    private void resetCardSlots() {
+        cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+    }
+
+    private void resetLeader() {
+        leaders.forEach(imageView -> imageView.setImage(new Image("/it/polimi/ingsw/client/GUI/back/leader_back.png")));
+    }
+
+    private void resetDepots() {
+        depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+        leadersDepots.forEach(imageView -> imageView.setVisible(false));
+    }
+
+    private void resetFaithTrack() {
+        track.forEach(imageView -> imageView.setVisible(false));
+        popeFavorsAcquired.forEach(imageView -> imageView.setVisible(false));
+        popeFavorsDiscard.forEach(imageView -> imageView.setVisible(true));
+    }
+
     @Override
     public void setUpAll(){
         ModelData model = Client.getInstance().getMyModel().toModelData();
@@ -263,6 +314,20 @@ public class PersonalBoardController extends Controller{
         loadLeader(model);
         loadStrongBox(model);
         loadCardSlots(model);
+        loadChoiceBox();
+    }
+
+    public void setUpOtherPlayer(String username){
+        resetBoard();
+        ModelData model = Client.getInstance().getModelOf(username).toModelData();
+        loadFaithTrack(model);
+        loadDepots(model);
+        loadLeader(model);
+        loadStrongBox(model);
+        loadCardSlots(model);
+        loadChoiceBox();
+
+        setDisableBoard(true);
     }
 
     @FXML
@@ -280,4 +345,20 @@ public class PersonalBoardController extends Controller{
         ControllerHandler.getInstance().changeView(Views.LEADER);
     }
 
+    @FXML
+    public void otherPlayerClicker(){
+        if (Client.getInstance().existAModelOf(choice_username.getValue()))
+            setUpOtherPlayer(choice_username.getValue());
+        btn_back.setDisable(false);
+        btn_back.setVisible(true);
+    }
+
+    @FXML
+    public void back(){
+        resetBoard();
+        setDisableBoard(false);
+        setUpAll();
+        btn_back.setDisable(true);
+        btn_back.setVisible(false);
+    }
 }

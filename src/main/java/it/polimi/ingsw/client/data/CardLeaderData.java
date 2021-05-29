@@ -39,9 +39,9 @@ public class CardLeaderData {
         URL url = null;
         if (active)
             url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/"+id+".png");
-        else
-            url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/"+id+"-BN.png");
-
+        else {
+            url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/" + id + "-BN.png");
+        }
         assert url != null;
         return url.toString();
     }

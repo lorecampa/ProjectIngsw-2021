@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
+import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.serverMessage.MarketAction;
@@ -116,6 +118,11 @@ public class MarketController extends Controller{
             Client.getInstance().writeToStream(new MarketAction(2,false));
         if (event.getSource().equals(btn_col3))
             Client.getInstance().writeToStream(new MarketAction(3,false));
+    }
+
+    @FXML
+    public void back(){
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
     }
 
     @Override

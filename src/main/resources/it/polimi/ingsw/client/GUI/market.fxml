@@ -110,7 +110,7 @@
             <Button fx:id="btn_col3" layoutX="276.0" layoutY="332.0" mnemonicParsing="false" onAction="#insertInCol" prefHeight="53.0" prefWidth="34.0" scaleY="1.3" />
             <Button fx:id="btn_row2" layoutX="370.0" layoutY="234.0" mnemonicParsing="false" onAction="#insertInRow" prefHeight="25.0" prefWidth="53.0" scaleY="1.3" />
             <Button fx:id="btn_row1" layoutX="370.0" layoutY="180.0" mnemonicParsing="false" onAction="#insertInRow" prefHeight="25.0" prefWidth="53.0" scaleY="1.3" />
-            <Button layoutX="424.0" layoutY="405.0" mnemonicParsing="false" prefHeight="141.0" prefWidth="144.0" text="BACK" />
+            <Button layoutX="424.0" layoutY="405.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="141.0" prefWidth="144.0" text="BACK" />
          </children>
       </Pane>
    </children>

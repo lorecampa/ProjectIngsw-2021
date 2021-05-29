@@ -182,6 +182,10 @@ public class Client{
         return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(username)).findFirst().orElse(null);
     }
 
+    public ArrayList<ModelClient> getModels() {
+        return models;
+    }
+
     public ModelClient getMyModel(){
         return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(myName)).findFirst().orElse(null);
     }
