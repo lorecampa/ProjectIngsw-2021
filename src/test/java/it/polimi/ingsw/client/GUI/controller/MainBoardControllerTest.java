@@ -1,8 +1,9 @@
-package it.polimi.ingsw.client.GUI.Controllers;
+package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ClientGUI;
 import it.polimi.ingsw.client.ModelClient;
+import javafx.application.Platform;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

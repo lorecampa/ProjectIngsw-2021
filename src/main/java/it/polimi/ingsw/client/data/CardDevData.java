@@ -53,7 +53,7 @@ public class CardDevData {
 
     public String toResourcePath(){
         URL url = null;
-        url = this.getClass().getResource("/it/polimi/ingsw/client/GUI/front/"+id+".png");
+        url = this.getClass().getResource("/GUI/front/"+id+".png");
         assert url != null;
         return url.toString();
     }
@@ -79,6 +79,7 @@ public class CardDevData {
         }
         return s;
     }
+
 
     public ArrayList<ResourceData> getResourceReq() {
         return resourceReq;

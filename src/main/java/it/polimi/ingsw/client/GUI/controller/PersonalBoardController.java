@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -303,7 +304,7 @@ public class PersonalBoardController extends Controller{
     }
 
     private void resetLeader() {
-        leaders.forEach(imageView -> imageView.setImage(new Image("/it/polimi/ingsw/client/GUI/back/leader_back.png")));
+        leaders.forEach(imageView -> imageView.setImage(new Image("/GUI/back/leader_back.png")));
     }
 
     private void resetDepots() {
@@ -377,5 +378,11 @@ public class PersonalBoardController extends Controller{
         setUpAll();
         btn_back.setDisable(true);
         btn_back.setVisible(false);
+    }
+
+    public void showDeckDev(){
+        Platform.runLater(()->{
+            ControllerHandler.getInstance().changeView(Views.DECK_DEV);
+        });
     }
 }

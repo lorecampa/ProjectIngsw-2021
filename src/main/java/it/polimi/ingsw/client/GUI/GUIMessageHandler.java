@@ -3,10 +3,7 @@ package it.polimi.ingsw.client.GUI;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
-import it.polimi.ingsw.client.GUI.controller.PersonalBoardController;
-import it.polimi.ingsw.client.GUI.controller.PreGameSelectionController;
-import it.polimi.ingsw.client.GUI.controller.SetupController;
-import it.polimi.ingsw.client.GUI.controller.WaitingController;
+import it.polimi.ingsw.client.GUI.controller.*;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
@@ -97,6 +94,22 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->controllerHandler.changeView(Views.PERSONAL_BOARD));
     }
 
+    @Override
+    public void gameSetUp(GameSetup message) {
+        super.gameSetUp(message);
+
+        Platform.runLater(()->{
+            DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
+            deckController.setUpDeckImages(message.getDeckDev());
+        });
+
+
+
+
+
+
+
+    }
 
     @Override
     public void anyConversionRequest(AnyConversionRequest message) {

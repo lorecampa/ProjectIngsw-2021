@@ -27,6 +27,10 @@ public class DeckDevData {
 
     }
 
+    public ArrayList<ArrayList<ArrayList<CardDevData>>> getDeck() {
+        return deck;
+    }
+
     public void removeCardDevData(int row, int col){
         deck.get(row).get(col).remove(0);
     }

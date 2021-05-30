@@ -1,13 +1,11 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.GUI.controller.Controller;
-import it.polimi.ingsw.client.GUI.controller.PersonalBoardController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -22,10 +20,10 @@ public class ClientGUI extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
-
         setUpControllers();
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);
+
         stage.show();
     }
 

@@ -1,12 +1,13 @@
 package it.polimi.ingsw.client.GUI;
 
 public enum Views {
-    MAIN_MENU("mainMenu"),
-    SETUP("setup"),
-    PRE_MATCH("preGameSelection"),
-    WAITING("waiting"),
-    MARKET("market"),
-    PERSONAL_BOARD("personalBoard");
+    MAIN_MENU("/GUI/mainMenu"),
+    SETUP("/GUI/setup"),
+    PRE_MATCH("/GUI/preGameSelection"),
+    WAITING("/GUI/waiting"),
+    MARKET("/GUI/market"),
+    PERSONAL_BOARD("/GUI/personalBoard"),
+    DECK_DEV("/GUI/deckDevelopment");
 
     private final String name;
 
