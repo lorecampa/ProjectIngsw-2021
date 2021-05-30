@@ -76,12 +76,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controllerHandler.changeView(Views.PRE_MATCH);
             controller.setLeaderImages(paths);
         });
-
-
-
-
-
-
     }
 
     @Override
@@ -102,13 +96,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
             DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
             deckController.setUpDeckImages(message.getDeckDev());
         });
-
-
-
-
-
-
-
     }
 
     @Override
@@ -129,6 +116,19 @@ public class GUIMessageHandler extends ClientMessageHandler {
     }
 
     @Override
+    public void leaderDiscardUpdate(LeaderDiscard message) {
+        super.leaderDiscardUpdate(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetLeader();
+                personalBoardController.setDisableLeaderBtn(true);
+                personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+    @Override
     public void bufferUpdate(BufferUpdate message) {
 
     }
@@ -141,6 +141,30 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message) {
 
+    }
+
+    @Override
+    public void faithTrackPositionIncreased(FaithTrackIncrement message) {
+        super.faithTrackPositionIncreased(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetFaithTrack();
+                personalBoardController.loadFaithTrack(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+    @Override
+    public void popeFavorActivation(PopeFavorActivated message) {
+        super.popeFavorActivation(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetFaithTrack();
+                personalBoardController.loadFaithTrack(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
     }
 
     @Override

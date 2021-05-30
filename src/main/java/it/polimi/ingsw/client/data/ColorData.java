@@ -14,12 +14,12 @@ public enum ColorData {
     WHITE("WHITE");
 
     private final String displayName;
-    private final String greyMarble = "/it/polimi/ingsw/client/GUI/punchboard/grey_marble.png";
-    private final String yellowMarble = "/it/polimi/ingsw/client/GUI/punchboard/yellow_marble.png";
-    private final String blueMarble = "/it/polimi/ingsw/client/GUI/punchboard/blue_marble.png";
-    private final String redMarble = "/it/polimi/ingsw/client/GUI/punchboard/red_marble.png";
-    private final String purpleMarble = "/it/polimi/ingsw/client/GUI/punchboard/purple_marble.png";
-    private final String whiteMarble = "/it/polimi/ingsw/client/GUI/punchboard/white_marble.png";
+    private final String greyMarble = "/GUI/punchboard/grey_marble.png";
+    private final String yellowMarble = "/GUI/punchboard/yellow_marble.png";
+    private final String blueMarble = "/GUI/punchboard/blue_marble.png";
+    private final String redMarble = "/GUI/punchboard/red_marble.png";
+    private final String purpleMarble = "/GUI/punchboard/purple_marble.png";
+    private final String whiteMarble = "/GUI/punchboard/white_marble.png";
 
     ColorData(String displayName) {
         this.displayName = displayName;

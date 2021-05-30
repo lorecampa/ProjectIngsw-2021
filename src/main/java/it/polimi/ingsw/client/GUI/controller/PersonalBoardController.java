@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
@@ -71,6 +70,7 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView card31;
     @FXML private ImageView card32;
     @FXML private ImageView card33;
+    @FXML private ImageView baseProd;
     @FXML private Button btn_back;
     @FXML private Button btn_market;
     @FXML private Button btn_prod;
@@ -78,7 +78,8 @@ public class PersonalBoardController extends Controller{
     @FXML private Button btn_deck;
     @FXML private Button btn_discard1;
     @FXML private Button btn_discard2;
-
+    @FXML private ImageView prodLeader1;
+    @FXML private ImageView prodLeader2;
     @FXML private ImageView leader1;
     @FXML private ImageView leader2;
     @FXML private ImageView le_depot_11;
@@ -88,6 +89,7 @@ public class PersonalBoardController extends Controller{
     @FXML private ChoiceBox<String> choice_username;
 
 
+    private String currentShowed;
     private final ArrayList<ImageView> track = new ArrayList<>();
     private final ArrayList<ImageView> popeFavorsDiscard = new ArrayList<>();
     private final ArrayList<ImageView> popeFavorsAcquired = new ArrayList<>();
@@ -96,6 +98,7 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<ArrayList<ImageView>> cardSlots = new ArrayList<>();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
     private final ArrayList<ImageView> leadersDepots = new ArrayList<>();
+    private final ArrayList<ImageView> leadersProd = new ArrayList<>();
 
     @FXML
     public void initialize(){
@@ -107,8 +110,16 @@ public class PersonalBoardController extends Controller{
         setUpStrongbox();
         setUpCardSlots();
         setUpLeaders();
+        setUpLeadersProd();
     }
 
+    public String getCurrentShowed() {
+        return currentShowed;
+    }
+
+    //------------------------
+    // SET UP VARIABLES
+    //------------------------
     private void setUpTrack(){
         track.addAll(Arrays.asList(pos0,pos1,pos2,pos3,pos4,pos5,pos6,pos7,pos8,pos9,pos10,pos11,pos12,pos13,pos14,
                 pos15,pos16,pos17,pos18,pos19,pos20,pos21,pos22,pos23,pos24));
@@ -126,6 +137,14 @@ public class PersonalBoardController extends Controller{
 
         leadersDepots.forEach(imageView -> imageView.setVisible(false));
 
+    }
+
+    private void setUpLeadersProd(){
+        leadersProd.add(prodLeader1);
+        leadersProd.add(prodLeader2);
+
+        prodLeader1.setVisible(false);
+        prodLeader2.setVisible(false);
     }
 
     private void setUpDepots(){
@@ -189,7 +208,10 @@ public class PersonalBoardController extends Controller{
         popeFavorsAcquired.forEach(image -> image.setVisible(false));
     }
 
-    private void loadFaithTrack(ModelData model){
+    //-------------------------------
+    // LOADING FROM MODEL PART TO GUI
+    //-------------------------------
+    public void loadFaithTrack(ModelData model){
         //FAITH TRACK
         ArrayList<FaithTrackData> faithTrackData = model.getFaithTrack();
         track.get(model.getCurrentPosOnFaithTrack()).setVisible(true);
@@ -238,13 +260,26 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    private void loadLeader(ModelData model){
+    public void loadLeader(ModelData model){
         //LEADERS
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
+        boolean owned = Client.getInstance().getMyName().equals(model.getUsername());
         for (int i = 0; i < leadersData.size() && i<2; i++) {
-            leaders.get(i).setImage(new Image(leadersData.get(i).toResourcePath()));
+            CardLeaderData leaderData = leadersData.get(i);
+            leaders.get(i).setImage(new Image(leaderData.toResourcePath()));
+            switch (i){
+                case 0:
+                    btn_discard1.setDisable(!owned);
+                    btn_discard1.setVisible(owned);
+                    leaders.get(i).setDisable(!owned);
+                    break;
+                case 1:
+                    btn_discard2.setDisable(!owned);
+                    btn_discard2.setVisible(owned);
+                    leaders.get(i).setDisable(!owned);
+                    break;
+            }
         }
-
     }
 
     private void loadStrongBox(ModelData model){
@@ -274,16 +309,10 @@ public class PersonalBoardController extends Controller{
         choice_username.getItems().addAll(usernames);
     }
 
-    private void setDisableBoard(boolean disable){
-        leader1.setDisable(disable);
-        leader2.setDisable(disable);
-
-        btn_discard1.setDisable(disable);
-        btn_discard1.setVisible(!disable);
-
-        btn_discard2.setDisable(disable);
-        btn_discard2.setVisible(!disable);
-
+    //----------------
+    // UTILITIES
+    //----------------
+    private void setDisableBoardForOther(boolean disable){
         btn_prod.setDisable(disable);
         btn_prod.setVisible(!disable);
         btn_market.setDisable(disable);
@@ -292,7 +321,30 @@ public class PersonalBoardController extends Controller{
         btn_deck.setVisible(!disable);
     }
 
+    private void setDisableBoardForProd(boolean disable){
+        setDisableLeaderBtn(disable);
+        btn_market.setDisable(disable);
+        btn_market.setVisible(!disable);
+        btn_deck.setDisable(disable);
+        btn_deck.setVisible(!disable);
+    }
+
+    public void setDisableLeaderBtn(boolean disable){
+        leader1.setDisable(disable);
+        leader2.setDisable(disable);
+
+        prodLeader1.setVisible(false);
+        prodLeader2.setVisible(false);
+
+        btn_discard1.setDisable(disable);
+        btn_discard1.setVisible(!disable);
+
+        btn_discard2.setDisable(disable);
+        btn_discard2.setVisible(!disable);
+    }
+
     private void resetBoard(){
+        setDisableLeaderBtn(true);
         resetFaithTrack();
         resetDepots();
         resetLeader();
@@ -301,9 +353,11 @@ public class PersonalBoardController extends Controller{
 
     private void resetCardSlots() {
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+        cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
+        baseProd.setDisable(true);
     }
 
-    private void resetLeader() {
+    public void resetLeader() {
         leaders.forEach(imageView -> imageView.setImage(new Image("/GUI/back/leader_back.png")));
     }
 
@@ -312,35 +366,55 @@ public class PersonalBoardController extends Controller{
         leadersDepots.forEach(imageView -> imageView.setVisible(false));
     }
 
-    private void resetFaithTrack() {
+    public void resetFaithTrack() {
         track.forEach(imageView -> imageView.setVisible(false));
         popeFavorsAcquired.forEach(imageView -> imageView.setVisible(false));
         popeFavorsDiscard.forEach(imageView -> imageView.setVisible(true));
     }
 
+    //-------------------------
+    // LOAD WHOLE MODEL TO GUI
+    //-------------------------
+
     @Override
     public void setUpAll(){
+        resetBoard();
+        setDisableBoardForOther(false);
+
         ModelData model = Client.getInstance().getMyModel().toModelData();
-        loadFaithTrack(model);
-        loadDepots(model);
-        loadLeader(model);
-        loadStrongBox(model);
-        loadCardSlots(model);
-        loadChoiceBox();
+        loadBoard(model);
+
+        btn_back.setDisable(true);
+        btn_back.setVisible(false);
+
+        currentShowed = Client.getInstance().getMyName();
     }
 
     public void setUpOtherPlayer(String username){
         resetBoard();
+        setDisableBoardForOther(true);
+
         ModelData model = Client.getInstance().getModelOf(username).toModelData();
+        loadBoard(model);
+
+        btn_back.setDisable(false);
+        btn_back.setVisible(true);
+
+        currentShowed = username;
+    }
+
+    private void loadBoard(ModelData model){
         loadFaithTrack(model);
         loadDepots(model);
         loadLeader(model);
         loadStrongBox(model);
         loadCardSlots(model);
         loadChoiceBox();
-
-        setDisableBoard(true);
     }
+
+    //-----------------
+    // GUI ACTIONS
+    //-----------------
 
     @FXML
     public void marketButton(){
@@ -356,6 +430,15 @@ public class PersonalBoardController extends Controller{
     }
 
     @FXML
+    public void leaderProdClicked(MouseEvent actionEvent){
+        if (actionEvent.getSource().equals(prodLeader1)) {
+            System.out.println("leader 1 prod");//Client.getInstance().writeToStream(new ProductionAction(0, true));
+        }
+        else
+            System.out.println("leader 2 prod");//Client.getInstance().writeToStream(new ProductionAction(1, true));
+    }
+
+    @FXML
     public void leaderDiscard(ActionEvent actionEvent){
         if (actionEvent.getSource().equals(btn_discard1))
             Client.getInstance().writeToStream(new LeaderManage(0, true));
@@ -367,22 +450,43 @@ public class PersonalBoardController extends Controller{
     public void otherPlayerClicker(){
         if (Client.getInstance().existAModelOf(choice_username.getValue()))
             setUpOtherPlayer(choice_username.getValue());
-        btn_back.setDisable(false);
-        btn_back.setVisible(true);
+    }
+
+    @FXML
+    public void cardProdClicked(MouseEvent event){
+        if (event.getSource().equals(baseProd))
+            System.out.println("base prod");//Client.getInstance().writeToStream(new BaseProduction());
+        else{
+            for (int i = 0; i < cardSlots.size(); i++) {
+                if(cardSlots.get(i).stream().anyMatch(imageView -> imageView.equals(event.getSource())))
+                    System.out.println("card slot " + i);//Client.getInstance().writeToStream(new ProductionAction(i,false));
+            }
+        }
+    }
+
+    @FXML
+    public void activateProduction(){
+        setDisableBoardForProd(true);
+        ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
+        for (int i = 0; i < leadersData.size(); i++) {
+            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION)))
+                leadersProd.get(i).setVisible(true);
+        }
+        baseProd.setDisable(false);
+        ArrayList<ArrayList<CardDevData>> cardSlotsData = Client.getInstance().getMyModel().toModelData().getCardSlots();
+        for (int i = 0; i < cardSlotsData.size(); i++) {
+            cardSlots.get(i).get(cardSlotsData.get(i).size()-1).setDisable(false);
+        }
+
     }
 
     @FXML
     public void back(){
-        resetBoard();
-        setDisableBoard(false);
         setUpAll();
-        btn_back.setDisable(true);
-        btn_back.setVisible(false);
+
     }
 
     public void showDeckDev(){
-        Platform.runLater(()->{
-            ControllerHandler.getInstance().changeView(Views.DECK_DEV);
-        });
+        Platform.runLater(()-> ControllerHandler.getInstance().changeView(Views.DECK_DEV));
     }
 }
