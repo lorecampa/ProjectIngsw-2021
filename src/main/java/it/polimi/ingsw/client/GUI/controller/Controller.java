@@ -65,4 +65,8 @@ public abstract class Controller {
         return fade;
     }
 
+    public String getResourcePath(String name){
+        return Objects.requireNonNull(getClass().getResource("/GUI/" + name)).toString();
+    }
+
 }

@@ -49,8 +49,7 @@ public class MastersOfRenaissanceTest
 
     @Test
     void test1(){
-        InputStream stream = getClass().getResourceAsStream("/front/" + 30 + ".png");
-        Image image = new Image(stream);
+        it.polimi.ingsw.Test.main(null);
     }
 
     @Test

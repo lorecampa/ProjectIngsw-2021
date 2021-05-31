@@ -154,7 +154,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
         resources.add(new ResourceData(ResourceType.COIN, 3));
         resources.add(new ResourceData(ResourceType.SERVANT, 3));
         resources.add(new ResourceData(ResourceType.STONE, 4));
-        resources.add(new ResourceData(ResourceType.SHIELD, 5));
+        //resources.add(new ResourceData(ResourceType.SHIELD, 5));
 
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);

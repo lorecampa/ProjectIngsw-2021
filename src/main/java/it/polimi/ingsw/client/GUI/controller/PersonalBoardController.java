@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -23,9 +24,12 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
+import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,10 +71,10 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView dep22;
     @FXML private ImageView dep21;
     @FXML private ImageView dep11;
-    @FXML private Text strong_coin;
-    @FXML private Text strong_serv;
-    @FXML private Text strong_shield;
-    @FXML private Text strong_stone;
+    @FXML private Label strong_coin;
+    @FXML private Label strong_serv;
+    @FXML private Label strong_shield;
+    @FXML private Label strong_stone;
     @FXML private ImageView card11;
     @FXML private ImageView card12;
     @FXML private ImageView card13;
@@ -107,6 +111,14 @@ public class PersonalBoardController extends Controller{
     @FXML private Pane cardSlot2;
     @FXML private Pane cardSlot3;
 
+    //from market res
+    private Label startLabel;
+    private ImageView startImage;
+    private Label destLabel;
+
+
+
+
     private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD;}
     private ProdState prodState;
 
@@ -116,7 +128,7 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<ImageView> popeFavorsDiscard = new ArrayList<>();
     private final ArrayList<ImageView> popeFavorsAcquired = new ArrayList<>();
     private final ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
-    private final Map<ResourceType,Text> strongBox = new HashMap<>();
+    private final Map<ResourceType,Label> strongBox = new HashMap<>();
     private final ArrayList<ArrayList<ImageView>> cardSlots = new ArrayList<>();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
     private final ArrayList<ImageView> leadersDepots = new ArrayList<>();
@@ -208,10 +220,17 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setUpStrongbox(){
+        strong_coin.setId(ResourceType.COIN.toString());
         strongBox.put(ResourceType.COIN,strong_coin);
+
+        strong_serv.setId(ResourceType.SERVANT.toString());
         strongBox.put(ResourceType.SERVANT,strong_serv);
+
         strongBox.put(ResourceType.SHIELD,strong_shield);
+        strong_shield.setId(ResourceType.SHIELD.toString());
+
         strongBox.put(ResourceType.STONE,strong_stone);
+        strong_stone.setId(ResourceType.STONE.toString());
     }
 
     private void setUpCardSlots(){
@@ -582,27 +601,10 @@ public class PersonalBoardController extends Controller{
     }
 
 
-    public void setUpResourceFromMarket(ArrayList<ResourceData> resources){
-        resourcePositioningGrid.setVisible(true);
-        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
 
-        for (ResourceData res: resources){
-            ResourceType type = res.getType();
-            Node node = null;
-            if (type == ResourceType.COIN){
-                node = nodes.get(4);
-            }else if(type == ResourceType.SHIELD){
-                node = nodes.get(5);
-            }else if(type == ResourceType.SERVANT){
-                node = nodes.get(6);
-            }else if (type == ResourceType.STONE){
-                node = nodes.get(7);
-            }
-            Label label  = (Label) node;
-            label.setText((Integer.toString(res.getValue())));
-        }
 
-    }
+
+
 
 
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
@@ -622,17 +624,105 @@ public class PersonalBoardController extends Controller{
 
     }
 
-    public void premuto(MouseEvent mouseEvent) {
-        System.out.println("pane "+ mouseEvent.getSource());
+
+
+
+    //RESOURCE FORM MARKET METHODS
+
+    public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
+        resourcePositioningGrid.getChildren().forEach(x -> x.setVisible(false));
+        resourcePositioningGrid.setVisible(true);
+        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
+        int imageIndex = 0;
+        int labelIndex = imageIndex + 4;
+        for (ResourceData res : resources) {
+            Image image = null;
+            ResourceType type = res.getType();
+            if (type == ResourceType.COIN) {
+                image = new Image(getResourcePath("punchboard/coin.png"));
+            } else if (type == ResourceType.SHIELD) {
+                image = new Image(getResourcePath("punchboard/shield.png"));
+            } else if (type == ResourceType.SERVANT) {
+                image = new Image(getResourcePath("punchboard/servant.png"));
+            } else if (type == ResourceType.STONE) {
+                image = new Image(getResourcePath("punchboard/stone.png"));
+            }
+
+            ImageView imageView = (ImageView) nodes.get(imageIndex);
+            Label label = (Label) nodes.get(labelIndex);
+
+            label.setText(Integer.toString(res.getValue()));
+            label.setId(res.getType().toString());
+            label.setVisible(true);
+
+            imageView.setImage(image);
+            imageView.setId(res.getType().toString());
+            imageView.setVisible(true);
+            imageIndex ++;
+            labelIndex++;
+        }
+
     }
 
 
-    //DRAG METHODS
+    @FXML
+    public void dragDetected(MouseEvent event){
+        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
+        Node source = event.getPickResult().getIntersectedNode();
+        int col = GridPane.getColumnIndex(source);
+        ImageView imageView = (ImageView) nodes.get(col);
+        Label label = (Label) nodes.get(col + 4);
 
+        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putImage(imageView.getImage());
+        db.setContent(content);
+        event.consume();
 
+        startImage = imageView;
+        startLabel = label;
+    }
 
+    @FXML
+    public void dragOver(DragEvent event){
+        //System.out.println("On drag over");
+        if (event.getDragboard().hasImage()) {
+            event.acceptTransferModes(TransferMode.ANY);
+            Label targetLabel;
+            if (event.getTarget() instanceof Label){
+                targetLabel = (Label) event.getTarget();
+            }else{
+                return;
+            }
 
+            if (targetLabel.getId().equals(startLabel.getId())){
+                destLabel = targetLabel;
+            }else{
+                destLabel = null;
+            }
+        }
+        event.consume();
+    }
 
+    @FXML
+    public void dragDropped(DragEvent event){
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (db.hasImage() && destLabel != null) {
+            int destNum = Integer.parseInt(destLabel.getText());
+            int startNum = Integer.parseInt(startLabel.getText());
+
+            destLabel.setText(Integer.toString(destNum + 1));
+            startLabel.setText(Integer.toString(startNum - 1));
+            if (startNum == 1){
+                startLabel.setVisible(false);
+                startImage.setVisible(false);
+            }
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
 
 
 
