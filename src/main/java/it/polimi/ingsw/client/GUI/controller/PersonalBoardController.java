@@ -448,6 +448,18 @@ public class PersonalBoardController extends Controller{
         btn_discard2.setVisible(!disable);
     }
 
+    public void setBoardForBuffer(){
+        depots.forEach(imageViews -> imageViews.stream()
+                .filter(Node::isVisible).forEach(imageView -> imageView.setDisable(false)));
+
+        leadersDepots.stream().filter(ImageView::isVisible).forEach(imageView -> imageView.setDisable(false));
+
+        strong_coin.setDisable(false);
+        strong_serv.setDisable(false);
+        strong_shield.setDisable(false);
+        strong_stone.setDisable(false);
+    }
+
     private void resetBoard(){
         setDisableLeaderBtn(true);
         resetFaithTrack();
@@ -628,7 +640,49 @@ public class PersonalBoardController extends Controller{
     @FXML
     public void back(){
         setUpAll();
+    }
 
+    @FXML
+    public void depotResourcePressed(MouseEvent mouseEvent){
+        ModelData modelData = Client.getInstance().getMyModel().toModelData();
+        ResourceData resourceData;
+        for (int i = 0; i < depots.size(); i++) {
+            if (depots.get(i).stream().anyMatch(imageView -> imageView.equals(mouseEvent.getSource()))){
+                resourceData = new ResourceData(modelData.getStandardDepot().get(i).getType(), 1);
+                Client.getInstance().writeToStream(new DepotModify(i, resourceData, true));
+                break;
+            }
+        }
+    }
+
+    @FXML
+    public void depotLeaderPressed(MouseEvent mouseEvent){
+        ModelData modelData = Client.getInstance().getMyModel().toModelData();
+        ResourceData resourceData;
+        for (int i = 0; i < leadersDepots.size(); i++) {
+            if (leadersDepots.get(i).equals(mouseEvent.getSource())){
+                if (i<2) {
+                    resourceData = new ResourceData(modelData.getLeaderDepot().get(0).getType(), 1);
+                    Client.getInstance().writeToStream(new DepotModify(0, resourceData, true));
+                }
+                else{
+                    resourceData = new ResourceData(modelData.getLeaderDepot().get(1).getType(), 1);
+                    Client.getInstance().writeToStream(new DepotModify(1, resourceData, true));
+                }
+            }
+        }
+    }
+
+    @FXML
+    public void strongboxPressed(MouseEvent mouseEvent){
+        if (strong_stone.equals(mouseEvent.getSource()))
+            Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.STONE,1)));
+        if (strong_shield.equals(mouseEvent.getSource()))
+            Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.SHIELD,1)));
+        if (strong_serv.equals(mouseEvent.getSource()))
+            Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.SERVANT,1)));
+        if (strong_coin.equals(mouseEvent.getSource()))
+            Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.COIN,1)));
     }
 
     public void showDeckDev(){
@@ -660,7 +714,6 @@ public class PersonalBoardController extends Controller{
         Node source = event.getPickResult().getIntersectedNode();
         System.out.println(GridPane.getRowIndex(source));
         System.out.println(GridPane.getColumnIndex(source));
-
     }
 
 
@@ -775,9 +828,4 @@ public class PersonalBoardController extends Controller{
         event.setDropCompleted(success);
         event.consume();
     }
-
-
-
-
-
 }

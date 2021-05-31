@@ -48,11 +48,6 @@ public class MastersOfRenaissanceTest
     }
 
     @Test
-    void test1(){
-        it.polimi.ingsw.Test.main(null);
-    }
-
-    @Test
     public void CardPrintTest() throws IOException, JsonFileModificationError {
 
         LinkedList<Leader> deckLeader = gs.getDeckLeader();
