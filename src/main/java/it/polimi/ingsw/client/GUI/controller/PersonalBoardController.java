@@ -5,7 +5,10 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
+import it.polimi.ingsw.message.serverMessage.BaseProduction;
+import it.polimi.ingsw.message.serverMessage.EndProductionSelection;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
+import it.polimi.ingsw.message.serverMessage.ProductionAction;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -21,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -100,7 +104,12 @@ public class PersonalBoardController extends Controller{
     @FXML private GridPane resourcePositioningGrid;
     @FXML private GridPane selectCardSlotGrid;
 
+    @FXML private Pane cardSlot1;
+    @FXML private Pane cardSlot2;
+    @FXML private Pane cardSlot3;
 
+    private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD;}
+    private ProdState prodState;
 
 
     private String currentShowed;
@@ -118,8 +127,14 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void initialize(){
+        prodState = ProdState.NOT_IN_PROD;
         btn_back.setVisible(false);
         btn_back.setDisable(true);
+        resourcePositioningGrid.setVisible(false);
+        resourcePositioningGrid.getChildren().forEach(node -> node.setVisible(false));
+        cardSlot1.setDisable(true);
+        cardSlot2.setDisable(true);
+        cardSlot3.setDisable(true);
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -127,9 +142,6 @@ public class PersonalBoardController extends Controller{
         setUpCardSlots();
         setUpLeaders();
         setUpLeadersProd();
-
-
-
     }
 
 
@@ -355,6 +367,10 @@ public class PersonalBoardController extends Controller{
         btn_market.setVisible(!disable);
         btn_deck.setDisable(disable);
         btn_deck.setVisible(!disable);
+        btn_players.setDisable(disable);
+        btn_players.setVisible(!disable);
+        choice_username.setDisable(disable);
+        choice_username.setVisible(!disable);
     }
 
     public void setDisableLeaderBtn(boolean disable){
@@ -459,11 +475,12 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void leaderProdClicked(MouseEvent actionEvent){
+        prodState = ProdState.ALREADY_PROD;
         if (actionEvent.getSource().equals(prodLeader1)) {
-            System.out.println("leader 1 prod");//Client.getInstance().writeToStream(new ProductionAction(0, true));
+            Client.getInstance().writeToStream(new ProductionAction(0, true));
         }
         else
-            System.out.println("leader 2 prod");//Client.getInstance().writeToStream(new ProductionAction(1, true));
+            Client.getInstance().writeToStream(new ProductionAction(1, true));
     }
 
     @FXML
@@ -482,30 +499,64 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void cardProdClicked(MouseEvent event){
+        prodState = ProdState.ALREADY_PROD;
         if (event.getSource().equals(baseProd))
-            System.out.println("base prod");//Client.getInstance().writeToStream(new BaseProduction());
+            Client.getInstance().writeToStream(new BaseProduction());
         else{
             for (int i = 0; i < cardSlots.size(); i++) {
                 if(cardSlots.get(i).stream().anyMatch(imageView -> imageView.equals(event.getSource())))
-                    System.out.println("card slot " + i);//Client.getInstance().writeToStream(new ProductionAction(i,false));
+                    Client.getInstance().writeToStream(new ProductionAction(i,false));
             }
         }
     }
 
     @FXML
-    public void activateProduction(){
+    public void productionClicked(){
+        switch (prodState) {
+            case NOT_IN_PROD:
+                activateProd();
+                prodState = ProdState.INITIAL;
+                break;
+            case INITIAL:
+                softExitProd();
+                prodState = ProdState.NOT_IN_PROD;
+                btn_prod.setText("PRODUCTION");
+                break;
+            case ALREADY_PROD:
+                exitProd();
+                prodState = ProdState.NOT_IN_PROD;
+                btn_prod.setText("PRODUCTION");
+                break;
+        }
+    }
+
+    private void activateProd(){
         setDisableBoardForProd(true);
+        btn_prod.setText("END PRODUCTION");
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
         for (int i = 0; i < leadersData.size(); i++) {
-            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION)))
+            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION))
+                && leadersData.get(i).isActive())
                 leadersProd.get(i).setVisible(true);
         }
         baseProd.setDisable(false);
         ArrayList<ArrayList<CardDevData>> cardSlotsData = Client.getInstance().getMyModel().toModelData().getCardSlots();
         for (int i = 0; i < cardSlotsData.size(); i++) {
-            cardSlots.get(i).get(cardSlotsData.get(i).size()-1).setDisable(false);
+            if (cardSlotsData.get(i).size() > 0)
+                cardSlots.get(i).get(cardSlotsData.get(i).size()-1).setDisable(false);
         }
+    }
 
+    private void softExitProd(){
+        setDisableBoardForProd(false);
+        leadersProd.forEach(imageView -> imageView.setVisible(false));
+        baseProd.setDisable(true);
+        cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
+    }
+
+    private void exitProd(){
+        softExitProd();
+        Client.getInstance().writeToStream(new EndProductionSelection());
     }
 
     @FXML
@@ -563,7 +614,10 @@ public class PersonalBoardController extends Controller{
 
     }
 
-    
+    public void premuto(MouseEvent mouseEvent) {
+        System.out.println("pane "+ mouseEvent.getSource());
+    }
+
 
     //DRAG METHODS
 

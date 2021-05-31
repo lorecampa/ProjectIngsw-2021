@@ -19,7 +19,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PersonalBoardController">
    <children>
-      <ImageView fitHeight="665.0" fitWidth="936.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fitHeight="665.0" fitWidth="936.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@board/Masters of Renaissance_PlayerBoard (11_2020)-1.png" />
          </image>
@@ -117,86 +117,7 @@
             </GridPane>
          </children>
       </Pane>
-      <HBox layoutX="350.0" layoutY="250.0" prefHeight="364.0" prefWidth="543.0">
-         <children>
-            <Pane onMouseClicked="#premuto" prefHeight="365.0" prefWidth="182.0">
-               <children>
-                  <ImageView fx:id="card11" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card12" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card13" fitHeight="265.0" fitWidth="250.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
-            <Pane onMouseClicked="#premuto" prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="card21" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card22" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card23" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="1.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
-            <Pane onMouseClicked="#premuto" prefHeight="364.0" prefWidth="182.0">
-               <children>
-                  <ImageView fx:id="card31" fitHeight="265.0" fitWidth="250.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card32" fitHeight="265.0" fitWidth="250.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="card33" fitHeight="265.0" fitWidth="250.0" layoutY="1.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@front/1.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
-         </children>
-      </HBox>
-      <HBox layoutX="-1.0" layoutY="665.0" prefHeight="135.0" prefWidth="931.0">
-         <children>
-            <Button fx:id="btn_back" mnemonicParsing="false" onAction="#back" prefHeight="135.0" prefWidth="135.0" text="BACK" />
-            <Region prefHeight="135.0" prefWidth="20.0" />
-            <Button fx:id="btn_market" mnemonicParsing="false" onAction="#marketButton" prefHeight="135.0" prefWidth="135.0" text="MARKET" />
-            <Region prefHeight="135.0" prefWidth="20.0" />
-            <Button fx:id="btn_prod" mnemonicParsing="false" onAction="#activateProduction" prefHeight="135.0" prefWidth="135.0" text="PRODUCTION" />
-            <Region prefHeight="135.0" prefWidth="20.0" />
-            <Button fx:id="btn_deck" mnemonicParsing="false" onAction="#showDeckDev" prefHeight="135.0" prefWidth="135.0" text="DECK DEV" />
-            <Region prefHeight="135.0" prefWidth="20.0" />
-            <AnchorPane prefHeight="135.0" prefWidth="310.0">
-               <children>
-                  <Button fx:id="btn_players" alignment="CENTER" layoutX="89.0" layoutY="70.0" mnemonicParsing="false" onAction="#otherPlayerClicker" prefHeight="51.0" prefWidth="135.0" text="OTHER PLAYERS" />
-                  <ChoiceBox fx:id="choice_username" layoutX="29.0" layoutY="14.0" prefHeight="25.0" prefWidth="258.0" />
-               </children>
-            </AnchorPane>
-         </children>
-      </HBox>
-      <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="214.0" prefWidth="931.0" visible="false">
+      <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="214.0" prefWidth="931.0">
          <children>
             <GridPane layoutX="35.0" layoutY="34.0" prefHeight="143.0" prefWidth="870.0">
               <columnConstraints>
@@ -226,14 +147,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ImageView fx:id="pos0" fitHeight="46.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                     <image>
-                        <Image url="@punchboard/faith_marker.png" />
-                     </image>
-                     <GridPane.margin>
-                        <Insets bottom="5.0" />
-                     </GridPane.margin>
-                  </ImageView>
                   <ImageView fx:id="pos5" fitHeight="46.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER">
                      <image>
                         <Image url="@punchboard/faith_marker.png" />
@@ -418,6 +331,14 @@
                         <Insets right="6.0" />
                      </GridPane.margin>
                   </ImageView>
+                  <ImageView fx:id="pos0" fitHeight="46.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <image>
+                        <Image url="@punchboard/faith_marker.png" />
+                     </image>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" />
+                     </GridPane.margin>
+                  </ImageView>
                   <ImageView fx:id="pos24" fitHeight="46.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="18" GridPane.halignment="CENTER">
                      <image>
                         <Image url="@punchboard/faith_marker.png" />
@@ -460,6 +381,85 @@
             </ImageView>
          </children>
       </Pane>
+      <HBox layoutX="350.0" layoutY="250.0" prefHeight="364.0" prefWidth="543.0">
+         <children>
+            <Pane fx:id="cardSlot1" onMouseClicked="#premuto" prefHeight="365.0" prefWidth="182.0">
+               <children>
+                  <ImageView fx:id="card11" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card12" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card13" fitHeight="265.0" fitWidth="250.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane fx:id="cardSlot2" onMouseClicked="#premuto" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="card21" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card22" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card23" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="1.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane fx:id="cardSlot3" onMouseClicked="#premuto" prefHeight="364.0" prefWidth="182.0">
+               <children>
+                  <ImageView fx:id="card31" fitHeight="265.0" fitWidth="250.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card32" fitHeight="265.0" fitWidth="250.0" layoutY="50.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="card33" fitHeight="265.0" fitWidth="250.0" layoutY="1.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@front/1.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <HBox layoutX="-1.0" layoutY="665.0" prefHeight="135.0" prefWidth="931.0">
+         <children>
+            <Button fx:id="btn_back" mnemonicParsing="false" onAction="#back" prefHeight="135.0" prefWidth="135.0" text="BACK" />
+            <Region prefHeight="135.0" prefWidth="20.0" />
+            <Button fx:id="btn_market" mnemonicParsing="false" onAction="#marketButton" prefHeight="135.0" prefWidth="135.0" text="MARKET" />
+            <Region prefHeight="135.0" prefWidth="20.0" />
+            <Button fx:id="btn_prod" mnemonicParsing="false" onAction="#productionClicked" prefHeight="135.0" prefWidth="135.0" text="PRODUCTION" />
+            <Region prefHeight="135.0" prefWidth="20.0" />
+            <Button fx:id="btn_deck" mnemonicParsing="false" onAction="#showDeckDev" prefHeight="135.0" prefWidth="135.0" text="DECK DEV" />
+            <Region prefHeight="135.0" prefWidth="20.0" />
+            <AnchorPane prefHeight="135.0" prefWidth="310.0">
+               <children>
+                  <Button fx:id="btn_players" alignment="CENTER" layoutX="89.0" layoutY="70.0" mnemonicParsing="false" onAction="#otherPlayerClicker" prefHeight="51.0" prefWidth="135.0" text="OTHER PLAYERS" />
+                  <ChoiceBox fx:id="choice_username" layoutX="29.0" layoutY="14.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
       <AnchorPane layoutX="1005.0" layoutY="37.0" prefHeight="321.0" prefWidth="224.0">
          <children>
             <ImageView fx:id="leader1" fitHeight="337.0" fitWidth="288.0" onMouseClicked="#leaderClicked" pickOnBounds="true" preserveRatio="true">
@@ -533,7 +533,7 @@
                   <Image url="@punchboard/stone.png" />
                </image>
             </ImageView>
-            <Label fx:id="coinNumLabel" alignment="CENTER" onDragDetected="#prova" onMouseDragEntered="#prova" prefHeight="39.0" prefWidth="155.0" text="4">
+            <Label fx:id="coinNumLabel" alignment="CENTER" prefHeight="39.0" prefWidth="155.0" text="4">
                <font>
                   <Font size="33.0" />
                </font>
