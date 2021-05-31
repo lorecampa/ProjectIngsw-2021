@@ -4,14 +4,12 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
-import it.polimi.ingsw.message.serverMessage.BaseProduction;
-import it.polimi.ingsw.message.serverMessage.EndProductionSelection;
-import it.polimi.ingsw.message.serverMessage.LeaderManage;
-import it.polimi.ingsw.message.serverMessage.ProductionAction;
+import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -111,10 +109,24 @@ public class PersonalBoardController extends Controller{
     @FXML private Pane cardSlot2;
     @FXML private Pane cardSlot3;
 
+    @FXML private ImageView imageBuffer1;
+    @FXML private Label labelBuffer1;
+
+    @FXML private ImageView imageBuffer2;
+    @FXML private Label labelBuffer2;
+
+    @FXML private ImageView imageBuffer3;
+    @FXML private Label labelBuffer3;
+
+    @FXML private ImageView imageBuffer4;
+    @FXML private Label labelBuffer4;
+
+
+
+
     //from market res
-    private Label startLabel;
     private ImageView startImage;
-    private Label destLabel;
+    private ImageView destImage;
 
 
 
@@ -135,6 +147,8 @@ public class PersonalBoardController extends Controller{
     private int rowDevCard;
     private int colDevCard;
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
+    private final ArrayList<ImageView> resourceBufferImages = new ArrayList<>();
+    private final HashMap<ResourceType, Label> resourceBufferLabelsMap = new HashMap<>();
 
     @FXML
     public void initialize(){
@@ -142,7 +156,7 @@ public class PersonalBoardController extends Controller{
         btn_back.setVisible(false);
         btn_back.setDisable(true);
         resourcePositioningGrid.setVisible(false);
-        resourcePositioningGrid.getChildren().forEach(node -> node.setVisible(false));
+        //resourcePositioningGrid.getChildren().forEach(node -> node.setVisible(false));
         cardSlot1.setDisable(true);
         cardSlot2.setDisable(true);
         cardSlot3.setDisable(true);
@@ -153,6 +167,25 @@ public class PersonalBoardController extends Controller{
         setUpCardSlots();
         setUpLeaders();
         setUpLeadersProd();
+        setUpBuffer();
+    }
+
+    private void setUpBuffer(){
+        resourceBufferImages.add(imageBuffer1);
+        resourceBufferLabelsMap.put(ResourceType.COIN, labelBuffer1);
+        imageBuffer1.setId(ResourceType.COIN.toString());
+
+        resourceBufferImages.add(imageBuffer2);
+        resourceBufferLabelsMap.put(ResourceType.SHIELD, labelBuffer2);
+        imageBuffer2.setId(ResourceType.SHIELD.toString());
+
+        resourceBufferImages.add(imageBuffer3);
+        resourceBufferLabelsMap.put(ResourceType.SERVANT, labelBuffer3);
+        imageBuffer3.setId(ResourceType.SERVANT.toString());
+
+        resourceBufferImages.add(imageBuffer4);
+        resourceBufferLabelsMap.put(ResourceType.STONE, labelBuffer4);
+        imageBuffer4.setId(ResourceType.STONE.toString());
     }
 
 
@@ -202,16 +235,16 @@ public class PersonalBoardController extends Controller{
     private void setUpDepots(){
         ArrayList<ImageView> row0 = new ArrayList<>();
         row0.add(dep11);
-        row0.forEach(imageView -> imageView.setVisible(false));
+        //row0.forEach(imageView -> imageView.setVisible(false));
         ArrayList<ImageView> row1 = new ArrayList<>();
         row1.add(dep21);
         row1.add(dep22);
-        row1.forEach(imageView -> imageView.setVisible(false));
+        //row1.forEach(imageView -> imageView.setVisible(false));
         ArrayList<ImageView> row2 = new ArrayList<>();
         row2.add(dep31);
         row2.add(dep32);
         row2.add(dep33);
-        row2.forEach(imageView -> imageView.setVisible(false));
+        //row2.forEach(imageView -> imageView.setVisible(false));
 
         depots.add(row0);
         depots.add(row1);
@@ -302,18 +335,24 @@ public class PersonalBoardController extends Controller{
             case 1:
                 boolean isWarehouse = leadersData.get(0).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
                 if (isWarehouse) {
+                    leadersDepots.get(0).setVisible(true);
+                    leadersDepots.get(1).setVisible(true);
                     for (int i = 0; i < le_depots.get(0).getValue(); i++) {
                         leadersDepots.get(i).setImage(new Image(le_depots.get(0).toResourceImage()));
                     }
                 } else {
+                    leadersDepots.get(2).setVisible(true);
+                    leadersDepots.get(3).setVisible(true);
                     for (int i = 0; i < le_depots.get(0).getValue(); i++) {
                         leadersDepots.get(i+2).setImage(new Image(le_depots.get(0).toResourceImage()));
                     }
                 }
                 break;
             case 2:
+                leadersDepots.forEach(x -> x.setVisible(true));
                 for (int i = 0; i < le_depots.get(0).getValue(); i++) {
                     leadersDepots.get(i).setImage(new Image(le_depots.get(0).toResourceImage()));
+
                 }
                 for (int i = 0; i < le_depots.get(1).getValue(); i++) {
                     leadersDepots.get(i+2).setImage(new Image(le_depots.get(1).toResourceImage()));
@@ -429,7 +468,7 @@ public class PersonalBoardController extends Controller{
     }
 
     public void resetStandardDepots() {
-        depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+        //depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
     }
 
     public void resetLeaderDepots(){
@@ -630,94 +669,107 @@ public class PersonalBoardController extends Controller{
     //RESOURCE FORM MARKET METHODS
 
     public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
-        resourcePositioningGrid.getChildren().forEach(x -> x.setVisible(false));
         resourcePositioningGrid.setVisible(true);
-        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
-        int imageIndex = 0;
-        int labelIndex = imageIndex + 4;
         for (ResourceData res : resources) {
-            Image image = null;
-            ResourceType type = res.getType();
-            if (type == ResourceType.COIN) {
-                image = new Image(getResourcePath("punchboard/coin.png"));
-            } else if (type == ResourceType.SHIELD) {
-                image = new Image(getResourcePath("punchboard/shield.png"));
-            } else if (type == ResourceType.SERVANT) {
-                image = new Image(getResourcePath("punchboard/servant.png"));
-            } else if (type == ResourceType.STONE) {
-                image = new Image(getResourcePath("punchboard/stone.png"));
-            }
-
-            ImageView imageView = (ImageView) nodes.get(imageIndex);
-            Label label = (Label) nodes.get(labelIndex);
-
-            label.setText(Integer.toString(res.getValue()));
-            label.setId(res.getType().toString());
-            label.setVisible(true);
-
-            imageView.setImage(image);
-            imageView.setId(res.getType().toString());
-            imageView.setVisible(true);
-            imageIndex ++;
-            labelIndex++;
+            resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
         }
+
+        resourceBufferImages.forEach(x -> {
+            x.setOnDragDetected(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    dragDetected(event);
+                }
+            });
+        });
+
+        depots.forEach(imageViews -> imageViews
+                .forEach(imageView -> {
+                    imageView.setOnDragOver(new EventHandler<DragEvent>() {
+                        @Override
+                        public void handle(DragEvent event) {
+                            dragOver(event);
+                        }
+                    });
+                    imageView.setOnDragDropped(new EventHandler<DragEvent>() {
+                        @Override
+                        public void handle(DragEvent event) {
+                            dragDropped(event);
+                        }
+                    });
+                }));
+
+        leadersDepots.forEach(imageView -> {
+            imageView.setOnDragOver(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    dragOver(event);
+                }
+            });
+            imageView.setOnDragDropped(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    dragDropped(event);
+                }
+            });
+        });
+
 
     }
 
 
-    @FXML
+
+
     public void dragDetected(MouseEvent event){
-        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
         Node source = event.getPickResult().getIntersectedNode();
-        int col = GridPane.getColumnIndex(source);
-        ImageView imageView = (ImageView) nodes.get(col);
-        Label label = (Label) nodes.get(col + 4);
+        ImageView imageView = (ImageView) source;
 
         Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
         ClipboardContent content = new ClipboardContent();
         content.putImage(imageView.getImage());
+        startImage = (ImageView) event.getSource();
         db.setContent(content);
         event.consume();
-
-        startImage = imageView;
-        startLabel = label;
     }
 
-    @FXML
+    private ResourceType getResourceTypeFromString(String resourceString){
+        if (resourceString.equals(ResourceType.COIN.toString())){
+            return ResourceType.COIN;
+        }else if(resourceString.equals(ResourceType.SHIELD.toString())){
+            return ResourceType.SHIELD;
+        }else if(resourceString.equals(ResourceType.SERVANT.toString())){
+            return ResourceType.SERVANT;
+        }else{
+            return ResourceType.STONE;
+        }
+    }
+
     public void dragOver(DragEvent event){
-        //System.out.println("On drag over");
+        System.out.println("Drag Over");
         if (event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.ANY);
-            Label targetLabel;
-            if (event.getTarget() instanceof Label){
-                targetLabel = (Label) event.getTarget();
-            }else{
-                return;
-            }
-
-            if (targetLabel.getId().equals(startLabel.getId())){
-                destLabel = targetLabel;
-            }else{
-                destLabel = null;
-            }
+            destImage = (ImageView) event.getTarget();
         }
         event.consume();
     }
 
-    @FXML
     public void dragDropped(DragEvent event){
+        System.out.println("Drag Dropped");
         Dragboard db = event.getDragboard();
         boolean success = false;
-        if (db.hasImage() && destLabel != null) {
-            int destNum = Integer.parseInt(destLabel.getText());
-            int startNum = Integer.parseInt(startLabel.getText());
+        if (db.hasImage()) {
 
-            destLabel.setText(Integer.toString(destNum + 1));
-            startLabel.setText(Integer.toString(startNum - 1));
-            if (startNum == 1){
-                startLabel.setVisible(false);
-                startImage.setVisible(false);
+            int depotIndex = 0;
+            for (int i = 0; i < depots.size(); i++) {
+                if (depots.get(i).stream().anyMatch(imageView -> imageView.equals(destImage))){
+                    depotIndex = i;
+                    break;
+                }
             }
+
+
+            Client.getInstance().writeToStream(new DepotModify(depotIndex,
+                    new ResourceData(getResourceTypeFromString(startImage.getId()), 1), true));
             success = true;
         }
         event.setDropCompleted(success);
