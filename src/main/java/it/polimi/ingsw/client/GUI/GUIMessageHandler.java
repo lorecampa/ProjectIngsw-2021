@@ -7,9 +7,12 @@ import it.polimi.ingsw.client.GUI.controller.*;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,46 @@ public class GUIMessageHandler extends ClientMessageHandler {
     private final ControllerHandler controllerHandler = ControllerHandler.getInstance();
 
 
+    @Override
+    public void reconnect(ReconnectionMessage message){
+        try {
+            super.reconnect(message);
+            Platform.runLater(()->{
+                controllerHandler.getCurrentController().showCustomMessage("We saved your main data, making sure you can disconnect and reconnect during the game!");
+            });
+        } catch (IOException e) {
+            Platform.runLater(()->{
+                controllerHandler.getCurrentController().showCustomMessage("Not able to save the file with your info to reconnect!");
+            });
+        }
+    }
+
+    @Override
+    public void reconnectGameSetUp(ReconnectGameMessage message) {
+        super.reconnectGameSetUp(message);
+        Platform.runLater(()->{
+            controllerHandler.getCurrentController().showCustomMessage("It's your turn!");
+        });
+    }
+
+    @Override
+    public void validReconnect(ConnectionMessage message) {
+        super.validReconnect(message);
+        Platform.runLater(()->{
+            controllerHandler.getCurrentController().showCustomMessage("Reconnected as "+message.getMessage()+"!");
+        });
+    }
+
+    @Override
+    public void strongboxUpdate(StrongboxUpdate message) {
+        super.strongboxUpdate(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.loadStrongBox(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
 
     @Override
     public void handleError(ErrorMessage message) {
@@ -30,7 +73,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void connectNewUser(ConnectionMessage message) {
-
+        Platform.runLater(()->{
+            controllerHandler.getCurrentController().showCustomMessage(message.getMessage());
+        });
     }
 
     @Override
@@ -62,8 +107,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->{
             controllerHandler.getCurrentController().showCustomMessage(msg);
         });
-
-
     }
 
     @Override
@@ -73,7 +116,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void connectInfo(ConnectionMessage message) {
-
+        Platform.runLater(()->{
+            controllerHandler.getCurrentController().showCustomMessage(message.getMessage());
+        });
     }
 
 
@@ -115,8 +160,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setUpResourceFromMarket(resources);
         });
-
-
 
         Platform.runLater(()->{
             DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
@@ -192,6 +235,56 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
+
+    @Override
+    public void activeLeader(LeaderActivate message) {
+        super.activeLeader(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetLeader();
+                personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+    @Override
+    public void cardSlotUpdate(CardSlotUpdate message) {
+        super.cardSlotUpdate(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetCardSlots();
+                personalBoardController.loadCardSlots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+    @Override
+    public void depotUpdate(DepotUpdate message) {
+        super.depotUpdate(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetStandardDepots();
+                personalBoardController.loadStandardDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+    @Override
+    public void depotLeaderUpdate(DepotLeaderUpdate message) {
+        super.depotLeaderUpdate(message);
+        Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                personalBoardController.resetLeaderDepots();
+                personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+            }
+        });
+    }
+
+
 
     @Override
     public void winningCondition() {

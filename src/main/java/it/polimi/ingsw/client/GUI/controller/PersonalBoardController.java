@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
@@ -13,7 +12,6 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -25,6 +23,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -149,6 +148,7 @@ public class PersonalBoardController extends Controller{
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
         label.setText(msg);
+        label.setTextFill(Paint.valueOf("Red"));
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);
     }
@@ -264,7 +264,7 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    private void loadDepots(ModelData model){
+    public void loadStandardDepots(ModelData model){
         //DEPOTS
         ArrayList<ResourceData> standardDepots = model.getStandardDepot();
         for (int i = 0; i < standardDepots.size(); i++) {
@@ -273,6 +273,9 @@ public class PersonalBoardController extends Controller{
                 depots.get(i).get(j).setVisible(true);
             }
         }
+    }
+
+    public void loadLeaderDepots(ModelData model){
         //LEADER DEPOTS
         ArrayList<ResourceData> le_depots = model.getLeaderDepot();
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
@@ -322,7 +325,7 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    private void loadStrongBox(ModelData model){
+    public void loadStrongBox(ModelData model){
         //STRONGBOX
         ArrayList<ResourceData> strongBoxData = model.getStrongbox();
         for (ResourceData resourceData : strongBoxData){
@@ -330,7 +333,7 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    private void loadCardSlots(ModelData model){
+    public void loadCardSlots(ModelData model){
         //CARD SLOTS
         ArrayList<ArrayList<CardDevData>>cardSlotsData = model.getCardSlots();
         for (int i = 0; i < cardSlotsData.size(); i++) {
@@ -390,12 +393,13 @@ public class PersonalBoardController extends Controller{
     private void resetBoard(){
         setDisableLeaderBtn(true);
         resetFaithTrack();
-        resetDepots();
+        resetStandardDepots();
+        resetLeaderDepots();
         resetLeader();
         resetCardSlots();
     }
 
-    private void resetCardSlots() {
+    public void resetCardSlots() {
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
         baseProd.setDisable(true);
@@ -405,8 +409,11 @@ public class PersonalBoardController extends Controller{
         leaders.forEach(imageView -> imageView.setImage(new Image("/GUI/back/leader_back.png")));
     }
 
-    private void resetDepots() {
+    public void resetStandardDepots() {
         depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+    }
+
+    public void resetLeaderDepots(){
         leadersDepots.forEach(imageView -> imageView.setVisible(false));
     }
 
@@ -449,7 +456,8 @@ public class PersonalBoardController extends Controller{
 
     private void loadBoard(ModelData model){
         loadFaithTrack(model);
-        loadDepots(model);
+        loadStandardDepots(model);
+        loadLeaderDepots(model);
         loadLeader(model);
         loadStrongBox(model);
         loadCardSlots(model);
