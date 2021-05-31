@@ -5,8 +5,10 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.controller.*;
 import it.polimi.ingsw.client.data.CardLeaderData;
+import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
+import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void handleError(ErrorMessage message) {
         String error = (message.getErrorType() == null)?message.getCustomError():message.getErrorType().getMessage();
         Platform.runLater(()->{
-            controllerHandler.getCurrentController().showErrorMessage(error);
+            controllerHandler.getCurrentController().showCustomMessage(error);
         });
     }
 
@@ -50,6 +52,17 @@ public class GUIMessageHandler extends ClientMessageHandler {
                 controllerHandler.changeView(Views.SETUP);
             }
         });
+
+    }
+
+    @Override
+    public void newTurn(StarTurn message) {
+        super.newTurn(message);
+        String msg = "Is "+ message.getUsername() + " turn";
+        Platform.runLater(()->{
+            controllerHandler.getCurrentController().showCustomMessage(msg);
+        });
+
 
     }
 
@@ -91,6 +104,19 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void gameSetUp(GameSetup message) {
         super.gameSetUp(message);
+
+        ArrayList<ResourceData> resources = new ArrayList<>();
+        resources.add(new ResourceData(ResourceType.COIN, 3));
+        resources.add(new ResourceData(ResourceType.SERVANT, 3));
+        resources.add(new ResourceData(ResourceType.STONE, 4));
+        resources.add(new ResourceData(ResourceType.SHIELD, 5));
+
+        Platform.runLater(()->{
+            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            pbController.setUpResourceFromMarket(resources);
+        });
+
+
 
         Platform.runLater(()->{
             DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);

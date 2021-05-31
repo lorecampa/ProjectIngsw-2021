@@ -1,10 +1,16 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.GUI.Views;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.text.View;
@@ -44,9 +50,19 @@ public abstract class Controller {
 
 
 
+    public void showCustomMessage(String msg){
+    }
 
-    public void showErrorMessage(String msg){
-        System.out.println(msg);
+    public void showFadedErrorMessage(AnchorPane pane){
+        FadeTransition fader = createFader(pane);
+        fader.play();
+    }
+
+    private FadeTransition createFader(Node node) {
+        FadeTransition fade = new FadeTransition(Duration.seconds(5), node);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        return fade;
     }
 
 }

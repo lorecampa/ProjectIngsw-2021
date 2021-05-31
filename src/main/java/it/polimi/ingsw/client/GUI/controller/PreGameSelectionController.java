@@ -1,9 +1,7 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.data.ResourceData;
-import it.polimi.ingsw.message.clientMessage.LeaderDiscard;
 import it.polimi.ingsw.message.serverMessage.AnyResponse;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -16,11 +14,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -77,12 +73,15 @@ public class PreGameSelectionController extends Controller {
     @FXML Button btn4;
 
 
-
     @Override
-    public void showErrorMessage(String msg) {
-        howManyResLabel.setText(msg);
+    public void showCustomMessage(String msg) {
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setText(msg);
         customMessageBox.setVisible(true);
+        showFadedErrorMessage(customMessageBox);
     }
+
+
 
     @FXML
     public void sendResources(){
@@ -198,7 +197,7 @@ public class PreGameSelectionController extends Controller {
             client.writeToStream(new LeaderManage(4,true));
             box4.setVisible(false);
         }else{
-            showErrorMessage("Invalid selection");
+            showCustomMessage("Invalid selection");
             return;
         }
     }

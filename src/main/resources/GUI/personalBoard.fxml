@@ -4,6 +4,7 @@
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,7 +19,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PersonalBoardController">
    <children>
-      <ImageView fitHeight="665.0" fitWidth="936.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="665.0" fitWidth="936.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@board/Masters of Renaissance_PlayerBoard (11_2020)-1.png" />
          </image>
@@ -118,7 +119,7 @@
       </Pane>
       <HBox layoutX="350.0" layoutY="250.0" prefHeight="364.0" prefWidth="543.0">
          <children>
-            <Pane prefHeight="365.0" prefWidth="182.0">
+            <Pane onMouseClicked="#premuto" prefHeight="365.0" prefWidth="182.0">
                <children>
                   <ImageView fx:id="card11" fitHeight="265.0" fitWidth="250.0" layoutX="1.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -137,7 +138,7 @@
                   </ImageView>
                </children>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane onMouseClicked="#premuto" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="card21" fitHeight="265.0" fitWidth="250.0" layoutX="9.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -156,7 +157,7 @@
                   </ImageView>
                </children>
             </Pane>
-            <Pane prefHeight="364.0" prefWidth="182.0">
+            <Pane onMouseClicked="#premuto" prefHeight="364.0" prefWidth="182.0">
                <children>
                   <ImageView fx:id="card31" fitHeight="265.0" fitWidth="250.0" layoutY="99.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -195,7 +196,7 @@
             </AnchorPane>
          </children>
       </HBox>
-      <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="214.0" prefWidth="931.0">
+      <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="214.0" prefWidth="931.0" visible="false">
          <children>
             <GridPane layoutX="35.0" layoutY="34.0" prefHeight="143.0" prefWidth="870.0">
               <columnConstraints>
@@ -501,6 +502,68 @@
             <ImageView fx:id="prodLeader2" fitHeight="88.0" fitWidth="223.0" onMouseClicked="#leaderProdClicked" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="250.0" />
          </children>
       </AnchorPane>
+      <GridPane fx:id="resourcePositioningGrid" layoutX="216.0" layoutY="90.0" prefHeight="115.0" prefWidth="572.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="186.0" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <image>
+                  <Image url="@punchboard/coin.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="89.0" fitWidth="136.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <image>
+                  <Image url="@punchboard/shield.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="89.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <image>
+                  <Image url="@punchboard/servant.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="89.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <image>
+                  <Image url="@punchboard/stone.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="coinNumLabel" alignment="CENTER" onDragDetected="#prova" onMouseDragEntered="#prova" prefHeight="39.0" prefWidth="155.0" text="4">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="shieldNumLabel" alignment="CENTER" prefHeight="122.0" prefWidth="152.0" text="4" GridPane.columnIndex="1">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="servantNumLabel" alignment="CENTER" prefHeight="40.0" prefWidth="133.0" text="4" GridPane.columnIndex="2">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="128.0" text="4" GridPane.columnIndex="3">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
       <ImageView fx:id="baseProd" fitHeight="109.0" fitWidth="115.0" layoutX="225.0" layoutY="447.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane fx:id="customMessageBox" layoutX="245.0" layoutY="116.0" prefHeight="104.0" prefWidth="517.0" visible="false">
+         <children>
+            <Label alignment="CENTER" layoutX="2.0" layoutY="23.0" prefHeight="17.0" prefWidth="525.0" text="Custom message">
+               <font>
+                  <Font size="46.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
    </children>
 </Pane>

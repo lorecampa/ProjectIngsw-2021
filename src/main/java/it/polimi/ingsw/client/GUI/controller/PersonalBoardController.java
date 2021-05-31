@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
@@ -7,13 +8,19 @@ import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -88,6 +95,13 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView le_depot_22;
     @FXML private ChoiceBox<String> choice_username;
 
+    @FXML private AnchorPane customMessageBox;
+
+    @FXML private GridPane resourcePositioningGrid;
+    @FXML private GridPane selectCardSlotGrid;
+
+
+
 
     private String currentShowed;
     private final ArrayList<ImageView> track = new ArrayList<>();
@@ -98,6 +112,8 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<ArrayList<ImageView>> cardSlots = new ArrayList<>();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
     private final ArrayList<ImageView> leadersDepots = new ArrayList<>();
+    private int rowDevCard;
+    private int colDevCard;
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
 
     @FXML
@@ -111,6 +127,18 @@ public class PersonalBoardController extends Controller{
         setUpCardSlots();
         setUpLeaders();
         setUpLeadersProd();
+
+
+
+    }
+
+
+    @Override
+    public void showCustomMessage(String msg) {
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setText(msg);
+        customMessageBox.setVisible(true);
+        showFadedErrorMessage(customMessageBox);
     }
 
     public String getCurrentShowed() {
@@ -488,5 +516,64 @@ public class PersonalBoardController extends Controller{
 
     public void showDeckDev(){
         Platform.runLater(()-> ControllerHandler.getInstance().changeView(Views.DECK_DEV));
+        Platform.runLater(()->{
+            ControllerHandler.getInstance().changeView(Views.DECK_DEV);
+            DeckDevelopmentController controller = (DeckDevelopmentController) ControllerHandler.getInstance().getController(Views.DECK_DEV);
+        });
     }
+
+
+    public void setUpResourceFromMarket(ArrayList<ResourceData> resources){
+        resourcePositioningGrid.setVisible(true);
+        ObservableList<Node> nodes = resourcePositioningGrid.getChildren();
+
+        for (ResourceData res: resources){
+            ResourceType type = res.getType();
+            Node node = null;
+            if (type == ResourceType.COIN){
+                node = nodes.get(4);
+            }else if(type == ResourceType.SHIELD){
+                node = nodes.get(5);
+            }else if(type == ResourceType.SERVANT){
+                node = nodes.get(6);
+            }else if (type == ResourceType.STONE){
+                node = nodes.get(7);
+            }
+            Label label  = (Label) node;
+            label.setText((Integer.toString(res.getValue())));
+        }
+
+    }
+
+
+    public void askCardSlotSelection(int rowDevCard, int colDevCard){
+        selectCardSlotGrid.setVisible(true);
+        this.rowDevCard = rowDevCard;
+        this.colDevCard = colDevCard;
+
+        //TODO make clickable dev card slot
+
+
+    }
+
+    public void selectCardSlot(MouseEvent event){
+        Node source = event.getPickResult().getIntersectedNode();
+        System.out.println(GridPane.getRowIndex(source));
+        System.out.println(GridPane.getColumnIndex(source));
+
+    }
+
+    
+
+    //DRAG METHODS
+
+
+
+
+
+
+
+
+
+
 }

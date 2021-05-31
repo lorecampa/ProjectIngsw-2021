@@ -24,6 +24,7 @@ public class SetupController extends Controller{
 
 
 
+
     @FXML
     public void sendData(){
         if (isNumOfPlayer){
@@ -50,7 +51,7 @@ public class SetupController extends Controller{
 
 
     @Override
-    public void showErrorMessage(String msg) {
+    public void showCustomMessage(String msg) {
         customMessage.setVisible(true);
         customMessage.setText(msg);
     }

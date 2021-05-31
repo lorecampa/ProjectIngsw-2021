@@ -1,8 +1,11 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
+import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.message.serverMessage.DevelopmentAction;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,13 +18,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
 
 
 public class DeckDevelopmentController extends Controller{
     private Node currNodeSelected = null;
-    private ArrayList<ImageView> deck = new ArrayList<>();
 
+    @FXML AnchorPane customMessageBox;
     @FXML Label customMessage;
     @FXML AnchorPane currCardSelBox;
     @FXML ImageView currCard;
@@ -31,11 +33,24 @@ public class DeckDevelopmentController extends Controller{
 
 
     @Override
+    public void showCustomMessage(String msg) {
+        customMessage.setText(msg);
+        customMessageBox.setVisible(true);
+        showFadedErrorMessage(customMessageBox);
+    }
+
+    @Override
     public void setUpAll() {
         gridPaneDeck.setVisible(true);
         currCardSelBox.setVisible(false);
         customMessage.setVisible(false);
 
+    }
+
+    public void goBackToPersonalBoard(){
+        Platform.runLater(()->{
+            ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+        });
     }
 
     public void selectCard(MouseEvent event){
