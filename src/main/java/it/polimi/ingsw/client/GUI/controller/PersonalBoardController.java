@@ -134,6 +134,7 @@ public class PersonalBoardController extends Controller{
     private int rowDevCard;
     private int colDevCard;
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
+    private final ArrayList<Button> discardButton = new ArrayList<>();
 
     private final ArrayList<ImageView> resourceBufferImages = new ArrayList<>();
     private final HashMap<ResourceType, Label> resourceBufferLabelsMap = new HashMap<>();
@@ -141,12 +142,14 @@ public class PersonalBoardController extends Controller{
     @FXML
     public void initialize(){
         prodState = ProdState.NOT_IN_PROD;
+
         btn_back.setVisible(false);
-        btn_back.setDisable(true);
         bufferBox.setVisible(false);
+
         cardSlot1.setDisable(true);
         cardSlot2.setDisable(true);
         cardSlot3.setDisable(true);
+
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -155,6 +158,7 @@ public class PersonalBoardController extends Controller{
         setUpLeaders();
         setUpLeadersProd();
         setUpBuffer();
+        setUpDiscard();
     }
 
     private void setUpBuffer(){
@@ -173,6 +177,11 @@ public class PersonalBoardController extends Controller{
         resourceBufferImages.add(imageBuffer4);
         resourceBufferLabelsMap.put(ResourceType.STONE, labelBuffer4);
         imageBuffer4.setId(ResourceType.STONE.toString());
+    }
+
+    private void setUpDiscard(){
+        discardButton.add(btn_discard1);
+        discardButton.add(btn_discard2);
     }
 
 
@@ -201,6 +210,7 @@ public class PersonalBoardController extends Controller{
     private void setUpLeaders(){
         leaders.add(leader1);
         leaders.add(leader2);
+
         ArrayList<ImageView> leaderDepot1 = new ArrayList<>();
         leaderDepot1.add(le_depot_11);
         leaderDepot1.add(le_depot_12);
@@ -210,16 +220,15 @@ public class PersonalBoardController extends Controller{
         leaderDepot1.add(le_depot_22);
         leadersDepots.add(leaderDepot2);
 
-        //leadersDepots.forEach(imageView -> imageView.setVisible(false));
-
+        leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
     }
 
     private void setUpLeadersProd(){
         leadersProd.add(prodLeader1);
         leadersProd.add(prodLeader2);
 
-        //prodLeader1.setVisible(false);
-        //prodLeader2.setVisible(false);
+        prodLeader1.setVisible(false);
+        prodLeader2.setVisible(false);
     }
 
     private void setUpDepots(){
@@ -322,6 +331,7 @@ public class PersonalBoardController extends Controller{
         for (int i = 0; i < le_depots.size(); i++) {
             boolean isWarehouse = leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
             if (isWarehouse){
+                leadersDepots.get(i).forEach(imageView -> imageView.setVisible(true));
                 for (int j = 0; j < le_depots.get(0).getValue(); j++) {
                     leadersDepots.get(i).get(j).setImage(new Image(le_depots.get(0).toResourceImage()));
                 }
@@ -333,21 +343,18 @@ public class PersonalBoardController extends Controller{
         //LEADERS
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
         boolean owned = Client.getInstance().getMyName().equals(model.getUsername());
+
         for (int i = 0; i < leadersData.size() && i<2; i++) {
             CardLeaderData leaderData = leadersData.get(i);
             leaders.get(i).setImage(new Image(leaderData.toResourcePath()));
-            switch (i){
-                case 0:
-                    btn_discard1.setDisable(!owned);
-                    btn_discard1.setVisible(owned);
-                    leaders.get(i).setDisable(!owned);
-                    break;
-                case 1:
-                    btn_discard2.setDisable(!owned);
-                    btn_discard2.setVisible(owned);
-                    leaders.get(i).setDisable(!owned);
-                    break;
-            }
+            boolean activated = leaderData.isActive();
+
+            if (activated)
+                leaders.get(i).setDisable(true);
+            else if (owned)
+                leaders.get(i).setDisable(false);
+
+            discardButton.get(i).setVisible(owned);
         }
     }
 
@@ -382,38 +389,19 @@ public class PersonalBoardController extends Controller{
     // UTILITIES
     //----------------
     private void setDisableBoardForOther(boolean disable){
-        btn_prod.setDisable(disable);
         btn_prod.setVisible(!disable);
-        btn_market.setDisable(disable);
         btn_market.setVisible(!disable);
-        btn_deck.setDisable(disable);
         btn_deck.setVisible(!disable);
     }
 
     private void setDisableBoardForProd(boolean disable){
-        setDisableLeaderBtn(disable);
-        btn_market.setDisable(disable);
         btn_market.setVisible(!disable);
-        btn_deck.setDisable(disable);
         btn_deck.setVisible(!disable);
-        btn_players.setDisable(disable);
         btn_players.setVisible(!disable);
-        choice_username.setDisable(disable);
         choice_username.setVisible(!disable);
-    }
 
-    public void setDisableLeaderBtn(boolean disable){
-        leader1.setDisable(disable);
-        leader2.setDisable(disable);
-
-        prodLeader1.setVisible(false);
-        prodLeader2.setVisible(false);
-
-        btn_discard1.setDisable(disable);
-        btn_discard1.setVisible(!disable);
-
-        btn_discard2.setDisable(disable);
-        btn_discard2.setVisible(!disable);
+        leaders.forEach(imageView -> imageView.setDisable(disable));
+        discardButton.forEach(button -> button.setDisable(disable));
     }
 
     public void setBoardForBuffer(){
@@ -429,7 +417,6 @@ public class PersonalBoardController extends Controller{
     }
 
     private void resetBoard(){
-        setDisableLeaderBtn(true);
         resetFaithTrack();
         resetStandardDepots();
         resetLeaderDepots();
@@ -441,18 +428,25 @@ public class PersonalBoardController extends Controller{
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
         baseProd.setDisable(true);
+
+        //cardSlot1.setDisable(true);
+        //cardSlot2.setDisable(true);
+        //cardSlot3.setDisable(true);
     }
 
     public void resetLeader() {
+        leaders.forEach(imageView -> imageView.setDisable(true));
+        discardButton.forEach(button -> button.setVisible(false));
         leaders.forEach(imageView -> imageView.setImage(new Image("/GUI/back/leader_back.png")));
     }
 
     public void resetStandardDepots() {
-        //depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+        depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setImage(null)));
     }
 
     public void resetLeaderDepots(){
-        //leadersDepots.forEach(imageView -> imageView.setVisible(false));
+        leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
+        leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setImage(null)));
     }
 
     public void resetFaithTrack() {
@@ -473,7 +467,6 @@ public class PersonalBoardController extends Controller{
         ModelData model = Client.getInstance().getMyModel().toModelData();
         loadBoard(model);
 
-        btn_back.setDisable(true);
         btn_back.setVisible(false);
 
         currentShowed = Client.getInstance().getMyName();
@@ -486,7 +479,6 @@ public class PersonalBoardController extends Controller{
         ModelData model = Client.getInstance().getModelOf(username).toModelData();
         loadBoard(model);
 
-        btn_back.setDisable(false);
         btn_back.setVisible(true);
 
         currentShowed = username;
@@ -513,10 +505,11 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void leaderClicked(MouseEvent event){
-        if (event.getSource().equals(leader1))
-            Client.getInstance().writeToStream(new LeaderManage(0, false));
-        else
-            Client.getInstance().writeToStream(new LeaderManage(1, false));
+        System.out.println("leader cliked");
+        if (event.getSource().equals(leader1)){}
+            //Client.getInstance().writeToStream(new LeaderManage(0, false));
+        else{}
+            //Client.getInstance().writeToStream(new LeaderManage(1, false));
     }
 
     @FXML
@@ -524,10 +517,10 @@ public class PersonalBoardController extends Controller{
         System.out.println("leader prod");
         prodState = ProdState.ALREADY_PROD;
         if (actionEvent.getSource().equals(prodLeader1)) {
-            Client.getInstance().writeToStream(new ProductionAction(0, true));
+           // Client.getInstance().writeToStream(new ProductionAction(0, true));
         }
-        else
-            Client.getInstance().writeToStream(new ProductionAction(1, true));
+        else{}
+           // Client.getInstance().writeToStream(new ProductionAction(1, true));
     }
 
     @FXML
@@ -546,6 +539,7 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void cardProdClicked(MouseEvent event){
+        System.out.println("card dev clicked");
         prodState = ProdState.ALREADY_PROD;
         if (event.getSource().equals(baseProd))
             Client.getInstance().writeToStream(new BaseProduction());
@@ -666,9 +660,6 @@ public class PersonalBoardController extends Controller{
         //TODO make clickable dev card slot
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
-
-
-
     }
 
     //warehouse resource insertion
@@ -716,12 +707,7 @@ public class PersonalBoardController extends Controller{
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
-
-
     }
-
-
-
 
     public void dragDetected(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();

@@ -1,13 +1,18 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.GUI.controller.Controller;
+import it.polimi.ingsw.client.GUI.controller.PersonalBoardController;
+import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,8 +27,7 @@ public class ClientGUI extends Application {
         this.stage = stage;
         setUpControllers();
         stage.setResizable(false);
-        controllerHandler.changeView(Views.MAIN_MENU);
-
+        controllerHandler.changeView(Views.PERSONAL_BOARD);
         stage.show();
     }
 
