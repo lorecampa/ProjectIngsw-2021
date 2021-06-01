@@ -113,13 +113,9 @@ public class PersonalBoardController extends Controller{
     @FXML private Label labelBuffer4;
 
 
-
-
     //from market res
     private ImageView startImage;
     private ImageView destImage;
-
-
 
 
     private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD;}
@@ -134,7 +130,7 @@ public class PersonalBoardController extends Controller{
     private final Map<ResourceType,Label> strongBox = new HashMap<>();
     private final ArrayList<ArrayList<ImageView>> cardSlots = new ArrayList<>();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
-    private final ArrayList<ImageView> leadersDepots = new ArrayList<>();
+    private final ArrayList<ArrayList<ImageView>> leadersDepots = new ArrayList<>();
     private int rowDevCard;
     private int colDevCard;
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
@@ -205,13 +201,16 @@ public class PersonalBoardController extends Controller{
     private void setUpLeaders(){
         leaders.add(leader1);
         leaders.add(leader2);
+        ArrayList<ImageView> leaderDepot1 = new ArrayList<>();
+        leaderDepot1.add(le_depot_11);
+        leaderDepot1.add(le_depot_12);
+        leadersDepots.add(leaderDepot1);
+        ArrayList<ImageView> leaderDepot2 = new ArrayList<>();
+        leaderDepot1.add(le_depot_21);
+        leaderDepot1.add(le_depot_22);
+        leadersDepots.add(leaderDepot2);
 
-        leadersDepots.add(le_depot_11);
-        leadersDepots.add(le_depot_12);
-        leadersDepots.add(le_depot_21);
-        leadersDepots.add(le_depot_22);
-
-        leadersDepots.forEach(imageView -> imageView.setVisible(false));
+        //leadersDepots.forEach(imageView -> imageView.setVisible(false));
 
     }
 
@@ -219,8 +218,8 @@ public class PersonalBoardController extends Controller{
         leadersProd.add(prodLeader1);
         leadersProd.add(prodLeader2);
 
-        prodLeader1.setVisible(false);
-        prodLeader2.setVisible(false);
+        //prodLeader1.setVisible(false);
+        //prodLeader2.setVisible(false);
     }
 
     private void setUpDepots(){
@@ -319,33 +318,14 @@ public class PersonalBoardController extends Controller{
         //LEADER DEPOTS
         ArrayList<ResourceData> le_depots = model.getLeaderDepot();
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
-        switch (le_depots.size()){
-            case 1:
-                boolean isWarehouse = leadersData.get(0).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
-                if (isWarehouse) {
-                    leadersDepots.get(0).setVisible(true);
-                    leadersDepots.get(1).setVisible(true);
-                    for (int i = 0; i < le_depots.get(0).getValue(); i++) {
-                        leadersDepots.get(i).setImage(new Image(le_depots.get(0).toResourceImage()));
-                    }
-                } else {
-                    leadersDepots.get(2).setVisible(true);
-                    leadersDepots.get(3).setVisible(true);
-                    for (int i = 0; i < le_depots.get(0).getValue(); i++) {
-                        leadersDepots.get(i+2).setImage(new Image(le_depots.get(0).toResourceImage()));
-                    }
-                }
-                break;
-            case 2:
-                leadersDepots.forEach(x -> x.setVisible(true));
-                for (int i = 0; i < le_depots.get(0).getValue(); i++) {
-                    leadersDepots.get(i).setImage(new Image(le_depots.get(0).toResourceImage()));
 
+        for (int i = 0; i < le_depots.size(); i++) {
+            boolean isWarehouse = leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
+            if (isWarehouse){
+                for (int j = 0; j < le_depots.get(0).getValue(); j++) {
+                    leadersDepots.get(i).get(j).setImage(new Image(le_depots.get(0).toResourceImage()));
                 }
-                for (int i = 0; i < le_depots.get(1).getValue(); i++) {
-                    leadersDepots.get(i+2).setImage(new Image(le_depots.get(1).toResourceImage()));
-                }
-                break;
+            }
         }
     }
 
@@ -440,7 +420,7 @@ public class PersonalBoardController extends Controller{
         depots.forEach(imageViews -> imageViews.stream()
                 .filter(Node::isVisible).forEach(imageView -> imageView.setDisable(false)));
 
-        leadersDepots.stream().filter(ImageView::isVisible).forEach(imageView -> imageView.setDisable(false));
+        //leadersDepots.stream().filter(ImageView::isVisible).forEach(imageView -> imageView.setDisable(false));
 
         strong_coin.setDisable(false);
         strong_serv.setDisable(false);
@@ -472,7 +452,7 @@ public class PersonalBoardController extends Controller{
     }
 
     public void resetLeaderDepots(){
-        leadersDepots.forEach(imageView -> imageView.setVisible(false));
+        //leadersDepots.forEach(imageView -> imageView.setVisible(false));
     }
 
     public void resetFaithTrack() {
@@ -541,6 +521,7 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void leaderProdClicked(MouseEvent actionEvent){
+        System.out.println("leader prod");
         prodState = ProdState.ALREADY_PROD;
         if (actionEvent.getSource().equals(prodLeader1)) {
             Client.getInstance().writeToStream(new ProductionAction(0, true));
@@ -615,7 +596,7 @@ public class PersonalBoardController extends Controller{
 
     private void softExitProd(){
         setDisableBoardForProd(false);
-        leadersProd.forEach(imageView -> imageView.setVisible(false));
+        //leadersProd.forEach(imageView -> imageView.setVisible(false));
         baseProd.setDisable(true);
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
     }
@@ -681,13 +662,6 @@ public class PersonalBoardController extends Controller{
         });
     }
 
-
-
-
-
-
-
-
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
         //TODO make clickable dev card slot
         this.rowDevCard = rowDevCard;
@@ -735,10 +709,11 @@ public class PersonalBoardController extends Controller{
 
         ));
 
-        leadersDepots.forEach(imageView -> {
-            imageView.setOnDragOver(this::dragOver);
-            imageView.setOnDragDropped(this::dragDropped);
-        });
+        leadersDepots.forEach(imageViews -> imageViews
+                .forEach(imageView -> {
+                    imageView.setOnDragOver(this::dragOver);
+                    imageView.setOnDragDropped(this::dragDropped);
+                }));
 
 
     }
@@ -803,10 +778,9 @@ public class PersonalBoardController extends Controller{
                 if (depots.stream().anyMatch(x -> x.contains(destImage))){
                     isNormalDepot = true;
                     indexDest = getImageDepotIndex(depots, destImage);
-                }else if (leadersDepots.contains(destImage)){
+                }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
                     isNormalDepot = false;
-                    indexDest = 1;
-                    //indexDest = getImageDepotIndex(leadersDepots, destImage);
+                    indexDest = getImageDepotIndex(leadersDepots, destImage);
                 }else{
                     return;
                 }
@@ -822,9 +796,9 @@ public class PersonalBoardController extends Controller{
             if (depots.stream().anyMatch(x -> x.contains(startImage))){
                 isFromNormalDepot = true;
                 startIndex = getImageDepotIndex(depots, startImage);
-            }else if(leadersDepots.contains(startImage)){
+            }else if(leadersDepots.stream().anyMatch(x->x.contains(startImage))){
                 isFromNormalDepot = false;
-                startIndex = 1;
+                startIndex = getImageDepotIndex(leadersDepots, startImage);
             }else{
                 return;
             }
@@ -834,9 +808,9 @@ public class PersonalBoardController extends Controller{
                 isToNormalDepot = true;
                 destIndex = getImageDepotIndex(depots, destImage);
 
-            }else if (leadersDepots.contains(destImage)){
+            }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
                 isToNormalDepot = false;
-                destIndex = 1;
+                destIndex = getImageDepotIndex(leadersDepots, destImage);
             }else{
                 return;
             }
