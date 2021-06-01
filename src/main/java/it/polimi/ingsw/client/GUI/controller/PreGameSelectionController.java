@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.serverMessage.AnyResponse;
 import it.polimi.ingsw.message.serverMessage.LeaderManage;
@@ -185,16 +186,16 @@ public class PreGameSelectionController extends Controller {
     @FXML
     public void discardLeader(ActionEvent event){
         if (event.getSource().equals(btn1)){
-            client.writeToStream(new LeaderManage(1,true));
+            client.writeToStream(new LeaderManage(0,true));
             box1.setVisible(false);
         }else if (event.getSource().equals(btn2)){
-            client.writeToStream(new LeaderManage(2,true));
+            client.writeToStream(new LeaderManage(1,true));
             box2.setVisible(false);
         }else if (event.getSource().equals(btn3)){
-            client.writeToStream(new LeaderManage(3,true));
+            client.writeToStream(new LeaderManage(2,true));
             box3.setVisible(false);
         }else if (event.getSource().equals(btn4)){
-            client.writeToStream(new LeaderManage(4,true));
+            client.writeToStream(new LeaderManage(3,true));
             box4.setVisible(false);
         }else{
             showCustomMessage("Invalid selection");
@@ -205,11 +206,14 @@ public class PreGameSelectionController extends Controller {
     //---------------------
     //EXTERNAL METHODS
     //--------------------
-    public void setLeaderImages(ArrayList<String> paths){
-        leader1.setImage(new Image(paths.get(0)));
-        leader2.setImage(new Image(paths.get(1)));
-        leader3.setImage(new Image(paths.get(2)));
-        leader4.setImage(new Image(paths.get(3)));
+    public void setUpLeader(ArrayList<CardLeaderData> cards){
+        leader1.setImage(new Image(cards.get(0).toResourcePath()));
+
+        leader2.setImage(new Image(cards.get(1).toResourcePath()));
+
+        leader3.setImage(new Image(cards.get(2).toResourcePath()));
+
+        leader4.setImage(new Image(cards.get(3).toResourcePath()));
 
 
 

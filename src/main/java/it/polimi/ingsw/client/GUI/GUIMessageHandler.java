@@ -127,14 +127,14 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void leaderSetUp(LeaderSetUpMessage message) {
         super.leaderSetUp(message);
         PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
-        ArrayList<String> paths = message.getLeaders().stream().map(CardLeaderData::toResourcePath)
-                .collect(Collectors.toCollection(ArrayList::new));
 
         Platform.runLater(()->{
             controllerHandler.changeView(Views.PRE_MATCH);
-            controller.setLeaderImages(paths);
+            controller.setUpLeader(message.getLeaders());
         });
     }
+
+
 
     @Override
     public void mainMenu() {
@@ -155,6 +155,13 @@ public class GUIMessageHandler extends ClientMessageHandler {
         resources.add(new ResourceData(ResourceType.SERVANT, 3));
         resources.add(new ResourceData(ResourceType.STONE, 4));
         //resources.add(new ResourceData(ResourceType.SHIELD, 5));
+
+        Platform.runLater(()->{
+            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            pbController.updateDepot(0, new ResourceData(ResourceType.COIN, 1), true);
+            pbController.updateDepot(2, new ResourceData(ResourceType.SHIELD, 2), true);
+
+        });
 
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);

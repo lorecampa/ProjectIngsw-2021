@@ -698,11 +698,12 @@ public class PersonalBoardController extends Controller{
         }
 
         resourceBufferImages.forEach(imageView -> {
-            imageView.setOnDragDetected(this::dragDetectedFromBuffer);
+            imageView.setOnDragDetected(this::dragDetected);
         });
 
         depots.forEach(imageViews -> imageViews.forEach(
                 imageView -> {
+                    imageView.setOnDragDetected(this::dragDetected);
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
                 }
@@ -711,6 +712,7 @@ public class PersonalBoardController extends Controller{
 
         leadersDepots.forEach(imageViews -> imageViews
                 .forEach(imageView -> {
+                    imageView.setOnDragDetected(this::dragDetected);
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
@@ -721,7 +723,7 @@ public class PersonalBoardController extends Controller{
 
 
 
-    public void dragDetectedFromBuffer(MouseEvent event){
+    public void dragDetected(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
         ImageView imageView = (ImageView) source;
 
