@@ -14,7 +14,7 @@
             <Image url="@ImageBk/bk1.jpg" />
          </image>
       </ImageView>
-      <Text fill="#d4ad22" layoutX="-6.0" layoutY="79.0" stroke="#94750f" strokeType="OUTSIDE" strokeWidth="2.0" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
+      <Text id="title" fx:id="mainTitle" fill="#d4ad22" layoutX="-6.0" layoutY="79.0" stroke="#94750f" strokeType="OUTSIDE" strokeWidth="2.0" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
          <font>
             <Font name="Old English Text MT" size="96.0" />
          </font>

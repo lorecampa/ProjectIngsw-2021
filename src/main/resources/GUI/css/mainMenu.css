@@ -1,4 +1,7 @@
-
+@font-face{
+    font-family:"Ruritaria";
+    src: url("../fonts/Ruritania.ttf");
+}
 .buttons{
     -fx-background-color: rgb(233,234,210);
     -fx-border-width: 3px;
@@ -30,9 +33,8 @@
     -fx-border-color: black;   /*not working*/
 }
 
-
 .title {
-
+    -fx-font-family: "Ruritaria";
 }
 .resourceImage:hover{
     -fx-scale-x: 1.2;
