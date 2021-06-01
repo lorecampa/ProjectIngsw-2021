@@ -33,8 +33,8 @@ public class ModelClient {
 
     public ModelClient(String username) {
         this.username = username;
-        //setUpForDebug();
-        realSetUp();
+        setUpForDebug();
+        //realSetUp();
     }
 
     private void realSetUp(){
@@ -56,7 +56,7 @@ public class ModelClient {
     private void setUpForDebug(){
         this.currentPosOnFaithTrack=8;
         for(int i=0;i<3;i++){
-            standardDepot.add(new ResourceData(ResourceType.STONE, i+1));
+            standardDepot.add(new ResourceData(ResourceType.STONE, i));
         }
 
         for(int i=0; i<25; i++){
@@ -117,16 +117,14 @@ public class ModelClient {
         cardSlots.get(2).add(cdd1);
 
         ArrayList<EffectData> effectsL= new ArrayList<>();
-        effectsL.add(effData2);
         effectsL.add(effData);
-        effectsL.add(effData3);
 
         ArrayList<EffectData> effectsL2= new ArrayList<>();
-        effectsL2.add(effData4);
+        effectsL2.add(effData);
 
 
         CardLeaderData cl=new CardLeaderData(57,4, cardSlots.get(0), cost, effectsL,false);
-        CardLeaderData cl2=new CardLeaderData(58, 4, cardSlots.get(0), cost, effectsL,true);
+        CardLeaderData cl2=new CardLeaderData(58, 4, cardSlots.get(0), cost, effectsL2,true);
         leaders.add(cl);
         leaders.add(cl2);
         //leaders.add(cl);

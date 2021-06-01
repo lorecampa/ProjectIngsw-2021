@@ -163,16 +163,21 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
         });
 
+        /*
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setUpResourceFromMarket(resources);
         });
+
+         */
 
         Platform.runLater(()->{
             DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
             deckController.setUpDeckImages(message.getDeckDev());
         });
     }
+
+
 
     @Override
     public void anyConversionRequest(AnyConversionRequest message) {
@@ -198,7 +203,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
             if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
                 personalBoardController.resetLeader();
-                personalBoardController.setDisableLeaderBtn(true);
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
@@ -211,7 +215,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void manageResourceRequest(ManageResourcesRequest message) {
-
+        Platform.runLater(()->{
+            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            pbController.setUpResourceFromMarket(message.getResources());
+        });
     }
 
     @Override
