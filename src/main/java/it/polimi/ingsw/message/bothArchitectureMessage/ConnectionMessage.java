@@ -36,6 +36,12 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
         this.message = "";
         this.num = num;
     }
+    public ConnectionMessage(@JsonProperty("type") ConnectionType type) {
+        this.type = type;
+        this.message = "";
+        this.num = -1;
+    }
+
 
     public String getMessage() {
         return message;
@@ -66,6 +72,8 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
             case RECONNECTION:
                 handler.validReconnect(this);
                 break;
+            case SEMI_PRODUCTION_ACK:
+                handler.handleProductionSelectionCompleted();
             default:
         }
         //handler.handleConnectionMessage(this);

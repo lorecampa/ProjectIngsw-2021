@@ -69,8 +69,11 @@ public class DeckDevelopmentController extends Controller{
     public void buyCard(ActionEvent event){
         int row = GridPane.getRowIndex(currNodeSelected);
         int col = GridPane.getColumnIndex(currNodeSelected);
-        //TODO change locate slot position
-        Client.getInstance().writeToStream(new DevelopmentAction(row, col,0));
+
+        PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+        controller.askCardSlotSelection(row, col);
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+
     }
 
     public void showDeckDev(){

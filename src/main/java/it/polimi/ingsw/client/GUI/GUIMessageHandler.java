@@ -150,6 +150,15 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void gameSetUp(GameSetup message) {
         super.gameSetUp(message);
 
+        Platform.runLater(()->{
+            DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
+            deckController.setUpDeckImages(message.getDeckDev());
+        });
+
+
+        /*
+        //DEBUG
+
         ArrayList<ResourceData> resources = new ArrayList<>();
         resources.add(new ResourceData(ResourceType.COIN, 3));
         resources.add(new ResourceData(ResourceType.SERVANT, 3));
@@ -163,18 +172,22 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
         });
 
-        /*
+
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setUpResourceFromMarket(resources);
         });
 
+        */
+
+        /*
+        Platform.runLater(()->{
+            PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            controller.setUpAnyConversion(resources, 4);
+        });
+
          */
 
-        Platform.runLater(()->{
-            DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
-            deckController.setUpDeckImages(message.getDeckDev());
-        });
     }
 
 
@@ -193,6 +206,11 @@ public class GUIMessageHandler extends ClientMessageHandler {
                     controller.showChooseResourcesBox();
                 }
             });
+        }else{
+            Platform.runLater(()->{
+                PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+                controller.setUpAnyConversion(message.getOptionConversion(), message.getNumOfAny());
+            });
         }
     }
 
@@ -206,11 +224,25 @@ public class GUIMessageHandler extends ClientMessageHandler {
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
+
     }
+
+
+    @Override
+    public void marketUpdate(MarketUpdate message) {
+        super.marketUpdate(message);
+        MarketController controller = (MarketController) ControllerHandler.getInstance().getController(Views.MARKET);
+        Platform.runLater(controller::setUpAll);
+    }
+
+
 
     @Override
     public void bufferUpdate(BufferUpdate message) {
-
+        Platform.runLater(()->{
+            PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            controller.bufferUpdate(message.getBufferUpdated());
+        });
     }
 
     @Override
@@ -218,6 +250,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setUpResourceFromMarket(message.getResources());
+            ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
         });
     }
 
@@ -305,5 +338,11 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     }
 
-
+    @Override
+    public void handleProductionSelectionCompleted() {
+        Platform.runLater(()->{
+            PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            controller.endLocalProduction();
+        });
+    }
 }

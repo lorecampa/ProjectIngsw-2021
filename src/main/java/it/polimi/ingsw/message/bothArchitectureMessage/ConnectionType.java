@@ -6,5 +6,6 @@ public enum ConnectionType {
     NUM_OF_PLAYER,
     WAIT_PLAYERS,
     RECONNECTION,
-    CONNECT
+    CONNECT,
+    SEMI_PRODUCTION_ACK;
 }

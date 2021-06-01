@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.serverMessage.*;
+import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -61,6 +62,12 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView dep22;
     @FXML private ImageView dep21;
     @FXML private ImageView dep11;
+
+    @FXML private ImageView imageCoinStrong;
+    @FXML private ImageView imageServStrong;
+    @FXML private ImageView imageStoneStrong;
+    @FXML private ImageView imageShieldStrong;
+
     @FXML private Label strong_coin;
     @FXML private Label strong_serv;
     @FXML private Label strong_shield;
@@ -92,25 +99,40 @@ public class PersonalBoardController extends Controller{
     @FXML private ImageView le_depot_22;
     @FXML private ChoiceBox<String> choice_username;
 
+
     @FXML private AnchorPane customMessageBox;
 
     @FXML private AnchorPane bufferBox;
 
     @FXML private Pane cardSlot1;
+    @FXML private Button selectSlot1Btn;
     @FXML private Pane cardSlot2;
+    @FXML private Button selectSlot2Btn;
     @FXML private Pane cardSlot3;
+    @FXML private Button selectSlot3Btn;
 
     @FXML private ImageView imageBuffer1;
     @FXML private Label labelBuffer1;
+    @FXML private Label bufferTop1;
+    @FXML private Button decreaseResBuffer1;
 
     @FXML private ImageView imageBuffer2;
     @FXML private Label labelBuffer2;
+    @FXML private Label bufferTop2;
+    @FXML private Button decreaseResBuffer2;
+
 
     @FXML private ImageView imageBuffer3;
     @FXML private Label labelBuffer3;
+    @FXML private Label bufferTop3;
+    @FXML private Button decreaseResBuffer3;
+
 
     @FXML private ImageView imageBuffer4;
     @FXML private Label labelBuffer4;
+    @FXML private Label bufferTop4;
+    @FXML private Button decreaseResBuffer4;
+
 
 
     //from market res
@@ -127,7 +149,8 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<ImageView> popeFavorsDiscard = new ArrayList<>();
     private final ArrayList<ImageView> popeFavorsAcquired = new ArrayList<>();
     private final ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
-    private final Map<ResourceType,Label> strongBox = new HashMap<>();
+    private final Map<ResourceType,Label> strongboxLabelMap = new HashMap<>();
+    private final Map<ResourceType,ImageView> strongboxImageMap = new HashMap<>();
     private final ArrayList<ArrayList<ImageView>> cardSlots = new ArrayList<>();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
     private final ArrayList<ArrayList<ImageView>> leadersDepots = new ArrayList<>();
@@ -136,8 +159,18 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
     private final ArrayList<Button> discardButton = new ArrayList<>();
 
-    private final ArrayList<ImageView> resourceBufferImages = new ArrayList<>();
+    private final HashMap<ResourceType, ImageView> resourceBufferImages = new HashMap<>();
     private final HashMap<ResourceType, Label> resourceBufferLabelsMap = new HashMap<>();
+    private final HashMap<ResourceType, Label> resourceBufferTopLabelsMap = new HashMap<>();
+    private final HashMap<ResourceType, Button> resourceBufferDecreaseBtnMap = new HashMap<>();
+    private int numOfAnyToConvert;
+    private HashMap<ResourceType, Integer> anyConverted = new HashMap<>() {{
+        put(ResourceType.COIN,0);
+        put(ResourceType.SERVANT, 0);
+        put(ResourceType.SHIELD,0);
+        put(ResourceType.STONE, 0);
+    }};
+
 
     @FXML
     public void initialize(){
@@ -162,21 +195,28 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setUpBuffer(){
-        resourceBufferImages.add(imageBuffer1);
+        resourceBufferImages.put(ResourceType.COIN, imageBuffer1);
         resourceBufferLabelsMap.put(ResourceType.COIN, labelBuffer1);
-        imageBuffer1.setId(ResourceType.COIN.toString());
+        resourceBufferTopLabelsMap.put(ResourceType.COIN, bufferTop1);
+        resourceBufferDecreaseBtnMap.put(ResourceType.COIN, decreaseResBuffer1);
 
-        resourceBufferImages.add(imageBuffer2);
+        resourceBufferImages.put(ResourceType.SHIELD, imageBuffer2);
         resourceBufferLabelsMap.put(ResourceType.SHIELD, labelBuffer2);
-        imageBuffer2.setId(ResourceType.SHIELD.toString());
+        resourceBufferTopLabelsMap.put(ResourceType.SHIELD, bufferTop2);
+        resourceBufferDecreaseBtnMap.put(ResourceType.SHIELD, decreaseResBuffer2);
 
-        resourceBufferImages.add(imageBuffer3);
+
+        resourceBufferImages.put(ResourceType.SERVANT, imageBuffer3);
         resourceBufferLabelsMap.put(ResourceType.SERVANT, labelBuffer3);
-        imageBuffer3.setId(ResourceType.SERVANT.toString());
+        resourceBufferTopLabelsMap.put(ResourceType.SERVANT, bufferTop3);
+        resourceBufferDecreaseBtnMap.put(ResourceType.SERVANT, decreaseResBuffer3);
 
-        resourceBufferImages.add(imageBuffer4);
+
+        resourceBufferImages.put(ResourceType.STONE, imageBuffer4);
         resourceBufferLabelsMap.put(ResourceType.STONE, labelBuffer4);
-        imageBuffer4.setId(ResourceType.STONE.toString());
+        resourceBufferTopLabelsMap.put(ResourceType.STONE, bufferTop4);
+        resourceBufferDecreaseBtnMap.put(ResourceType.STONE, decreaseResBuffer4);
+
     }
 
     private void setUpDiscard(){
@@ -252,17 +292,15 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setUpStrongbox(){
-        //strong_coin.setId(ResourceType.COIN.toString());
-        strongBox.put(ResourceType.COIN,strong_coin);
+        strongboxLabelMap.put(ResourceType.COIN,strong_coin);
+        strongboxLabelMap.put(ResourceType.SERVANT,strong_serv);
+        strongboxLabelMap.put(ResourceType.SHIELD,strong_shield);
+        strongboxLabelMap.put(ResourceType.STONE,strong_stone);
 
-        //strong_serv.setId(ResourceType.SERVANT.toString());
-        strongBox.put(ResourceType.SERVANT,strong_serv);
-
-        //strong_shield.setId(ResourceType.SHIELD.toString());
-        strongBox.put(ResourceType.SHIELD,strong_shield);
-
-        strong_stone.setId(ResourceType.STONE.toString());
-        strongBox.put(ResourceType.STONE,strong_stone);
+        strongboxImageMap.put(ResourceType.COIN, imageCoinStrong);
+        strongboxImageMap.put(ResourceType.SHIELD, imageShieldStrong);
+        strongboxImageMap.put(ResourceType.SERVANT, imageServStrong);
+        strongboxImageMap.put(ResourceType.STONE, imageStoneStrong);
     }
 
     private void setUpCardSlots(){
@@ -362,7 +400,7 @@ public class PersonalBoardController extends Controller{
         //STRONGBOX
         ArrayList<ResourceData> strongBoxData = model.getStrongbox();
         for (ResourceData resourceData : strongBoxData){
-            strongBox.get(resourceData.getType()).setText(String.valueOf(resourceData.getValue()));
+            strongboxLabelMap.get(resourceData.getType()).setText(String.valueOf(resourceData.getValue()));
         }
     }
 
@@ -406,15 +444,50 @@ public class PersonalBoardController extends Controller{
 
     public void setBoardForBuffer(){
         depots.forEach(imageViews -> imageViews.stream()
-                .filter(Node::isVisible).forEach(imageView -> imageView.setDisable(false)));
+                .filter(x -> x.getImage() != null).forEach(x -> x.setOnMouseClicked(this::depotClick)));
 
-        //leadersDepots.stream().filter(ImageView::isVisible).forEach(imageView -> imageView.setDisable(false));
+        leadersDepots.forEach(imageViews -> imageViews
+                .forEach(imageView -> {
+                    imageView.setOnMouseClicked(this::leaderDepotClick);
+                }));
 
-        strong_coin.setDisable(false);
-        strong_serv.setDisable(false);
-        strong_shield.setDisable(false);
-        strong_stone.setDisable(false);
+        strongboxImageMap.values().forEach(x -> x.setDisable(false));
     }
+
+    public void leaderDepotClick(MouseEvent event){
+        ImageView source = (ImageView) event.getSource();
+        int index = getImageDepotIndex(leadersDepots, source);
+        ResourceType type = Client.getInstance().getMyModel().toModelData().getLeaderDepot().get(index).getType();
+
+        Client.getInstance().writeToStream(new DepotModify(index, new ResourceData(type, 1), false));
+    }
+
+    public void depotClick(MouseEvent event){
+        ImageView source = (ImageView) event.getSource();
+        int index = getImageDepotIndex(depots, source);
+        ResourceType type = Client.getInstance().getMyModel().toModelData().getStandardDepot().get(index).getType();
+
+        Client.getInstance().writeToStream(new DepotModify(index, new ResourceData(type, 1), true));
+    }
+    
+    @FXML
+    public void strongboxClick(MouseEvent event){
+        ImageView source = (ImageView) event.getSource();
+        ResourceType res = null;
+        for (ResourceType resourceType: strongboxImageMap.keySet()){
+            if (strongboxImageMap.get(resourceType).equals(source)){
+                res = resourceType;
+                break;
+            }
+        }
+
+        Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(res, 1)));
+    }
+
+
+    //-------------------------
+    // RESET
+    //---
 
     private void resetBoard(){
         resetFaithTrack();
@@ -424,14 +497,14 @@ public class PersonalBoardController extends Controller{
         resetCardSlots();
     }
 
+    public void resetBuffer(){
+
+    }
+
     public void resetCardSlots() {
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
         baseProd.setDisable(true);
-
-        //cardSlot1.setDisable(true);
-        //cardSlot2.setDisable(true);
-        //cardSlot3.setDisable(true);
     }
 
     public void resetLeader() {
@@ -454,6 +527,7 @@ public class PersonalBoardController extends Controller{
         popeFavorsAcquired.forEach(imageView -> imageView.setVisible(false));
         popeFavorsDiscard.forEach(imageView -> imageView.setVisible(true));
     }
+
 
     //-------------------------
     // LOAD WHOLE MODEL TO GUI
@@ -649,17 +723,28 @@ public class PersonalBoardController extends Controller{
     }
 
     public void showDeckDev(){
-        Platform.runLater(()-> ControllerHandler.getInstance().changeView(Views.DECK_DEV));
-        Platform.runLater(()->{
-            ControllerHandler.getInstance().changeView(Views.DECK_DEV);
-            DeckDevelopmentController controller = (DeckDevelopmentController) ControllerHandler.getInstance().getController(Views.DECK_DEV);
-        });
+        ControllerHandler.getInstance().changeView(Views.DECK_DEV);
     }
 
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
-        //TODO make clickable dev card slot
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
+    }
+
+    @FXML
+    public void selectCardSlot(ActionEvent event){
+        int slot;
+        if (event.getSource().equals(selectSlot1Btn)){
+            slot = 0;
+        }else if(event.getSource().equals(selectSlot2Btn)){
+            slot = 1;
+        }else if(event.getSource().equals(selectSlot3Btn)){
+            slot = 2;
+        }else{
+            return;
+        }
+
+        Client.getInstance().writeToStream(new DevelopmentAction(rowDevCard, colDevCard, slot));
     }
 
     //warehouse resource insertion
@@ -673,8 +758,106 @@ public class PersonalBoardController extends Controller{
 
     public void updateStrongbox(ArrayList<ResourceData> strongboxUpdated){
         for (ResourceData res: strongboxUpdated){
-            strongBox.get(res.getType()).setText(Integer.toString(res.getValue()));
+            strongboxLabelMap.get(res.getType()).setText(Integer.toString(res.getValue()));
         }
+    }
+
+
+    //ANY CONVERSION REQUEST
+
+    public void endLocalProduction(){
+        bufferBox.setVisible(false);
+    }
+
+    public void setUpAnyConversion(ArrayList<ResourceData> conversion, int num){
+        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
+        resourceBufferTopLabelsMap.values().forEach(x -> x.setText("0"));
+        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
+        resourceBufferLabelsMap.values().forEach(x -> x.setVisible(false));
+        anyConverted.keySet().forEach(x -> anyConverted.put(x, 0));
+
+        resourceBufferDecreaseBtnMap.values().forEach(x -> {
+            x.setVisible(false);
+            x.setOnAction(this::decreaseAnySelected);
+        });
+
+        bufferBox.setVisible(true);
+        numOfAnyToConvert = num;
+        if (conversion == null){
+            resourceBufferImages.values().forEach(x->x.setOnMouseClicked(this::selectAnyToConvert));
+        }else{
+            conversion.forEach(x -> {
+                resourceBufferImages.get(x.getType()).setOnMouseClicked(this::selectAnyToConvert);
+                Label topLabel = resourceBufferTopLabelsMap.get(x.getType());
+                topLabel.setText(Integer.toString(x.getValue()));
+                topLabel.setVisible(true);
+            });
+        }
+
+    }
+
+    private void selectAnyToConvert(MouseEvent event){
+        ImageView source = (ImageView) event.getSource();
+        ResourceType type = null;
+        for(ResourceType resType: resourceBufferImages.keySet()){
+            if (resourceBufferImages.get(resType).equals(source)){
+                type = resType;
+                break;
+            }
+        }
+        Label topLabel = resourceBufferTopLabelsMap.get(type);
+        Label label = resourceBufferLabelsMap.get(type);
+        Button btn = resourceBufferDecreaseBtnMap.get(type);
+
+        label.setText(Integer.toString(Integer.parseInt(label.getText()) + 1));
+        if (!label.isVisible()){
+            label.setVisible(true);
+        }
+
+        if (!btn.isVisible()){
+            btn.setVisible(true);
+        }
+
+        if(topLabel.isVisible()){
+            int oldTopValue = Integer.parseInt(topLabel.getText());
+            topLabel.setText(Integer.toString(oldTopValue - 1));
+            if (oldTopValue == 1){
+                source.setDisable(true);
+            }
+        }
+
+
+        anyConverted.put(type, anyConverted.get(type) + 1);
+        if (anyConverted.values().stream().mapToInt(x -> x).sum() == numOfAnyToConvert){
+            System.out.println("Any response sent now!");
+            ArrayList<ResourceData> response = anyConverted.keySet()
+                    .stream().map(x -> new ResourceData(x, anyConverted.get(x)))
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            Client.getInstance().writeToStream(new AnyResponse(response));
+        }
+    }
+    public void decreaseAnySelected(ActionEvent event){
+        Button source = (Button) event.getSource();
+        ResourceType typeSource = null;
+        for (ResourceType type: resourceBufferDecreaseBtnMap.keySet()){
+            if (resourceBufferDecreaseBtnMap.get(type).equals(source)){
+                typeSource = type;
+                break;
+            }
+        }
+        int oldNum = anyConverted.get(typeSource);
+        if (oldNum == 1){
+            source.setVisible(false);
+        }
+        anyConverted.put(typeSource, oldNum - 1);
+        resourceBufferLabelsMap.get(typeSource).setText(Integer.toString(oldNum - 1));
+
+
+        int oldTopNum = Integer.parseInt(resourceBufferTopLabelsMap.get(typeSource).getText());
+        resourceBufferTopLabelsMap.get(typeSource).setText(Integer.toString(oldTopNum + 1));
+
+        resourceBufferImages.get(typeSource).setDisable(false);
     }
 
 
@@ -683,12 +866,16 @@ public class PersonalBoardController extends Controller{
     //RESOURCE FORM MARKET METHODS
 
     public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
+        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
+        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
+        resourceBufferDecreaseBtnMap.values().forEach(x -> x.setVisible(false));
+
         bufferBox.setVisible(true);
         for (ResourceData res : resources) {
             resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
         }
 
-        resourceBufferImages.forEach(imageView -> {
+        resourceBufferImages.values().forEach(imageView -> {
             imageView.setOnDragDetected(this::dragDetected);
         });
 
@@ -721,17 +908,7 @@ public class PersonalBoardController extends Controller{
         event.consume();
     }
 
-    private ResourceType getResourceTypeFromString(String resourceString){
-        if (resourceString.equals(ResourceType.COIN.toString())){
-            return ResourceType.COIN;
-        }else if(resourceString.equals(ResourceType.SHIELD.toString())){
-            return ResourceType.SHIELD;
-        }else if(resourceString.equals(ResourceType.SERVANT.toString())){
-            return ResourceType.SERVANT;
-        }else{
-            return ResourceType.STONE;
-        }
-    }
+
 
     public void dragOver(DragEvent event){
         System.out.println("Drag Over");
@@ -758,9 +935,14 @@ public class PersonalBoardController extends Controller{
         boolean success = false;
 
         if (db.hasImage()) {
-
-            if (resourceBufferImages.contains(startImage)){
-                ResourceData res = new ResourceData(getResourceTypeFromString(startImage.getId()), 1);
+            if (resourceBufferImages.containsValue(startImage)){
+                ResourceType type = null;
+                for(ResourceType resType: resourceBufferImages.keySet()){
+                    if (resourceBufferImages.get(resType).equals(startImage)){
+                        type = resType;
+                        break;
+                    }
+                }
                 boolean isNormalDepot;
                 int indexDest;
                 if (depots.stream().anyMatch(x -> x.contains(destImage))){
@@ -773,9 +955,9 @@ public class PersonalBoardController extends Controller{
                     return;
                 }
                 System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
-                        + isNormalDepot + " ResType: " + res.getType().getDisplayName());
+                        + isNormalDepot + " ResType: " + type);
 
-                //Client.getInstance().writeToStream(new DepotModify(indexDest, res, isNormalDepot));
+                Client.getInstance().writeToStream(new DepotModify(indexDest, new ResourceData(type, 1), isNormalDepot));
                 return;
             }
 
@@ -804,12 +986,25 @@ public class PersonalBoardController extends Controller{
             }
             System.out.println("Switch:\nFromDepot: " +startIndex + " isNormal: " + isFromNormalDepot);
             System.out.println("ToDepot: " +destIndex + " isNormal: " + isToNormalDepot);
-            //Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
+            Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
 
             success = true;
         }
         event.setDropCompleted(success);
         event.consume();
+    }
+
+
+    public void bufferUpdate(ArrayList<ResourceData> bufferUpdated){
+        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
+        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
+        resourceBufferDecreaseBtnMap.values().forEach(x -> x.setVisible(false));
+
+        bufferBox.setVisible(true);
+        for (ResourceData res : bufferUpdated) {
+            resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
+        }
+
     }
 
 }

@@ -3,6 +3,8 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.client.data.ResourceData;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
+import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.*;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.market.Marble;
@@ -155,6 +157,11 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
                         optionOfDiscount.stream().map(Resource::toClient)
                                 .collect(Collectors.toCollection(ArrayList<ResourceData>::new)),
                         numOfAny));
+    }
+
+    @Override
+    public void productionCardSelectionCompleted() {
+        match.sendSinglePlayer(getUsername(), new ConnectionMessage(ConnectionType.SEMI_PRODUCTION_ACK));
     }
 
     @Override

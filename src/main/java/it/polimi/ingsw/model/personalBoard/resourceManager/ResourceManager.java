@@ -119,6 +119,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
                     notifyAllObservers(x -> x.anyProductionProfitRequest(anyToProduce));
                 }else{
                     notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_ACTION));
+                    notifyAllObservers(ResourceManagerObserver::productionCardSelectionCompleted);
                 }
             }
         }
@@ -148,6 +149,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
         if(anyToProduce == 0){
             notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_ACTION));
+            notifyAllObservers(ResourceManagerObserver::productionCardSelectionCompleted);
         }
     }
 
@@ -394,10 +396,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
         resources.forEach(this::addToBuffer);
 
-        if(anyRequired == 0 && checkDiscount){
-            notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
-            notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
-
+        if(anyRequired == 0){
+            if (checkDiscount){
+                notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
+                notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
+            }else{
+                notifyAllObservers(ResourceManagerObserver::productionCardSelectionCompleted);
+            }
         }else if (anyRequired > 0){
             if(checkDiscount){
                 notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_BUY_DEV_CONVERSION));
