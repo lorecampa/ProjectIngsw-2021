@@ -1,0 +1,5 @@
+.leaderCard{
+    -fx-border-color: rgb(153, 140, 93);
+    -fx-border-width: 20px;
+    -fx-border-insets: 5px;
+}

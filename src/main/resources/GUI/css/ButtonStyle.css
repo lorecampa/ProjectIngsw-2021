@@ -1,0 +1,19 @@
+.closeButton{
+    -fx-border-radius: 36px;
+    -fx-background-color: red;
+    -fx-background-radius: 33px;
+    -fx-text-fill: black;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+}
+.closeButton:hover{
+    -fx-border-width: 3px;
+    -fx-border-color: white;
+}
+.buttonLess{
+    -fx-border-color: rgb(255, 210, 48);
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-width: 2px;
+    -fx-border-radius: 30px;
+    -fx-text-fill: rgb(255, 210, 48);
+}

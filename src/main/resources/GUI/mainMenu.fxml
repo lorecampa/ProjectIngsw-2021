@@ -1,38 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="background" prefHeight="408.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
+<AnchorPane id="background" prefHeight="408.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
    <children>
-      <Text fill="#609c66" layoutX="-6.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="2.0" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
+      <ImageView fitHeight="337.0" fitWidth="600.0" pickOnBounds="true" scaleX="1.5" scaleY="1.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@ImageBk/bk1.jpg" />
+         </image>
+      </ImageView>
+      <Text fill="#d4ad22" layoutX="-6.0" layoutY="79.0" stroke="#94750f" strokeType="OUTSIDE" strokeWidth="2.0" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
          <font>
             <Font name="Old English Text MT" size="96.0" />
          </font>
-         <stroke>
-            <LinearGradient cycleMethod="REFLECT" endX="1.0" endY="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color green="1.0" blue="0.10000000149011612" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </stroke>
       </Text>
-      <Button fx:id="multiBtn" alignment="CENTER" layoutX="254.0" layoutY="191.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Multiplayer" textAlignment="CENTER" />
-      <Button fx:id="singleBtn" layoutX="254.0" layoutY="253.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="SinglePlayer" />
-      <Button fx:id="quitBtn" layoutX="254.0" layoutY="315.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Quit" />
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="panel" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="200.0">
+         <children>
+            <Button fx:id="singleBtn" layoutX="46.0" layoutY="72.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="SinglePlayer" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
+            <Button fx:id="quitBtn" layoutX="46.0" layoutY="137.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Quit" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
+            <Button fx:id="multiBtn" alignment="CENTER" layoutX="46.0" layoutY="7.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Multiplayer" textAlignment="CENTER" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
