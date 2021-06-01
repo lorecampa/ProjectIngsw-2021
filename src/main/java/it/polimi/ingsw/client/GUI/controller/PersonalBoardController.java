@@ -7,12 +7,9 @@ import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -20,14 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -102,8 +94,7 @@ public class PersonalBoardController extends Controller{
 
     @FXML private AnchorPane customMessageBox;
 
-    @FXML private GridPane resourcePositioningGrid;
-    @FXML private GridPane selectCardSlotGrid;
+    @FXML private AnchorPane bufferBox;
 
     @FXML private Pane cardSlot1;
     @FXML private Pane cardSlot2;
@@ -147,6 +138,7 @@ public class PersonalBoardController extends Controller{
     private int rowDevCard;
     private int colDevCard;
     private final ArrayList<ImageView> leadersProd = new ArrayList<>();
+
     private final ArrayList<ImageView> resourceBufferImages = new ArrayList<>();
     private final HashMap<ResourceType, Label> resourceBufferLabelsMap = new HashMap<>();
 
@@ -155,8 +147,7 @@ public class PersonalBoardController extends Controller{
         prodState = ProdState.NOT_IN_PROD;
         btn_back.setVisible(false);
         btn_back.setDisable(true);
-        resourcePositioningGrid.setVisible(false);
-        //resourcePositioningGrid.getChildren().forEach(node -> node.setVisible(false));
+        bufferBox.setVisible(false);
         cardSlot1.setDisable(true);
         cardSlot2.setDisable(true);
         cardSlot3.setDisable(true);
@@ -253,17 +244,17 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setUpStrongbox(){
-        strong_coin.setId(ResourceType.COIN.toString());
+        //strong_coin.setId(ResourceType.COIN.toString());
         strongBox.put(ResourceType.COIN,strong_coin);
 
-        strong_serv.setId(ResourceType.SERVANT.toString());
+        //strong_serv.setId(ResourceType.SERVANT.toString());
         strongBox.put(ResourceType.SERVANT,strong_serv);
 
+        //strong_shield.setId(ResourceType.SHIELD.toString());
         strongBox.put(ResourceType.SHIELD,strong_shield);
-        strong_shield.setId(ResourceType.SHIELD.toString());
 
-        strongBox.put(ResourceType.STONE,strong_stone);
         strong_stone.setId(ResourceType.STONE.toString());
+        strongBox.put(ResourceType.STONE,strong_stone);
     }
 
     private void setUpCardSlots(){
@@ -320,10 +311,7 @@ public class PersonalBoardController extends Controller{
         //DEPOTS
         ArrayList<ResourceData> standardDepots = model.getStandardDepot();
         for (int i = 0; i < standardDepots.size(); i++) {
-            for (int j = 0; j < standardDepots.get(i).getValue(); j++) {
-                depots.get(i).get(j).setImage(new Image(standardDepots.get(i).toResourceImage()));
-                depots.get(i).get(j).setVisible(true);
-            }
+            updateDepot(i, standardDepots.get(i), true);
         }
     }
 
@@ -677,11 +665,11 @@ public class PersonalBoardController extends Controller{
     public void strongboxPressed(MouseEvent mouseEvent){
         if (strong_stone.equals(mouseEvent.getSource()))
             Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.STONE,1)));
-        if (strong_shield.equals(mouseEvent.getSource()))
+        else if(strong_shield.equals(mouseEvent.getSource()))
             Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.SHIELD,1)));
-        if (strong_serv.equals(mouseEvent.getSource()))
+        else if (strong_serv.equals(mouseEvent.getSource()))
             Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.SERVANT,1)));
-        if (strong_coin.equals(mouseEvent.getSource()))
+        else if (strong_coin.equals(mouseEvent.getSource()))
             Client.getInstance().writeToStream(new StrongboxModify(new ResourceData(ResourceType.COIN,1)));
     }
 
@@ -701,19 +689,27 @@ public class PersonalBoardController extends Controller{
 
 
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
-        selectCardSlotGrid.setVisible(true);
+        //TODO make clickable dev card slot
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
 
-        //TODO make clickable dev card slot
 
 
     }
 
-    public void selectCardSlot(MouseEvent event){
-        Node source = event.getPickResult().getIntersectedNode();
-        System.out.println(GridPane.getRowIndex(source));
-        System.out.println(GridPane.getColumnIndex(source));
+    //warehouse resource insertion
+    public void updateDepot(int index, ResourceData depot, boolean isNormalDepot){
+        if (isNormalDepot){
+            for (int i = 0; i < depot.getValue(); i++){
+                depots.get(index).get(i).setImage(new Image(depot.toResourceImage()));
+            }
+        }
+    }
+
+    public void updateStrongbox(ArrayList<ResourceData> strongboxUpdated){
+        for (ResourceData res: strongboxUpdated){
+            strongBox.get(res.getType()).setText(Integer.toString(res.getValue()));
+        }
     }
 
 
@@ -722,49 +718,26 @@ public class PersonalBoardController extends Controller{
     //RESOURCE FORM MARKET METHODS
 
     public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
-        resourcePositioningGrid.setVisible(true);
+        bufferBox.setVisible(true);
         for (ResourceData res : resources) {
             resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
         }
 
-        resourceBufferImages.forEach(x -> {
-            x.setOnDragDetected(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    dragDetected(event);
-                }
-            });
+        resourceBufferImages.forEach(imageView -> {
+            imageView.setOnDragDetected(this::dragDetectedFromBuffer);
         });
 
-        depots.forEach(imageViews -> imageViews
-                .forEach(imageView -> {
-                    imageView.setOnDragOver(new EventHandler<DragEvent>() {
-                        @Override
-                        public void handle(DragEvent event) {
-                            dragOver(event);
-                        }
-                    });
-                    imageView.setOnDragDropped(new EventHandler<DragEvent>() {
-                        @Override
-                        public void handle(DragEvent event) {
-                            dragDropped(event);
-                        }
-                    });
-                }));
+        depots.forEach(imageViews -> imageViews.forEach(
+                imageView -> {
+                    imageView.setOnDragOver(this::dragOver);
+                    imageView.setOnDragDropped(this::dragDropped);
+                }
+
+        ));
 
         leadersDepots.forEach(imageView -> {
-            imageView.setOnDragOver(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    dragOver(event);
-                }
-            });
-            imageView.setOnDragDropped(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    dragDropped(event);
-                }
-            });
+            imageView.setOnDragOver(this::dragOver);
+            imageView.setOnDragDropped(this::dragDropped);
         });
 
 
@@ -773,7 +746,7 @@ public class PersonalBoardController extends Controller{
 
 
 
-    public void dragDetected(MouseEvent event){
+    public void dragDetectedFromBuffer(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
         ImageView imageView = (ImageView) source;
 
@@ -806,26 +779,75 @@ public class PersonalBoardController extends Controller{
         event.consume();
     }
 
+    private int getImageDepotIndex(ArrayList<ArrayList<ImageView>> depots, ImageView imageView){
+        for (int i = 0; i < depots.size(); i++) {
+            if (depots.get(i).stream().anyMatch(x -> x.equals(imageView))){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
     public void dragDropped(DragEvent event){
         System.out.println("Drag Dropped");
         Dragboard db = event.getDragboard();
         boolean success = false;
+
         if (db.hasImage()) {
 
-            int depotIndex = 0;
-            for (int i = 0; i < depots.size(); i++) {
-                if (depots.get(i).stream().anyMatch(imageView -> imageView.equals(destImage))){
-                    depotIndex = i;
-                    break;
+            if (resourceBufferImages.contains(startImage)){
+                ResourceData res = new ResourceData(getResourceTypeFromString(startImage.getId()), 1);
+                boolean isNormalDepot;
+                int indexDest;
+                if (depots.stream().anyMatch(x -> x.contains(destImage))){
+                    isNormalDepot = true;
+                    indexDest = getImageDepotIndex(depots, destImage);
+                }else if (leadersDepots.contains(destImage)){
+                    isNormalDepot = false;
+                    indexDest = 1;
+                    //indexDest = getImageDepotIndex(leadersDepots, destImage);
+                }else{
+                    return;
                 }
+                System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
+                        + isNormalDepot + " ResType: " + res.getType().getDisplayName());
+
+                //Client.getInstance().writeToStream(new DepotModify(indexDest, res, isNormalDepot));
+                return;
             }
 
+            boolean isFromNormalDepot;
+            int startIndex;
+            if (depots.stream().anyMatch(x -> x.contains(startImage))){
+                isFromNormalDepot = true;
+                startIndex = getImageDepotIndex(depots, startImage);
+            }else if(leadersDepots.contains(startImage)){
+                isFromNormalDepot = false;
+                startIndex = 1;
+            }else{
+                return;
+            }
+            boolean isToNormalDepot;
+            int destIndex;
+            if (depots.stream().anyMatch(x -> x.contains(destImage))){
+                isToNormalDepot = true;
+                destIndex = getImageDepotIndex(depots, destImage);
 
-            Client.getInstance().writeToStream(new DepotModify(depotIndex,
-                    new ResourceData(getResourceTypeFromString(startImage.getId()), 1), true));
+            }else if (leadersDepots.contains(destImage)){
+                isToNormalDepot = false;
+                destIndex = 1;
+            }else{
+                return;
+            }
+            System.out.println("Switch:\nFromDepot: " +startIndex + " isNormal: " + isFromNormalDepot);
+            System.out.println("ToDepot: " +destIndex + " isNormal: " + isToNormalDepot);
+            //Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
+
             success = true;
         }
         event.setDropCompleted(success);
         event.consume();
     }
+
 }
