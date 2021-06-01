@@ -25,4 +25,7 @@ public interface ResourceManagerObserver {
     void depotUpdate(Resource depotUpdated, int index, boolean isNormalDepot);
 
     void updateLeaderDepot(ArrayList<Depot> depots, boolean isDiscard);
+
+    void productionCardSelectionCompleted();
+
 }

@@ -13,8 +13,8 @@ public class Strongbox {
     private ArrayList<Resource> resources;
 
     public Strongbox() {
-        resources=ResourceFactory.createAllConcreteResource();
-        //setUpForDebug();
+        //resources=ResourceFactory.createAllConcreteResource();
+        setUpForDebug();
     }
 
     private void setUpForDebug(){

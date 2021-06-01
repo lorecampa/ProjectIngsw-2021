@@ -171,11 +171,7 @@ public class CLIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void manageResourceRequest(ManageResourcesRequest message) {
-        if(message.isFromMarket())
-            PrintAssistant.instance.printf("Insert those resources in your depots!");
-        else
-            PrintAssistant.instance.printf("From where you want to take those resources to pay the production?");
-
+        PrintAssistant.instance.printf("Insert those resources in your depots!");
         StringBuilder resource= new StringBuilder("Buffer: ");
         for(ResourceData r : message.getResources()){
             resource.append(r.toCli());
@@ -242,6 +238,11 @@ public class CLIMessageHandler extends ClientMessageHandler {
     public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message) {
         super.handleDeckDevCardRemoving(message);
         PrintAssistant.instance.printf("I have discarded some development cards");
+    }
+
+    @Override
+    public void handleProductionSelectionCompleted() {
+        PrintAssistant.instance.printf("Card inserted in production buffer");
     }
 
     //Print

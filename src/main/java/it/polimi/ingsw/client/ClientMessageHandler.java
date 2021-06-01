@@ -187,4 +187,8 @@ public abstract class ClientMessageHandler {
         client.getDeckDevData().removeCardDevData(message.getRow(), message.getColumn());
     }
 
+
+    public abstract void handleProductionSelectionCompleted();
+
+
 }

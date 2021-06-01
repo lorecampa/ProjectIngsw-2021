@@ -27,7 +27,7 @@ public class ClientGUI extends Application {
         this.stage = stage;
         setUpControllers();
         stage.setResizable(false);
-        controllerHandler.changeView(Views.PERSONAL_BOARD);
+        controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
     }
 
