@@ -36,8 +36,12 @@ public class CardLeaderData {
     }
 
     public String toResourcePath(){
-        URL url = null;
-        if (active)
+        return toResourcePath(active);
+    }
+
+    public String toResourcePath(boolean color){
+        URL url;
+        if (color)
             url = this.getClass().getResource("/GUI/front/"+id+".png");
         else {
             url = this.getClass().getResource("/GUI/front/" + id + "-BN.png");

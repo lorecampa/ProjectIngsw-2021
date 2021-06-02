@@ -23,10 +23,17 @@ import java.util.stream.Collectors;
 
 public class PreGameSelectionController extends Controller {
     private final Client client = Client.getInstance();
+    private ArrayList<ImageView> leaders = new ArrayList<>();
+    private HashMap<Button, ImageView> leaderButtonMap = new HashMap<>();
 
     private int howManyRes = 0;
     private boolean isSelectionOver = false;
-    private HashMap<ResourceType, Integer> resNumMap = new HashMap<>();
+    private HashMap<ResourceType, Integer> resNumMap = new HashMap<>() {{
+        put(ResourceType.COIN,0);
+        put(ResourceType.SERVANT, 0);
+        put(ResourceType.SHIELD,0);
+        put(ResourceType.STONE, 0);
+    }};
 
     @FXML AnchorPane customMessageBox;
     @FXML Label customMessageLabel;
@@ -185,66 +192,64 @@ public class PreGameSelectionController extends Controller {
 
     @FXML
     public void discardLeader(ActionEvent event){
-        if (event.getSource().equals(btn1)){
-            client.writeToStream(new LeaderManage(0,true));
-            box1.setVisible(false);
-        }else if (event.getSource().equals(btn2)){
-            client.writeToStream(new LeaderManage(1,true));
-            box2.setVisible(false);
-        }else if (event.getSource().equals(btn3)){
-            client.writeToStream(new LeaderManage(2,true));
-            box3.setVisible(false);
-        }else if (event.getSource().equals(btn4)){
-            client.writeToStream(new LeaderManage(3,true));
-            box4.setVisible(false);
-        }else{
-            showCustomMessage("Invalid selection");
-            return;
-        }
+        Button btn = (Button) event.getSource();
+        ImageView leaderSelected = leaderButtonMap.get(btn);
+        leaderSelected.getParent().setVisible(false);
+        int index = leaders.indexOf(leaderSelected);
+        leaders.remove(leaderSelected);
+        Client.getInstance().writeToStream(new LeaderManage(index, true));
+
     }
 
     //---------------------
     //EXTERNAL METHODS
     //--------------------
-    public void setUpLeader(ArrayList<CardLeaderData> cards){
-        leader1.setImage(new Image(cards.get(0).toResourcePath()));
-
-        leader2.setImage(new Image(cards.get(1).toResourcePath()));
-
-        leader3.setImage(new Image(cards.get(2).toResourcePath()));
-
-        leader4.setImage(new Image(cards.get(3).toResourcePath()));
-
-
-
+    public void setUpLeaderImages(ArrayList<CardLeaderData> cards){
+        leader1.setImage(new Image(cards.get(0).toResourcePath(true)));
+        leader2.setImage(new Image(cards.get(1).toResourcePath(true)));
+        leader3.setImage(new Image(cards.get(2).toResourcePath(true)));
+        leader4.setImage(new Image(cards.get(3).toResourcePath(true)));
     }
 
     @Override
     public void setUpAll() {
-        Arrays.stream(ResourceType.values())
-                .forEach(x -> {
-                    if (x != ResourceType.FAITH && x != ResourceType.ANY){
-                        resNumMap.put(x, 0);
-                    }
-                });
+    }
+
+    @FXML
+    public void initialize(){
+        leaderButtonMap.put(btn1, leader1);
+        leaders.add(leader1);
+
+        leaderButtonMap.put(btn2, leader2);
+        leaders.add(leader2);
+
+        leaderButtonMap.put(btn3, leader3);
+        leaders.add(leader3);
+
+        leaderButtonMap.put(btn4, leader4);
+        leaders.add(leader4);
 
         showLeaderBox();
-        sendResBtn.setVisible(false);
-
     }
 
     public void showChooseResourcesBox(){
+        reset();
         howManyResLabel.setText("You have "+ howManyRes + " to choose");
-        leaderBox.setVisible(false);
         chooseResourcesBox.setVisible(true);
-        customMessageBox.setVisible(false);
     }
     public void showLeaderBox(){
+        reset();
         leaderBox.setVisible(true);
-        chooseResourcesBox.setVisible(false);
     }
 
     public void setHowManyRes(int howManyRes) {
         this.howManyRes = howManyRes;
+    }
+
+    private void reset(){
+        customMessageBox.setVisible(false);
+        leaderBox.setVisible(false);
+        chooseResourcesBox.setVisible(false);
+        sendResBtn.setVisible(false);
     }
 }

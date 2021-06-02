@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.controller.*;
-import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
@@ -14,7 +13,6 @@ import javafx.application.Platform;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 public class GUIMessageHandler extends ClientMessageHandler {
@@ -130,7 +128,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
         Platform.runLater(()->{
             controllerHandler.changeView(Views.PRE_MATCH);
-            controller.setUpLeader(message.getLeaders());
+            controller.setUpLeaderImages(message.getLeaders());
         });
     }
 
@@ -156,9 +154,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
         });
 
 
-        /*
-        //DEBUG
 
+        //DEBUG
+        /*
         ArrayList<ResourceData> resources = new ArrayList<>();
         resources.add(new ResourceData(ResourceType.COIN, 3));
         resources.add(new ResourceData(ResourceType.SERVANT, 3));
@@ -174,17 +172,11 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
 
         Platform.runLater(()->{
-            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            pbController.setUpResourceFromMarket(resources);
-        });
-
-        */
-
-        /*
-        Platform.runLater(()->{
             PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             controller.setUpAnyConversion(resources, 4);
         });
+
+
 
          */
 
@@ -221,7 +213,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
             if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
                 personalBoardController.resetLeader();
+                personalBoardController.resetLeaderDepots();
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
 
@@ -290,7 +284,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
             if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
                 personalBoardController.resetLeader();
+                personalBoardController.resetLeaderDepots();
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
     }
@@ -310,13 +306,23 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void depotUpdate(DepotUpdate message) {
         super.depotUpdate(message);
-        Platform.runLater(()->{
-            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
-            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
-                personalBoardController.resetStandardDepots();
-                personalBoardController.loadStandardDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
-            }
-        });
+        if (message.isNormalDepot()) {
+            Platform.runLater(() -> {
+                PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+                if (message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                    personalBoardController.resetStandardDepots();
+                    personalBoardController.loadStandardDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                }
+            });
+        }else{
+            Platform.runLater(()->{
+                PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+                if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                    personalBoardController.resetLeaderDepots();
+                    personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                }
+            });
+        }
     }
 
     @Override

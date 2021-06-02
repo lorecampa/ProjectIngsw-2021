@@ -452,18 +452,19 @@
          </children>
       </AnchorPane>
       <ImageView fx:id="baseProd" fitHeight="109.0" fitWidth="115.0" layoutX="225.0" layoutY="447.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true" />
-      <AnchorPane fx:id="customMessageBox" disable="true" layoutX="245.0" layoutY="116.0" prefHeight="104.0" prefWidth="517.0" visible="false">
+      <AnchorPane fx:id="customMessageBox" disable="true" layoutX="245.0" layoutY="116.0" mouseTransparent="true" prefHeight="104.0" prefWidth="517.0" visible="false">
          <children>
-            <Label alignment="CENTER" layoutX="2.0" layoutY="23.0" prefHeight="17.0" prefWidth="525.0" text="Custom message">
+            <Label alignment="CENTER" layoutX="2.0" layoutY="25.0" prefHeight="55.0" prefWidth="525.0" text="Custom message">
                <font>
                   <Font size="46.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="bufferBox" layoutX="208.0" layoutY="10.0" prefHeight="169.0" prefWidth="601.0" style="-fx-background-color: rgb(140,140,140);">
+      <AnchorPane fx:id="bufferBox" layoutX="208.0" layoutY="10.0" prefHeight="188.0" prefWidth="610.0" style="-fx-background-color: rgb(140,140,140);">
          <children>
-            <Label fx:id="bufferCustomLabel" alignment="CENTER" layoutX="1.0" layoutY="-2.0" prefHeight="55.0" prefWidth="601.0" text="positioning" textFill="WHITE">
+            <Button fx:id="discardMarketResBtn" layoutX="582.0" mnemonicParsing="false" onAction="#discardMarketResources" prefHeight="25.0" prefWidth="29.0" text="X" />
+            <Label fx:id="bufferCustomLabel" alignment="CENTER" layoutX="1.0" layoutY="-2.0" mouseTransparent="true" prefHeight="55.0" prefWidth="611.0" text="positioning" textFill="WHITE">
                <font>
                   <Font size="34.0" />
                </font>
