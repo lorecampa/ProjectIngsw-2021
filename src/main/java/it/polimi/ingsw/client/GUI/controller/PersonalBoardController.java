@@ -134,6 +134,7 @@ public class PersonalBoardController extends Controller{
     @FXML private Label bufferTop4;
     @FXML private Button decreaseResBuffer4;
 
+    @FXML private Button btn_endTurn;
 
 
     //from market res
@@ -1070,4 +1071,8 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    @FXML
+    public void endTurn(){
+        Client.getInstance().writeToStream(new EndTurn());
+    }
 }

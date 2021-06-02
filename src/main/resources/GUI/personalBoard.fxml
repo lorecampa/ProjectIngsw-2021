@@ -344,6 +344,7 @@
                   <Image url="@punchboard/PopeFavor_3_Acquired.png" />
                </image>
             </ImageView>
+            <Button fx:id="btn_endTurn" layoutY="2.0" mnemonicParsing="false" onAction="#endTurn" text="End Turn" />
          </children>
       </Pane>
       <HBox layoutX="350.0" layoutY="250.0" prefHeight="364.0" prefWidth="543.0">
