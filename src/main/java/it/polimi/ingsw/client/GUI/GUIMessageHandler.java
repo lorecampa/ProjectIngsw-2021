@@ -213,7 +213,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
             if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
                 personalBoardController.resetLeader();
+                personalBoardController.resetLeaderDepots();
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
 
@@ -282,7 +284,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
             if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
                 personalBoardController.resetLeader();
+                personalBoardController.resetLeaderDepots();
                 personalBoardController.loadLeader(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
     }
@@ -302,13 +306,23 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void depotUpdate(DepotUpdate message) {
         super.depotUpdate(message);
-        Platform.runLater(()->{
-            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
-            if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
-                personalBoardController.resetStandardDepots();
-                personalBoardController.loadStandardDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
-            }
-        });
+        if (message.isNormalDepot()) {
+            Platform.runLater(() -> {
+                PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+                if (message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                    personalBoardController.resetStandardDepots();
+                    personalBoardController.loadStandardDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                }
+            });
+        }else{
+            Platform.runLater(()->{
+                PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+                if(message.getUsername().equals(personalBoardController.getCurrentShowed())) {
+                    personalBoardController.resetLeaderDepots();
+                    personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
+                }
+            });
+        }
     }
 
     @Override

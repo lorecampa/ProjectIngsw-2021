@@ -32,7 +32,7 @@ public class DepotUpdate implements ClientMessage{
         return depotIndex;
     }
 
-    public boolean normalDepot() {
+    public boolean isNormalDepot() {
         return normalDepot;
     }
 

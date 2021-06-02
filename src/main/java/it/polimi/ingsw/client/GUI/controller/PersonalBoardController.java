@@ -258,8 +258,8 @@ public class PersonalBoardController extends Controller{
         leaderDepot1.add(le_depot_12);
         leadersDepots.add(leaderDepot1);
         ArrayList<ImageView> leaderDepot2 = new ArrayList<>();
-        leaderDepot1.add(le_depot_21);
-        leaderDepot1.add(le_depot_22);
+        leaderDepot2.add(le_depot_21);
+        leaderDepot2.add(le_depot_22);
         leadersDepots.add(leaderDepot2);
 
         leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
@@ -368,12 +368,18 @@ public class PersonalBoardController extends Controller{
         ArrayList<ResourceData> le_depots = model.getLeaderDepot();
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
 
+        boolean isWarehouse;
         for (int i = 0; i < le_depots.size(); i++) {
-            boolean isWarehouse = leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
-            if (isWarehouse){
-                leadersDepots.get(i).forEach(imageView -> imageView.setVisible(true));
-                for (int j = 0; j < le_depots.get(0).getValue(); j++) {
-                    leadersDepots.get(i).get(j).setImage(new Image(le_depots.get(0).toResourceImage()));
+            for (int j = i; j < leadersData.size(); j++) {
+                if (leadersData.get(j).isActive()) {
+                    isWarehouse = leadersData.get(j).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE));
+                    if (isWarehouse){
+                        leadersDepots.get(j).forEach(imageView -> imageView.setVisible(true));
+                        for (int h = 0; h < le_depots.get(i).getValue(); h++) {
+                            leadersDepots.get(j).get(h).setImage(new Image(le_depots.get(i).toResourceImage()));
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -973,6 +979,21 @@ public class PersonalBoardController extends Controller{
                 }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
                     isNormalDepot = false;
                     indexDest = getImageDepotIndex(leadersDepots, destImage);
+                    /*
+                    long numOfWarehouse = Client.getInstance().getMyModel().toModelData().getLeaders().stream()
+                            .filter(CardLeaderData::isActive).map(CardLeaderData::getEffects)
+                            .flatMap(effectData -> effectData.stream().map(EffectData::getType))
+                            .filter(type1 -> type1.equals(EffectType.WAREHOUSE)).count();
+
+                     */
+                    int numOfLeaderBefore = 0;
+                    ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
+                    for (int i = 0; i < indexDest; i++) {
+                        if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
+                            numOfLeaderBefore++;
+                    }
+                    indexDest -= numOfLeaderBefore;
+
                 }else{
                     return;
                 }
@@ -992,6 +1013,13 @@ public class PersonalBoardController extends Controller{
             }else if(leadersDepots.stream().anyMatch(x->x.contains(startImage))){
                 isFromNormalDepot = false;
                 startIndex = getImageDepotIndex(leadersDepots, startImage);
+                int numOfLeaderBefore = 0;
+                ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
+                for (int i = 0; i < startIndex; i++) {
+                    if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
+                        numOfLeaderBefore++;
+                }
+                startIndex -= numOfLeaderBefore;
             }else{
                 return;
             }
@@ -1004,6 +1032,13 @@ public class PersonalBoardController extends Controller{
             }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
                 isToNormalDepot = false;
                 destIndex = getImageDepotIndex(leadersDepots, destImage);
+                int numOfLeaderBefore = 0;
+                ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
+                for (int i = 0; i < destIndex; i++) {
+                    if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
+                        numOfLeaderBefore++;
+                }
+                destIndex -= numOfLeaderBefore;
             }else{
                 return;
             }

@@ -4,14 +4,12 @@ import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ModelData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
-import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
 
 public abstract class ClientMessageHandler {
     private final Client client = Client.getInstance();
@@ -104,7 +102,7 @@ public abstract class ClientMessageHandler {
 
     //DepotUpdate maessage handler
     public void depotUpdate(DepotUpdate message){
-        if(message.normalDepot()){
+        if(message.isNormalDepot()){
             client.getModelOf(message.getUsername()).setStandardDepotAt(message.getDepotIndex(), message.getDepot());
         }
         else{
