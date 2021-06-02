@@ -103,6 +103,7 @@ public class PersonalBoardController extends Controller{
     @FXML private AnchorPane customMessageBox;
 
     @FXML private AnchorPane bufferBox;
+    @FXML private Button discardMarketResBtn;
 
     @FXML private Pane cardSlot1;
     @FXML private Button selectSlot1Btn;
@@ -164,6 +165,7 @@ public class PersonalBoardController extends Controller{
     private final HashMap<ResourceType, Label> resourceBufferTopLabelsMap = new HashMap<>();
     private final HashMap<ResourceType, Button> resourceBufferDecreaseBtnMap = new HashMap<>();
     private int numOfAnyToConvert;
+
     private HashMap<ResourceType, Integer> anyConverted = new HashMap<>() {{
         put(ResourceType.COIN,0);
         put(ResourceType.SERVANT, 0);
@@ -500,9 +502,6 @@ public class PersonalBoardController extends Controller{
         resetCardSlots();
     }
 
-    public void resetBuffer(){
-
-    }
 
     public void resetCardSlots() {
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
@@ -772,16 +771,10 @@ public class PersonalBoardController extends Controller{
     }
 
     public void setUpAnyConversion(ArrayList<ResourceData> conversion, int num){
-        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
-        resourceBufferTopLabelsMap.values().forEach(x -> x.setText("0"));
-        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
-        resourceBufferLabelsMap.values().forEach(x -> x.setVisible(false));
+        resetBuffer();
+        resourceBufferImages.values().forEach(x -> x.setDisable(false));
+        resourceBufferDecreaseBtnMap.values().forEach(x -> x.setOnAction(this::decreaseAnySelected));
         anyConverted.keySet().forEach(x -> anyConverted.put(x, 0));
-
-        resourceBufferDecreaseBtnMap.values().forEach(x -> {
-            x.setVisible(false);
-            x.setOnAction(this::decreaseAnySelected);
-        });
 
         bufferBox.setVisible(true);
         numOfAnyToConvert = num;
@@ -839,6 +832,7 @@ public class PersonalBoardController extends Controller{
             Client.getInstance().writeToStream(new AnyResponse(response));
         }
     }
+
     public void decreaseAnySelected(ActionEvent event){
         Button source = (Button) event.getSource();
         ResourceType typeSource = null;
@@ -866,36 +860,61 @@ public class PersonalBoardController extends Controller{
 
 
     //RESOURCE FORM MARKET METHODS
+    private void resetBuffer(){
+        resourceBufferLabelsMap.values().forEach(x -> {
+            x.setVisible(false);
+            x.setText(Integer.toString(0));
+        });
 
-    public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
-        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
-        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
+        resourceBufferTopLabelsMap.values().forEach(x ->{
+            x.setVisible(false);
+            x.setText(Integer.toString(0));
+        });
+
         resourceBufferDecreaseBtnMap.values().forEach(x -> x.setVisible(false));
 
+        discardMarketResBtn.setVisible(false);
+
+        resourceBufferImages.values().forEach(x ->{
+            x.setVisible(true);
+            x.setDisable(true);
+        });
+    }
+
+
+    public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
+        resetBuffer();
+        resourceBufferLabelsMap.values().forEach(x -> x.setVisible(true));
+        discardMarketResBtn.setVisible(true);
         bufferBox.setVisible(true);
         for (ResourceData res : resources) {
             resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
-        }
 
-        resourceBufferImages.values().forEach(imageView -> {
-            imageView.setOnDragDetected(this::dragDetected);
-        });
+            resourceBufferImages.get(res.getType()).setDisable(false);
+            resourceBufferImages.get(res.getType()).setOnDragDetected(this::dragDetected);
+
+        }
 
         depots.forEach(imageViews -> imageViews.forEach(
                 imageView -> {
                     imageView.setOnDragDetected(this::dragDetected);
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
-                }
+                }));
 
-        ));
-
+        //TODO is correct?
         leadersDepots.forEach(imageViews -> imageViews
                 .forEach(imageView -> {
                     imageView.setOnDragDetected(this::dragDetected);
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
+    }
+
+    public void discardMarketResources(){
+        bufferBox.setVisible(false);
+        resetBuffer();
+        Client.getInstance().writeToStream(new DiscardResourcesFromMarket());
     }
 
     public void dragDetected(MouseEvent event){
@@ -938,6 +957,7 @@ public class PersonalBoardController extends Controller{
 
         if (db.hasImage()) {
             if (resourceBufferImages.containsValue(startImage)){
+                //insertion from buffer
                 ResourceType type = null;
                 for(ResourceType resType: resourceBufferImages.keySet()){
                     if (resourceBufferImages.get(resType).equals(startImage)){
@@ -959,7 +979,8 @@ public class PersonalBoardController extends Controller{
                 System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
                         + isNormalDepot + " ResType: " + type);
 
-                Client.getInstance().writeToStream(new DepotModify(indexDest, new ResourceData(type, 1), isNormalDepot));
+                Client.getInstance().writeToStream(new DepotModify(indexDest,
+                        new ResourceData(type, 1), isNormalDepot));
                 return;
             }
 
@@ -998,15 +1019,20 @@ public class PersonalBoardController extends Controller{
 
 
     public void bufferUpdate(ArrayList<ResourceData> bufferUpdated){
-        resourceBufferLabelsMap.values().forEach(x -> x.setText("0"));
-        resourceBufferTopLabelsMap.values().forEach(x -> x.setVisible(false));
-        resourceBufferDecreaseBtnMap.values().forEach(x -> x.setVisible(false));
-
-        bufferBox.setVisible(true);
-        for (ResourceData res : bufferUpdated) {
-            resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
+        if (bufferUpdated.stream().mapToInt(ResourceData::getValue).sum() == 0){
+            bufferBox.setVisible(false);
+        }else{
+            resourceBufferLabelsMap.values().forEach(x -> x.setText(Integer.toString(0)));
+            for (ResourceType type: resourceBufferImages.keySet()){
+                if (bufferUpdated.stream().filter(x -> x.getValue() > 0)
+                        .map(ResourceData::getType).noneMatch(x -> x == type)){
+                    resourceBufferImages.get(type).setDisable(true);
+                }
+            }
+            for (ResourceData res : bufferUpdated) {
+                resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
+            }
         }
-
     }
 
 }
