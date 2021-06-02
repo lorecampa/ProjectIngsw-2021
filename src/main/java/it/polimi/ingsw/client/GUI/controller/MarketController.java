@@ -6,10 +6,12 @@ import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.serverMessage.MarketAction;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -90,11 +92,13 @@ public class MarketController extends Controller{
     }
 
     private void setUpBtn(Button btn){
+        /*
         btn.setStyle("-fx-background-color:transparent;");
 
         btn.setOnMouseEntered(t -> btn.setStyle("-fx-border-color:blue;-fx-background-color:transparent;"));
 
         btn.setOnMouseExited(t -> btn.setStyle("-fx-background-color:transparent;"));
+         */
     }
 
 
@@ -137,5 +141,72 @@ public class MarketController extends Controller{
         }
     }
 
+    public void hoverButton(MouseEvent event){
+        if (event.getSource().equals(btn_row0)){
+            setCSS(true, true, 0);
+        }
+        if (event.getSource().equals(btn_row1)){
+            setCSS(true, true, 1);
+        }
+        if (event.getSource().equals(btn_row2)){
+            setCSS(true, true, 2);
+        }
+        if (event.getSource().equals(btn_col0)){
+            setCSS(false, true, 0);
+        }
+        if (event.getSource().equals(btn_col1)) {
+            setCSS(false, true, 1);
+        }
+        if (event.getSource().equals(btn_col2)){
+            setCSS(false, true, 2);
+        }
+        if (event.getSource().equals(btn_col3)){
+            setCSS(false, true, 3);
+        }
 
+    }
+    public void hoverButtonExit(MouseEvent event){
+        if (event.getSource().equals(btn_row0)){
+            setCSS(true, false, 0);
+        }
+        if (event.getSource().equals(btn_row1)){
+            setCSS(true, false, 1);
+        }
+        if (event.getSource().equals(btn_row2)){
+            setCSS(true, false, 2);
+        }
+        if (event.getSource().equals(btn_col0)){
+            setCSS(false, false, 0);
+        }
+        if (event.getSource().equals(btn_col1)) {
+            setCSS(false, false, 1);
+        }
+        if (event.getSource().equals(btn_col2)){
+            setCSS(false, false, 2);
+        }
+        if (event.getSource().equals(btn_col3)){
+            setCSS(false, false, 3);
+        }
+    }
+
+    public void setCSS(boolean isRow, boolean isSet, int num){
+        if(isRow) {
+            ArrayList<ImageView> myRow=marbles.get(num);
+            myRow.forEach(x->{
+                if (isSet) {
+                    x.getStyleClass().add("marble");
+                } else {
+                    x.getStyleClass().remove("marble");
+                }
+            });
+        }
+        else{
+            for(int i=0; i<3; i++){
+                if(isSet)
+                    marbles.get(i).get(num).getStyleClass().add("marble");
+                else
+                    marbles.get(i).get(num).getStyleClass().remove("marble");
+            }
+        }
+    }
 }
