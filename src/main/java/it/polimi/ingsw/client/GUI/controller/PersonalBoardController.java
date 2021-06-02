@@ -387,12 +387,15 @@ public class PersonalBoardController extends Controller{
             leaders.get(i).setImage(new Image(leaderData.toResourcePath()));
             boolean activated = leaderData.isActive();
 
-            if (activated)
+            if (activated) {
                 leaders.get(i).setDisable(true);
-            else if (owned)
+                discardButton.get(i).setVisible(false);
+            }
+            else if (owned) {
                 leaders.get(i).setDisable(false);
+                discardButton.get(i).setVisible(true);
+            }
 
-            discardButton.get(i).setVisible(owned);
         }
     }
 
@@ -580,21 +583,20 @@ public class PersonalBoardController extends Controller{
     @FXML
     public void leaderClicked(MouseEvent event){
         System.out.println("leader cliked");
-        if (event.getSource().equals(leader1)){}
-            //Client.getInstance().writeToStream(new LeaderManage(0, false));
-        else{}
-            //Client.getInstance().writeToStream(new LeaderManage(1, false));
+        if (event.getSource().equals(leader1))
+            Client.getInstance().writeToStream(new LeaderManage(0, false));
+        else
+            Client.getInstance().writeToStream(new LeaderManage(1, false));
     }
 
     @FXML
     public void leaderProdClicked(MouseEvent actionEvent){
         System.out.println("leader prod");
         prodState = ProdState.ALREADY_PROD;
-        if (actionEvent.getSource().equals(prodLeader1)) {
-           // Client.getInstance().writeToStream(new ProductionAction(0, true));
-        }
-        else{}
-           // Client.getInstance().writeToStream(new ProductionAction(1, true));
+        if (actionEvent.getSource().equals(prodLeader1))
+           Client.getInstance().writeToStream(new ProductionAction(0, true));
+        else
+           Client.getInstance().writeToStream(new ProductionAction(1, true));
     }
 
     @FXML

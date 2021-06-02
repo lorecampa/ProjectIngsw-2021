@@ -70,18 +70,19 @@ public class CardManager extends GameMasterObservable implements Observable<Card
      * @param leaderIndex is the index of the leader to discard
      * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
      */
-    public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException, InvalidStateActionException {
+    public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException, InvalidStateActionException, LeaderCardAlreadyActivatedException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER);
 
         Leader leaderToDiscard = leaders.get(leaderIndex);
-        leaders.remove(leaderIndex);
 
-        if (leaderToDiscard.isActive()){
-            leaderToDiscard.discardCreationEffects();
+        if (!leaderToDiscard.isActive()){
+            leaders.remove(leaderIndex);
+            //leaderToDiscard.discardCreationEffects();
+            notifyGameMaster(GameMasterObserver::discardLeader);
+            notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
+        }else{
+            throw new LeaderCardAlreadyActivatedException("Can't discard a activated leader!");
         }
-        notifyGameMaster(GameMasterObserver::discardLeader);
-        notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
-
     }
 
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{

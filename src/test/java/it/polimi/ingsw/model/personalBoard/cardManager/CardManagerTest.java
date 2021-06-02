@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.personalBoard.cardManager;
 
 import it.polimi.ingsw.exception.CardAlreadyUsed;
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
+import it.polimi.ingsw.exception.LeaderCardAlreadyActivatedException;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.PlayerState;
@@ -115,6 +116,12 @@ class CardManagerTest {
         cardManager.addLeader(leader2);
         assertDoesNotThrow(() -> cardManager.discardLeader(0));
         assertDoesNotThrow(() -> cardManager.discardLeader(0));
+        cardManager.addLeader(leader1);
+        cardManager.addLeader(leader2);
+        leader1.setActive();
+        leader2.setActive();
+        assertThrows(LeaderCardAlreadyActivatedException.class,() -> cardManager.discardLeader(0));
+        assertThrows(LeaderCardAlreadyActivatedException.class,() -> cardManager.discardLeader(1));
     }
 
     @Test
