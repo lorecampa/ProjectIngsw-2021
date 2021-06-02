@@ -1,0 +1,6 @@
+.panelSingleCard{
+    -fx-background-color: rgba(153, 140, 93, 0.5);
+    -fx-border-width: 2px;
+    -fx-border-color: rgb(255, 235, 166) ;
+    -fx-border-style: solid;
+}

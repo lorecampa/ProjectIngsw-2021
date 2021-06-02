@@ -1,7 +1,7 @@
 .closeButton{
     -fx-border-radius: 36px;
     -fx-background-color: red;
-    -fx-background-radius: 33px;
+    -fx-background-radius: 30px;
     -fx-text-fill: black;
     -fx-border-width: 2px;
     -fx-border-color: black;
