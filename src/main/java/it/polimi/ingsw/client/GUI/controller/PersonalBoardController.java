@@ -908,8 +908,6 @@ public class PersonalBoardController extends Controller{
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
-
-        //TODO is correct?
         leadersDepots.forEach(imageViews -> imageViews
                 .forEach(imageView -> {
                     imageView.setOnDragDetected(this::dragDetected);

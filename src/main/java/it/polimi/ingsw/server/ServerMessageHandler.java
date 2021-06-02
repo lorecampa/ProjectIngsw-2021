@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
@@ -23,7 +22,6 @@ public class ServerMessageHandler {
     private ClientConnectionHandler client;
     private VirtualClient virtualClient;
     private HandlerState serverPhase;
-    //TODO control that all messages with null value in each attributes are okay
     /**
      * ServerMessageHandler constructor creates a new class instance
      * @param server is the reference to the server

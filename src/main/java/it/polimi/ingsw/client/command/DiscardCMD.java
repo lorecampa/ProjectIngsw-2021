@@ -37,7 +37,6 @@ public class DiscardCMD implements Command{
             return;
         }
         int leaderIndex;
-        //TODO change and make command
         if (split[0].equals("market")){
             client.writeToStream(new DiscardResourcesFromMarket());
             return;

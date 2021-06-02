@@ -99,7 +99,6 @@ public class ClientConnectionHandler implements Runnable {
             message.ifPresentOrElse(
                     x -> x.process(serverMessageHandler),
                     () -> writeToStream(new ErrorMessage(ErrorType.INVALID_MESSAGE)));
-            //TODO handle quit with a message
         }catch (Exception e){
             System.out.println("client disconnection");
             serverMessageHandler.handleDisconnection();

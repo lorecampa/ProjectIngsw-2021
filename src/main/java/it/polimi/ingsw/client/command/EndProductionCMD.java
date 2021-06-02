@@ -33,7 +33,6 @@ public class EndProductionCMD implements Command{
 
     @Override
     public void help() {
-        //TODO modify
         ArrayList<String> rowHelp= new ArrayList<>();
         rowHelp.add("HELP: "+cmd);
         rowHelp.add("Write the command to end your production phase and start the next game phase.");
