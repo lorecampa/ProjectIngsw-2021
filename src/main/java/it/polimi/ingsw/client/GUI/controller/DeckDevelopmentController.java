@@ -62,7 +62,7 @@ public class DeckDevelopmentController extends Controller{
         currCard.setImage(imageSelected.getImage());
 
         gridPaneDeck.setDisable(true);
-        gridPaneDeck.setVisible(false);
+        //gridPaneDeck.setVisible(false);
         currCardSelBox.setVisible(true);
     }
 

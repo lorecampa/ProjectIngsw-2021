@@ -5,7 +5,8 @@
 .buttons{
     -fx-background-color: rgb(233,234,210);
     -fx-border-width: 3px;
-    -fx-border-radius: 3px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 18px;
 }
 .buttons:hover{
     -fx-border-color: rgb(255, 210, 48);/*0 255 100*/
