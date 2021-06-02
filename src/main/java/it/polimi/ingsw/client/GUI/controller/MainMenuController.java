@@ -12,6 +12,8 @@ import it.polimi.ingsw.message.serverMessage.QuitGame;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class MainMenuController extends Controller{
     public final ControllerHandler handler = ControllerHandler.getInstance();
@@ -26,6 +28,8 @@ public class MainMenuController extends Controller{
     @FXML
     Button quitBtn;
 
+    @FXML
+    Text mainTitle;
 
     //---------------------
     //INTERNAL METHODS
@@ -48,7 +52,7 @@ public class MainMenuController extends Controller{
 
     @Override
     public void setUpAll() {
-
+        //mainTitle.setFont(Font.loadFont("file:resources/GUI/fonts/Ruritania.ttf",120));
     }
 
     //---------------------
