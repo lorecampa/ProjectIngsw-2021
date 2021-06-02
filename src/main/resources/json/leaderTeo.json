@@ -1,0 +1,478 @@
+[
+{
+  "@class" : "Leader",
+  "id": 57,
+  "victoryPoints" : 5,
+  "requirements":[
+    {
+      "@class": "ResourceReq",
+      "resourceReq": [
+        {
+          "type": "SERVANT",
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "onActivationEffects": [
+    {
+      "@class" : "MarbleEffect",
+      "transformIn" : [
+        {
+          "type": "SERVANT",
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "onCreationEffects": []
+},
+
+
+
+{
+"@class" : "Leader",
+"id": 58,
+"victoryPoints" : 5,
+"requirements":[
+  {
+    "@class": "ResourceReq",
+    "resourceReq": [
+      {
+        "type": "SERVANT",
+        "value": 5
+      }
+    ]
+  }
+],
+"onActivationEffects": [
+{
+"@class" : "MarbleEffect",
+"transformIn" : [
+{
+"type": "SHIELD",
+"value": 1
+}
+]
+}
+],
+"onCreationEffects": []
+},
+
+
+{
+"@class" : "Leader",
+"id": 59,
+"victoryPoints" : 5,
+"requirements":[
+  {
+    "@class": "ResourceReq",
+    "resourceReq": [
+      {
+        "type": "SERVANT",
+        "value": 5
+      }
+    ]
+  }
+],
+"onActivationEffects": [
+{
+"@class" : "MarbleEffect",
+"transformIn" : [
+{
+"type": "STONE",
+"value": 1
+}
+]
+}
+],
+"onCreationEffects": []
+},
+
+
+{
+"@class" : "Leader",
+"id": 60,
+"victoryPoints" : 5,
+"requirements":[
+  {
+    "@class": "ResourceReq",
+    "resourceReq": [
+      {
+        "type": "SERVANT",
+        "value": 5
+      }
+    ]
+  }
+],
+"onActivationEffects": [
+{
+"@class" : "MarbleEffect",
+"transformIn" : [
+{
+"type": "COIN",
+"value": 1
+}
+]
+}
+],
+"onCreationEffects": []
+},
+  {
+    "@class" : "Leader",
+    "id": 57,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "id": 58,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 59,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 60,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+  {
+    "@class" : "Leader",
+    "id": 57,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "id": 58,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 59,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 60,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+  {
+    "@class" : "Leader",
+    "id": 57,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SERVANT",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+
+  {
+    "@class" : "Leader",
+    "id": 58,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "SHIELD",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 59,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "STONE",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  },
+
+
+  {
+    "@class" : "Leader",
+    "id": 60,
+    "victoryPoints" : 5,
+    "requirements":[
+      {
+        "@class": "ResourceReq",
+        "resourceReq": [
+          {
+            "type": "SERVANT",
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "onActivationEffects": [
+      {
+        "@class" : "MarbleEffect",
+        "transformIn" : [
+          {
+            "type": "COIN",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "onCreationEffects": []
+  }
+]

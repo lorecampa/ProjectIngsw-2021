@@ -206,7 +206,7 @@ public class CLIMessageHandler extends ClientMessageHandler {
             for(ResourceData r : entry.getValue()){
                 resource.append(r.toCli());
             }
-            PrintAssistant.instance.printf("Leader "+entry.getKey()+" option: "+resource);
+            PrintAssistant.instance.printf("Leader "+(entry.getKey()+1)+" option: "+resource);
         }
     }
 
