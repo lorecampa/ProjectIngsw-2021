@@ -4,15 +4,12 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.controller.*;
-import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
-import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.application.Platform;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class GUIMessageHandler extends ClientMessageHandler {
@@ -147,41 +144,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void gameSetUp(GameSetup message) {
         super.gameSetUp(message);
-
-        Platform.runLater(()->{
-            DeckDevelopmentController deckController = (DeckDevelopmentController) controllerHandler.getController(Views.DECK_DEV);
-            deckController.setUpDeckImages(message.getDeckDev());
-        });
-
-
-
-        //DEBUG
-        /*
-        ArrayList<ResourceData> resources = new ArrayList<>();
-        resources.add(new ResourceData(ResourceType.COIN, 3));
-        resources.add(new ResourceData(ResourceType.SERVANT, 3));
-        resources.add(new ResourceData(ResourceType.STONE, 4));
-        //resources.add(new ResourceData(ResourceType.SHIELD, 5));
-
-        Platform.runLater(()->{
-            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            pbController.updateDepot(0, new ResourceData(ResourceType.COIN, 1), true);
-            pbController.updateDepot(2, new ResourceData(ResourceType.SHIELD, 2), true);
-
-        });
-
-
-        Platform.runLater(()->{
-            PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            controller.setUpAnyConversion(resources, 4);
-        });
-
-
-
-         */
-
     }
-
 
 
     @Override
@@ -201,6 +164,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
         }else{
             Platform.runLater(()->{
                 PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+                controller.setBufferLabel("You have to convert " + message.getNumOfAny() + " into concrete resources");
                 controller.setUpAnyConversion(message.getOptionConversion(), message.getNumOfAny());
             });
         }
@@ -240,10 +204,21 @@ public class GUIMessageHandler extends ClientMessageHandler {
     }
 
     @Override
-    public void manageResourceRequest(ManageResourcesRequest message) {
+    public void handleDepotPositioningRequest(DepotPositioningRequest message) {
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            pbController.setBufferLabel("Put those resources inside the depots");
             pbController.setUpResourceFromMarket(message.getResources());
+            ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+        });
+    }
+
+    @Override
+    public void handleWarehouseRemovingRequest(WarehouseRemovingRequest message) {
+        Platform.runLater(()->{
+            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            pbController.setBufferLabel("Remove those resources from yours depots or strongbox");
+            pbController.setUpWarehouseResourceRemoving(message.getResources());
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
         });
     }
@@ -289,6 +264,12 @@ public class GUIMessageHandler extends ClientMessageHandler {
                 personalBoardController.loadLeaderDepots(Client.getInstance().getModelOf(message.getUsername()).toModelData());
             }
         });
+    }
+
+    @Override
+    public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message) {
+        super.handleDeckDevCardRemoving(message);
+        //TODO single player
     }
 
     @Override
@@ -347,7 +328,8 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleProductionSelectionCompleted() {
         Platform.runLater(()->{
-            PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance()
+                    .getController(Views.PERSONAL_BOARD);
             controller.endLocalProduction();
         });
     }

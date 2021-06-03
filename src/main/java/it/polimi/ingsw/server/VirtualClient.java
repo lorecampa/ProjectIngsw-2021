@@ -133,11 +133,19 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
 
     @Override
-    public void manageResourceRequest(ArrayList<Resource> resources, boolean isFromMarket) {
+    public void depotPositioningRequest(ArrayList<Resource> resources) {
         match.sendSinglePlayer(getUsername(),
-                new ManageResourcesRequest(resources.stream()
+                new DepotPositioningRequest(resources.stream()
                         .map(Resource::toClient)
-                        .collect(Collectors.toCollection(ArrayList::new)), isFromMarket));
+                        .collect(Collectors.toCollection(ArrayList::new))));
+    }
+
+    @Override
+    public void warehouseRemovingRequest(ArrayList<Resource> resources) {
+        match.sendSinglePlayer(getUsername(),
+                new WarehouseRemovingRequest(resources.stream()
+                        .map(Resource::toClient)
+                        .collect(Collectors.toCollection(ArrayList::new))));
     }
 
     @Override

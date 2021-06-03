@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PersonalBoardController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PersonalBoardController">
    <children>
       <ImageView fitHeight="665.0" fitWidth="936.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -38,22 +38,22 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ImageView fx:id="imageServStrong" fitHeight="49.0" fitWidth="57.0" onMouseClicked="#strongboxClick" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <ImageView fx:id="imageServStrong" fitHeight="49.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <image>
                         <Image url="@punchboard/servant.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="imageStoneStrong" fitHeight="49.0" fitWidth="57.0" onMouseClicked="#strongboxClick" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <ImageView fx:id="imageStoneStrong" fitHeight="49.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <image>
                         <Image url="@punchboard/stone.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="imageShieldStrong" fitHeight="49.0" fitWidth="57.0" onMouseClicked="#strongboxClick" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                  <ImageView fx:id="imageShieldStrong" fitHeight="49.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                      <image>
                         <Image url="@punchboard/shield.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="imageCoinStrong" fitHeight="49.0" fitWidth="57.0" onMouseClicked="#strongboxClick" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+                  <ImageView fx:id="imageCoinStrong" fitHeight="49.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
                      <image>
                         <Image url="@punchboard/coin.png" />
                      </image>
@@ -553,7 +553,7 @@
          <children>
             <ImageView fx:id="dep33" fitHeight="49.0" fitWidth="57.0" layoutX="117.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep32" fitHeight="49.0" fitWidth="57.0" layoutX="59.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="dep31" fitHeight="49.0" fitWidth="57.0" layoutX="1.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="dep31" fitHeight="49.0" fitWidth="57.0" layoutX="1.0" layoutY="131.0"  pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep22" fitHeight="49.0" fitWidth="57.0" layoutX="97.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep21" fitHeight="49.0" fitWidth="57.0" layoutX="36.0" layoutY="68.0" onDragOver="#dragOver" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep11" fitHeight="49.0" fitWidth="57.0" layoutX="67.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />

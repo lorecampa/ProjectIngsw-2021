@@ -161,23 +161,23 @@ public class CLIMessageHandler extends ClientMessageHandler {
             printResources(client.getMyName());
         }
         else{
-            resource = new StringBuilder("Buffer: ");
-            for(ResourceData r : message.getBufferUpdated()){
-                resource.append(r.toCli());
-            }
-            PrintAssistant.instance.printf(resource.toString());
+            printBuffer(message.getBufferUpdated());
         }
     }
 
     @Override
-    public void manageResourceRequest(ManageResourcesRequest message) {
+    public void handleDepotPositioningRequest(DepotPositioningRequest message) {
         PrintAssistant.instance.printf("Insert those resources in your depots!");
-        StringBuilder resource= new StringBuilder("Buffer: ");
-        for(ResourceData r : message.getResources()){
-            resource.append(r.toCli());
-        }
-        PrintAssistant.instance.printf(resource.toString());
+        printBuffer(message.getResources());
     }
+
+    @Override
+    public void handleWarehouseRemovingRequest(WarehouseRemovingRequest message) {
+        PrintAssistant.instance.printf("Remove those resources from yours depots or strongbox!");
+        printBuffer(message.getResources());
+    }
+
+
 
     @Override
     public void faithTrackPositionIncreased(FaithTrackIncrement message) {
@@ -261,5 +261,13 @@ public class CLIMessageHandler extends ClientMessageHandler {
     private void printLeader(String username){
         if(username.equals(client.getMyName()))
             client.getModelOf(client.getMyName()).printLeaders();
+    }
+
+    private void printBuffer(ArrayList<ResourceData> resources){
+        StringBuilder resource= new StringBuilder("Buffer: ");
+        for(ResourceData r : resources){
+            resource.append(r.toCli());
+        }
+        PrintAssistant.instance.printf(resource.toString());
     }
 }

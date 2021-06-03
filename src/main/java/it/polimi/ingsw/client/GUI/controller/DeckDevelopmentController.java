@@ -4,14 +4,10 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.DeckDevData;
-import it.polimi.ingsw.message.serverMessage.DevelopmentAction;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,8 +19,7 @@ import javafx.scene.layout.GridPane;
 public class DeckDevelopmentController extends Controller{
     private Node currNodeSelected = null;
 
-    @FXML AnchorPane customMessageBox;
-    @FXML Label customMessage;
+
     @FXML AnchorPane currCardSelBox;
     @FXML ImageView currCard;
     @FXML Button buyCardBtn;
@@ -32,45 +27,38 @@ public class DeckDevelopmentController extends Controller{
 
 
 
-    @Override
-    public void showCustomMessage(String msg) {
-        customMessage.setText(msg);
-        customMessageBox.setVisible(true);
-        showFadedErrorMessage(customMessageBox);
+    @FXML
+    public void initialize(){
+        gridPaneDeck.setVisible(true);
+        currCardSelBox.setVisible(false);
     }
 
     @Override
     public void setUpAll() {
-        gridPaneDeck.setVisible(true);
-        currCardSelBox.setVisible(false);
-        customMessage.setVisible(false);
-
+        setUpDeckImages(Client.getInstance().getDeckDevData());
     }
 
     public void goBackToPersonalBoard(){
-        Platform.runLater(()->{
-            ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
-        });
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
     }
 
     public void selectCard(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
-        System.out.println("Row: "+GridPane.getColumnIndex(source));
-        System.out.println("Col: "+GridPane.getRowIndex(source));
         currNodeSelected = source;
         ImageView imageSelected = (ImageView) source;
         currCard.setImage(imageSelected.getImage());
-
         gridPaneDeck.setDisable(true);
-        //gridPaneDeck.setVisible(false);
         currCardSelBox.setVisible(true);
     }
 
-    public void buyCard(ActionEvent event){
+    public void buyCard(){
         int row = GridPane.getRowIndex(currNodeSelected);
         int col = GridPane.getColumnIndex(currNodeSelected);
+        gridPaneDeck.setDisable(false);
 
-        PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+        PersonalBoardController controller = (PersonalBoardController) ControllerHandler
+                .getInstance().getController(Views.PERSONAL_BOARD);
+
         controller.askCardSlotSelection(row, col);
         ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
 
@@ -78,7 +66,6 @@ public class DeckDevelopmentController extends Controller{
 
     public void showDeckDev(){
         currCardSelBox.setVisible(false);
-        gridPaneDeck.setDisable(false);
         gridPaneDeck.setVisible(true);
     }
 

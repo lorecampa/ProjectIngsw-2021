@@ -10,7 +10,8 @@ public interface ResourceManagerObserver {
 
     void bufferUpdate(ArrayList<Resource> resources);
 
-    void manageResourceRequest(ArrayList<Resource> resources, boolean isFromMarket);
+    void depotPositioningRequest(ArrayList<Resource> resources);
+    void warehouseRemovingRequest(ArrayList<Resource> resources);
 
 
 

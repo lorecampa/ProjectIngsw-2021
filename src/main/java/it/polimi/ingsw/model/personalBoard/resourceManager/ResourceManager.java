@@ -112,7 +112,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         if (anyRequired == 0){
             if (isFromBuyDevelopment){
                 notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
-                notifyAllObservers(x->x.bufferUpdate(resourcesBuffer));
+                notifyAllObservers(x->x.warehouseRemovingRequest(resourcesBuffer));
             }else{
                 if(anyToProduce > 0){
                     notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.ANY_PRODUCE_PROFIT_CONVERSION));
@@ -166,7 +166,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         fromResourceToConcreteResource(resourcesSent, false, false,
                 true);
         resourcesSent.forEach(this::addToBuffer);
-        notifyAllObservers(x -> x.manageResourceRequest(resourcesBuffer, true));
+        notifyAllObservers(x -> x.depotPositioningRequest(resourcesBuffer));
         notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.MARKET_RESOURCE_POSITIONING));
     }
 
@@ -180,7 +180,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
     public void stopProduction() throws InvalidStateActionException {
         checkPlayerState(PlayerState.PRODUCTION_ACTION);
-        sendBufferUpdate();
+        notifyAllObservers(x -> x.warehouseRemovingRequest(resourcesBuffer));
         notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.PRODUCTION_RESOURCE_REMOVING));
     }
 
@@ -399,7 +399,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         if(anyRequired == 0){
             if (checkDiscount){
                 notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.BUY_DEV_RESOURCE_REMOVING));
-                notifyAllObservers(x-> x.bufferUpdate(resourcesBuffer));
+                notifyAllObservers(x-> x.warehouseRemovingRequest(resourcesBuffer));
             }else{
                 notifyAllObservers(ResourceManagerObserver::productionCardSelectionCompleted);
             }

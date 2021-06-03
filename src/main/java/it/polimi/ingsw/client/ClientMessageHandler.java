@@ -147,7 +147,9 @@ public abstract class ClientMessageHandler {
     public abstract void bufferUpdate(BufferUpdate message);
 
     //ManageResourceRequest message handler
-    public abstract void manageResourceRequest(ManageResourcesRequest message);
+    public abstract void handleDepotPositioningRequest(DepotPositioningRequest message);
+
+    public abstract void handleWarehouseRemovingRequest(WarehouseRemovingRequest message);
 
     public void faithTrackPositionIncreased(FaithTrackIncrement message){
         client.getModelOf(message.getUsername()).increaseCurrentPosOnFaithTrack();

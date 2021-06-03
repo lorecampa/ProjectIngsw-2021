@@ -2,7 +2,6 @@ package it.polimi.ingsw.message.clientMessage;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.client.CLIMessageHandler;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.bothArchitectureMessage.*;
@@ -19,6 +18,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = BufferUpdate.class, name = "BufferUpdate"),
         @JsonSubTypes.Type(value = CardSlotUpdate.class, name = "CardSlotUpdate"),
         @JsonSubTypes.Type(value = DepotLeaderUpdate.class, name = "DepotLeaderUpdate"),
+        @JsonSubTypes.Type(value = DepotPositioningRequest.class, name = "DepotPositioningRequest"),
         @JsonSubTypes.Type(value = DepotUpdate.class, name = "DepotUpdate"),
         @JsonSubTypes.Type(value = ErrorMessage.class, name = "ErrorMessage"),
         @JsonSubTypes.Type(value = FaithTrackIncrement.class, name = "FaithTrackIncrement"),
@@ -28,7 +28,6 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = LeaderDiscard.class, name = "LeaderDiscard"),
         @JsonSubTypes.Type(value = LeaderSetUpMessage.class, name ="LeaderSetUpMessage"),
         @JsonSubTypes.Type(value = MainMenuMessage.class, name = "MainMenuMessage"),
-        @JsonSubTypes.Type(value = ManageResourcesRequest.class, name = "ManageResourcesRequest"),
         @JsonSubTypes.Type(value = MarketUpdate.class, name = "MarketUpdate"),
         @JsonSubTypes.Type(value = MatchStart.class, name = "MatchStart"),
         @JsonSubTypes.Type(value = PopeFavorActivated.class, name = "PopeFavorActivated"),
@@ -36,6 +35,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.*;
         @JsonSubTypes.Type(value = RemoveDeckDevelopmentCard.class, name = "RemoveDeckDevelopmentCard"),
         @JsonSubTypes.Type(value = StarTurn.class, name = "StarTurn"),
         @JsonSubTypes.Type(value = StrongboxUpdate.class, name = "StrongboxUpdate"),
+        @JsonSubTypes.Type(value = WarehouseRemovingRequest.class, name = "WarehouseRemovingRequest"),
         @JsonSubTypes.Type(value = WhiteMarbleConversionRequest.class, name = "WhiteMarbleConverted"),
         @JsonSubTypes.Type(value = WinningCondition.class, name = "WinningCondition"),
 })
