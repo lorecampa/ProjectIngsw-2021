@@ -182,10 +182,6 @@ public class PersonalBoardController extends Controller{
         btn_back.setVisible(false);
         bufferBox.setVisible(false);
 
-        cardSlot1.setDisable(true);
-        cardSlot2.setDisable(true);
-        cardSlot3.setDisable(true);
-
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -908,17 +904,18 @@ public class PersonalBoardController extends Controller{
 
     public void dragDetected(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
-        ImageView imageView = (ImageView) source;
-
-        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
-        ClipboardContent content = new ClipboardContent();
-        content.putImage(imageView.getImage());
-        startImage = (ImageView) event.getSource();
-        db.setContent(content);
-        event.consume();
+        ImageView imageView;
+        try{ imageView = (ImageView) source;}
+        catch (Exception e){ return;}
+        if (imageView.getImage() != null) {
+            Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(imageView.getImage());
+            startImage = (ImageView) event.getSource();
+            db.setContent(content);
+            event.consume();
+        }
     }
-
-
 
     public void dragOver(DragEvent event){
         System.out.println("Drag Over");

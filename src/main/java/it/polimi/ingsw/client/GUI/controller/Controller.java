@@ -29,8 +29,8 @@ public abstract class Controller {
     public abstract void setUpAll();
 
     public void activate(){
-        stage.setScene(scene);
         setUpAll();
+        stage.setScene(scene);
         //handle resize
     }
 

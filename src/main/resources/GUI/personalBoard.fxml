@@ -553,7 +553,7 @@
          <children>
             <ImageView fx:id="dep33" fitHeight="49.0" fitWidth="57.0" layoutX="117.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep32" fitHeight="49.0" fitWidth="57.0" layoutX="59.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="dep31" fitHeight="49.0" fitWidth="57.0" layoutX="1.0" layoutY="131.0"  pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="dep31" fitHeight="49.0" fitWidth="57.0" layoutX="1.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep22" fitHeight="49.0" fitWidth="57.0" layoutX="97.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep21" fitHeight="49.0" fitWidth="57.0" layoutX="36.0" layoutY="68.0" onDragOver="#dragOver" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="dep11" fitHeight="49.0" fitWidth="57.0" layoutX="67.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
