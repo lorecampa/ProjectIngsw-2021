@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 public class SetupController extends Controller{
-    private final ControllerHandler handler = ControllerHandler.getInstance();
     private final Client client = Client.getInstance();
     private boolean isNumOfPlayer = true;
 
@@ -41,13 +40,19 @@ public class SetupController extends Controller{
 
     @Override
     public void setUpAll() {
-
+        isNumOfPlayer = true;
+        numOfPlayerBox.setVisible(true);
+        usernameBox.setVisible(false);
+        customMessage.setVisible(false);
     }
+
+
     public void showInsertUsername(){
         isNumOfPlayer = false;
         usernameBox.setVisible(true);
         numOfPlayerBox.setVisible(false);
     }
+
 
 
     @Override

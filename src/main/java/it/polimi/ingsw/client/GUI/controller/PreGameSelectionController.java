@@ -213,6 +213,8 @@ public class PreGameSelectionController extends Controller {
 
     @Override
     public void setUpAll() {
+        leaderBox.setVisible(true);
+
     }
 
     @FXML

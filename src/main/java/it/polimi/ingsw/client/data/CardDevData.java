@@ -52,11 +52,12 @@ public class CardDevData {
     }
 
     public String toResourcePath(){
-        URL url = null;
+        URL url;
         url = this.getClass().getResource("/GUI/front/"+id+".png");
         assert url != null;
         return url.toString();
     }
+
 
     public String colorToColor(){
         String s="";

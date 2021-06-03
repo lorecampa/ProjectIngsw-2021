@@ -124,7 +124,6 @@ public class Controller {
 
 
     public void endGame(){
-        match.getAllPlayers().forEach(x->x.getClient().setState(HandlerState.FIRST_CONTACT));
         match.removeMatchFromServer();
     }
 

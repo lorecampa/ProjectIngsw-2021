@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.controller.*;
+import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
@@ -73,6 +74,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
         });
     }
 
+
     @Override
     public void waitingPeople(ConnectionMessage message) {
         WaitingController controller = (WaitingController) controllerHandler.getController(Views.WAITING);
@@ -84,13 +86,12 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void username(ConnectionMessage message) {
-        SetupController setupController = (SetupController) controllerHandler.getController(Views.SETUP);
         Platform.runLater(()->{
-            setupController.showInsertUsername();
-            if (controllerHandler.getCurrentView() == Views.MAIN_MENU ||
-            controllerHandler.getCurrentView() == Views.WAITING){
+            SetupController setupController = (SetupController) controllerHandler.getController(Views.SETUP);
+            if (controllerHandler.getCurrentView() == Views.MAIN_MENU || controllerHandler.getCurrentView() == Views.WAITING){
                 controllerHandler.changeView(Views.SETUP);
             }
+            setupController.showInsertUsername();
         });
 
     }
@@ -106,7 +107,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void numberOfPlayer(ConnectionMessage message) {
-        Platform.runLater(()->controllerHandler.changeView(Views.SETUP));
+        Platform.runLater(()->{
+            SetupController controller = (SetupController) controllerHandler.getController(Views.SETUP);
+            controllerHandler.changeView(Views.SETUP);
+        });
     }
 
     @Override
@@ -145,6 +149,17 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void gameSetUp(GameSetup message) {
         super.gameSetUp(message);
     }
+
+    @Override
+    public void gameOver(GameOver message) {
+        super.gameOver(message);
+        Platform.runLater(()->{
+            GameEndedController controller = (GameEndedController) controllerHandler.getController(Views.GAME_END);
+            controller.setUpRanking(message.getPlayers());
+            ControllerHandler.getInstance().changeView(Views.GAME_END);
+        });
+    }
+
 
 
     @Override
@@ -322,7 +337,12 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void winningCondition() {
+        Platform.runLater(()->{
+            String msg = "Winning condition has been reached, " +
+                    "all players will play the last turn until the inkwell player !!";
 
+            ControllerHandler.getInstance().getCurrentController().showCustomMessage(msg);
+        });
     }
 
     @Override

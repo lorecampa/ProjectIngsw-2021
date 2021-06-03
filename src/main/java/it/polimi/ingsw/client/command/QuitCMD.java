@@ -20,8 +20,14 @@ public class QuitCMD implements Command{
 
     @Override
     public void doCommand() {
-        client.writeToStream(new QuitGame());
-        System.exit(0);
+        if (client.getState() != ClientState.GAME_OVER){
+            client.writeToStream(new QuitGame());
+            System.exit(0);
+        }
+        client.setState(ClientState.MAIN_MENU);
+        client.clearModels();
+        client.messageToMainMenu();
+
     }
 
     @Override

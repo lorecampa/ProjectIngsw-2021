@@ -76,7 +76,6 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
                 handler.handleProductionSelectionCompleted();
             default:
         }
-        //handler.handleConnectionMessage(this);
     }
 
     @Override
@@ -95,6 +94,5 @@ public class ConnectionMessage implements ClientMessage, ServerMessage {
                 handler.handleConnectionMessage(this);
                 break;
         }
-        //handler.handleConnectionMessage(this);
     }
 }

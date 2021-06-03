@@ -7,7 +7,8 @@ public enum Views {
     WAITING("/GUI/waiting"),
     MARKET("/GUI/market"),
     PERSONAL_BOARD("/GUI/personalBoard"),
-    DECK_DEV("/GUI/deckDevelopment");
+    DECK_DEV("/GUI/deckDevelopment"),
+    GAME_END("/GUI/gameEnded");
 
     private final String name;
 

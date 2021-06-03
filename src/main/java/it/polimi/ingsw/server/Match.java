@@ -283,6 +283,7 @@ public class Match {
     }
 
     public void removeMatchFromServer(){
+        allPlayers.forEach(x-> x.getClient().setState(HandlerState.FIRST_CONTACT));
         System.out.println("Match with index: "+this.matchID+" deleted!");
         server.matchEnd(this);
     }

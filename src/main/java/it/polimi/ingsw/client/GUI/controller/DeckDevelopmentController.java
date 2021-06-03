@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
+import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.DeckDevData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import java.net.URL;
 
 
 public class DeckDevelopmentController extends Controller{
@@ -35,8 +37,8 @@ public class DeckDevelopmentController extends Controller{
 
     @Override
     public void setUpAll() {
-        showDeckDev();
         setUpDeckImages(Client.getInstance().getDeckDevData());
+        showDeckDev();
     }
 
     public void goBackToPersonalBoard(){
@@ -46,7 +48,13 @@ public class DeckDevelopmentController extends Controller{
     public void selectCard(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
         currNodeSelected = source;
-        ImageView imageSelected = (ImageView) source;
+        ImageView imageSelected;
+        try {
+            imageSelected = (ImageView) source;
+        }catch (Exception e){
+            System.out.println("lol ez");
+            return;
+        }
         currCard.setImage(imageSelected.getImage());
         gridPaneDeck.setDisable(true);
         currCardSelBox.setVisible(true);
@@ -67,6 +75,7 @@ public class DeckDevelopmentController extends Controller{
 
     public void showDeckDev(){
         currCardSelBox.setVisible(false);
+        gridPaneDeck.setDisable(false);
         gridPaneDeck.setVisible(true);
     }
 
@@ -80,7 +89,16 @@ public class DeckDevelopmentController extends Controller{
         for (int i = 0; i < deckDev.getDeck().size(); i++){
             for (int j = 0; j < deckDev.getDeck().get(0).size(); j++){
                 ImageView imageView = (ImageView) getNodeByRowColumnIndex(i, j);
-                imageView.setImage(new Image(deckDev.getDeck().get(i).get(j).get(0).toResourcePath()));
+
+                if (!deckDev.getDeck().get(i).get(j).isEmpty()){
+                    imageView.setImage(new Image(deckDev.getDeck().get(i).get(j).get(0).toResourcePath()));
+                }else{
+                    int backId = 16*i + j + 1;
+                    URL url = this.getClass().getResource("/GUI/back/"+backId+".png");
+                    assert url != null;
+                    imageView.setImage(new Image(url.toString()));
+                    imageView.setDisable(true);
+                }
             }
         }
 
