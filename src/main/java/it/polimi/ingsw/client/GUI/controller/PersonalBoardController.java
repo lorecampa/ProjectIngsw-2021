@@ -663,7 +663,7 @@ public class PersonalBoardController extends Controller{
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
-        selectCardSlotButtons.forEach(x -> x.setVisible(false));
+        selectCardSlotButtons.forEach(x -> x.setVisible(true));
     }
 
     @FXML
@@ -1035,6 +1035,7 @@ public class PersonalBoardController extends Controller{
 
     public void bufferUpdate(ArrayList<ResourceData> bufferUpdated){
         bufferBox.setVisible(true);
+        selectCardSlotButtons.forEach(x -> x.setVisible(false));
         if (bufferUpdated.stream().mapToInt(ResourceData::getValue).sum() == 0){
             bufferBox.setVisible(false);
         }else{
