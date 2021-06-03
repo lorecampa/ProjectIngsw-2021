@@ -229,6 +229,28 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         sendBufferUpdate();
     }
 
+    private boolean semiSwitch(Depot fromDepot,Depot toDepot, Resource res) throws TooMuchResourceDepotException {
+        if (res.getType() == toDepot.getResourceType()){
+            int available = toDepot.getMaxStorable() - toDepot.getResourceValue();
+            if (available > 0){
+                Resource resToAdd = ResourceFactory.createResource(res.getType(),available);
+                if (available >= res.getValue()){
+                    toDepot.addResource(res);
+                }else {
+                    toDepot.addResource(resToAdd);
+                }
+                try {
+                    fromDepot.subResource(resToAdd);
+                    return true;
+                } catch (NegativeResourceException | InvalidOrganizationWarehouseException e) {
+                    fromDepot.setEmptyResource();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Switch the resource from fromDepot to toDepot
      * @param fromIndex the first depot
@@ -239,6 +261,25 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         checkPlayerState(PlayerState.BUY_DEV_RESOURCE_REMOVING,
                 PlayerState.PRODUCTION_RESOURCE_REMOVING,
                 PlayerState.MARKET_RESOURCE_POSITIONING);
+
+        boolean semiSwitchDone = false;
+        if (!isFromNormalDepot){
+            Resource res = currWarehouse.getLeaderDepot(fromIndex).getResource();
+            if(isToNormalDepot){
+                semiSwitchDone = semiSwitch(currWarehouse.getLeaderDepot(fromIndex), currWarehouse.getNormalDepot(toIndex), res);
+            }else{
+                semiSwitchDone = semiSwitch(currWarehouse.getLeaderDepot(fromIndex),currWarehouse.getLeaderDepot(toIndex),res);
+            }
+        }else if (!isToNormalDepot){
+            Resource res = currWarehouse.getNormalDepot(fromIndex).getResource();
+            semiSwitchDone = semiSwitch(currWarehouse.getNormalDepot(fromIndex), currWarehouse.getLeaderDepot(toIndex), res);
+        }
+
+        if (semiSwitchDone){
+            sendDepotUpdate(isFromNormalDepot, fromIndex);
+            sendDepotUpdate(isToNormalDepot, toIndex);
+            return;
+        }
 
         Resource from = currWarehouse.popResourceFromDepotAt(fromIndex, isFromNormalDepot);
         Resource to = currWarehouse.popResourceFromDepotAt(toIndex, isToNormalDepot);

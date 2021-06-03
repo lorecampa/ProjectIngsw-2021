@@ -7,13 +7,13 @@
       {
         "@class" : "CardReq",
         "color": "GREEN",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       },
       {
         "@class" : "CardReq",
         "color": "YELLOW",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -40,13 +40,13 @@
       {
         "@class" : "CardReq",
         "color": "BLUE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       },
       {
         "@class" : "CardReq",
         "color": "PURPLE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -73,13 +73,13 @@
       {
         "@class" : "CardReq",
         "color": "GREEN",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       },
       {
         "@class" : "CardReq",
         "color": "BLUE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -106,13 +106,13 @@
       {
         "@class" : "CardReq",
         "color": "YELLOW",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       },
       {
         "@class" : "CardReq",
         "color": "PURPLE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -338,13 +338,13 @@
       {
         "@class" : "CardReq",
         "color": "YELLOW",
-        "level": 1,
+        "level": 0,
         "numRequired": 2
       },
       {
         "@class" : "CardReq",
         "color": "BLUE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -372,13 +372,13 @@
       {
         "@class" : "CardReq",
         "color": "GREEN",
-        "level": 1,
+        "level": 0,
         "numRequired": 2
       },
       {
         "@class" : "CardReq",
         "color": "PURPLE",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -405,13 +405,13 @@
       {
         "@class" : "CardReq",
         "color": "BLUE",
-        "level": 1,
+        "level": 0,
         "numRequired": 2
       },
       {
         "@class" : "CardReq",
         "color": "YELLOW",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],
@@ -438,13 +438,13 @@
       {
         "@class" : "CardReq",
         "color": "PURPLE",
-        "level": 1,
+        "level": 0,
         "numRequired": 2
       },
       {
         "@class" : "CardReq",
         "color": "GREEN",
-        "level": 1,
+        "level": 0,
         "numRequired": 1
       }
     ],

@@ -35,6 +35,7 @@ public class DeckDevelopmentController extends Controller{
 
     @Override
     public void setUpAll() {
+        showDeckDev();
         setUpDeckImages(Client.getInstance().getDeckDevData());
     }
 
