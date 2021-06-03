@@ -77,8 +77,8 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void waitingPeople(ConnectionMessage message) {
-        WaitingController controller = (WaitingController) controllerHandler.getController(Views.WAITING);
         Platform.runLater(()->{
+            WaitingController controller = (WaitingController) controllerHandler.getController(Views.WAITING);
             controller.setLobbyMessage();
             controllerHandler.changeView(Views.WAITING);
         });
@@ -108,7 +108,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void numberOfPlayer(ConnectionMessage message) {
         Platform.runLater(()->{
-            SetupController controller = (SetupController) controllerHandler.getController(Views.SETUP);
             controllerHandler.changeView(Views.SETUP);
         });
     }
@@ -125,9 +124,8 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void leaderSetUp(LeaderSetUpMessage message) {
         super.leaderSetUp(message);
-        PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
-
         Platform.runLater(()->{
+            PreGameSelectionController controller = (PreGameSelectionController) controllerHandler.getController(Views.PRE_MATCH);
             controllerHandler.changeView(Views.PRE_MATCH);
             controller.setUpLeaderImages(message.getLeaders());
         });

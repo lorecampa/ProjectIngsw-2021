@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="611.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PreGameSelectionController">
+<AnchorPane prefHeight="611.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PreGameSelectionController">
    <children>
       <ImageView fitHeight="393.0" fitWidth="598.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true" scaleX="1.7" scaleY="2.2" AnchorPane.leftAnchor="148.0" AnchorPane.topAnchor="84.0">
          <image>
@@ -23,7 +23,7 @@
                </font></Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="chooseResourcesBox" layoutX="37.0" layoutY="125.0" prefHeight="437.0" prefWidth="708.0" visible="false">
+      <AnchorPane fx:id="chooseResourcesBox" layoutX="37.0" layoutY="125.0" prefHeight="437.0" prefWidth="708.0">
          <children>
             <AnchorPane layoutX="51.0" layoutY="124.0" prefHeight="228.0" prefWidth="619.0" styleClass="panel">
                <children>
@@ -63,7 +63,7 @@
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font></Button>
-                  <Button fx:id="sendResBtn" layoutX="251.0" layoutY="164.0" mnemonicParsing="false" onAction="#sendResources" prefHeight="46.0" prefWidth="100.0" styleClass="buttons" text="START GAME" />
+                  <Button fx:id="sendResBtn" layoutX="260.0" layoutY="168.0" mnemonicParsing="false" onAction="#sendResources" prefHeight="46.0" prefWidth="100.0" styleClass="buttons" text="START GAME" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="211.0" layoutY="43.0" prefHeight="74.0" prefWidth="300.0" styleClass="panel">
@@ -112,7 +112,7 @@
                </font></Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="leaderBox" prefHeight="611.0" prefWidth="784.0" stylesheets="@css/Card.css">
+      <AnchorPane fx:id="leaderBox" prefHeight="611.0" prefWidth="784.0" stylesheets="@css/Card.css" visible="false">
          <children>
             <AnchorPane fx:id="box1" layoutX="144.0" layoutY="52.0" prefHeight="232.0" prefWidth="67.0" styleClass="panel">
                <children>

@@ -23,9 +23,13 @@ import java.util.stream.Collectors;
 
 public class PreGameSelectionController extends Controller {
     private final Client client = Client.getInstance();
-    private ArrayList<ImageView> leaders = new ArrayList<>();
-    private HashMap<Button, ImageView> leaderButtonMap = new HashMap<>();
+    private final ArrayList<ImageView> leaders = new ArrayList<>();
+    private int startIndexDiscarded = 0;
+    private final HashMap<Button, ImageView> leaderButtonMap = new HashMap<>();
 
+
+    private ArrayList<Button> decreaseResourcesBtn = new ArrayList<>();
+    private ArrayList<Label> numResourcesLabel = new ArrayList<>();
     private int howManyRes = 0;
     private boolean isSelectionOver = false;
     private HashMap<ResourceType, Integer> resNumMap = new HashMap<>() {{
@@ -41,6 +45,7 @@ public class PreGameSelectionController extends Controller {
     //resource box
     @FXML AnchorPane chooseResourcesBox;
     @FXML Label howManyResLabel;
+
     @FXML ImageView coin;
     @FXML ImageView coin1;
     @FXML Button decreaseCoin;
@@ -101,7 +106,7 @@ public class PreGameSelectionController extends Controller {
     }
     @FXML
     public void decreaseRes(ActionEvent event){
-        ResourceType res = null;
+        ResourceType res;
         int oldValue;
         if (event.getSource().equals(decreaseCoin)){
             res = ResourceType.COIN;
@@ -145,7 +150,7 @@ public class PreGameSelectionController extends Controller {
     @FXML
     public void increaseRes(MouseEvent event){
         if (isSelectionOver) return;
-        ResourceType res = null;
+        ResourceType res;
         int oldValue;
         if (event.getSource().equals(coin)){
             res = ResourceType.COIN;
@@ -196,7 +201,9 @@ public class PreGameSelectionController extends Controller {
         ImageView leaderSelected = leaderButtonMap.get(btn);
         leaderSelected.getParent().setVisible(false);
         int index = leaders.indexOf(leaderSelected);
-        leaders.remove(leaderSelected);
+        if (index > startIndexDiscarded){
+            index--;
+        }
         Client.getInstance().writeToStream(new LeaderManage(index, true));
 
     }
@@ -205,16 +212,15 @@ public class PreGameSelectionController extends Controller {
     //EXTERNAL METHODS
     //--------------------
     public void setUpLeaderImages(ArrayList<CardLeaderData> cards){
-        leader1.setImage(new Image(cards.get(0).toResourcePath(true)));
-        leader2.setImage(new Image(cards.get(1).toResourcePath(true)));
-        leader3.setImage(new Image(cards.get(2).toResourcePath(true)));
-        leader4.setImage(new Image(cards.get(3).toResourcePath(true)));
+        for (int i = 0; i < leaders.size(); i++){
+            leaders.get(i).setImage(new Image(cards.get(i).toResourcePath(true)));
+        }
     }
 
     @Override
     public void setUpAll() {
-        leaderBox.setVisible(true);
-
+        startIndexDiscarded = 0;
+        showLeaderBox();
     }
 
     @FXML
@@ -231,16 +237,31 @@ public class PreGameSelectionController extends Controller {
         leaderButtonMap.put(btn4, leader4);
         leaders.add(leader4);
 
+        decreaseResourcesBtn.add(decreaseStone);
+        decreaseResourcesBtn.add(decreaseCoin);
+        decreaseResourcesBtn.add(decreaseServant);
+        decreaseResourcesBtn.add(decreaseShield);
+
+        numResourcesLabel.add(stoneNum);
+        numResourcesLabel.add(coinNum);
+        numResourcesLabel.add(servantNum);
+        numResourcesLabel.add(shieldNum);
+
+
+
         showLeaderBox();
     }
 
     public void showChooseResourcesBox(){
         reset();
         howManyResLabel.setText("You have "+ howManyRes + " to choose");
+        numResourcesLabel.forEach(x -> x.setText(Integer.toString(0)));
+        decreaseResourcesBtn.forEach(x -> x.setVisible(false));
         chooseResourcesBox.setVisible(true);
     }
     public void showLeaderBox(){
         reset();
+        leaders.forEach(x -> x.getParent().setVisible(true));
         leaderBox.setVisible(true);
     }
 

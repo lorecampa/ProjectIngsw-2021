@@ -198,7 +198,7 @@ public class PersonalBoardController extends Controller{
         selectCardSlotButtons.add(selectSlot1Btn);
         selectCardSlotButtons.add(selectSlot2Btn);
         selectCardSlotButtons.add(selectSlot3Btn);
-        selectCardSlotButtons.forEach(x -> x.setDisable(true));
+        selectCardSlotButtons.forEach(x -> x.setVisible(true));
     }
 
     private void setUpBuffer(){
@@ -663,7 +663,7 @@ public class PersonalBoardController extends Controller{
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
-        selectCardSlotButtons.forEach(x -> x.setDisable(false));
+        selectCardSlotButtons.forEach(x -> x.setVisible(false));
     }
 
     @FXML
