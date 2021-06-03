@@ -446,7 +446,7 @@
             </HBox>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="1005.0" layoutY="399.0" prefHeight="321.0" prefWidth="224.0" styleClass="panel">
+      <AnchorPane layoutX="1005.0" layoutY="370.0" prefHeight="321.0" prefWidth="224.0" styleClass="panel">
          <children>
             <ImageView fx:id="leader2" fitHeight="337.0" fitWidth="288.0" onMouseClicked="#leaderClicked" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <image>
@@ -462,7 +462,7 @@
       <ImageView fx:id="baseProd" fitHeight="109.0" fitWidth="115.0" layoutX="225.0" layoutY="447.0" onMouseClicked="#cardProdClicked" pickOnBounds="true" preserveRatio="true" />
       <AnchorPane fx:id="customMessageBox" disable="true" layoutX="245.0" layoutY="116.0" mouseTransparent="true" prefHeight="104.0" prefWidth="517.0" styleClass="panel">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" layoutY="25.0" prefHeight="55.0" prefWidth="525.0" text="Custom message" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" layoutY="25.0" prefHeight="55.0" prefWidth="525.0" text="Custom message" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="46.0" />
                </font>
@@ -559,7 +559,7 @@
       <Button fx:id="selectSlot1Btn" layoutX="423.0" layoutY="217.0" mnemonicParsing="false" onAction="#selectCardSlot" prefHeight="37.0" prefWidth="30.0" styleClass="selectCardSlotButton" />
       <Button fx:id="selectSlot2Btn" layoutX="603.0" layoutY="217.0" mnemonicParsing="false" onAction="#selectCardSlot" prefHeight="37.0" prefWidth="30.0" styleClass="selectCardSlotButton" />
       <Button fx:id="selectSlot3Btn" layoutX="791.0" layoutY="217.0" mnemonicParsing="false" onAction="#selectCardSlot" prefHeight="37.0" prefWidth="30.0" styleClass="selectCardSlotButton" />
-      <AnchorPane layoutX="1005.0" layoutY="37.0" prefHeight="321.0" prefWidth="224.0" styleClass="panel">
+      <AnchorPane layoutX="1005.0" layoutY="10.0" prefHeight="321.0" prefWidth="224.0" styleClass="panel">
          <children>
             <ImageView fx:id="leader1" fitHeight="337.0" fitWidth="288.0" onMouseClicked="#leaderClicked" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <image>
