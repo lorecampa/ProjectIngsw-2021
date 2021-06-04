@@ -12,12 +12,23 @@ import it.polimi.ingsw.message.serverMessage.QuitGame;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+
+import java.util.Objects;
 
 public class MainMenuController extends Controller{
     public final ControllerHandler handler = ControllerHandler.getInstance();
     public final Client client = Client.getInstance();
+    public final String mainMenuMusic = "startGameSong.mp3";
+
+    @FXML
+    ImageView musicImage;
 
     @FXML
     Button multiBtn;
@@ -52,8 +63,17 @@ public class MainMenuController extends Controller{
 
     @Override
     public void setUpAll() {
-        //mainTitle.setFont(Font.loadFont("file:resources/GUI/fonts/Ruritania.ttf",120));
+        ControllerHandler.getInstance().startSong(mainMenuMusic);
+        ControllerHandler.getInstance().setMusicImage(musicImage);
     }
+
+    @FXML
+    public void changeMusic(){
+        ControllerHandler.getInstance().changeMusic();
+        ControllerHandler.getInstance().setMusicImage(musicImage);
+
+    }
+
 
     //---------------------
     //EXTERNAL METHODS

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.serverMessage.AnyResponse;
@@ -38,6 +39,8 @@ public class PreGameSelectionController extends Controller {
         put(ResourceType.SHIELD,0);
         put(ResourceType.STONE, 0);
     }};
+
+    @FXML ImageView musicImage;
 
     @FXML AnchorPane customMessageBox;
     @FXML Label customMessageLabel;
@@ -219,8 +222,15 @@ public class PreGameSelectionController extends Controller {
 
     @Override
     public void setUpAll() {
+        ControllerHandler.getInstance().setMusicImage(musicImage);
         startIndexDiscarded = 0;
         showLeaderBox();
+    }
+
+    @FXML
+    public void changeMusic(){
+        ControllerHandler.getInstance().changeMusic();
+        ControllerHandler.getInstance().setMusicImage(musicImage);
     }
 
     @FXML

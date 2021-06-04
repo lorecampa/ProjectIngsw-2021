@@ -140,7 +140,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     @Override
     public void startGame() {
-        Platform.runLater(()->controllerHandler.changeView(Views.PERSONAL_BOARD));
+        Platform.runLater(()->{
+            controllerHandler.stopMusic();
+            controllerHandler.changeView(Views.PERSONAL_BOARD);
+        });
     }
 
     @Override

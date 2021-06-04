@@ -1,20 +1,21 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.GUI.controller.Controller;
-import it.polimi.ingsw.client.GUI.controller.PersonalBoardController;
-import it.polimi.ingsw.client.data.ResourceData;
-import it.polimi.ingsw.model.resource.ResourceType;
+
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ClientGUI extends Application {
     private final List<Views> views = Arrays.asList(Views.values());
@@ -29,6 +30,13 @@ public class ClientGUI extends Application {
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
+
+
+
+
+
+
+
     }
 
     private void setUpControllers() throws IOException {

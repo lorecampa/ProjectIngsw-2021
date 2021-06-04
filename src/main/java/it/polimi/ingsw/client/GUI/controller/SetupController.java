@@ -6,7 +6,11 @@ import it.polimi.ingsw.client.command.NumOfPlayerCMD;
 import it.polimi.ingsw.client.command.UsernameCMD;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+
+import java.util.Objects;
 
 public class SetupController extends Controller{
     private final Client client = Client.getInstance();
@@ -19,6 +23,7 @@ public class SetupController extends Controller{
     @FXML TextField numOfPlayer;
     @FXML TextField username;
     @FXML Button playButton;
+    @FXML ImageView musicImage;
 
 
 
@@ -40,6 +45,7 @@ public class SetupController extends Controller{
 
     @Override
     public void setUpAll() {
+        ControllerHandler.getInstance().setMusicImage(musicImage);
         isNumOfPlayer = true;
         numOfPlayerBox.setVisible(true);
         usernameBox.setVisible(false);
@@ -59,5 +65,11 @@ public class SetupController extends Controller{
     public void showCustomMessage(String msg) {
         customMessage.setVisible(true);
         customMessage.setText(msg);
+    }
+
+    @FXML
+    public void changeMusic(){
+        ControllerHandler.getInstance().changeMusic();
+        ControllerHandler.getInstance().setMusicImage(musicImage);
     }
 }

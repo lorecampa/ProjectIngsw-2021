@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="background" prefHeight="408.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
+<AnchorPane id="background" prefHeight="408.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.MainMenuController">
    <children>
       <ImageView fitHeight="337.0" fitWidth="600.0" pickOnBounds="true" scaleX="1.5" scaleY="1.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
@@ -26,5 +26,10 @@
             <Button fx:id="multiBtn" alignment="CENTER" layoutX="46.0" layoutY="7.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Multiplayer" textAlignment="CENTER" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
          </children>
       </AnchorPane>
+      <ImageView fx:id="musicImage" fitHeight="24.0" fitWidth="24.0" layoutX="562.0" layoutY="370.0" onMouseClicked="#changeMusic" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icons/speaker.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
