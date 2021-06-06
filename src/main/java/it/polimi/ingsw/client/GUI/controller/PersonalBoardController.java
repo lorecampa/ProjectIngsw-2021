@@ -918,7 +918,6 @@ public class PersonalBoardController extends Controller{
     }
 
     public void dragOver(DragEvent event){
-        System.out.println("Drag Over");
         if (event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.ANY);
             destImage = (ImageView) event.getTarget();
@@ -937,7 +936,6 @@ public class PersonalBoardController extends Controller{
 
 
     public void dragDropped(DragEvent event){
-        System.out.println("Drag Dropped");
         Dragboard db = event.getDragboard();
         boolean success = false;
 

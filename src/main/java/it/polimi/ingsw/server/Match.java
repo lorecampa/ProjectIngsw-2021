@@ -94,6 +94,20 @@ public class Match {
         }
     }
 
+    public void addForSinglePlayer(VirtualClient player){
+        synchronized (allPlayers) {
+            synchronized (activePlayers) {
+                if (!allPlayers.contains(player)) {
+                    allPlayers.add(player);
+                    activePlayers.add(player);
+                    player.getClient().setState(HandlerState.USERNAME);
+                    player.getClient().writeToStream(new ReconnectionMessage(matchID, player.getClientID()));
+                    player.getClient().writeToStream(new ConnectionMessage(ConnectionType.USERNAME, "Insert your Username"));
+                }
+            }
+        }
+    }
+
     public void setPlayerUsername(VirtualClient player, String username){
         synchronized (allPlayers){
 

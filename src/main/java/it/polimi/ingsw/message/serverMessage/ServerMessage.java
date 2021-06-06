@@ -25,6 +25,7 @@ import it.polimi.ingsw.server.ServerMessageHandler;
         @JsonSubTypes.Type(value = MarketAction.class, name = "MarketAction"),
         @JsonSubTypes.Type(value = ProductionAction.class, name = "ProductionAction"),
         @JsonSubTypes.Type(value = QuitGame.class, name = "QuitGame"),
+        @JsonSubTypes.Type(value = SinglePlayerMessage.class, name = "SinglePlayerMessage"),
         @JsonSubTypes.Type(value = StrongboxModify.class, name = "StrongboxModify"),
         @JsonSubTypes.Type(value = WhiteMarbleConversionResponse.class, name = "WhiteMarbleConversionResponse")
 })

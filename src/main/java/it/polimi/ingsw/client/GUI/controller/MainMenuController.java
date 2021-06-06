@@ -9,6 +9,7 @@ import it.polimi.ingsw.client.command.QuitCMD;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.serverMessage.QuitGame;
+import it.polimi.ingsw.message.serverMessage.SinglePlayerMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -52,7 +53,8 @@ public class MainMenuController extends Controller{
     }
 
     public void playSinglePlayer(){
-        //TODO
+        client.setState(ClientState.ENTERING_LOBBY);
+        client.writeToStream(new SinglePlayerMessage());
     }
 
     public void quitGame(){

@@ -120,7 +120,7 @@ class ProductionEffectTest {
         rm.restoreRM();
         //now those are the resources
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
-        //warehouse (0 -> ) (1 -> ) (2 -> )
+        //warehouse (0 -> ) (1 -> ) (2 ->)
         ArrayList<Resource> productionCost = resourceArray(2, 5, 0, 9, 0, 2);
         ArrayList<Resource> productionAcquired = resourceArray(0, 0, 1, 0, 0, 0);
 

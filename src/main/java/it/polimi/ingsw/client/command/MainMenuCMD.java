@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
+import it.polimi.ingsw.message.serverMessage.SinglePlayerMessage;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,12 +44,12 @@ public class MainMenuCMD implements Command{
 
         switch (num){
             case 1:
-                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
                 client.setState(ClientState.ENTERING_LOBBY);
+                client.writeToStream(new ConnectionMessage(ConnectionType.CONNECT, ""));
                 break;
             case 2:
-                //single player, how do we connect to that game?
                 client.setState(ClientState.ENTERING_LOBBY);
+                client.writeToStream(new SinglePlayerMessage());
                 break;
             case 3:
                 int matchID=-1;

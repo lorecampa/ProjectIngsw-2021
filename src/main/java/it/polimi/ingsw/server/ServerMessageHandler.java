@@ -77,6 +77,12 @@ public class ServerMessageHandler {
         server.putInLobby(client);
     }
 
+
+    public void handleSinglePlayer(){
+        if(!isServerPhaseCorrect(HandlerState.FIRST_CONTACT)) return;
+        server.singlePlayer(client);
+    }
+
     public void handleMatchCreation(ConnectionMessage message){
         if (!isServerPhaseCorrect(HandlerState.NUM_OF_PLAYER)) return;
         server.createMatch(message.getNum(),client);
@@ -91,8 +97,6 @@ public class ServerMessageHandler {
         getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
                 ()->server.clientDisconnect(client));
     }
-
-
 
     public void handleReconnection(ReconnectionMessage msg){
         server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);

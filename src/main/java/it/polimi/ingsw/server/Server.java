@@ -96,8 +96,10 @@ public class Server {
                 return;
             synchronized (lockOpenMatch) {
                 openMatch = newMatch;
-                matches.add(newMatch);
-                newMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())),player,openMatch));
+                synchronized (matches) {
+                    matches.add(newMatch);
+                }
+                newMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())), player, openMatch));
             }
             for (int i = 1; i < newMatch.getNumOfPlayers() && i < lobby.size(); i++) {
                 newMatch.addPlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())),lobby.get(i),openMatch));
@@ -124,6 +126,14 @@ public class Server {
                 }
             }
         }
+    }
+
+    public void singlePlayer(ClientConnectionHandler client){
+        Match newMatch = new Match(1, this, getNextMatchID());
+        synchronized (matches) {
+            matches.add(newMatch);
+        }
+        newMatch.addForSinglePlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())), client, newMatch));
     }
 
     public void clientDisconnect(ClientConnectionHandler client){
