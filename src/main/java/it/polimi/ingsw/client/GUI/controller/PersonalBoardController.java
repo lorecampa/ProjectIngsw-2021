@@ -28,8 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PersonalBoardController extends Controller{
-    @FXML
-    Pane background;
+    @FXML private Pane background;
     @FXML private ImageView pos0;
     @FXML private ImageView pos5;
     @FXML private ImageView pos4;
@@ -139,6 +138,8 @@ public class PersonalBoardController extends Controller{
 
     @FXML private Button btn_endTurn;
 
+    @FXML private ImageView inkwell_image;
+    @FXML private Label playerName_label;
 
     //from market res
     private ImageView startImage;
@@ -678,6 +679,7 @@ public class PersonalBoardController extends Controller{
         setStandardBoard();
 
         currentShowed = Client.getInstance().getMyName();
+        playerName_label.setText(currentShowed);
 
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
@@ -696,6 +698,7 @@ public class PersonalBoardController extends Controller{
         btn_back.setVisible(true);
 
         currentShowed = username;
+        playerName_label.setText(currentShowed);
     }
 
     private void loadBoard(ModelData model){
@@ -706,6 +709,7 @@ public class PersonalBoardController extends Controller{
         loadStrongBox(model);
         loadCardSlots(model);
         loadChoiceBox();
+        inkwell_image.setVisible(Client.getInstance().getModelOf(model.getUsername()).isInkwell());
     }
 
     //-----------------

@@ -4,3 +4,19 @@
     -fx-border-radius: 15px;
     -fx-background-radius: 18px;
 }
+
+.dropDown .context-menu{
+    -fx-pref-width: 258;
+    -fx-background-color: rgb(233,234,210);
+    -fx-border-width: 3px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 18px;
+}
+
+.dropDown .menu-item:focused {
+    -fx-pref-width: 258;
+    -fx-background-color: rgb(255, 210, 48);
+    -fx-border-width: 3px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 18px;
+}

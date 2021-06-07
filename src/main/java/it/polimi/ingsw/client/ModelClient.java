@@ -662,6 +662,10 @@ public class ModelClient {
         return new ModelData(username,faithTrack,currentPosOnFaithTrack,standardDepot,leaderDepot,maxStoreLeaderDepot,strongbox,cardSlots,leaders);
     }
 
+    public boolean isInkwell() {
+        return inkwell;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj==null)

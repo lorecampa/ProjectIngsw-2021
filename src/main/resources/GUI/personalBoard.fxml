@@ -350,6 +350,11 @@
                   <Image url="@punchboard/PopeFavor_3_Acquired.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="inkwell_image" fitHeight="91.0" fitWidth="115.0" layoutX="19.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@punchboard/calamaio.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <HBox layoutX="350.0" layoutY="250.0" prefHeight="364.0" prefWidth="543.0">
@@ -454,8 +459,8 @@
                </image>
             </ImageView>
             <Button fx:id="btn_discard2" layoutX="216.0" layoutY="-8.0" mnemonicParsing="false" onAction="#leaderDiscard" styleClass="closeButton" text="X" AnchorPane.rightAnchor="-6.276021321614593" AnchorPane.topAnchor="-8.0" />
-            <ImageView fx:id="le_depot_21" fitHeight="49.0" fitWidth="57.0" layoutX="44.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
-            <ImageView fx:id="le_depot_22" fitHeight="49.0" fitWidth="57.0" layoutX="129.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
+            <ImageView fx:id="le_depot_21" fitHeight="49.0" fitWidth="57.0" layoutX="50.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
+            <ImageView fx:id="le_depot_22" fitHeight="49.0" fitWidth="57.0" layoutX="133.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
             <ImageView fx:id="prodLeader2" fitHeight="88.0" fitWidth="223.0" onMouseClicked="#leaderProdClicked" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="250.0" />
          </children>
       </AnchorPane>
@@ -567,9 +572,14 @@
                </image>
             </ImageView>
             <Button fx:id="btn_discard1" layoutX="216.0" layoutY="-8.0" mnemonicParsing="false" onAction="#leaderDiscard" styleClass="closeButton" text="X" AnchorPane.rightAnchor="-6.276021321614593" AnchorPane.topAnchor="-8.0" />
-            <ImageView fx:id="le_depot_11" fitHeight="49.0" fitWidth="57.0" layoutX="44.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
-            <ImageView fx:id="le_depot_12" fitHeight="49.0" fitWidth="57.0" layoutX="129.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
+            <ImageView fx:id="le_depot_11" fitHeight="49.0" fitWidth="57.0" layoutX="49.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
+            <ImageView fx:id="le_depot_12" fitHeight="49.0" fitWidth="57.0" layoutX="133.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true" styleClass="resourceImage" />
             <ImageView fx:id="prodLeader1" fitHeight="88.0" fitWidth="223.0" onMouseClicked="#leaderProdClicked" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="250.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="955.0" layoutY="733.0" prefHeight="55.0" prefWidth="308.0">
+         <children>
+            <Label fx:id="playerName_label" alignment="CENTER" layoutX="140.0" layoutY="19.0" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </children>
