@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
+import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.serverMessage.AnyResponse;
@@ -112,7 +113,13 @@ public class PreGameSelectionController extends Controller {
                 .stream().filter(x -> resNumMap.get(x) != 0)
                 .map(x -> new ResourceData(x, resNumMap.get(x)))
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        WaitingController controller = (WaitingController) ControllerHandler.getInstance().getController(Views.WAITING);
+        controller.setPreMatchMessage();
+        ControllerHandler.getInstance().changeView(Views.WAITING);
+
         client.writeToStream(new AnyResponse(resources));
+
     }
     @FXML
     public void decreaseRes(ActionEvent event){
