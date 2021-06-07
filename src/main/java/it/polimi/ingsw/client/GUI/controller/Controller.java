@@ -3,12 +3,15 @@ package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.GUI.Views;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +21,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public abstract class Controller {
-    private Stage stage;
-    private Scene scene;
+    protected Stage stage;
+    protected Scene scene;
 
     public void setUp(@NotNull Scene scene,@NotNull Stage stage){
         this.stage = stage;
@@ -31,7 +34,6 @@ public abstract class Controller {
     public void activate(){
         setUpAll();
         stage.setScene(scene);
-        //handle resize
     }
 
     public void showCustomMessage(String msg){

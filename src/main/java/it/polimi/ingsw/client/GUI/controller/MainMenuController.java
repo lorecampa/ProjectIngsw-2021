@@ -12,14 +12,20 @@ import it.polimi.ingsw.message.serverMessage.QuitGame;
 import it.polimi.ingsw.message.serverMessage.SinglePlayerMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -27,6 +33,9 @@ public class MainMenuController extends Controller{
     public final ControllerHandler handler = ControllerHandler.getInstance();
     public final Client client = Client.getInstance();
     public final String mainMenuMusic = "startGameSong.mp3";
+
+    @FXML
+    AnchorPane background;
 
     @FXML
     ImageView musicImage;
@@ -67,6 +76,12 @@ public class MainMenuController extends Controller{
     public void setUpAll() {
         ControllerHandler.getInstance().startSong(mainMenuMusic);
         ControllerHandler.getInstance().setMusicImage(musicImage);
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
     @FXML

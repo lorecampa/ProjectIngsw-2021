@@ -4,10 +4,12 @@ import it.polimi.ingsw.client.GUI.controller.Controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -30,12 +32,6 @@ public class ClientGUI extends Application {
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
-
-
-
-
-
-
 
     }
 

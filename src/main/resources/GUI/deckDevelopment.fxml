@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.DeckDevelopmentController">
+<AnchorPane fx:id="background" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.DeckDevelopmentController">
    <children>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="200.0" layoutY="314.0" pickOnBounds="true" scaleX="6.0" scaleY="6.6">
          <image>

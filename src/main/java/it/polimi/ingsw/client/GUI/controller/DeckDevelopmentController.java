@@ -7,13 +7,18 @@ import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.DeckDevData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 
@@ -21,13 +26,11 @@ import java.net.URL;
 public class DeckDevelopmentController extends Controller{
     private Node currNodeSelected = null;
 
-
+    @FXML AnchorPane background;
     @FXML AnchorPane currCardSelBox;
     @FXML ImageView currCard;
     @FXML Button buyCardBtn;
     @FXML GridPane gridPaneDeck;
-
-
 
     @FXML
     public void initialize(){
@@ -39,6 +42,12 @@ public class DeckDevelopmentController extends Controller{
     public void setUpAll() {
         setUpDeckImages(Client.getInstance().getDeckDevData());
         showDeckDev();
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
     @FXML

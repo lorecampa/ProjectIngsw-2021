@@ -9,12 +9,17 @@ import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +45,7 @@ public class PreGameSelectionController extends Controller {
         put(ResourceType.STONE, 0);
     }};
 
+    @FXML AnchorPane background;
     @FXML ImageView musicImage;
 
     @FXML AnchorPane customMessageBox;
@@ -87,6 +93,7 @@ public class PreGameSelectionController extends Controller {
     @FXML Button btn2;
     @FXML Button btn3;
     @FXML Button btn4;
+
 
 
     @Override
@@ -227,6 +234,12 @@ public class PreGameSelectionController extends Controller {
         ControllerHandler.getInstance().setMusicImage(musicImage);
         startIndexDiscarded = 0;
         showLeaderBox();
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
     @FXML

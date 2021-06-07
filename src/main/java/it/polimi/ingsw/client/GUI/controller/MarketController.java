@@ -8,14 +8,23 @@ import it.polimi.ingsw.message.serverMessage.MarketAction;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class MarketController extends Controller{
+
+    @FXML
+    VBox background;
     @FXML Button btn_row0;
     @FXML Button btn_row1;
     @FXML Button btn_row2;
@@ -47,8 +56,6 @@ public class MarketController extends Controller{
         setUpMarbles();
         setUpBtns();
     }
-
-
 
     private void setUpMarbles(){
         marbles = new ArrayList<>();
@@ -139,6 +146,12 @@ public class MarketController extends Controller{
                 marbles.get(i).get(j).setImage(new Image(marketTray.get(i).get(j).toMarbleResource()));
             }
         }
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
     public void hoverButton(MouseEvent event){

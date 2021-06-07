@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="611.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PreGameSelectionController">
+<AnchorPane fx:id="background" prefHeight="611.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PreGameSelectionController">
    <children>
       <ImageView fitHeight="393.0" fitWidth="598.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true" scaleX="1.7" scaleY="2.2" AnchorPane.leftAnchor="148.0" AnchorPane.topAnchor="84.0">
          <image>

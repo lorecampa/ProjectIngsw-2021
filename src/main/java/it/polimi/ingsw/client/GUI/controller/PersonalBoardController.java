@@ -8,7 +8,9 @@ import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -16,12 +18,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PersonalBoardController extends Controller{
+    @FXML
+    Pane background;
     @FXML private ImageView pos0;
     @FXML private ImageView pos5;
     @FXML private ImageView pos4;
@@ -169,7 +177,6 @@ public class PersonalBoardController extends Controller{
         put(ResourceType.SHIELD,0);
         put(ResourceType.STONE, 0);
     }};
-
 
     @FXML
     public void initialize(){
@@ -671,6 +678,12 @@ public class PersonalBoardController extends Controller{
         setStandardBoard();
 
         currentShowed = Client.getInstance().getMyName();
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
     public void setUpOtherPlayer(String username){

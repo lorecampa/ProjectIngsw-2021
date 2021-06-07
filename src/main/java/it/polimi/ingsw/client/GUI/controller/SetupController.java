@@ -5,10 +5,15 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.command.NumOfPlayerCMD;
 import it.polimi.ingsw.client.command.UsernameCMD;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -17,6 +22,7 @@ public class SetupController extends Controller{
     private boolean isNumOfPlayer = true;
 
 
+    @FXML AnchorPane background;
     @FXML Label customMessage;
     @FXML AnchorPane numOfPlayerBox;
     @FXML AnchorPane usernameBox;
@@ -24,10 +30,6 @@ public class SetupController extends Controller{
     @FXML TextField username;
     @FXML Button playButton;
     @FXML ImageView musicImage;
-
-
-
-
 
     @FXML
     public void sendData(){
@@ -50,6 +52,12 @@ public class SetupController extends Controller{
         numOfPlayerBox.setVisible(true);
         usernameBox.setVisible(false);
         customMessage.setVisible(false);
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        super.stage.setX(x);
+        super.stage.setY(y);
     }
 
 
