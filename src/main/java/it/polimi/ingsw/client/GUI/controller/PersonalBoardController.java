@@ -137,7 +137,7 @@ public class PersonalBoardController extends Controller{
     private ImageView destImage;
 
 
-    private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD;}
+    private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD}
     private ProdState prodState;
 
 
@@ -532,18 +532,7 @@ public class PersonalBoardController extends Controller{
             x.setOnMouseClicked(this::removeDepotRes);
         }));
 
-        //disable leader
-        leaders.forEach(imageView -> imageView.setDisable(true));
-        discardButton.forEach(button -> button.setDisable(true));
-
-        //disable buttons
-        btn_prod.setVisible(false);
-        btn_market.setVisible(false);
-        choice_username.setVisible(false);
-        btn_deck.setVisible(false);
-        btn_players.setVisible(false);
-        btn_endTurn.setVisible(false);
-
+        disableLeaderAndButtons();
     }
 
     private void setBoardForPos(){
@@ -551,7 +540,6 @@ public class PersonalBoardController extends Controller{
         depots.forEach(imageViews -> imageViews.forEach(
                 imageView -> {
                     imageView.setDisable(false);
-                    //TODO togliere che si ingrandiscono
                     imageView.setOnDragDetected(this::dragDetected);
                     imageView.setOnDragOver(this::dragOver);
                     imageView.setOnDragDropped(this::dragDropped);
@@ -566,6 +554,11 @@ public class PersonalBoardController extends Controller{
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
 
+        disableLeaderAndButtons();
+
+    }
+
+    private void disableLeaderAndButtons(){
         //disable leader
         leaders.forEach(imageView -> imageView.setDisable(true));
         discardButton.forEach(button -> button.setDisable(true));
@@ -619,17 +612,6 @@ public class PersonalBoardController extends Controller{
         btn_deck.setVisible(!disable);
     }
 
-    private void setDisableBoardForProd(boolean disable){
-        btn_market.setVisible(!disable);
-        btn_deck.setVisible(!disable);
-        btn_players.setVisible(!disable);
-        choice_username.setVisible(!disable);
-
-        leaders.forEach(imageView -> imageView.setDisable(disable));
-        discardButton.forEach(button -> button.setDisable(disable));
-
-
-    }
 
 
     //-------------------------
@@ -724,7 +706,7 @@ public class PersonalBoardController extends Controller{
 
     @FXML
     public void leaderClicked(MouseEvent event){
-        System.out.println("leader cliked");
+        System.out.println("leader clicked");
         if (event.getSource().equals(leader1))
             Client.getInstance().writeToStream(new LeaderManage(0, false));
         else
@@ -958,7 +940,7 @@ public class PersonalBoardController extends Controller{
     }
     public void removeDepotRes(MouseEvent event) {
         ImageView source = (ImageView) event.getSource();
-        ResourceType type = null;
+        ResourceType type;
         boolean isNormalDepot;
         int index;
         if (source.getImage() != null) {
@@ -1045,6 +1027,61 @@ public class PersonalBoardController extends Controller{
         return -1;
     }
 
+    private boolean isNormalDepot(ImageView imageView){
+        return depots.stream().anyMatch(x -> x.contains(imageView));
+    }
+
+    private int computeIndex(ImageView imageView){
+        int index;
+        if (depots.stream().anyMatch(x -> x.contains(imageView))){
+            index = getImageDepotIndex(depots, imageView);
+        }else if (leadersDepots.stream().anyMatch(x->x.contains(imageView))){
+            index = getImageDepotIndex(leadersDepots, imageView);
+            int numOfLeaderBefore = 0;
+            ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
+            for (int i = 0; i < index; i++) {
+                if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() &&
+                        leaderData.get(i).getEffects().stream()
+                                .noneMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
+                    numOfLeaderBefore++;
+            }
+            index -= numOfLeaderBefore;
+        }else{
+            throw new UnsupportedOperationException();
+        }
+        return index;
+    }
+
+    private void insertInDepot(){
+        ResourceType type = null;
+        for(ResourceType resType: resourceBufferImages.keySet()){
+            if (resourceBufferImages.get(resType).equals(startImage)){
+                type = resType;
+                break;
+            }
+        }
+        boolean isNormalDepot = isNormalDepot(destImage);
+        int indexDest = computeIndex(destImage);
+        System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
+                + isNormalDepot + " ResType: " + type);
+
+        Client.getInstance().writeToStream(new DepotModify(indexDest,
+                new ResourceData(type, 1), isNormalDepot));
+    }
+
+    private void switchDepots(){
+        boolean isFromNormalDepot = isNormalDepot(startImage);
+        int startIndex = computeIndex(startImage);
+
+        boolean isToNormalDepot = isNormalDepot(destImage);
+        int destIndex = computeIndex(destImage);
+
+        System.out.println("Switch:\nFromDepot: " + startIndex + " isNormal: " + isFromNormalDepot);
+        System.out.println("ToDepot: " + destIndex + " isNormal: " + isToNormalDepot);
+        Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
+
+    }
+
 
     public void dragDropped(DragEvent event){
         Dragboard db = event.getDragboard();
@@ -1052,89 +1089,10 @@ public class PersonalBoardController extends Controller{
 
         if (db.hasImage()) {
             if (resourceBufferImages.containsValue(startImage)){
-                //insertion from buffer
-                ResourceType type = null;
-                for(ResourceType resType: resourceBufferImages.keySet()){
-                    if (resourceBufferImages.get(resType).equals(startImage)){
-                        type = resType;
-                        break;
-                    }
-                }
-                boolean isNormalDepot;
-                int indexDest;
-                if (depots.stream().anyMatch(x -> x.contains(destImage))){
-                    isNormalDepot = true;
-                    indexDest = getImageDepotIndex(depots, destImage);
-                }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
-                    isNormalDepot = false;
-                    indexDest = getImageDepotIndex(leadersDepots, destImage);
-                    /*
-                    long numOfWarehouse = Client.getInstance().getMyModel().toModelData().getLeaders().stream()
-                            .filter(CardLeaderData::isActive).map(CardLeaderData::getEffects)
-                            .flatMap(effectData -> effectData.stream().map(EffectData::getType))
-                            .filter(type1 -> type1.equals(EffectType.WAREHOUSE)).count();
-
-                     */
-                    int numOfLeaderBefore = 0;
-                    ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
-                    for (int i = 0; i < indexDest; i++) {
-                        if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
-                            numOfLeaderBefore++;
-                    }
-                    indexDest -= numOfLeaderBefore;
-
-                }else{
-                    return;
-                }
-                System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
-                        + isNormalDepot + " ResType: " + type);
-
-                Client.getInstance().writeToStream(new DepotModify(indexDest,
-                        new ResourceData(type, 1), isNormalDepot));
-                return;
+                insertInDepot();
+            }else {
+                switchDepots();
             }
-
-            boolean isFromNormalDepot;
-            int startIndex;
-            if (depots.stream().anyMatch(x -> x.contains(startImage))){
-                isFromNormalDepot = true;
-                startIndex = getImageDepotIndex(depots, startImage);
-            }else if(leadersDepots.stream().anyMatch(x->x.contains(startImage))){
-                isFromNormalDepot = false;
-                startIndex = getImageDepotIndex(leadersDepots, startImage);
-                int numOfLeaderBefore = 0;
-                ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
-                for (int i = 0; i < startIndex; i++) {
-                    if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
-                        numOfLeaderBefore++;
-                }
-                startIndex -= numOfLeaderBefore;
-            }else{
-                return;
-            }
-            boolean isToNormalDepot;
-            int destIndex;
-            if (depots.stream().anyMatch(x -> x.contains(destImage))){
-                isToNormalDepot = true;
-                destIndex = getImageDepotIndex(depots, destImage);
-
-            }else if (leadersDepots.stream().anyMatch(x->x.contains(destImage))){
-                isToNormalDepot = false;
-                destIndex = getImageDepotIndex(leadersDepots, destImage);
-                int numOfLeaderBefore = 0;
-                ArrayList<CardLeaderData> leaderData = Client.getInstance().getMyModel().toModelData().getLeaders();
-                for (int i = 0; i < destIndex; i++) {
-                    if (!leaderData.get(i).isActive() || leaderData.get(i).isActive() && !leaderData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.WAREHOUSE)))
-                        numOfLeaderBefore++;
-                }
-                destIndex -= numOfLeaderBefore;
-            }else{
-                return;
-            }
-            System.out.println("Switch:\nFromDepot: " +startIndex + " isNormal: " + isFromNormalDepot);
-            System.out.println("ToDepot: " +destIndex + " isNormal: " + isToNormalDepot);
-            Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
-
             success = true;
         }
         event.setDropCompleted(success);
