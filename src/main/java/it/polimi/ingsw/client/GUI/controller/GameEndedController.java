@@ -27,7 +27,10 @@ public class GameEndedController extends Controller{
 
     public void setUpRanking(Map<Integer, String> players){
         ObservableList<Node> children = matchRankingGrid.getChildren();
-
+        children.forEach(x -> {
+            Label label = (Label) x;
+            label.setVisible(false);
+        });
         TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
         matchRanking.putAll(players);
         Set<Map.Entry<Integer, String>> entries = matchRanking.entrySet();
@@ -35,6 +38,7 @@ public class GameEndedController extends Controller{
         for(Map.Entry<Integer, String> entry : entries){
             Label label = (Label) children.get(i);
             label.setText(entry.getKey()+": "+entry.getValue());
+            label.setVisible(true);
             i++;
         }
     }
