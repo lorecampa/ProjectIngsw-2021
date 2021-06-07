@@ -204,11 +204,13 @@ public class PreGameSelectionController extends Controller {
         ImageView leaderSelected = leaderButtonMap.get(btn);
         leaderSelected.getParent().setVisible(false);
         int index = leaders.indexOf(leaderSelected);
-        if (index > startIndexDiscarded){
-            index--;
-        }
-        Client.getInstance().writeToStream(new LeaderManage(index, true));
 
+        for (int i = 0; i < index; i++) {
+            if (!leaders.get(i).getParent().isVisible())
+                index--;
+        }
+
+        Client.getInstance().writeToStream(new LeaderManage(index, true));
     }
 
     //---------------------
