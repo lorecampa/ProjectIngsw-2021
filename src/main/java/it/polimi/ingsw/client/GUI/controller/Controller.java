@@ -34,24 +34,6 @@ public abstract class Controller {
         //handle resize
     }
 
-    public void activateOnNew(Views view){
-        Parent root;
-        try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/client/GUI/"+view + ".fxml")));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        setUpAll();
-    }
-
-
-
-
-
     public void showCustomMessage(String msg){
     }
 

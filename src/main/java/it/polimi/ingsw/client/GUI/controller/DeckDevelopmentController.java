@@ -41,10 +41,12 @@ public class DeckDevelopmentController extends Controller{
         showDeckDev();
     }
 
+    @FXML
     public void goBackToPersonalBoard(){
         ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
     }
 
+    @FXML
     public void selectCard(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
         currNodeSelected = source;
@@ -60,6 +62,7 @@ public class DeckDevelopmentController extends Controller{
         currCardSelBox.setVisible(true);
     }
 
+    @FXML
     public void buyCard(){
         int row = GridPane.getRowIndex(currNodeSelected);
         int col = GridPane.getColumnIndex(currNodeSelected);
@@ -68,18 +71,17 @@ public class DeckDevelopmentController extends Controller{
         PersonalBoardController controller = (PersonalBoardController) ControllerHandler
                 .getInstance().getController(Views.PERSONAL_BOARD);
 
-        controller.askCardSlotSelection(row, col);
-        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
 
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+        controller.askCardSlotSelection(row, col);
     }
 
+    @FXML
     public void showDeckDev(){
         currCardSelBox.setVisible(false);
         gridPaneDeck.setDisable(false);
         gridPaneDeck.setVisible(true);
     }
-
-
 
     //---------------------
     //EXTERNAL METHODS
@@ -118,9 +120,4 @@ public class DeckDevelopmentController extends Controller{
 
         return result;
     }
-
-
-
-
-
 }

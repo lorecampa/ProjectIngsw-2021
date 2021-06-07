@@ -224,8 +224,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setBufferLabel("Put those resources inside the depots");
-            pbController.setUpResourceFromMarket(message.getResources());
+
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+            pbController.setUpResourceFromMarket(message.getResources());
+
         });
     }
 
@@ -234,8 +236,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
         Platform.runLater(()->{
             PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
             pbController.setBufferLabel("Remove those resources from yours depots or strongbox");
-            pbController.setUpWarehouseResourceRemoving(message.getResources());
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+            pbController.setUpWarehouseResourceRemoving(message.getResources());
+
         });
     }
 

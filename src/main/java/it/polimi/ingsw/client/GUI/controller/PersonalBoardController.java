@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 
 import java.util.*;
@@ -104,11 +103,8 @@ public class PersonalBoardController extends Controller{
     @FXML private Button discardMarketResBtn;
     @FXML private Label bufferCustomLabel;
 
-    @FXML private Pane cardSlot1;
     @FXML private Button selectSlot1Btn;
-    @FXML private Pane cardSlot2;
     @FXML private Button selectSlot2Btn;
-    @FXML private Pane cardSlot3;
     @FXML private Button selectSlot3Btn;
 
     @FXML private ImageView imageBuffer1;
@@ -194,44 +190,6 @@ public class PersonalBoardController extends Controller{
         setUpSelectCardSlotButton();
     }
 
-    private void setUpSelectCardSlotButton(){
-        selectCardSlotButtons.add(selectSlot1Btn);
-        selectCardSlotButtons.add(selectSlot2Btn);
-        selectCardSlotButtons.add(selectSlot3Btn);
-        selectCardSlotButtons.forEach(x -> x.setVisible(true));
-    }
-
-    private void setUpBuffer(){
-        resourceBufferImages.put(ResourceType.COIN, imageBuffer1);
-        resourceBufferLabelsMap.put(ResourceType.COIN, labelBuffer1);
-        resourceBufferTopLabelsMap.put(ResourceType.COIN, bufferTop1);
-        resourceBufferDecreaseBtnMap.put(ResourceType.COIN, decreaseResBuffer1);
-
-        resourceBufferImages.put(ResourceType.SHIELD, imageBuffer2);
-        resourceBufferLabelsMap.put(ResourceType.SHIELD, labelBuffer2);
-        resourceBufferTopLabelsMap.put(ResourceType.SHIELD, bufferTop2);
-        resourceBufferDecreaseBtnMap.put(ResourceType.SHIELD, decreaseResBuffer2);
-
-
-        resourceBufferImages.put(ResourceType.SERVANT, imageBuffer3);
-        resourceBufferLabelsMap.put(ResourceType.SERVANT, labelBuffer3);
-        resourceBufferTopLabelsMap.put(ResourceType.SERVANT, bufferTop3);
-        resourceBufferDecreaseBtnMap.put(ResourceType.SERVANT, decreaseResBuffer3);
-
-
-        resourceBufferImages.put(ResourceType.STONE, imageBuffer4);
-        resourceBufferLabelsMap.put(ResourceType.STONE, labelBuffer4);
-        resourceBufferTopLabelsMap.put(ResourceType.STONE, bufferTop4);
-        resourceBufferDecreaseBtnMap.put(ResourceType.STONE, decreaseResBuffer4);
-
-    }
-
-    private void setUpDiscard(){
-        discardButton.add(btn_discard1);
-        discardButton.add(btn_discard2);
-    }
-
-
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
@@ -252,6 +210,18 @@ public class PersonalBoardController extends Controller{
         track.addAll(Arrays.asList(pos0,pos1,pos2,pos3,pos4,pos5,pos6,pos7,pos8,pos9,pos10,pos11,pos12,pos13,pos14,
                 pos15,pos16,pos17,pos18,pos19,pos20,pos21,pos22,pos23,pos24));
         track.forEach(image -> image.setVisible(false));
+    }
+
+    private void setUpSelectCardSlotButton(){
+        selectCardSlotButtons.add(selectSlot1Btn);
+        selectCardSlotButtons.add(selectSlot2Btn);
+        selectCardSlotButtons.add(selectSlot3Btn);
+        selectCardSlotButtons.forEach(x -> x.setVisible(false));
+    }
+
+    private void setUpDiscard(){
+        discardButton.add(btn_discard1);
+        discardButton.add(btn_discard2);
     }
 
     private void setUpLeaders(){
@@ -344,6 +314,30 @@ public class PersonalBoardController extends Controller{
         popeFavorsAcquired.forEach(image -> image.setVisible(false));
     }
 
+    private void setUpBuffer(){
+        resourceBufferImages.put(ResourceType.COIN, imageBuffer1);
+        resourceBufferLabelsMap.put(ResourceType.COIN, labelBuffer1);
+        resourceBufferTopLabelsMap.put(ResourceType.COIN, bufferTop1);
+        resourceBufferDecreaseBtnMap.put(ResourceType.COIN, decreaseResBuffer1);
+
+        resourceBufferImages.put(ResourceType.SHIELD, imageBuffer2);
+        resourceBufferLabelsMap.put(ResourceType.SHIELD, labelBuffer2);
+        resourceBufferTopLabelsMap.put(ResourceType.SHIELD, bufferTop2);
+        resourceBufferDecreaseBtnMap.put(ResourceType.SHIELD, decreaseResBuffer2);
+
+
+        resourceBufferImages.put(ResourceType.SERVANT, imageBuffer3);
+        resourceBufferLabelsMap.put(ResourceType.SERVANT, labelBuffer3);
+        resourceBufferTopLabelsMap.put(ResourceType.SERVANT, bufferTop3);
+        resourceBufferDecreaseBtnMap.put(ResourceType.SERVANT, decreaseResBuffer3);
+
+
+        resourceBufferImages.put(ResourceType.STONE, imageBuffer4);
+        resourceBufferLabelsMap.put(ResourceType.STONE, labelBuffer4);
+        resourceBufferTopLabelsMap.put(ResourceType.STONE, bufferTop4);
+        resourceBufferDecreaseBtnMap.put(ResourceType.STONE, decreaseResBuffer4);
+    }
+
     //-------------------------------
     // LOADING FROM MODEL PART TO GUI
     //-------------------------------
@@ -408,7 +402,6 @@ public class PersonalBoardController extends Controller{
                 leaders.get(i).setDisable(false);
                 discardButton.get(i).setVisible(true);
             }
-
         }
     }
 
@@ -442,6 +435,184 @@ public class PersonalBoardController extends Controller{
     //----------------
     // UTILITIES
     //----------------
+    private void setStandardBoard(){
+        // LEADER & LEADER DISCARD
+        ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
+        for (int i = 0; i < leadersData.size() && i<2; i++) {
+            CardLeaderData leaderData = leadersData.get(i);
+            boolean activated = leaderData.isActive();
+            if (activated) {
+                leaders.get(i).setDisable(true);
+                discardButton.get(i).setVisible(false);
+            }
+            else {
+                leaders.get(i).setDisable(false);
+                discardButton.get(i).setVisible(true);
+                discardButton.get(i).setDisable(false);
+            }
+        }
+
+        //LEADER EFFECTS
+        leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> {
+            imageView.setDisable(true);
+            imageView.setOnMouseClicked(null);
+            imageView.setOnDragDetected(null);
+            imageView.setOnDragOver(null);
+            imageView.setOnDragDropped(null);
+        }));
+        leadersProd.forEach(imageView -> imageView.setVisible(false));
+        //TODO ADD MARBLE
+
+        //DEPOTS
+        depots.forEach(imageViews -> imageViews.forEach(imageView -> {
+            imageView.setDisable(true);
+            imageView.setOnMouseClicked(null);
+            imageView.setOnDragDetected(null);
+            imageView.setOnDragOver(null);
+            imageView.setOnDragDropped(null);
+        }));
+
+        //STRONGBOX
+        strongboxImageMap.forEach((type, imageView) -> imageView.setDisable(true));
+
+        //CARD SLOT BTN
+        selectCardSlotButtons.forEach(x -> x.setVisible(false));
+
+        //CARDS
+        cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
+
+        //BASE PROD
+        baseProd.setDisable(true);
+
+        //BUTTONS
+        btn_prod.setVisible(true);
+        btn_market.setVisible(true);
+        choice_username.setVisible(true);
+        btn_players.setVisible(true);
+        btn_endTurn.setVisible(true);
+        btn_deck.setVisible(true);
+
+        btn_deck.setText("DECK DEV");
+        btn_deck.setOnAction(event -> showDeckDev());
+    }
+
+    private void setBoardForBuy(){
+        //disable leader
+        leaders.forEach(imageView -> imageView.setDisable(true));
+        discardButton.forEach(button -> button.setDisable(true));
+
+        //disable buttons
+        btn_prod.setVisible(false);
+        btn_market.setVisible(false);
+        choice_username.setVisible(false);
+        btn_players.setVisible(false);
+        btn_endTurn.setVisible(false);
+
+        //enable card slot selection
+        selectCardSlotButtons.forEach(x -> x.setVisible(true));
+
+        //change deck dev button
+        btn_deck.setText("CANCEL BUYING");
+        btn_deck.setOnAction(event -> setStandardBoard());
+    }
+
+    private void setBoardForPay(){
+        //DEPOTS
+        depots.forEach(depot -> depot.forEach(x -> {
+            x.setDisable(false);
+            x.setOnMouseClicked(this::removeDepotRes);
+        }));
+
+        //STRONGBOX
+        strongboxImageMap.values().forEach(imageView -> imageView.setDisable(false));
+
+        //LEADER DEPOT
+        leadersDepots.forEach(depot -> depot.forEach(x -> {
+            x.setDisable(false);
+            x.setOnMouseClicked(this::removeDepotRes);
+        }));
+
+        //disable leader
+        leaders.forEach(imageView -> imageView.setDisable(true));
+        discardButton.forEach(button -> button.setDisable(true));
+
+        //disable buttons
+        btn_prod.setVisible(false);
+        btn_market.setVisible(false);
+        choice_username.setVisible(false);
+        btn_deck.setVisible(false);
+        btn_players.setVisible(false);
+        btn_endTurn.setVisible(false);
+
+    }
+
+    private void setBoardForPos(){
+        //DEPOTS
+        depots.forEach(imageViews -> imageViews.forEach(
+                imageView -> {
+                    imageView.setDisable(false);
+                    //TODO togliere che si ingrandiscono
+                    imageView.setOnDragDetected(this::dragDetected);
+                    imageView.setOnDragOver(this::dragOver);
+                    imageView.setOnDragDropped(this::dragDropped);
+                }));
+
+        //LEADERS DEPOTS
+        leadersDepots.forEach(imageViews -> imageViews
+                .forEach(imageView -> {
+                    imageView.setDisable(false);
+                    imageView.setOnDragDetected(this::dragDetected);
+                    imageView.setOnDragOver(this::dragOver);
+                    imageView.setOnDragDropped(this::dragDropped);
+                }));
+
+        //disable leader
+        leaders.forEach(imageView -> imageView.setDisable(true));
+        discardButton.forEach(button -> button.setDisable(true));
+
+        //disable buttons
+        btn_prod.setVisible(false);
+        btn_market.setVisible(false);
+        choice_username.setVisible(false);
+        btn_deck.setVisible(false);
+        btn_players.setVisible(false);
+        btn_endTurn.setVisible(false);
+    }
+
+    private void setBoardForProd(){
+        //disable leader
+        leaders.forEach(imageView -> imageView.setDisable(true));
+        discardButton.forEach(button -> button.setDisable(true));
+
+        //disable buttons
+        btn_market.setVisible(false);
+        choice_username.setVisible(false);
+        btn_deck.setVisible(false);
+        btn_players.setVisible(false);
+        btn_endTurn.setVisible(false);
+
+        btn_prod.setText("END PRODUCTION");
+
+        //LEADER PROD
+        ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
+        for (int i = 0; i < leadersData.size(); i++) {
+            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION))
+                    && leadersData.get(i).isActive())
+                leadersProd.get(i).setVisible(true);
+        }
+
+        //BASE PROD
+        baseProd.setDisable(false);
+
+        //CARD
+        ArrayList<ArrayList<CardDevData>> cardSlotsData = Client.getInstance().getMyModel().toModelData().getCardSlots();
+        for (int i = 0; i < cardSlotsData.size(); i++) {
+            if (cardSlotsData.get(i).size() > 0)
+                cardSlots.get(i).get(cardSlotsData.get(i).size()-1).setDisable(false);
+        }
+    }
+
+
     private void setDisableBoardForOther(boolean disable){
         btn_prod.setVisible(!disable);
         btn_market.setVisible(!disable);
@@ -456,10 +627,9 @@ public class PersonalBoardController extends Controller{
 
         leaders.forEach(imageView -> imageView.setDisable(disable));
         discardButton.forEach(button -> button.setDisable(disable));
+
+
     }
-
-
-
 
 
     //-------------------------
@@ -516,6 +686,7 @@ public class PersonalBoardController extends Controller{
         loadBoard(model);
 
         btn_back.setVisible(false);
+        setStandardBoard();
 
         currentShowed = Client.getInstance().getMyName();
     }
@@ -602,11 +773,11 @@ public class PersonalBoardController extends Controller{
     public void productionClicked(){
         switch (prodState) {
             case NOT_IN_PROD:
-                activateProd();
+                setBoardForProd();
                 prodState = ProdState.INITIAL;
                 break;
             case INITIAL:
-                softExitProd();
+                setStandardBoard();
                 prodState = ProdState.NOT_IN_PROD;
                 btn_prod.setText("PRODUCTION");
                 break;
@@ -618,32 +789,8 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    private void activateProd(){
-        setDisableBoardForProd(true);
-        btn_prod.setText("END PRODUCTION");
-        ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
-        for (int i = 0; i < leadersData.size(); i++) {
-            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION))
-                && leadersData.get(i).isActive())
-                leadersProd.get(i).setVisible(true);
-        }
-        baseProd.setDisable(false);
-        ArrayList<ArrayList<CardDevData>> cardSlotsData = Client.getInstance().getMyModel().toModelData().getCardSlots();
-        for (int i = 0; i < cardSlotsData.size(); i++) {
-            if (cardSlotsData.get(i).size() > 0)
-                cardSlots.get(i).get(cardSlotsData.get(i).size()-1).setDisable(false);
-        }
-    }
-
-    private void softExitProd(){
-        setDisableBoardForProd(false);
-        //leadersProd.forEach(imageView -> imageView.setVisible(false));
-        baseProd.setDisable(true);
-        cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
-    }
-
     private void exitProd(){
-        softExitProd();
+        setStandardBoard();
         Client.getInstance().writeToStream(new EndProductionSelection());
     }
 
@@ -652,10 +799,7 @@ public class PersonalBoardController extends Controller{
         setUpAll();
     }
 
-
-
-
-
+    @FXML
     public void showDeckDev(){
         ControllerHandler.getInstance().changeView(Views.DECK_DEV);
     }
@@ -663,7 +807,7 @@ public class PersonalBoardController extends Controller{
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
-        selectCardSlotButtons.forEach(x -> x.setVisible(true));
+        setBoardForBuy();
     }
 
     @FXML
@@ -681,13 +825,6 @@ public class PersonalBoardController extends Controller{
             }
         }
     }
-
-    public void updateStrongbox(ArrayList<ResourceData> strongboxUpdated){
-        for (ResourceData res: strongboxUpdated){
-            strongboxLabelMap.get(res.getType()).setText(Integer.toString(res.getValue()));
-        }
-    }
-
 
     //ANY CONVERSION REQUEST
 
@@ -774,9 +911,6 @@ public class PersonalBoardController extends Controller{
         resourceBufferImages.get(typeSource).setDisable(false);
     }
 
-
-
-
     //RESOURCE FORM MARKET METHODS
     private void resetBuffer(){
         resourceBufferLabelsMap.values().forEach(x -> {
@@ -801,25 +935,12 @@ public class PersonalBoardController extends Controller{
 
     public void setUpWarehouseResourceRemoving(ArrayList<ResourceData> resources){
         resetBuffer();
+        setBoardForPay();
+
         resourceBufferLabelsMap.values().forEach(x -> x.setVisible(true));
         for (ResourceData res : resources) {
             resourceBufferLabelsMap.get(res.getType()).setText(Integer.toString(res.getValue()));
         }
-        strongboxImageMap.values().forEach(x ->{
-            x.setDisable(false);
-            x.setOnMouseClicked(this::removeStrongboxRes);
-        });
-
-        depots.forEach(depot -> depot.forEach(x -> {
-            System.out.println(x.getParent().isDisable());
-            x.setDisable(false);
-            x.setOnMouseClicked(this::removeDepotRes);
-        }));
-
-        leadersDepots.forEach(ldepot -> ldepot.forEach(x -> {
-            x.setDisable(false);
-            x.setOnMouseClicked(this::removeDepotRes);
-        }));
 
         bufferBox.setVisible(true);
 
@@ -840,21 +961,22 @@ public class PersonalBoardController extends Controller{
         ResourceType type = null;
         boolean isNormalDepot;
         int index;
-        if (depots.stream().anyMatch(x -> x.contains(source))){
-            isNormalDepot = true;
-            index = getImageDepotIndex(depots, source);
-            type = Client.getInstance().getMyModel().toModelData().getStandardDepot().get(index).getType();
+        if (source.getImage() != null) {
+            if (depots.stream().anyMatch(x -> x.contains(source))) {
+                isNormalDepot = true;
+                index = getImageDepotIndex(depots, source);
+                type = Client.getInstance().getMyModel().toModelData().getStandardDepot().get(index).getType();
+            } else if (leadersDepots.stream().anyMatch(x -> x.contains(source))) {
+                isNormalDepot = false;
+                index = getImageDepotIndex(leadersDepots, source);
+                type = Client.getInstance().getMyModel().toModelData().getLeaderDepot().get(index).getType();
 
-        }else if (leadersDepots.stream().anyMatch(x -> x.contains(source))){
-            isNormalDepot = false;
-            index = getImageDepotIndex(leadersDepots, source);
-            type = Client.getInstance().getMyModel().toModelData().getLeaderDepot().get(index).getType();
-
-        }else{
-            return;
+            } else {
+                return;
+            }
+            Client.getInstance().writeToStream(new DepotModify(index, new ResourceData(type, 1),
+                    isNormalDepot));
         }
-        Client.getInstance().writeToStream(new DepotModify(index, new ResourceData(type, 1),
-                isNormalDepot));
     }
 
     private ResourceType getResTypeFromImage(Map<ResourceType, ImageView> map, ImageView image){
@@ -880,18 +1002,7 @@ public class PersonalBoardController extends Controller{
 
         }
 
-        depots.forEach(imageViews -> imageViews.forEach(
-                imageView -> {
-                    imageView.setOnDragDetected(this::dragDetected);
-                    imageView.setOnDragOver(this::dragOver);
-                    imageView.setOnDragDropped(this::dragDropped);
-                }));
-        leadersDepots.forEach(imageViews -> imageViews
-                .forEach(imageView -> {
-                    imageView.setOnDragDetected(this::dragDetected);
-                    imageView.setOnDragOver(this::dragOver);
-                    imageView.setOnDragDropped(this::dragDropped);
-                }));
+        setBoardForPos();
 
         bufferBox.setVisible(true);
     }
@@ -1036,6 +1147,7 @@ public class PersonalBoardController extends Controller{
         selectCardSlotButtons.forEach(x -> x.setVisible(false));
         if (bufferUpdated.stream().mapToInt(ResourceData::getValue).sum() == 0){
             bufferBox.setVisible(false);
+            setStandardBoard();
         }else{
             resourceBufferLabelsMap.values().forEach(x -> x.setText(Integer.toString(0)));
             for (ResourceType type: resourceBufferImages.keySet()){
