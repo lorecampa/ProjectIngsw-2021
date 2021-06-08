@@ -133,8 +133,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
         });
     }
 
-
-
     @Override
     public void mainMenu() {
         Platform.runLater(()->controllerHandler.changeView(Views.MAIN_MENU));

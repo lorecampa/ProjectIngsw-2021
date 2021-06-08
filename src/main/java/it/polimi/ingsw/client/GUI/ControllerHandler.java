@@ -45,8 +45,6 @@ public class ControllerHandler {
         return controllers.get(getCurrentView());
     }
 
-
-
     public void startSong(String music){
         Media pick = new Media(Objects.requireNonNull(getClass()
                 .getResource("/GUI/audio/" + music)).toString());
@@ -60,6 +58,14 @@ public class ControllerHandler {
             player.play();
         });
         muted = false;
+    }
+
+    public void setVolume(double volume){
+        player.setVolume(volume);
+    }
+
+    public double getVolume(){
+        return player.getVolume();
     }
 
     public boolean isMuted() {

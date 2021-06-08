@@ -14,6 +14,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -94,6 +95,9 @@ public class PreGameSelectionController extends Controller {
     @FXML Button btn2;
     @FXML Button btn3;
     @FXML Button btn4;
+
+    @FXML
+    Slider musicVolume;
 
 
 
@@ -242,6 +246,8 @@ public class PreGameSelectionController extends Controller {
         startIndexDiscarded = 0;
         showLeaderBox();
 
+        musicVolume.setValue(ControllerHandler.getInstance().getVolume()*100);
+
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
         double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
@@ -279,9 +285,11 @@ public class PreGameSelectionController extends Controller {
         numResourcesLabel.add(servantNum);
         numResourcesLabel.add(shieldNum);
 
-
-
         showLeaderBox();
+
+        musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
+            double volume = new_val.doubleValue()/100;
+            ControllerHandler.getInstance().setVolume(volume);});
     }
 
     public void showChooseResourcesBox(){

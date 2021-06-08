@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client.GUI.controller;
 
+import it.polimi.ingsw.client.GUI.ControllerHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;

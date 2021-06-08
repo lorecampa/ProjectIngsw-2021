@@ -30,6 +30,8 @@ public class SetupController extends Controller{
     @FXML TextField username;
     @FXML Button playButton;
     @FXML ImageView musicImage;
+    @FXML
+    Slider musicVolume;
 
     @FXML
     public void sendData(){
@@ -38,6 +40,13 @@ public class SetupController extends Controller{
         }else{
             new UsernameCMD(username.getText(), client).doCommand();
         }
+    }
+
+    @FXML
+    public void initialize(){
+        musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
+            double volume = new_val.doubleValue()/100;
+            ControllerHandler.getInstance().setVolume(volume);});
     }
 
 
@@ -52,6 +61,8 @@ public class SetupController extends Controller{
         numOfPlayerBox.setVisible(true);
         usernameBox.setVisible(false);
         customMessage.setVisible(false);
+
+        musicVolume.setValue(ControllerHandler.getInstance().getVolume()*100);
 
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
