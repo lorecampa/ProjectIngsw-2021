@@ -26,5 +26,11 @@ public class ProductionAction implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleProduction(this);
+
+    }
+
+    @Override
+    public String toString() {
+        return " - Production Action";
     }
 }

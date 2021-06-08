@@ -26,5 +26,12 @@ public class WhiteMarbleConversionResponse implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleWhiteMarbleConversion(this);
+
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - White Marble Conversion Response";
     }
 }

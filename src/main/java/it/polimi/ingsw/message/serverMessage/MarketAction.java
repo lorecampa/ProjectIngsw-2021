@@ -26,5 +26,12 @@ public class MarketAction implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleMarketAction(this);
+
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - Market Action";
     }
 }

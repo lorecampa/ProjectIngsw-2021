@@ -42,5 +42,12 @@ public class DepotSwitch implements ServerMessage {
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleSwitch(this);
+
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - Depot Switch";
     }
 }

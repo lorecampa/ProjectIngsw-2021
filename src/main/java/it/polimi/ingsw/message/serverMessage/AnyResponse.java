@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AnyResponse implements ServerMessage{
@@ -24,5 +25,11 @@ public class AnyResponse implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleAnyResponse(this);
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - Any Response";
     }
 }

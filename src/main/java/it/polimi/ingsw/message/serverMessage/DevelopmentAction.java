@@ -35,5 +35,12 @@ public class DevelopmentAction implements ServerMessage {
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleDevelopmentAction(this);
+
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - Development Action";
     }
 }

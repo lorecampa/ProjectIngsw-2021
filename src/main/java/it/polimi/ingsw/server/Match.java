@@ -3,7 +3,6 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
@@ -13,7 +12,6 @@ import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +24,7 @@ public class Match {
     private final ArrayList<VirtualClient> allPlayers;
     private final ArrayList<VirtualClient> activePlayers;
     private final ArrayList<VirtualClient> inactivePlayers;
-
+    private final ArrayList<String> logs =new ArrayList<>();
 
     private final int matchID;
 
@@ -304,6 +302,23 @@ public class Match {
         allPlayers.forEach(x-> x.getClient().setState(HandlerState.FIRST_CONTACT));
         System.out.println("Match with index: "+this.matchID+" deleted!");
         server.matchEnd(this);
+    }
+
+    public void addToLog(String s){
+        logs.add(s);
+    }
+
+    public void printLogs(int numToShow){
+        int start;
+        if(numToShow>logs.size()-1){
+            start=0;
+        }
+        else{
+            start= logs.size()-numToShow;
+        }
+        for(int i=start; i<logs.size();i++){
+            System.out.println(logs.get(i));
+        }
     }
 
 }

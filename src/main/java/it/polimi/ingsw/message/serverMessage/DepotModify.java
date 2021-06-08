@@ -36,5 +36,12 @@ public class DepotModify implements ServerMessage {
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleDepotModify(this);
+
+        handler.getVirtualClient().ifPresent(x->x.addToLog(this));
+    }
+
+    @Override
+    public String toString() {
+        return " - Depot Modify";
     }
 }

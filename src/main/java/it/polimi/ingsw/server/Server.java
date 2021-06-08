@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
@@ -63,6 +64,7 @@ public class Server {
             e.printStackTrace();
         }
         System.out.println("Server ready");
+        new Thread(new ServerInput(this)).start();
         acceptConnection();
 
     }
@@ -207,16 +209,24 @@ public class Server {
     }
 
     public static void main(String[] args){
-
-
-
         Server server = new Server(args);
         server.startServer();
+
     }
 
     public void matchEnd(Match match){
         matches.remove(match);
     }
 
-
+    public ArrayList<Match> getMatches(){
+        return matches;
+    }
+    public Match getMatchWithId(int id){
+        for(Match match : matches){
+            if(id==match.getMatchID()){
+                return match;
+            }
+        }
+        return null;
+    }
 }

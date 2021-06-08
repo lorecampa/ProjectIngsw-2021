@@ -6,13 +6,19 @@ import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.*;
+import it.polimi.ingsw.message.serverMessage.ServerMessage;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.market.Marble;
 import it.polimi.ingsw.model.personalBoard.resourceManager.Depot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.*;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,6 +46,15 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.username = username;
         this.match = match;
         this.ready = false;
+    }
+
+    public void addToLog(ServerMessage msg){
+        SimpleDateFormat formatter=new SimpleDateFormat("HH:mm:ss");
+
+        String s= formatter.format( new Date())
+                +" - ["+username+"]"
+                +msg;
+        match.addToLog(s);
     }
 
     public ClientConnectionHandler getClient() { return client; }
@@ -235,4 +250,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
                 new DepotUpdate(depotUpdated.toClient(), index, isLeaderDepot, username)
         );
     }
+
+
 }
