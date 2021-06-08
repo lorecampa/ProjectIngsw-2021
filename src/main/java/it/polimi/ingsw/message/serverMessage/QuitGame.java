@@ -8,7 +8,6 @@ public class QuitGame implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleDisconnection();
-
         handler.getVirtualClient().ifPresent(x->x.addToLog(this));
     }
 

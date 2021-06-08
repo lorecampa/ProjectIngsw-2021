@@ -39,17 +39,7 @@ public class ClientGUI extends Application {
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
-
-        /*
-        stage.setOnCloseRequest(t -> {
-            Client.getInstance().writeToStream(new QuitGame());
-            Platform.exit();
-            System.exit(0);
-        });
-
-         */
-
-        scene.getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, this::closeWindowEvent);
+        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, this::closeWindowEvent);
 
     }
 
@@ -68,6 +58,10 @@ public class ClientGUI extends Application {
         if(res.isPresent()) {
             if(res.get().equals(ButtonType.CANCEL)){
                 event.consume();
+            }else if(res.get().equals(ButtonType.YES)){
+                Client.getInstance().writeToStream(new QuitGame());
+                Platform.exit();
+                System.exit(0);
             }
         }
     }

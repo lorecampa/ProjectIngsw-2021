@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -55,13 +56,12 @@ public class LogErrorController extends Controller{
     private Label createDateLabel(String date) {
         Label labelDate = new Label();
         labelDate.setWrapText(true);
-        labelDate.setPrefWidth(150);
+        labelDate.setPrefWidth(145);
         labelDate.setPrefHeight(70);
         labelDate.setMaxWidth(Region.USE_PREF_SIZE);
         labelDate.setMinWidth(Region.USE_PREF_SIZE);
-        labelDate.setTextFill(Color.RED);
         labelDate.setFont(new Font(15));
-        labelDate.setTextAlignment(TextAlignment.CENTER);
+        labelDate.setAlignment(Pos.CENTER);
 
         labelDate.setText(date);
         return labelDate;
@@ -70,13 +70,13 @@ public class LogErrorController extends Controller{
     private Label createErrorLabel(String error) {
         Label labelError = new Label();
         labelError.setWrapText(true);
-        labelError.setPrefWidth(150);
+        labelError.setPrefWidth(170);
         labelError.setPrefHeight(80);
         labelError.setMaxWidth(Region.USE_PREF_SIZE);
         labelError.setMinWidth(Region.USE_PREF_SIZE);
 
         labelError.setFont(new Font(15));
-        labelError.setTextAlignment(TextAlignment.CENTER);
+        labelError.setAlignment(Pos.CENTER);
         labelError.setText(error);
 
         return labelError;
@@ -84,10 +84,11 @@ public class LogErrorController extends Controller{
 
     private HBox createHboxContainer(){
         HBox container = new HBox();
-        container.setPrefWidth(400);
+        container.setPrefWidth(315);
         container.setPrefHeight(70);
         container.setMinWidth(Region.USE_PREF_SIZE);
         container.setMinHeight(Region.USE_PREF_SIZE);
+        container.setStyle("-fx-background-color: rgba(190,190,190,0.3);");
 
         return container;
     }

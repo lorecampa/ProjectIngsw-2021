@@ -98,7 +98,6 @@ public class ServerMessageHandler {
     }
 
     public void handleDisconnection(){
-        System.out.println("client disconnect");
         getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
                 ()->server.clientDisconnect(client));
     }

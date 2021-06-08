@@ -673,7 +673,7 @@ public class ModelClient {
     }
 
     public void addErrorInLog(String error){
-        String timeStamp = new SimpleDateFormat("dd-MM-yy HH:mm:ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
         errorMessagesLog.put(timeStamp, error);
     }
 
