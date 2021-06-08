@@ -66,6 +66,7 @@ public class CLIMessageHandler extends ClientMessageHandler {
     @Override
     public void reconnectGameSetUp(ReconnectGameMessage message) {
         super.reconnectGameSetUp(message);
+        client.setState(ClientState.IN_GAME);
         PrintAssistant.instance.printf("It's your turn!");
     }
 

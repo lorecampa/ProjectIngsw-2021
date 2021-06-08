@@ -64,7 +64,7 @@ public class MainMenuCMD implements Command{
                     PrintAssistant.instance.errorPrint("Some errors with files where your data to re-log are stored!");
                 }
                 client.writeToStream( new ReconnectionMessage(matchID,clientID));
-                client.setState(ClientState.ENTERING_LOBBY);
+                //client.setState(ClientState.ENTERING_LOBBY);
                 break;
         }
 
