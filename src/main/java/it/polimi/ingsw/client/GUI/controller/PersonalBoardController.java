@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -18,11 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,8 +91,8 @@ public class PersonalBoardController extends Controller{
     @FXML private Button btn_deck;
     @FXML private Button btn_discard1;
     @FXML private Button btn_discard2;
-    @FXML private ImageView prodLeader1;
-    @FXML private ImageView prodLeader2;
+    @FXML private ImageView effectLeader1;
+    @FXML private ImageView effectLeader2;
     @FXML private ImageView leader1;
     @FXML private ImageView leader2;
     @FXML private ImageView le_depot_11;
@@ -109,6 +107,7 @@ public class PersonalBoardController extends Controller{
     @FXML private AnchorPane bufferBox;
     @FXML private Button discardMarketResBtn;
     @FXML private Label bufferCustomLabel;
+    @FXML private GridPane bufferGrid;
 
     @FXML private Button selectSlot1Btn;
     @FXML private Button selectSlot2Btn;
@@ -163,7 +162,7 @@ public class PersonalBoardController extends Controller{
     private int rowDevCard;
     private int colDevCard;
     private final ArrayList<Button> selectCardSlotButtons = new ArrayList<>();
-    private final ArrayList<ImageView> leadersProd = new ArrayList<>();
+    private final ArrayList<ImageView> leadersEffect = new ArrayList<>();
     private final ArrayList<Button> discardButton = new ArrayList<>();
 
     private final HashMap<ResourceType, ImageView> resourceBufferImages = new HashMap<>();
@@ -245,11 +244,10 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setUpLeadersProd(){
-        leadersProd.add(prodLeader1);
-        leadersProd.add(prodLeader2);
+        leadersEffect.add(effectLeader1);
+        leadersEffect.add(effectLeader2);
 
-        prodLeader1.setVisible(false);
-        prodLeader2.setVisible(false);
+        leadersEffect.forEach(imageView -> imageView.setVisible(false));
     }
 
     private void setUpDepots(){
@@ -464,8 +462,11 @@ public class PersonalBoardController extends Controller{
             imageView.setOnDragOver(null);
             imageView.setOnDragDropped(null);
         }));
-        leadersProd.forEach(imageView -> imageView.setVisible(false));
-        //TODO ADD MARBLE
+
+        leadersEffect.forEach(imageView -> {
+            imageView.setVisible(false);
+            imageView.setOnMouseClicked(null);
+        });
 
         //DEPOTS
         depots.forEach(imageViews -> imageViews.forEach(imageView -> {
@@ -599,8 +600,10 @@ public class PersonalBoardController extends Controller{
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
         for (int i = 0; i < leadersData.size(); i++) {
             if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.PRODUCTION))
-                    && leadersData.get(i).isActive())
-                leadersProd.get(i).setVisible(true);
+                    && leadersData.get(i).isActive()) {
+                leadersEffect.get(i).setVisible(true);
+                leadersEffect.get(i).setOnMouseClicked(this::leaderProdClicked);
+            }
         }
 
         //BASE PROD
@@ -614,6 +617,9 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    private void setBoardForAnyConv(){
+        disableLeaderAndButtons();
+    }
 
     private void setDisableBoardForOther(boolean disable){
         btn_prod.setVisible(!disable);
@@ -621,7 +627,18 @@ public class PersonalBoardController extends Controller{
         btn_deck.setVisible(!disable);
     }
 
+    private void setBoardForMarbleConv(){
+        disableLeaderAndButtons();
+        ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
+        for (int i = 0; i < leadersData.size(); i++) {
+            if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.MARBLE))
+                    && leadersData.get(i).isActive()) {
+                leadersEffect.get(i).setVisible(true);
+                leadersEffect.get(i).setOnMouseClicked(this::leaderMarbleClicked);
+            }
+        }
 
+    }
 
     //-------------------------
     // RESET
@@ -734,10 +751,19 @@ public class PersonalBoardController extends Controller{
     }
 
     @FXML
+    public void leaderMarbleClicked(MouseEvent actionEvent){
+        System.out.println("leader marble");
+        if (actionEvent.getSource().equals(effectLeader1))
+            Client.getInstance().writeToStream(new WhiteMarbleConversionResponse(0, 1));
+        else
+            Client.getInstance().writeToStream(new WhiteMarbleConversionResponse(1, 1));
+    }
+
+    @FXML
     public void leaderProdClicked(MouseEvent actionEvent){
         System.out.println("leader prod");
         prodState = ProdState.ALREADY_PROD;
-        if (actionEvent.getSource().equals(prodLeader1))
+        if (actionEvent.getSource().equals(effectLeader1))
            Client.getInstance().writeToStream(new ProductionAction(0, true));
         else
            Client.getInstance().writeToStream(new ProductionAction(1, true));
@@ -831,11 +857,23 @@ public class PersonalBoardController extends Controller{
     //ANY CONVERSION REQUEST
 
     public void endLocalProduction(){
+        setStandardBoard();
         bufferBox.setVisible(false);
+    }
+
+    public void setUpMarbleConv(){
+        setBoardForMarbleConv();
+        bufferGrid.setVisible(false);
+        bufferBox.setVisible(true);
     }
 
     public void setUpAnyConversion(ArrayList<ResourceData> conversion, int num){
         resetBuffer();
+
+        setBoardForAnyConv();
+
+        bufferGrid.setVisible(true);
+
         resourceBufferImages.values().forEach(x -> x.setDisable(false));
         resourceBufferDecreaseBtnMap.values().forEach(x -> x.setOnAction(this::decreaseAnySelected));
         anyConverted.keySet().forEach(x -> anyConverted.put(x, 0));
@@ -994,6 +1032,7 @@ public class PersonalBoardController extends Controller{
 
     public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
         resetBuffer();
+        bufferGrid.setVisible(true);
         resourceBufferLabelsMap.values().forEach(x -> x.setVisible(true));
         discardMarketResBtn.setVisible(true);
         for (ResourceData res : resources) {

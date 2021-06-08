@@ -212,7 +212,7 @@ public class Controller {
 
         try{
             market.setWhiteMarbleToTransform(numOfWhiteMarble);
-            cardManager.activateLeaderEffect(leaderIndex, getPlayerState());
+            cardManager.activateLeaderInfinite(leaderIndex, getPlayerState());
 
             if(market.getWhiteMarbleDrew() == 0){
                 getPlayerRM().resourceFromMarket(market.getResourceToSend());

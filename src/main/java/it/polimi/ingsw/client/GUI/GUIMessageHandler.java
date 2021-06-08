@@ -245,8 +245,13 @@ public class GUIMessageHandler extends ClientMessageHandler {
     }
 
     @Override
-    public void whiteMarbleConversion(WhiteMarbleConversionRequest message) {
-
+    public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
+        Platform.runLater(()-> {
+            PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            controller.setBufferLabel("You have to convert " + message.getNumOfWhiteMarbleDrew() + "\n white marbles into concrete resources");
+            ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+            controller.setUpMarbleConv();
+        });
     }
 
     @Override

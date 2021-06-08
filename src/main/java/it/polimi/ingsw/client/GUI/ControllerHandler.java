@@ -53,7 +53,8 @@ public class ControllerHandler {
         player = new MediaPlayer(pick);
         player.setAutoPlay(true);
         player.setCycleCount(MediaPlayer.INDEFINITE);
-        player.setVolume(10);
+        //TODO change volume
+        player.setVolume(0);
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
             player.play();

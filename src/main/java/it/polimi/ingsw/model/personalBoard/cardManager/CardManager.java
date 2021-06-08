@@ -160,6 +160,12 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leadersUsed.add(leader);
     }
 
+    public void activateLeaderInfinite(int leaderIndex, PlayerState playerState) throws InvalidStateActionException, NotEnoughRequirementException {
+        checkPlayerState(PlayerState.WHITE_MARBLE_CONVERSION);
+        Leader leader = leaders.get(leaderIndex);
+        leader.doEffects(playerState);
+    }
+
     /**
      * Method to activate the production of a development card
      * @param indexCardSlot is the card slot in which the card is in it
