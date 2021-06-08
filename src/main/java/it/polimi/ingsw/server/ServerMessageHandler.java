@@ -9,6 +9,7 @@ import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -85,7 +86,10 @@ public class ServerMessageHandler {
 
     public void handleMatchCreation(ConnectionMessage message){
         if (!isServerPhaseCorrect(HandlerState.NUM_OF_PLAYER)) return;
-        server.createMatch(message.getNum(),client);
+        try {server.createMatch(message.getNum(),client);}
+        catch (InvalidParameterException exception){
+            client.writeToStream(new ErrorMessage(exception.getMessage()));
+        }
     }
 
     public void handleUsernameInput(ConnectionMessage message){

@@ -29,13 +29,15 @@ public class UsernameCMD implements Command{
             PrintAssistant.instance.invalidStateCommand(cmd);
             return;
         }
-        //System.out.println("--"+param+"---");
         String[] split= param.split(" ", 2);
         if(split.length>1){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        //System.out.println("--"+split[0]+"---");
+        if (split[0].length() == 0){
+            PrintAssistant.instance.invalidParamCommand(cmd);
+            return;
+        }
         client.setMyName(split[0]);
         client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, split[0]));
     }

@@ -16,9 +16,9 @@
             <Image url="@ImageBk/bk1.jpg" />
          </image>
       </ImageView>
-      <AnchorPane fx:id="customMessageBox" prefHeight="63.0" prefWidth="721.0">
+      <AnchorPane fx:id="customMessageBox" layoutX="6.0" layoutY="62.0" prefHeight="63.0" prefWidth="505.0" styleClass="panel" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
          <children>
-            <Label fx:id="customMessageLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="23.0" prefHeight="17.0" prefWidth="784.0" text="Custom Message" textAlignment="CENTER">
+            <Label fx:id="customMessageLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="23.0" prefHeight="20.0" prefWidth="501.0" text="Custom Message" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></Label>

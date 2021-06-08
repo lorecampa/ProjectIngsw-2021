@@ -8,6 +8,7 @@ import it.polimi.ingsw.message.clientMessage.ErrorType;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,7 +90,11 @@ public class Server {
         }
     }
 
-    public void createMatch(int numOfPlayer, ClientConnectionHandler player){
+    public void createMatch(int numOfPlayer, ClientConnectionHandler player) throws InvalidParameterException{
+
+        if (numOfPlayer<1 || numOfPlayer >4)
+            throw new InvalidParameterException("Number of players has to be between 1 and 4");
+
         Match newMatch = new Match(numOfPlayer, this, getNextMatchID());
         synchronized (lobby){
             if (!lobby.contains(player) || !lobby.get(0).equals(player))

@@ -12,45 +12,50 @@
 
 <AnchorPane fx:id="background" prefHeight="393.0" prefWidth="598.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.SetupController">
    <children>
-      <ImageView fitHeight="284.0" fitWidth="423.0" layoutX="106.0" layoutY="71.0" pickOnBounds="true" scaleX="1.5" scaleY="1.5" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="106.0" AnchorPane.rightAnchor="74.33333333333337" AnchorPane.topAnchor="71.0">
+      <ImageView fitHeight="271.0" fitWidth="404.0" layoutX="99.0" layoutY="65.0" pickOnBounds="true" scaleX="1.5" scaleY="1.5">
          <image>
             <Image url="@ImageBk/bk1.jpg" />
          </image>
       </ImageView>
-      <AnchorPane layoutX="-18.0" prefHeight="402.0" prefWidth="621.0">
+      <AnchorPane layoutX="-3.0" prefHeight="402.0" prefWidth="606.0">
          <children>
-            <Text fill="#d4ad22" layoutX="1.0" layoutY="51.0" stroke="#967828" strokeType="OUTSIDE" strokeWidth="0.5" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="600.0">
+            <Text fill="#d4ad22" layoutX="30.0" layoutY="14.0" stroke="#967828" strokeType="OUTSIDE" strokeWidth="0.5" text="Masters of Renaissance" textAlignment="CENTER" wrappingWidth="500.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="20.0">
                <font>
                   <Font name="Old English Text MT" size="43.0" />
                </font>
             </Text>
-            <AnchorPane fx:id="usernameBox" layoutX="201.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" styleClass="panel" visible="false">
+            <AnchorPane fx:id="usernameBox" layoutX="201.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" styleClass="panel" visible="false" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="203.0">
                <children>
                   <TextField fx:id="username" alignment="CENTER" layoutX="20.0" layoutY="100.0" prefWidth="157.0" styleClass="inputTypeText" />
                   <Label alignment="CENTER" layoutX="28.0" layoutY="68.0" prefHeight="17.0" prefWidth="149.0" styleClass="lableText" text="Username" textAlignment="CENTER" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="numOfPlayerBox" layoutX="201.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" styleClass="panel">
+            <AnchorPane fx:id="numOfPlayerBox" layoutX="201.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" styleClass="panel" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="203.0">
                <children>
                   <TextField fx:id="numOfPlayer" alignment="CENTER" layoutX="22.0" layoutY="100.0" prefHeight="25.0" prefWidth="157.0" styleClass="inputTypeText" />
                   <Label alignment="CENTER" layoutX="2.0" layoutY="69.0" prefHeight="17.0" prefWidth="185.0" styleClass="lableText" text="Number of players" textAlignment="CENTER" />
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="198.0" layoutY="313.0" prefHeight="42.0" prefWidth="206.0" styleClass="panel">
+            <AnchorPane layoutX="198.0" layoutY="313.0" prefHeight="50.0" prefWidth="200.0" styleClass="panel" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="203.0">
                <children>
-                  <Button fx:id="playButton" layoutX="56.0" layoutY="9.0" mnemonicParsing="false" onAction="#sendData" prefHeight="25.0" prefWidth="95.0" styleClass="buttons" text="Next" />
+                  <Button fx:id="playButton" layoutX="56.0" layoutY="9.0" mnemonicParsing="false" onAction="#sendData" prefHeight="35.0" prefWidth="92.0" styleClass="buttons" text="Next" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="54.0" AnchorPane.topAnchor="4.0" />
                </children>
             </AnchorPane>
-            <Label fx:id="customMessage" alignment="CENTER" contentDisplay="CENTER" layoutX="-3.0" layoutY="84.0" prefHeight="17.0" prefWidth="621.0" text="Custom Message" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
-            <ImageView fx:id="musicImage" fitHeight="27.0" fitWidth="36.0" layoutX="580.0" layoutY="361.0" onMouseClicked="#changeMusic" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="musicImage" fitHeight="27.0" fitWidth="36.0" layoutX="554.0" layoutY="361.0" onMouseClicked="#changeMusic" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@icons/speaker.png" />
                </image>
             </ImageView>
-            <Slider fx:id="musicVolume" layoutX="587.0" layoutY="221.0" orientation="VERTICAL" />
+            <Slider fx:id="musicVolume" layoutX="558.0" layoutY="217.0" orientation="VERTICAL" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="customMessageBox" layoutX="16.0" layoutY="72.0" prefHeight="63.0" prefWidth="500.0" styleClass="panel" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+         <children>
+            <Label fx:id="customMessageLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="23.0" prefHeight="20.0" prefWidth="500.0" text="Custom Message" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

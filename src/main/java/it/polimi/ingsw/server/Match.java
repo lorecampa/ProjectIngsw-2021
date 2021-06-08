@@ -112,11 +112,15 @@ public class Match {
         synchronized (allPlayers){
 
             boolean valid = true;
-            for (VirtualClient otherPlayer : allPlayers){
-                if ((!otherPlayer.equals(player) && otherPlayer.getUsername().equals(username))
-                        ||username.equalsIgnoreCase("LorenzoIlMagnifico")) {
-                    valid = false;
-                    break;
+            if (username.length() == 0)
+                valid = false;
+            else {
+                for (VirtualClient otherPlayer : allPlayers) {
+                    if ((!otherPlayer.equals(player) && otherPlayer.getUsername().equals(username))
+                            || username.equalsIgnoreCase("LorenzoIlMagnifico")) {
+                        valid = false;
+                        break;
+                    }
                 }
             }
             if (valid) {
