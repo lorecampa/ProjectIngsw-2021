@@ -182,10 +182,6 @@ public class PersonalBoardController extends Controller{
     @FXML
     public void initialize(){
         prodState = ProdState.NOT_IN_PROD;
-
-        btn_back.setVisible(false);
-        bufferBox.setVisible(false);
-
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -500,6 +496,11 @@ public class PersonalBoardController extends Controller{
         btn_endTurn.setVisible(true);
         btn_deck.setVisible(true);
 
+        btn_back.setVisible(false);
+        bufferBox.setVisible(false);
+
+        customMessageBox.setVisible(false);
+
         btn_deck.setText("DECK DEV");
         btn_deck.setOnAction(event -> showDeckDev());
     }
@@ -627,6 +628,8 @@ public class PersonalBoardController extends Controller{
     //---
 
     private void resetBoard(){
+        btn_back.setVisible(false);
+        bufferBox.setVisible(false);
         resetFaithTrack();
         resetStandardDepots();
         resetLeaderDepots();

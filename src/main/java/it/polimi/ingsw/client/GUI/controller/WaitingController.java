@@ -31,4 +31,6 @@ public class WaitingController extends Controller {
     public void setPreMatchMessage(){
         message.setText("Waiting for other players to finish pre-match setup");
     }
+
+    public void setReconnectMessage(String username){message.setText("Reconnected as " + username + "\nWaiting for your turn to load the game");}
 }

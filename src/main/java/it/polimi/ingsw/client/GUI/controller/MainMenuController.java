@@ -4,10 +4,12 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
+import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.command.MainMenuCMD;
 import it.polimi.ingsw.client.command.QuitCMD;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
+import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.serverMessage.QuitGame;
 import it.polimi.ingsw.message.serverMessage.SinglePlayerMessage;
 import javafx.application.Platform;
@@ -27,7 +29,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class MainMenuController extends Controller{
     public final ControllerHandler handler = ControllerHandler.getInstance();
@@ -45,6 +51,9 @@ public class MainMenuController extends Controller{
 
     @FXML
     Button singleBtn;
+
+    @FXML
+    Button reconnectBtn;
 
     @FXML
     Button quitBtn;
@@ -89,6 +98,20 @@ public class MainMenuController extends Controller{
         ControllerHandler.getInstance().changeMusic();
         ControllerHandler.getInstance().setMusicImage(musicImage);
 
+    }
+
+    @FXML
+    public void reconnect() throws FileNotFoundException {
+        int matchID;
+        int clientID;
+
+        File file = new File(client.getNameFile());
+        Scanner scanner= new Scanner(file);
+        matchID=Integer.parseInt(scanner.nextLine());
+        clientID=Integer.parseInt(scanner.nextLine());
+
+        client.writeToStream( new ReconnectionMessage(matchID,clientID));
+        client.setState(ClientState.ENTERING_LOBBY);
     }
 
 

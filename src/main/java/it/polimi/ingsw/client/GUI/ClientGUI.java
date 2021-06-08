@@ -1,8 +1,12 @@
 package it.polimi.ingsw.client.GUI;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.controller.Controller;
 
+import it.polimi.ingsw.message.serverMessage.QuitGame;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -11,6 +15,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -32,6 +37,12 @@ public class ClientGUI extends Application {
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);
         stage.show();
+
+        stage.setOnCloseRequest(t -> {
+            Client.getInstance().writeToStream(new QuitGame());
+            Platform.exit();
+            System.exit(0);
+        });
 
     }
 

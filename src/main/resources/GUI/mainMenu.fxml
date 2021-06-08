@@ -22,8 +22,13 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="panel" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="200.0">
          <children>
             <Button fx:id="singleBtn" layoutX="46.0" layoutY="72.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="SinglePlayer" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
-            <Button fx:id="quitBtn" layoutX="46.0" layoutY="137.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Quit" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
             <Button fx:id="multiBtn" alignment="CENTER" layoutX="46.0" layoutY="7.0" mnemonicParsing="false" onAction="#playMultiplayer" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Multiplayer" textAlignment="CENTER" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
+            <Button fx:id="reconnectBtn" layoutX="54.0" layoutY="137.0" mnemonicParsing="false" onAction="#reconnect" prefHeight="55.0" prefWidth="92.0" styleClass="buttons" text="Reconnect" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="52.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="442.0" layoutY="318.0" prefHeight="71.0" prefWidth="92.0" styleClass="panel">
+         <children>
+            <Button fx:id="quitBtn" layoutX="10.0" layoutY="8.0" mnemonicParsing="false" onAction="#quitGame" prefHeight="55.0" prefWidth="72.0" styleClass="buttons" text="Quit" />
          </children>
       </AnchorPane>
       <ImageView fx:id="musicImage" fitHeight="24.0" fitWidth="24.0" layoutX="562.0" layoutY="370.0" onMouseClicked="#changeMusic" pickOnBounds="true" preserveRatio="true">

@@ -36,7 +36,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void reconnectGameSetUp(ReconnectGameMessage message) {
         super.reconnectGameSetUp(message);
         Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage("It's your turn!");
+            controllerHandler.changeView(Views.PERSONAL_BOARD);
         });
     }
 
@@ -44,7 +44,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void validReconnect(ConnectionMessage message) {
         super.validReconnect(message);
         Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage("Reconnected as "+message.getMessage()+"!");
+            WaitingController waitingController = (WaitingController) controllerHandler.getController(Views.WAITING);
+            waitingController.setReconnectMessage(message.getMessage());
+            controllerHandler.changeView(Views.WAITING);
         });
     }
 
