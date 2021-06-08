@@ -64,6 +64,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleError(ErrorMessage message) {
         String error = (message.getErrorType() == null)?message.getCustomError():message.getErrorType().getMessage();
+        Client.getInstance().getMyModel().addErrorInLog(error);
         Platform.runLater(()->{
             controllerHandler.getCurrentController().showCustomMessage(error);
         });

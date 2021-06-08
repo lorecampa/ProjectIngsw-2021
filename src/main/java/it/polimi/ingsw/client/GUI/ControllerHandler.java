@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.GUI;
 
 import it.polimi.ingsw.client.GUI.controller.Controller;
-import it.polimi.ingsw.client.GUI.controller.PreGameSelectionController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -51,7 +50,7 @@ public class ControllerHandler {
         player = new MediaPlayer(pick);
         player.setAutoPlay(true);
         player.setCycleCount(MediaPlayer.INDEFINITE);
-        //TODO change volume
+        //TODO change volume 0.2 is the best
         player.setVolume(0);
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);

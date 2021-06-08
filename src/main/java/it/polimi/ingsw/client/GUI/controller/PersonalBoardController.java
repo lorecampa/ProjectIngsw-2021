@@ -129,6 +129,9 @@ public class PersonalBoardController extends Controller{
     @FXML private Label bufferTop3;
     @FXML private Button decreaseResBuffer3;
 
+    //TODO make it not visible if not your view
+    @FXML private ImageView logError;
+
 
     @FXML private ImageView imageBuffer4;
     @FXML private Label labelBuffer4;
@@ -1187,5 +1190,12 @@ public class PersonalBoardController extends Controller{
     @FXML
     public void endTurn(){
         Client.getInstance().writeToStream(new EndTurn());
+    }
+
+
+
+    @FXML
+    public void showLogError(){
+        ControllerHandler.getInstance().changeView(Views.LOG_ERROR);
     }
 }

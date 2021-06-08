@@ -8,6 +8,7 @@ public enum Views {
     MARKET("/GUI/market"),
     PERSONAL_BOARD("/GUI/personalBoard"),
     DECK_DEV("/GUI/deckDevelopment"),
+    LOG_ERROR("/GUI/logError"),
     GAME_END("/GUI/gameEnded");
 
     private final String name;

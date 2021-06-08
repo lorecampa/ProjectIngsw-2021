@@ -585,6 +585,11 @@
                </font></Label>
          </children>
       </AnchorPane>
+      <ImageView fx:id="logError" fitHeight="69.0" fitWidth="71.0" layoutX="1134.0" layoutY="721.0" onMouseClicked="#showLogError" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@punchboard/red_marble.png" />
+         </image>
+      </ImageView>
    </children>
    <stylesheets>
       <URL value="@css/mainMenu.css" />

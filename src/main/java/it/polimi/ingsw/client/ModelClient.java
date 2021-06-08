@@ -3,7 +3,12 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.OptionalInt;
 
 public class ModelClient {
@@ -24,8 +29,9 @@ public class ModelClient {
     private ArrayList<ArrayList<CardDevData>> cardSlots = new ArrayList<>();
     private ArrayList<EffectData> baseProduction;
     private ArrayList<CardLeaderData> leaders = new ArrayList<>();
-
     private final ArrayList<ResourceData> discounts = new ArrayList<>();
+
+    private final LinkedHashMap<String, String> errorMessagesLog = new LinkedHashMap<>();
 
     //attributes to CLI
     int lengthInChar = DIM_CELL_CHAR*NUMBER_OF_CELL_FAITH;
@@ -664,6 +670,15 @@ public class ModelClient {
 
     public boolean isInkwell() {
         return inkwell;
+    }
+
+    public void addErrorInLog(String error){
+        String timeStamp = new SimpleDateFormat("dd-MM-yy HH:mm:ss").format(new Date());
+        errorMessagesLog.put(timeStamp, error);
+    }
+
+    public LinkedHashMap<String, String> getErrorMessagesLog() {
+        return errorMessagesLog;
     }
 
     @Override
