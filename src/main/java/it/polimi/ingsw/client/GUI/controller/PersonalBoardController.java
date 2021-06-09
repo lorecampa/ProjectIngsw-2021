@@ -493,7 +493,8 @@ public class PersonalBoardController extends Controller{
         baseProd.setDisable(true);
 
         //BUTTONS
-        btn_prod.setVisible(true);
+        //btn_prod.setVisible(true);
+
         btn_market.setVisible(true);
         choice_username.setVisible(true);
         btn_players.setVisible(true);
@@ -582,6 +583,10 @@ public class PersonalBoardController extends Controller{
     private void disableLeader(){
         leaders.forEach(imageView -> imageView.setDisable(true));
         discardButton.forEach(button -> button.setDisable(true));
+    }
+
+    public void enableProd(){
+        btn_prod.setVisible(true);
     }
 
     private void disableLeaderAndButtons(){
@@ -1200,6 +1205,7 @@ public class PersonalBoardController extends Controller{
         if (bufferUpdated.stream().mapToInt(ResourceData::getValue).sum() == 0){
             bufferBox.setVisible(false);
             setStandardBoard();
+            btn_prod.setVisible(false);
         }else{
             resourceBufferLabelsMap.values().forEach(x -> x.setText(Integer.toString(0)));
             for (ResourceType type: resourceBufferImages.keySet()){

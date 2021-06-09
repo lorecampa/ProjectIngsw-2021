@@ -104,6 +104,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
         super.newTurn(message);
         String msg = "Is "+ message.getUsername() + " turn";
         Platform.runLater(()->{
+            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+            personalBoardController.enableProd();
+            controllerHandler.changeView(Views.PERSONAL_BOARD);
             controllerHandler.getCurrentController().showCustomMessage(msg);
         });
     }
