@@ -65,8 +65,10 @@ public class GameEndedController extends Controller{
         ControllerHandler.getInstance().changeView(Views.MAIN_MENU);
     }
 
-
-
-
-
+    @FXML
+    public void back(){
+        PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+        controller.setUpForEnd();
+    }
 }

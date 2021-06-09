@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.GUI.controller;
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import it.polimi.ingsw.client.ModelClient;
@@ -129,7 +130,6 @@ public class PersonalBoardController extends Controller{
     @FXML private Label bufferTop3;
     @FXML private Button decreaseResBuffer3;
 
-    //TODO make it not visible if not your view
     @FXML private ImageView logError;
 
 
@@ -501,9 +501,12 @@ public class PersonalBoardController extends Controller{
         btn_deck.setVisible(true);
 
         btn_back.setVisible(false);
+
         bufferBox.setVisible(false);
 
         customMessageBox.setVisible(false);
+
+        logError.setVisible(true);
 
         btn_deck.setText("DECK DEV");
         btn_deck.setOnAction(event -> showDeckDev());
@@ -511,8 +514,7 @@ public class PersonalBoardController extends Controller{
 
     private void setBoardForBuy(){
         //disable leader
-        leaders.forEach(imageView -> imageView.setDisable(true));
-        discardButton.forEach(button -> button.setDisable(true));
+        disableLeader();
 
         //disable buttons
         btn_prod.setVisible(false);
@@ -520,6 +522,8 @@ public class PersonalBoardController extends Controller{
         choice_username.setVisible(false);
         btn_players.setVisible(false);
         btn_endTurn.setVisible(false);
+
+        logError.setVisible(false);
 
         //enable card slot selection
         selectCardSlotButtons.forEach(x -> x.setVisible(true));
@@ -545,6 +549,8 @@ public class PersonalBoardController extends Controller{
             x.setOnMouseClicked(this::removeDepotRes);
         }));
 
+        logError.setVisible(false);
+
         disableLeaderAndButtons();
     }
 
@@ -567,15 +573,20 @@ public class PersonalBoardController extends Controller{
                     imageView.setOnDragDropped(this::dragDropped);
                 }));
 
+        logError.setVisible(false);
+
         disableLeaderAndButtons();
 
     }
 
-    private void disableLeaderAndButtons(){
-        //disable leader
+    private void disableLeader(){
         leaders.forEach(imageView -> imageView.setDisable(true));
         discardButton.forEach(button -> button.setDisable(true));
+    }
 
+    private void disableLeaderAndButtons(){
+        //disable leader
+        disableLeader();
         //disable buttons
         btn_prod.setVisible(false);
         btn_market.setVisible(false);
@@ -587,8 +598,9 @@ public class PersonalBoardController extends Controller{
 
     private void setBoardForProd(){
         //disable leader
-        leaders.forEach(imageView -> imageView.setDisable(true));
-        discardButton.forEach(button -> button.setDisable(true));
+        disableLeader();
+
+        logError.setVisible(false);
 
         //disable buttons
         btn_market.setVisible(false);
@@ -598,6 +610,7 @@ public class PersonalBoardController extends Controller{
         btn_endTurn.setVisible(false);
 
         btn_prod.setText("END PRODUCTION");
+        btn_prod.setVisible(true);
 
         //LEADER PROD
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
@@ -621,17 +634,14 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setBoardForAnyConv(){
-        disableLeaderAndButtons();
-    }
 
-    private void setDisableBoardForOther(boolean disable){
-        btn_prod.setVisible(!disable);
-        btn_market.setVisible(!disable);
-        btn_deck.setVisible(!disable);
+        logError.setVisible(false);
+        disableLeaderAndButtons();
     }
 
     private void setBoardForMarbleConv(){
         disableLeaderAndButtons();
+        logError.setVisible(false);
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
         for (int i = 0; i < leadersData.size(); i++) {
             if (leadersData.get(i).getEffects().stream().anyMatch(effectData -> effectData.getType().equals(EffectType.MARBLE))
@@ -640,7 +650,11 @@ public class PersonalBoardController extends Controller{
                 leadersEffect.get(i).setOnMouseClicked(this::leaderMarbleClicked);
             }
         }
+    }
 
+    private void setBoardForEndGame(){
+        logError.setVisible(false);
+        disableLeaderAndButtons();
     }
 
     //-------------------------
@@ -693,7 +707,6 @@ public class PersonalBoardController extends Controller{
     @Override
     public void setUpAll(){
         resetBoard();
-        setDisableBoardForOther(false);
 
         ModelData model = Client.getInstance().getMyModel().toModelData();
         loadBoard(model);
@@ -713,11 +726,18 @@ public class PersonalBoardController extends Controller{
 
     public void setUpOtherPlayer(String username){
         resetBoard();
-        setDisableBoardForOther(true);
+
+        btn_prod.setVisible(false);
+        btn_market.setVisible(false);
+        btn_deck.setVisible(false);
 
         ModelData model = Client.getInstance().getModelOf(username).toModelData();
         loadBoard(model);
 
+        logError.setVisible(false);
+
+        btn_back.setText("BACK");
+        btn_back.setOnAction(t -> back());
         btn_back.setVisible(true);
 
         currentShowed = username;
@@ -860,7 +880,7 @@ public class PersonalBoardController extends Controller{
     //ANY CONVERSION REQUEST
 
     public void endLocalProduction(){
-        setStandardBoard();
+        setBoardForProd();
         bufferBox.setVisible(false);
     }
 
@@ -952,6 +972,18 @@ public class PersonalBoardController extends Controller{
         resourceBufferTopLabelsMap.get(typeSource).setText(Integer.toString(oldTopNum + 1));
 
         resourceBufferImages.get(typeSource).setDisable(false);
+    }
+
+    //END GAME
+    public void setUpForEnd(){
+        setBoardForEndGame();
+        btn_back.setText("MAIN MENU");
+        btn_back.setVisible(true);
+        btn_back.setOnAction(event -> {
+            Client.getInstance().setState(ClientState.MAIN_MENU);
+            Client.getInstance().clearModels();
+            ControllerHandler.getInstance().changeView(Views.MAIN_MENU);
+        });
     }
 
     //RESOURCE FORM MARKET METHODS
