@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.requirement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -16,10 +17,12 @@ import java.util.Collections;
  * Class CardReq represent a class for all kind of card requirement
  */
 public class CardReq implements Requirement {
+    @JsonIgnore
+    CardManager cardManager = null;
+
     Color color;
     int level;
     int numRequired;
-    CardManager cardManager = null;
 
     /**
      * Constructor CardReq creates a new CardReq instance

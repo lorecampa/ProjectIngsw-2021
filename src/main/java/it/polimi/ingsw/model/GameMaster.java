@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,11 +33,12 @@ import java.util.stream.Collectors;
  * GameMaster class
  */
 public class GameMaster implements GameMasterObserver,Observable<ModelObserver>, LorenzoIlMagnifico {
-
+    @JsonIgnore
     List<ModelObserver> modelObserverList = new ArrayList<>();
+    @JsonIgnore
+    ObjectMapper mapper;
 
     private PlayerState playerState;
-    ObjectMapper mapper;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
     private int numberOfPlayer;
@@ -45,13 +47,14 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     private ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment;
     private LinkedList<Leader> deckLeader;
     private Market market;
-    private String faithTrackSerialized;
     private LinkedList<Token> deckToken;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
     private boolean isLastTurn = false;
     private boolean gameEnded = false;
+
     private String baseProductionSerialized;
+    private String faithTrackSerialized;
 
 
     public static String getNameLorenzo() {

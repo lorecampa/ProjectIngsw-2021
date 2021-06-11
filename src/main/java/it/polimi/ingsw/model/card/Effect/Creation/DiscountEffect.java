@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.EffectType;
@@ -19,8 +20,10 @@ import java.util.stream.Collectors;
  * Discount class defines represent all effect that concern a discount
  */
 public class DiscountEffect implements Effect {
-    private final ArrayList<Resource> discounts;
+    @JsonIgnore
     private ResourceManager resourceManager = null;
+
+    private final ArrayList<Resource> discounts;
 
     /**
      * Constructor DiscountEffect creates a new DiscountEffect instance

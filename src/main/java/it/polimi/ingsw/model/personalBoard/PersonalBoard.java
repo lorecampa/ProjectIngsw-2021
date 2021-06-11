@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.PlayerState;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class PersonalBoard {
+
     private final FaithTrack faithTrack;
     private final CardManager cardManager;
     private final ResourceManager resourceManager;
@@ -67,6 +69,7 @@ public class PersonalBoard {
         faithTrack.attachObserver(virtualClient);
         resourceManager.attachObserver(virtualClient);
         cardManager.attachObserver(virtualClient);
+
     }
 
     public ModelData toClient(boolean isCurrentPlayer){

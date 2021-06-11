@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Creation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.EffectType;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
  * Class WarehouseEffect defines a class for all effect that modify the warehouse structure
  */
 public class WarehouseEffect  implements Effect {
-    private final ArrayList<Resource> depots;
+    @JsonIgnore
     private ResourceManager resourceManager = null;
 
-
+    private final ArrayList<Resource> depots;
 
     /**
      * Constructor WarehouseEffect creates a new WarehouseEffect instance

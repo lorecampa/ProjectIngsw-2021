@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.market;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  * Class that manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
  */
 public class Market extends GameMasterObservable implements Observable<MarketObserver> {
+    @JsonIgnore
     List<MarketObserver> marketObserverList = new ArrayList<>();
 
     private final int numCol;

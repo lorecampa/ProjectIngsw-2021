@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -25,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CardManager extends GameMasterObservable implements Observable<CardManagerObserver> {
+    @JsonIgnore
     List<CardManagerObserver> cardManagerObserverList = new ArrayList<>();
 
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();

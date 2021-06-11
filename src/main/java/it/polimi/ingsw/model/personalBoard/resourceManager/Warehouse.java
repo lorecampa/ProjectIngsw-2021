@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import java.util.ArrayList;
 import java.util.OptionalInt;
 
-public class Warehouse implements Cloneable{
+public class Warehouse{
     private ArrayList<Depot> depots = new ArrayList<>();
     private ArrayList<Depot> depotsLeader = new ArrayList<>();
 

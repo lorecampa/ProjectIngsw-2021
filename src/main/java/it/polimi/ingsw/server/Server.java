@@ -1,14 +1,22 @@
 package it.polimi.ingsw.server;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -221,6 +229,7 @@ public class Server {
     public ArrayList<Match> getMatches(){
         return matches;
     }
+
     public Match getMatchWithId(int id){
         for(Match match : matches){
             if(id==match.getMatchID()){
@@ -229,4 +238,5 @@ public class Server {
         }
         return null;
     }
+
 }

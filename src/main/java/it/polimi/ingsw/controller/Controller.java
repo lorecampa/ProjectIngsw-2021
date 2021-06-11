@@ -33,9 +33,6 @@ public class Controller {
     }
 
 
-
-
-
     public int getNumberOfPlayer(){
         return gameMaster.getNumberOfPlayer();
     }
@@ -52,9 +49,6 @@ public class Controller {
     public PlayerState getPlayerState(){
         return gameMaster.getPlayerState();
     }
-
-
-
 
 
     public String getCurrentPlayer(){
@@ -486,5 +480,7 @@ public class Controller {
 
     }
 
-
+    public GameMaster getGameMaster() {
+        return gameMaster;
+    }
 }

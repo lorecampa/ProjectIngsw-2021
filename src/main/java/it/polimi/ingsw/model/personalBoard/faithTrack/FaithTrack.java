@@ -17,6 +17,7 @@ import java.util.function.Consumer;
  * Class that manage the Faith Track of a player
  */
 public class FaithTrack extends GameMasterObservable  implements Observable<FaithTrackObserver>{
+    @JsonIgnore
     List<FaithTrackObserver> faithTrackObserverList = new ArrayList<>();
 
     private int victoryPoints;
