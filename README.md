@@ -11,7 +11,7 @@
 | Basic rules | <img src="DoneClipArt.png" width="40"/> |
 | Complete rules | <img src="DoneClipArt.png" width="40"/> |
 | Socket | <img src="DoneClipArt.png" width="40"/> |
-| GUI | <img src="DoneClipArt.png" width="40"/>) |
+| GUI | <img src="DoneClipArt.png" width="40"/> |
 | CLI | <img src="DoneClipArt.png" width="40"/> |
 | Multiple games | <img src="DoneClipArt.png" width="40"/> |
 | Custom Parameters | <img src="NotDoneClipArt.png" width="40"/> |
