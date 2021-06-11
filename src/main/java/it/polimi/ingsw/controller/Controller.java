@@ -13,6 +13,8 @@ import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceFactory;
+import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.server.HandlerState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.VirtualClient;
@@ -395,6 +397,13 @@ public class Controller {
         return cardManager.getLeaders().size() == 2;
     }
 
+    public void autoDiscardLeaderSetUp( String username){
+        while (!hasFinishedLeaderSetUp(username)){
+            discardLeaderSetUp(0,username);
+        }
+        autoInsertSetUpResources(username);
+    }
+
     public void discardLeaderSetUp(int leaderIndex, String username){
         CardManager playerCardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         try {
@@ -436,10 +445,25 @@ public class Controller {
 
     private boolean isFinishedSetup(){
         for(VirtualClient player : match.getAllPlayers()){
-            if(player.getClient().getState()!=HandlerState.WAITING_TO_BE_IN_MATCH)
+            if(player.getClient().getState()!= HandlerState.WAITING_TO_BE_IN_MATCH)
                 return false;
         }
         return true;
+    }
+
+    public void autoInsertSetUpResources(String username){
+        ArrayList<Resource> resources = new ArrayList<>();
+        switch (gameMaster.getPlayerPosition(username)){
+            case 1:
+            case 2:
+                resources.add(ResourceFactory.createResource(ResourceType.COIN,1));
+                insertSetUpResources(resources,username);
+                break;
+            case 3:
+                resources.add(ResourceFactory.createResource(ResourceType.COIN,2));
+                insertSetUpResources(resources,username);
+                break;
+        }
     }
 
     public void insertSetUpResources(ArrayList<Resource> resources, String username){

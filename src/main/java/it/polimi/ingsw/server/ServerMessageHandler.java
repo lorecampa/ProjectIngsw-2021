@@ -124,10 +124,7 @@ public class ServerMessageHandler {
         }else if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
             controller.leaderManage(msg.getIndex(), msg.isDiscard());
         }
-
-
     }
-
 
     //MARKET
     public void handleMarketAction(MarketAction msg){

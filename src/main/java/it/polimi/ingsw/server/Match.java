@@ -159,6 +159,10 @@ public class Match{
                         else if(player.getClient().getState() == HandlerState.IN_MATCH && player.getUsername()
                                 .equals(controller.getCurrentPlayer())){
                             controller.nextTurn();
+                        }else if (player.getClient().getState() == HandlerState.LEADER_SETUP){
+                            controller.autoDiscardLeaderSetUp(player.getUsername());
+                        }else if (player.getClient().getState() == HandlerState.RESOURCE_SETUP){
+                            controller.autoInsertSetUpResources(player.getUsername());
                         }
                     }
                     else {
