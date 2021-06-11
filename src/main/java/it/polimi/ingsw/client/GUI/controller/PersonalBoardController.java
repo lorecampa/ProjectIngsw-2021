@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -21,6 +22,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 
 import java.util.*;
@@ -181,9 +184,32 @@ public class PersonalBoardController extends Controller{
         put(ResourceType.STONE, 0);
     }};
 
+
+    private final double MAX_TEXT_WIDTH = 400;
+    private final double defaultFontSize = 46;
+    private final Font defaultFont = Font.font(defaultFontSize);
+
+
     @FXML
     public void initialize(){
         prodState = ProdState.NOT_IN_PROD;
+
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setFont(defaultFont);
+        label.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text tmpText = new Text(newValue);
+            tmpText.setFont(defaultFont);
+
+            double textWidth = tmpText.getLayoutBounds().getWidth();
+
+            if (textWidth <= MAX_TEXT_WIDTH) {
+                label.setFont(defaultFont);
+            } else {
+                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
+                label.setFont(Font.font(defaultFont.getFamily(), newFontSize));
+            }
+        });
+
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -199,7 +225,12 @@ public class PersonalBoardController extends Controller{
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
-        label.setText(msg);
+
+        TextField  tf = new TextField(msg);
+
+        label.textProperty().bind(tf.textProperty());
+
+
         label.setTextFill(Paint.valueOf("Red"));
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);
@@ -440,7 +471,7 @@ public class PersonalBoardController extends Controller{
     //----------------
     // UTILITIES
     //----------------
-    private void setStandardBoard(){
+    public void setStandardBoard(){
         // LEADER & LEADER DISCARD
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
         for (int i = 0; i < leadersData.size() && i<2; i++) {
@@ -493,7 +524,7 @@ public class PersonalBoardController extends Controller{
         baseProd.setDisable(true);
 
         //BUTTONS
-        //btn_prod.setVisible(true);
+        btn_prod.setVisible(true);
 
         btn_market.setVisible(true);
         choice_username.setVisible(true);
@@ -553,6 +584,12 @@ public class PersonalBoardController extends Controller{
         logError.setVisible(false);
 
         disableLeaderAndButtons();
+    }
+
+    public void setBoardNotTurn(){
+        disableLeader();
+        btn_prod.setVisible(false);
+        btn_endTurn.setVisible(false);
     }
 
     private void setBoardForPos(){
@@ -639,7 +676,6 @@ public class PersonalBoardController extends Controller{
     }
 
     private void setBoardForAnyConv(){
-
         logError.setVisible(false);
         disableLeaderAndButtons();
     }
@@ -885,7 +921,8 @@ public class PersonalBoardController extends Controller{
     //ANY CONVERSION REQUEST
 
     public void endLocalProduction(){
-        setBoardForProd();
+        if (prodState != ProdState.NOT_IN_PROD)
+            setBoardForProd();
         bufferBox.setVisible(false);
     }
 
@@ -1205,7 +1242,6 @@ public class PersonalBoardController extends Controller{
         if (bufferUpdated.stream().mapToInt(ResourceData::getValue).sum() == 0){
             bufferBox.setVisible(false);
             setStandardBoard();
-            btn_prod.setVisible(false);
         }else{
             resourceBufferLabelsMap.values().forEach(x -> x.setText(Integer.toString(0)));
             for (ResourceType type: resourceBufferImages.keySet()){

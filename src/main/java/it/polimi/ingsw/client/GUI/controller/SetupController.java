@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,10 @@ public class SetupController extends Controller{
 
     @FXML AnchorPane customMessageBox;
 
+    private final double MAX_TEXT_WIDTH = 400;
+    private final double defaultFontSize = 46;
+    private final Font defaultFont = Font.font(defaultFontSize);
+
     @FXML
     public void sendData(){
         if (isNumOfPlayer){
@@ -48,8 +54,8 @@ public class SetupController extends Controller{
             }
         }else{
             String name = username.getText();
-            if (name.length() == 0)
-                showCustomMessage("Insert a username");
+            if (name.length() == 0 || name.length() > 20)
+                showCustomMessage("Insert a valid username, length between 1 and 20");
             else {
                 client.setMyName(username.getText());
                 client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, username.getText()));
@@ -63,6 +69,22 @@ public class SetupController extends Controller{
             double volume = new_val.doubleValue()/100;
             ControllerHandler.getInstance().setVolume(volume);});
         customMessageBox.setVisible(false);
+
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setFont(defaultFont);
+        label.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text tmpText = new Text(newValue);
+            tmpText.setFont(defaultFont);
+
+            double textWidth = tmpText.getLayoutBounds().getWidth();
+
+            if (textWidth <= MAX_TEXT_WIDTH) {
+                label.setFont(defaultFont);
+            } else {
+                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
+                label.setFont(Font.font(defaultFont.getFamily(), newFontSize));
+            }
+        });
     }
 
 
@@ -74,7 +96,7 @@ public class SetupController extends Controller{
     public void setUpAll() {
         ControllerHandler.getInstance().setMusicImage(musicImage);
         isNumOfPlayer = true;
-        numOfPlayerBox.setVisible(true);
+        numOfPlayerBox.setVisible(false);
         usernameBox.setVisible(false);
 
         musicVolume.setValue(ControllerHandler.getInstance().getVolume()*100);
@@ -84,6 +106,12 @@ public class SetupController extends Controller{
         double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
         super.stage.setX(x);
         super.stage.setY(y);
+    }
+
+    public void showNumOfPLayer(){
+        isNumOfPlayer = true;
+        usernameBox.setVisible(false);
+        numOfPlayerBox.setVisible(true);
     }
 
 
@@ -98,7 +126,11 @@ public class SetupController extends Controller{
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
-        label.setText(msg);
+
+        TextField  tf = new TextField(msg);
+        label.textProperty().bind(tf.textProperty());
+
+
         label.setTextFill(Paint.valueOf("Red"));
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);

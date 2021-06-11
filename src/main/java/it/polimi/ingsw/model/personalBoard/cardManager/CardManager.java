@@ -20,6 +20,7 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -106,9 +107,18 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         }
         leader.checkRequirements();
         leader.doCreationEffects();
+
+        int i=0;
+        while (leaders.get(i).isActive()){
+            i++;
+        }
+
+        leaders.remove(leader);
+        leaders.add(i, leader);
+
         leader.setActive();
 
-        notifyAllObservers(x -> x.leaderActivated(leader, leaderIndex));
+        notifyAllObservers(x -> x.leaderActivated(leaders));
 
     }
 

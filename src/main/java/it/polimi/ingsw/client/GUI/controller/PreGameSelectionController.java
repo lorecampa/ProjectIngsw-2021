@@ -15,10 +15,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
@@ -99,12 +102,20 @@ public class PreGameSelectionController extends Controller {
     @FXML
     Slider musicVolume;
 
+    private final double MAX_TEXT_WIDTH = 400;
+    private final double defaultFontSize = 46;
+    private final Font defaultFont = Font.font(defaultFontSize);
+
 
 
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
-        label.setText(msg);
+        TextField tf = new TextField(msg);
+
+        label.textProperty().bind(tf.textProperty());
+
+
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);
     }
@@ -290,6 +301,23 @@ public class PreGameSelectionController extends Controller {
         musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
             double volume = new_val.doubleValue()/100;
             ControllerHandler.getInstance().setVolume(volume);});
+
+
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setFont(defaultFont);
+        label.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text tmpText = new Text(newValue);
+            tmpText.setFont(defaultFont);
+
+            double textWidth = tmpText.getLayoutBounds().getWidth();
+
+            if (textWidth <= MAX_TEXT_WIDTH) {
+                label.setFont(defaultFont);
+            } else {
+                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
+                label.setFont(Font.font(defaultFont.getFamily(), newFontSize));
+            }
+        });
     }
 
     public void showChooseResourcesBox(){

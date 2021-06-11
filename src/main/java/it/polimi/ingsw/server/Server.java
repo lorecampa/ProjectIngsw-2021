@@ -54,7 +54,7 @@ public class Server {
                 System.exit(0);
             }
         }else{
-            port = 3030;
+            port = 2020;
         }
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
@@ -68,13 +68,13 @@ public class Server {
     public void startServer(){
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("Server ready");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Server ready");
+
         new Thread(new ServerInput(this)).start();
         acceptConnection();
-
     }
 
     public void closeOpenMatch(){

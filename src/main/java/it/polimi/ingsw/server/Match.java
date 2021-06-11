@@ -158,7 +158,6 @@ public class Match{
                         }
                         else if(player.getClient().getState() == HandlerState.IN_MATCH && player.getUsername()
                                 .equals(controller.getCurrentPlayer())){
-
                             controller.nextTurn();
                         }
                     }

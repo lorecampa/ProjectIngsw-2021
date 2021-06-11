@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.Server;
 public class LogsOfGameCMD implements ServerCommand{
     private final Server server;
     private final String param;
+
     public LogsOfGameCMD(String param, Server server){
         this.param=param;
         this.server=server;

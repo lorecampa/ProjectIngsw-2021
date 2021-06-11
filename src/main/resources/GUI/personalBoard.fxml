@@ -577,17 +577,17 @@
             <ImageView fx:id="effectLeader1" fitHeight="88.0" fitWidth="223.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="250.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="955.0" layoutY="733.0" prefHeight="55.0" prefWidth="308.0" styleClass="panel">
+      <AnchorPane layoutX="955.0" layoutY="733.0" prefHeight="58.0" prefWidth="215.0" styleClass="panel">
          <children>
-            <Label fx:id="playerName_label" alignment="CENTER" layoutX="140.0" layoutY="19.0" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <Label fx:id="playerName_label" alignment="CENTER" layoutX="16.0" layoutY="16.0" prefHeight="34.0" prefWidth="193.0" textAlignment="CENTER" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="14.0">
                <font>
                   <Font size="20.0" />
                </font></Label>
          </children>
       </AnchorPane>
-      <ImageView fx:id="logError" fitHeight="69.0" fitWidth="71.0" layoutX="1134.0" layoutY="721.0" onMouseClicked="#showLogError" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="logError" fitHeight="68.0" fitWidth="71.0" layoutX="1186.0" layoutY="728.0" onMouseClicked="#showLogError" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@punchboard/red_marble.png" />
+            <Image url="@ImageBk/PergamenaLogError.png" />
          </image>
       </ImageView>
    </children>

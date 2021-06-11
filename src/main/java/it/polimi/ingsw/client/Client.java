@@ -62,7 +62,7 @@ public class Client{
         }
         else{
             ipHost="127.0.0.1";
-            portNumber=3030;
+            portNumber=2020;
         }
 
         try {
@@ -140,14 +140,15 @@ public class Client{
         String serializedMessage = null;
         try{
             serializedMessage = in.readLine();
-        } catch (Exception e) {
+            ClientMessage message = deserialize(serializedMessage);
+            message.process(clientMessageHandler);
+        } catch (IOException e) {
             PrintAssistant.instance.errorPrint("Server disconnected, even Google sometimes went down! Wait until the host re-set up the server please!");
             System.exit(0);
+        }catch (Exception exception){
+            PrintAssistant.instance.printf("Client closing...");
+            System.exit(0);
         }
-
-        ClientMessage message = deserialize(serializedMessage);
-
-        message.process(clientMessageHandler);
     }
 
     public ClientMessage deserialize(String serializedMessage){

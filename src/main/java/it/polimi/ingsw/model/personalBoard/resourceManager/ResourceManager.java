@@ -524,7 +524,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param depots i want to add*/
     public void addLeaderDepot(ArrayList<Depot> depots){
         for(Depot dep : depots){
-            currWarehouse.addDepotLeader(dep);
+            currWarehouse.addDepotLeader(dep); // [d2][d3][d1]
+            // arraydisupporto.add(id)            [8]  [4][7]
         }
         notifyAllObservers(x -> x.updateLeaderDepot(depots, false));
     }

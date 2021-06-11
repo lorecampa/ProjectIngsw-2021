@@ -5,28 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.CLIMessageHandler;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.CardLeaderData;
+import it.polimi.ingsw.model.card.Leader;
+
+import java.util.ArrayList;
 
 public class LeaderActivate implements ClientMessage{
-    private final CardLeaderData leader;
-    private final int leaderIndex;
+    private final ArrayList<CardLeaderData> leaders;
     private final String username;
 
     @JsonCreator
-    public LeaderActivate(@JsonProperty("leader") CardLeaderData leader,
-                          @JsonProperty("leaderIndex") int leaderIndex,
+    public LeaderActivate(@JsonProperty("leaders") ArrayList<CardLeaderData> leaders,
                           @JsonProperty("username") String username) {
-        this.leader = leader;
-        this.leaderIndex = leaderIndex;
+        this.leaders = leaders;
         this.username = username;
     }
 
-
-    public CardLeaderData getLeader() {
-        return leader;
-    }
-
-    public int getLeaderIndex() {
-        return leaderIndex;
+    public ArrayList<CardLeaderData> getLeaders() {
+        return leaders;
     }
 
     public String getUsername() {

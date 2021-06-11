@@ -128,7 +128,6 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     @Override
     public void currentPlayerChange(String nextPlayer) {
         match.sendSinglePlayer(username, new StarTurn(nextPlayer));
-
     }
 
 
@@ -225,8 +224,8 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     }
 
     @Override
-    public void leaderActivated(Leader leader, int leaderIndex) {
-        match.sendAllPlayers(new LeaderActivate(leader.toCardLeaderData(), leaderIndex, username));
+    public void leaderActivated(ArrayList<Leader> leaders) {
+        match.sendAllPlayers(new LeaderActivate(leaders.stream().map(Leader::toCardLeaderData).collect(Collectors.toCollection(ArrayList::new)), username));
     }
 
     @Override
