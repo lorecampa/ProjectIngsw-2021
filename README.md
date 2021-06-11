@@ -8,7 +8,7 @@
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](DoneClipArt.png = 50x50) |
+| Basic rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](DoneClipArt.png) |
 | Complete rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Socket | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
@@ -17,7 +17,7 @@
 | Custom Parameters | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
 | Server Persistence | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Reconnect | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Local Single Player | [![RED](https://placehold.it/15/f03c15/f03c15)](NotDoneClipArt.png = 50x50) |
+| Local Single Player | [![RED](https://placehold.it/15/f03c15/f03c15)](NotDoneClipArt.png) |
 
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
