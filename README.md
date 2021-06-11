@@ -47,7 +47,7 @@
     This command can be followed by these arguments:
   - **-gui**: it opens the game on Graphical User Interface(GUI);
   - **-IDADDRESS** write the ip address u want to connect to;
-  -**-PORT** write the port u want to access to
+  - **-PORT** write the port u want to access to.
  
  ## Build
  Use maven to build jar files for both the Client and the Server by choosing the appropriate Maven Profile.  
