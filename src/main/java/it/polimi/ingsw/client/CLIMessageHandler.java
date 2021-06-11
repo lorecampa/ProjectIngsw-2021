@@ -109,23 +109,26 @@ public class CLIMessageHandler extends ClientMessageHandler {
     public void anyConversionRequest(AnyConversionRequest message) {
         ArrayList<String> textToPrint = new ArrayList<>();
         StringBuilder row = new StringBuilder();
-        textToPrint.add("You have to convert "+message.getNumOfAny()+" into concrete resource!");
-        if(message.isProduction()){
-            textToPrint.add("You can convert the any in every concrete resource you want!");
-        }
-        else{
-            textToPrint.add("You can convert the any in: ");
-            for(ResourceData res : message.getOptionConversion()){
-                row.append(res.toCli());
-            }
-            textToPrint.add(row.toString());
-            row = new StringBuilder();
-            if(!message.getOptionOfDiscountNotUsed().isEmpty()){
-                textToPrint.add("You can also use the discount: ");
-                for(ResourceData res : message.getOptionOfDiscountNotUsed()){
+        if (message.getNumOfAny() == 0)
+            textToPrint.add("Waiting other players to finish their setUp...");
+        else {
+            textToPrint.add("You have to convert " + message.getNumOfAny() + " into concrete resource!");
+            if (message.isProduction()) {
+                textToPrint.add("You can convert the any in every concrete resource you want!");
+            } else {
+                textToPrint.add("You can convert the any in: ");
+                for (ResourceData res : message.getOptionConversion()) {
                     row.append(res.toCli());
                 }
                 textToPrint.add(row.toString());
+                row = new StringBuilder();
+                if (!message.getOptionOfDiscountNotUsed().isEmpty()) {
+                    textToPrint.add("You can also use the discount: ");
+                    for (ResourceData res : message.getOptionOfDiscountNotUsed()) {
+                        row.append(res.toCli());
+                    }
+                    textToPrint.add(row.toString());
+                }
             }
         }
         PrintAssistant.instance.printfMultipleString(textToPrint);

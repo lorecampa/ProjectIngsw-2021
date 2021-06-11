@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.observer.*;
 import it.polimi.ingsw.exception.*;
@@ -12,10 +13,12 @@ import java.util.function.Consumer;
 
 
 public class ResourceManager extends GameMasterObservable implements Observable<ResourceManagerObserver> {
+    @JsonIgnore
     List<ResourceManagerObserver> resourceManagerObserverList = new ArrayList<>();
 
     private final Warehouse currWarehouse;
     private final Strongbox strongbox;
+
     private final ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
@@ -521,7 +524,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param depots i want to add*/
     public void addLeaderDepot(ArrayList<Depot> depots){
         for(Depot dep : depots){
-            currWarehouse.addDepotLeader(dep);
+            currWarehouse.addDepotLeader(dep); // [d2][d3][d1]
+            // arraydisupporto.add(id)            [8]  [4][7]
         }
         notifyAllObservers(x -> x.updateLeaderDepot(depots, false));
     }

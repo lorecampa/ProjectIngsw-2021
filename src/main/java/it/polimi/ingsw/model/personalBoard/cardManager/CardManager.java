@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -19,12 +20,14 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CardManager extends GameMasterObservable implements Observable<CardManagerObserver> {
+    @JsonIgnore
     List<CardManagerObserver> cardManagerObserverList = new ArrayList<>();
 
     private final ArrayList<CardSlot> cardSlots = new ArrayList<>();
@@ -104,9 +107,18 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         }
         leader.checkRequirements();
         leader.doCreationEffects();
+
+        int i=0;
+        while (leaders.get(i).isActive()){
+            i++;
+        }
+
+        leaders.remove(leader);
+        leaders.add(i, leader);
+
         leader.setActive();
 
-        notifyAllObservers(x -> x.leaderActivated(leader, leaderIndex));
+        notifyAllObservers(x -> x.leaderActivated(leaders));
 
     }
 

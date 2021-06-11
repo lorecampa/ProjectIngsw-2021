@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.requirement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -17,8 +18,10 @@ import java.util.stream.Collectors;
  * Class ResourceReq defines a class that represent all requirement of type resource
  */
 public class ResourceReq implements Requirement {
-    private final ArrayList<Resource> resourceReq;
+    @JsonIgnore
     private ResourceManager resourceManager = null;
+
+    private final ArrayList<Resource> resourceReq;
 
     /**
      * Constructor ResourceReq creates a new ResourceReq instance

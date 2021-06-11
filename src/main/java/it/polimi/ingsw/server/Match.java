@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;
@@ -12,26 +15,30 @@ import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Match {
+public class Match{
     private final Server server;
     private Controller controller;
     private final int numOfPlayers;
-
     private final ArrayList<VirtualClient> allPlayers;
     private final ArrayList<VirtualClient> activePlayers;
     private final ArrayList<VirtualClient> inactivePlayers;
     private final ArrayList<String> logs =new ArrayList<>();
-
     private final int matchID;
+    private final String MATCH_SAVING_PATH = "MatchSaving";
+
 
     public Match(int numOfPlayers, Server server, int matchID) {
         this.server = server;
         this.numOfPlayers = numOfPlayers;
-
         this.allPlayers = new ArrayList<>();
         this.activePlayers = new ArrayList<>();
         this.inactivePlayers = new ArrayList<>();
@@ -151,8 +158,11 @@ public class Match {
                         }
                         else if(player.getClient().getState() == HandlerState.IN_MATCH && player.getUsername()
                                 .equals(controller.getCurrentPlayer())){
-
                             controller.nextTurn();
+                        }else if (player.getClient().getState() == HandlerState.LEADER_SETUP){
+                            controller.autoDiscardLeaderSetUp(player.getUsername());
+                        }else if (player.getClient().getState() == HandlerState.RESOURCE_SETUP){
+                            controller.autoInsertSetUpResources(player.getUsername());
                         }
                     }
                     else {
@@ -298,6 +308,14 @@ public class Match {
         return activePlayers;
     }
 
+    public ArrayList<VirtualClient> getInactivePlayers() {
+        return inactivePlayers;
+    }
+
+    public ArrayList<String> getLogs() {
+        return logs;
+    }
+
     public void removeMatchFromServer(){
         allPlayers.forEach(x-> x.getClient().setState(HandlerState.FIRST_CONTACT));
         System.out.println("Match with index: "+this.matchID+" deleted!");
@@ -319,6 +337,35 @@ public class Match {
         for(int i=start; i<logs.size();i++){
             System.out.println(logs.get(i));
         }
+    }
+
+    public void saveMatchState(){
+        if (!Files.isDirectory(Paths.get(MATCH_SAVING_PATH))) {
+            try {
+                Files.createDirectories(Paths.get(MATCH_SAVING_PATH));
+            } catch (IOException e) {
+                //error saving match data
+                e.printStackTrace();
+            }
+        }
+
+        String fileName = MATCH_SAVING_PATH +"/"+ getMatchID()+ ".txt";
+        try {
+            FileWriter file = new FileWriter(fileName);
+            ObjectMapper mapper = new ObjectMapper();
+
+            mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+
+            MatchData matchSave = new MatchData(this);
+            file.write(mapper.writeValueAsString(matchSave));
+
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

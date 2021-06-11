@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface CardManagerObserver {
     void cardSlotUpdate(int indexCardSlot, int rowDeckDevelopment, int colDeckDevelopment);
 
-    void leaderActivated(Leader leader, int leaderIndex);
+    void leaderActivated(ArrayList<Leader> leaders);
     void leaderDiscard(int leaderIndex);
 
 }

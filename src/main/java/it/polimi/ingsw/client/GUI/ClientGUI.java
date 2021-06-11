@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
@@ -35,6 +36,7 @@ public class ClientGUI extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GUI/icons/icon.png"))));
         setUpControllers();
         stage.setResizable(false);
         controllerHandler.changeView(Views.MAIN_MENU);

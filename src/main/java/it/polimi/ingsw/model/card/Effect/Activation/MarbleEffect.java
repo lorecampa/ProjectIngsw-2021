@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.EffectType;
@@ -21,8 +22,10 @@ import java.util.stream.Collectors;
  * MarbleEffect class defines the effect that concern marbles
  */
 public class MarbleEffect implements Effect {
-    private final ArrayList<Resource> transformIn;
+    @JsonIgnore
     private Market market = null;
+
+    private final ArrayList<Resource> transformIn;
 
     /**
      * Constructor MarbleEffect creates a new MarbleEffect instance

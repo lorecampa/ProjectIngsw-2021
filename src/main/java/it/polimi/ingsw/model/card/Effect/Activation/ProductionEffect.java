@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.card.Effect.Activation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.EffectType;
@@ -19,10 +20,11 @@ import java.util.stream.Collectors;
  * ProductionEffect class represent the effect of production
  */
 public class ProductionEffect implements Effect {
+    @JsonIgnore
+    private ResourceManager resourceManager = null;
 
     private final ArrayList<Resource>  resourceCost;
     private final ArrayList<Resource> resourceAcquired;
-    private ResourceManager resourceManager = null;
 
     /**
      * Constructor ProductionEffect creates a new ProductionEffect instance

@@ -21,6 +21,9 @@ public class ServerInput implements Runnable{
             put("quit", ExitServerCMD.class);
             put("listmatch", ListMatchCMD.class);
             put("logs", LogsOfGameCMD.class);
+
+            //just for debug
+            put("debug", Debug.class);
         }
     };
 

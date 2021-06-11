@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 public class ModelClient {
     private final Integer NUMBER_OF_CELL_FAITH=10;
@@ -249,9 +250,9 @@ public class ModelClient {
         leaders.get(index).setActive(true);
     }
 
-    public void putAsActiveInLeader(CardLeaderData card){
-        leaders.add(card);
-        leaders.get(leaders.size()-1).setActive(true);
+    public void putAsActiveInLeader(ArrayList<CardLeaderData> card){
+        leaders.clear();
+        leaders.addAll(card.stream().filter(CardLeaderData::isActive).collect(Collectors.toCollection(ArrayList::new)));
     }
 
     public boolean validIndexForLeader(int index){

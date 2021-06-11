@@ -35,9 +35,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void reconnectGameSetUp(ReconnectGameMessage message) {
         super.reconnectGameSetUp(message);
-        Platform.runLater(()->{
-            controllerHandler.changeView(Views.PERSONAL_BOARD);
-        });
+        Platform.runLater(()-> controllerHandler.changeView(Views.PERSONAL_BOARD));
     }
 
     @Override
@@ -64,7 +62,8 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleError(ErrorMessage message) {
         String error = (message.getErrorType() == null)?message.getCustomError():message.getErrorType().getMessage();
-        Client.getInstance().getMyModel().addErrorInLog(error);
+        if (Client.getInstance().getMyModel() != null)
+            Client.getInstance().getMyModel().addErrorInLog(error);
         Platform.runLater(()->{
             controllerHandler.getCurrentController().showCustomMessage(error);
         });
@@ -104,9 +103,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
         super.newTurn(message);
         String msg = "Is "+ message.getUsername() + " turn";
         Platform.runLater(()->{
-            PersonalBoardController personalBoardController = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
-            personalBoardController.enableProd();
-            controllerHandler.changeView(Views.PERSONAL_BOARD);
             controllerHandler.getCurrentController().showCustomMessage(msg);
         });
     }
@@ -115,6 +111,8 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void numberOfPlayer(ConnectionMessage message) {
         Platform.runLater(()->{
             controllerHandler.changeView(Views.SETUP);
+            SetupController setupController = (SetupController) controllerHandler.getController(Views.SETUP);
+            setupController.showNumOfPLayer();
         });
     }
 
@@ -226,11 +224,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleDepotPositioningRequest(DepotPositioningRequest message) {
         Platform.runLater(()->{
-            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            pbController.setBufferLabel("Put those resources inside the depots");
-
+            PersonalBoardController personalBoardController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            personalBoardController.setBufferLabel("Put those resources inside the depots");
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
-            pbController.setUpResourceFromMarket(message.getResources());
+            personalBoardController.setUpResourceFromMarket(message.getResources());
 
         });
     }
@@ -238,10 +235,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleWarehouseRemovingRequest(WarehouseRemovingRequest message) {
         Platform.runLater(()->{
-            PersonalBoardController pbController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            pbController.setBufferLabel("Remove those resources from yours depots or strongbox");
+            PersonalBoardController personalBoardController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            personalBoardController.setBufferLabel("Remove those resources from yours depots or strongbox");
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
-            pbController.setUpWarehouseResourceRemoving(message.getResources());
+            personalBoardController.setUpWarehouseResourceRemoving(message.getResources());
 
         });
     }
@@ -249,10 +246,10 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
         Platform.runLater(()-> {
-            PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            controller.setBufferLabel("You have to convert " + message.getNumOfWhiteMarbleDrew() + "\n white marbles into concrete resources");
+            PersonalBoardController personalBoardController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
+            personalBoardController.setBufferLabel("You have to convert " + message.getNumOfWhiteMarbleDrew() + " white marbles into concrete resources");
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
-            controller.setUpMarbleConv();
+            personalBoardController.setUpMarbleConv();
         });
     }
 
@@ -297,7 +294,6 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message) {
         super.handleDeckDevCardRemoving(message);
-        //TODO single player
     }
 
     @Override

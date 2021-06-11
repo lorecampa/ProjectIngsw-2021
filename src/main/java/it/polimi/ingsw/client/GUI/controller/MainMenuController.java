@@ -17,10 +17,13 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
@@ -58,12 +61,36 @@ public class MainMenuController extends Controller{
     @FXML
     Text mainTitle;
 
+    @FXML AnchorPane customMessageBox;
+    @FXML Label customMessageLabel;
+
+    private final double MAX_TEXT_WIDTH = 400;
+    private final double defaultFontSize = 46;
+    private final Font defaultFont = Font.font(defaultFontSize);
+
 
     @FXML
     public void initialize(){
         musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
             double volume = new_val.doubleValue()/100;
             ControllerHandler.getInstance().setVolume(volume);});
+
+        customMessageBox.setVisible(false);
+
+        customMessageLabel.setFont(defaultFont);
+        customMessageLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text tmpText = new Text(newValue);
+            tmpText.setFont(defaultFont);
+
+            double textWidth = tmpText.getLayoutBounds().getWidth();
+
+            if (textWidth <= MAX_TEXT_WIDTH) {
+                customMessageLabel.setFont(defaultFont);
+            } else {
+                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
+                customMessageLabel.setFont(Font.font(defaultFont.getFamily(), newFontSize));
+            }
+        });
     }
 
     //---------------------
@@ -117,6 +144,17 @@ public class MainMenuController extends Controller{
 
         client.writeToStream( new ReconnectionMessage(matchID,clientID));
         client.setState(ClientState.ENTERING_LOBBY);
+    }
+
+    @Override
+    public void showCustomMessage(String msg) {
+        TextField tf = new TextField(msg);
+
+        customMessageLabel.textProperty().bind(tf.textProperty());
+
+
+        customMessageBox.setVisible(true);
+        showFadedErrorMessage(customMessageBox);
     }
 
     //---------------------

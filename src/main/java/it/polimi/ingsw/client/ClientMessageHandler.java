@@ -125,10 +125,10 @@ public abstract class ClientMessageHandler {
     //leaderActivate message handler
     public void activeLeader(LeaderActivate message){
         if(message.getUsername().equals(client.getMyName())){
-            client.getModelOf(client.getMyName()).setActiveLeaderAt(message.getLeaderIndex());
+            client.getModelOf(client.getMyName()).setLeaders(message.getLeaders());
         }
         else{
-            client.getModelOf(message.getUsername()).putAsActiveInLeader(message.getLeader());
+            client.getModelOf(message.getUsername()).putAsActiveInLeader(message.getLeaders());
         }
     }
 

@@ -30,11 +30,8 @@ public class UsernameCMD implements Command{
             return;
         }
         String[] split= param.split(" ", 2);
-        if(split.length>1){
-            PrintAssistant.instance.invalidParamCommand(cmd);
-            return;
-        }
-        if (split[0].length() == 0){
+
+        if (split[0].length() == 0 || split[0].length() > 20){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

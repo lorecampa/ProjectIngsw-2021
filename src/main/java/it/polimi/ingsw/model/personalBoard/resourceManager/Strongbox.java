@@ -1,16 +1,25 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.observer.GameMasterObservable;
+import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ResourceManagerObserver;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 
-public class Strongbox {
+public class Strongbox{
+
+
     private ArrayList<Resource> resources;
+
 
     public Strongbox() {
         //resources=ResourceFactory.createAllConcreteResource();
@@ -58,5 +67,7 @@ public class Strongbox {
             strongboxData.add(resource.toClient());
         return strongboxData;
     }
+
+
 
 }
