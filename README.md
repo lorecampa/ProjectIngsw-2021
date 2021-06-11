@@ -8,16 +8,16 @@
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | <img src="DoneClipArt.png" width="50"/> |
-| Complete rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Socket | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| CLI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Multiple games | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Custom Parameters | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
-| Server Persistence | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Reconnect | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Local Single Player | [![RED](https://placehold.it/15/f03c15/f03c15)](NotDoneClipArt.png) |
+| Basic rules | <img src="DoneClipArt.png" width="40"/> |
+| Complete rules | <img src="DoneClipArt.png" width="40"/> |
+| Socket | <img src="DoneClipArt.png" width="40"/> |
+| GUI | <img src="DoneClipArt.png" width="40"/>) |
+| CLI | <img src="DoneClipArt.png" width="40"/> |
+| Multiple games | <img src="DoneClipArt.png" width="40"/> |
+| Custom Parameters | <img src="NotDoneClipArt.png" width="40"/> |
+| Server Persistence | <img src="DoneClipArt.png" width="40"/> |
+| Reconnect | <img src="DoneClipArt.png" width="40"/> |
+| Local Single Player | <img src="NotDoneClipArt.png" width="40"/> |
 
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
