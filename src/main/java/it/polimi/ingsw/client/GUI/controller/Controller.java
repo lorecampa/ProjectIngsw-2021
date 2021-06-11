@@ -32,6 +32,7 @@ public abstract class Controller {
     public abstract void setUpAll();
 
     public void activate(){
+        stage.setIconified(false);
         setUpAll();
         stage.setScene(scene);
     }
