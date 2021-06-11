@@ -27,7 +27,7 @@
 
 # Master Of Renaissance
 
-![MOR Logo](logo.png)
+![MOR Logo](logo.jpg)
 
 ## Setup
 
