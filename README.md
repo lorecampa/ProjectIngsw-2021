@@ -8,7 +8,7 @@
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | <img src="DoneClipaArt.jpg" width="50"/> |
+| Basic rules | <img src="DoneClipaArt.png" width="50"/> |
 | Complete rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Socket | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
