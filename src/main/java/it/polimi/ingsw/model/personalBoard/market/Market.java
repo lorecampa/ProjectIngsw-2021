@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Class that manage the game Market in which a player can insert a marble in the marketTray to acquire resources.
+ * Game Market in which a player can insert a marble in the marketTray to acquire resources.
  */
 public class Market extends GameMasterObservable implements Observable<MarketObserver> {
     @JsonIgnore
@@ -38,13 +38,13 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     private final ArrayList<Resource> resourcesToSend = new ArrayList<>();
 
     /**
-     * Constructor of the class market, that will setup the market tray in a random state with the chosen number of each
-     * type of marble.
-     * @param numCol is the number of columns
-     * @param numRow is the number of rows
-     * @param allMarbles is the array that contains all the marbles of the market
+     * Constructs a Market with the specified number of rows and columns and inserts the marbles contained in allMarbles,
+     * the last marble in allMarbles will be the marbleToInsert.
+     * @param numCol number of columns
+     * @param numRow number of rows
+     * @param allMarbles array that contains all the marbles of the market
      * @throws WrongMarketDimensionException if it's impossible to create a market with that dimensions
-     * @throws WrongMarblesNumberException  if the number of marbles does not match with the dimension of the market
+     * @throws WrongMarblesNumberException if the number of marbles does not match with the dimension of the market
      */
     @JsonCreator
     public Market(@JsonProperty("numRow") int numRow,
@@ -83,8 +83,8 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     }
 
     /**
-     * Method to add a resource in the array that will be send to the resource manager.
-     * @param resource is the resource that need to be added.
+     * Add a resource in the array that will be send to the resource manager.
+     * @param resource resource that need to be added.
      */
     public void addInResourcesToSend(Resource resource) {
         if(resourcesToSend.contains(resource)){
@@ -95,25 +95,24 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     }
 
     /**
-     * Method to increase the value that track the number of white marbles drew.
+     * Increase the value that track the number of white marbles drew.
      */
     public void increaseWhiteMarbleDrew(){
         numOfWhiteMarbleDrew++;
     }
 
     /**
-     * Method to get the number of white marble drew.
-     * @return is the number of white marble drew
+     * Return the number of white marble drew.
+     * @return the number of white marble drew.
      */
     public int getWhiteMarbleDrew(){
         return numOfWhiteMarbleDrew;
     }
 
     /**
-     * Method to insert the extra marble in a specific row of the market tray and call the action of every marble
-     * in that row.
-     * @param row is the row in which the marble will be insert
-     * @throws IndexOutOfBoundsException if the selected row does not exist
+     * Insert the extra marble in a specific row of the market tray and call the action of every marble in that row.
+     * @param row index of the row in which the marble will be insert.
+     * @throws IndexOutOfBoundsException if the selected row does not exist.
      */
     public void insertMarbleInRow(int row) throws IndexOutOfBoundsException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
@@ -132,10 +131,9 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
 
     /**
-     * Method to insert the extra marble in a specific column of the market tray and call the action of every marble
-     * in that column.
-     * @param col is the column in which the marble will be insert
-     * @throws IndexOutOfBoundsException if the selected column does not exist
+     * Insert the extra marble in a specific column of the market tray and call the action of every marble in that column.
+     * @param col is the column in which the marble will be insert.
+     * @throws IndexOutOfBoundsException if the selected column does not exist.
      */
     public void insertMarbleInCol(int col) throws IndexOutOfBoundsException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
@@ -155,6 +153,9 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         notifyMarketChange();
     }
 
+    /**
+     * This method is called after every market action of the player to notify all observers about that change.
+     */
     private void notifyMarketChange(){
         if (getWhiteMarbleDrew() > 0){
             notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.WHITE_MARBLE_CONVERSION));
@@ -163,8 +164,8 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     }
 
     /**
-     * Method to get a copy of the resources got from market
-     * @return is the array in which the resources are stored
+     * Return a copy of the resources got from market.
+     * @return the array in which the resources are stored.
      */
     public ArrayList<Resource> getResourceToSend(){
         return resourcesToSend.stream()
@@ -172,7 +173,10 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-
+    /**
+     * Insert resources in resourcesToSend, this method is called by the MarbleEffect of a Leader Card.
+     * @param resources array of resources to add.
+     */
     public void insertLeaderResources(ArrayList<Resource> resources){
         resources.forEach(this::addInResourcesToSend);
     }
@@ -199,13 +203,17 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     }
 
     /**
-     * Method to reset the market after it's been used
+     * Reset the market after it's been used
      */
     public void reset(){
         numOfWhiteMarbleDrew = 0;
         resourcesToSend.clear();
     }
 
+    /**
+     * Return a MarketData object based on the current state of the market.
+     * @return a MarketData object based on the current state of the market.
+     */
     public MarketData toMarketData(){
         ArrayList<ArrayList<ColorData>> marketTrayColor = marketTray.stream()
                 .map(row -> row.stream().map(Marble::getColorData).collect(Collectors.toCollection(ArrayList::new)))

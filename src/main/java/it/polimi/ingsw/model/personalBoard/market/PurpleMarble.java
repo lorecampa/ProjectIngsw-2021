@@ -4,17 +4,25 @@ import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+/**
+ * Implementation of marble interface that represent the purple marble.
+ */
 public class PurpleMarble implements Marble{
     private final ColorData color = ColorData.PURPLE;
+
     /**
-     * Method that will add a servant in market's resource to send array
-     * @param market is the reference to the market of the game
+     * Add a servant in market's resourcesToSend array.
+     * @param market reference to the market of the game.
      */
     @Override
     public void doMarbleAction(Market market){
         market.addInResourcesToSend(ResourceFactory.createResource(ResourceType.SERVANT,1));
     }
 
+    /**
+     * Return ColorData.PURPLE.
+     * @return ColorData.PURPLE.
+     */
     @Override
     public ColorData getColorData() {
         return color;
