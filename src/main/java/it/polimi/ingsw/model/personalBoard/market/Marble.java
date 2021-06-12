@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.ColorData;
 
+/**
+ * A class implement the Marble interface to indicate that it's a marble.
+ */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "@class")
@@ -16,10 +19,14 @@ import it.polimi.ingsw.client.data.ColorData;
         @JsonSubTypes.Type(value = PurpleMarble.class, name = "purple") })
 public interface Marble {
     /**
-     * Method implemented by all marbles that will perform a different effect for each type
-     * @param market is the reference to the market of the game
+     * Perform an action on market based on the marble type.
+     * @param market the reference to the market of the game.
      */
     void doMarbleAction(Market market);
 
+    /**
+     * Return the color of the marble.
+     * @return the color of the marble.
+     */
     ColorData getColorData();
 }
