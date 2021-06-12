@@ -27,7 +27,9 @@ public class Depot {
     }
 
     /**
-    *Main constructor of Depot with all the attributes
+    *Main constructor of Depot with all the attributes, used for leader's depot
+     * @param maxStorable integer representing the max value of local resource
+     * @param resource  to initialize at
     */
     public Depot(Resource resource, int maxStorable) {
         this.resource = resource;
@@ -36,7 +38,8 @@ public class Depot {
     }
 
     /**
-    *Constructor of Depot with only lockDepot and maxStorable
+    *Constructor of Depot with only lockDepot and maxStorable, used for normal depots
+     *  @param maxStorable integer representing the max value of local resource
     */
     public Depot(int maxStorable) {
         this.resource = ResourceFactory.createResource(ResourceType.ANY, 0);
@@ -45,7 +48,10 @@ public class Depot {
     }
 
     /**
-     * set the resource, called the first time i need to put in this depot a new resource
+     * Set resource of curr Depot
+     * @param resource to set the curr depot at
+     * @throws TooMuchResourceDepotException if You tried to put more resources than possible
+     * @throws InvalidOrganizationWarehouseException if You can't insert a RESOURCETYPE_A in a leader depot of RESOURCETYPE_B
      * */
     public void setResource(Resource resource) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException {
         if (lockDepot && resource.getType() != this.resource.getType()){
@@ -59,6 +65,9 @@ public class Depot {
         this.resource = resource;
     }
 
+    /**
+     * Set the curr resource at value 0 and reset the type if is not a lockDepot
+     * */
     public void setEmptyResource(){
         if (lockDepot) {
             resource = ResourceFactory.createResource(resource.getType(), 0);
@@ -69,28 +78,33 @@ public class Depot {
     }
 
     /**
-     *return the value of resource in depot
+     *Return the value of resource in depot
+     * @return the value of resource in depot
      */
     public int getResourceValue(){
         return resource.getValue();
     }
 
     /**
-     *return the type of resource in depot
+     *Return the type of resource in depot
+     * @return the type of resource in depot
      */
     public ResourceType getResourceType(){
         return resource.getType();
     }
 
     /**
-     *return the "free" spaces available in this depot
+     *Return how many free spaces available in curr depot
+     * @return how many free spaces available in curr depot
      */
     public int howMuchResCanIStillStoreIn(){
         return Math.max(maxStorable - resource.getValue(), 0);
     }
 
     /**       
-     *Add a value to the value of my resource
+     *Add a resource to the curr depot, adding the value if possible
+     * @param newRes to add to curr depot
+     * @throws TooMuchResourceDepotException if adding too much res in this depot
      */
     public void addResource(Resource newRes) throws TooMuchResourceDepotException{
         if (newRes.getValue() + resource.getValue() > maxStorable){
@@ -105,7 +119,10 @@ public class Depot {
     }
 
     /**
-     *Sub a value to the value of my resource
+     *Sub a resource to the curr depot, subtracting the value if possible
+     * @param newRes to sub to curr depot
+     * @throws NegativeResourceException if there are no resources here or if you can't sub more resources than are present
+     * @throws  InvalidOrganizationWarehouseException if you try to sub a resource type different from his own
      */
     public void subResource(Resource newRes) throws NegativeResourceException, InvalidOrganizationWarehouseException {
         if(resource.getType() == ResourceType.ANY || (lockDepot && resource.getValue() == 0)){

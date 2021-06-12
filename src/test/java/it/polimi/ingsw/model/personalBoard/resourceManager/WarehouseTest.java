@@ -28,8 +28,8 @@ class WarehouseTest {
 
     @Test
     void getDepot(){
-        assertEquals(ResourceType.COIN, w.getNormalDepot(0).getResourceType());
-        assertEquals(1, w.getNormalDepot(0).getResourceValue());
+        assertEquals(ResourceType.COIN, w.getDepot(0, true).getResourceType());
+        assertEquals(1, w.getDepot(0, true).getResourceValue());
     }
 
 
@@ -115,7 +115,7 @@ class WarehouseTest {
     @Test
     void removeResourceAt(){
         Resource r = w.popResourceFromDepotAt(0, true);
-        assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getNormalDepot(0).getResource());
+        assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getDepot(0, true).getResource());
         assertEquals(ResourceFactory.createResource(ResourceType.COIN, 1), r);
     }
 

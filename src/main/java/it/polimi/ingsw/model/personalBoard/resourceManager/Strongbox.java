@@ -1,31 +1,31 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.observer.GameMasterObservable;
-import it.polimi.ingsw.observer.Observable;
-import it.polimi.ingsw.observer.ResourceManagerObserver;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
-
+/**
+ * Strongbox is the class where we store the data and manage the resource of the Strongbox*/
 public class Strongbox{
 
 
     private ArrayList<Resource> resources;
 
-
+    /**
+     * Constructor of Strongbox, set up all the resources
+     * */
     public Strongbox() {
         //resources=ResourceFactory.createAllConcreteResource();
         setUpForDebug();
     }
 
+    /**
+     * Set 20 as value of every resource in strongbox
+     * */
     private void setUpForDebug(){
         resources = new ArrayList<>();
         resources.add(ResourceFactory.createResource(ResourceType.COIN, 20));
@@ -34,24 +34,25 @@ public class Strongbox{
         resources.add(ResourceFactory.createResource(ResourceType.STONE, 20));
     }
 
-
-
     /**
-     * change the resource passed in resources adding the value passed
-     * @param resource to add to the existing one*/
+     * Change the resource of the type passed adding the value passed
+     * @param resource to add to the existing one
+     * */
     public void addResource(Resource resource){
         resources.get(resources.indexOf(resource)).addValue(resource.getValue());
     }
 
     /**
-     * change the resource passed in resources subtracting the value passed
-     * @param resource to sub to the existing one*/
+     * Change the resource of type passed subtracting the value passed
+     * @param resource to sub to the existing one
+     * @throws NegativeResourceException if trying to sub more than Strongbox own
+     * */
     public void subResource(Resource resource) throws NegativeResourceException {
         resources.get(resources.indexOf(resource)).subValue(resource.getValue());
     }
 
     /**
-     * return the value that i own of that specific ResourceType
+     * Return the value that i own of that specific ResourceType
      * @param resourceType i want to find*/
     public int howManyDoIHave(ResourceType resourceType){
         return resources.get(resources.indexOf(ResourceFactory.createResource(resourceType, 0))).getValue();
@@ -61,13 +62,15 @@ public class Strongbox{
         return resources;
     }
 
+    /**
+     * Return the array of resourceData read to be sent
+     * @return the arrayList of ResourceData to sent
+     * */
     public ArrayList<ResourceData> toStrongboxData(){
         ArrayList<ResourceData> strongboxData = new ArrayList<>();
         for (Resource resource: resources)
             strongboxData.add(resource.toClient());
         return strongboxData;
     }
-
-
 
 }

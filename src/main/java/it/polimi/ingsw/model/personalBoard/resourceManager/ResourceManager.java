@@ -267,15 +267,15 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
         boolean semiSwitchDone = false;
         if (!isFromNormalDepot){
-            Resource res = currWarehouse.getLeaderDepot(fromIndex).getResource();
+            Resource res = currWarehouse.getDepot(fromIndex, false).getResource();
             if(isToNormalDepot){
-                semiSwitchDone = semiSwitch(currWarehouse.getLeaderDepot(fromIndex), currWarehouse.getNormalDepot(toIndex), res);
+                semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, false), currWarehouse.getDepot(toIndex, true), res);
             }else{
-                semiSwitchDone = semiSwitch(currWarehouse.getLeaderDepot(fromIndex),currWarehouse.getLeaderDepot(toIndex),res);
+                semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, false),currWarehouse.getDepot(toIndex, true),res);
             }
         }else if (!isToNormalDepot){
-            Resource res = currWarehouse.getNormalDepot(fromIndex).getResource();
-            semiSwitchDone = semiSwitch(currWarehouse.getNormalDepot(fromIndex), currWarehouse.getLeaderDepot(toIndex), res);
+            Resource res = currWarehouse.getDepot(fromIndex, true).getResource();
+            semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, true), currWarehouse.getDepot(toIndex, false), res);
         }
 
         if (semiSwitchDone){
@@ -524,8 +524,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * @param depots i want to add*/
     public void addLeaderDepot(ArrayList<Depot> depots){
         for(Depot dep : depots){
-            currWarehouse.addDepotLeader(dep); // [d2][d3][d1]
-            // arraydisupporto.add(id)            [8]  [4][7]
+            currWarehouse.addDepotLeader(dep);
         }
         notifyAllObservers(x -> x.updateLeaderDepot(depots, false));
     }
