@@ -2,7 +2,7 @@
 
 
 - ###  Campana Lorenzo ([@lorecampa](https://github.com/lorecampa))<br>lorenzo.campana@mail.polimi.it
-- ###  Canali Davide ([@CanaliDavide](https://github.com/CanaliDavide))<br>davide.canali@mail.polimi.it
+- ###  Canali Davide ([@CanaliDavide](https://github.com/CanaliDavide))<br>davide1.canali@mail.polimi.it
 - ###  Cordioli Matteo ([@MatteoCordioli](https://github.com/MatteoCordioli))<br>matteo.cordioli@mail.polimi.it
 
 
