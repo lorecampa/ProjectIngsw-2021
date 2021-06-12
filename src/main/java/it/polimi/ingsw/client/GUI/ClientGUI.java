@@ -35,6 +35,7 @@ public class ClientGUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         this.stage = stage;
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GUI/icons/icon.png"))));
         setUpControllers();

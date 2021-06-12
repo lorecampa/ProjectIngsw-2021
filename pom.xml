@@ -238,7 +238,9 @@
                   <mainClass>${project.mainClass}</mainClass>
                 </transformer>
               </transformers>
+<!--              <icon>src/main/resources/GUI/icons/icon.png</icon>-->
             </configuration>
+
           </execution>
         </executions>
       </plugin>

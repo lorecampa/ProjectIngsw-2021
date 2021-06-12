@@ -53,8 +53,8 @@ public class Server {
                 System.out.println("Invalid port number!");
                 System.exit(0);
             }
-        }else if(args.length==0){
-            System.out.println("Invalid port number!");
+        }else if(args.length!=0){
+            System.out.println("Invalid param!");
             System.exit(0);
         }else{
             port = 2020;
