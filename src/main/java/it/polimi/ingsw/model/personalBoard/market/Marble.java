@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.client.data.ColorData;
 
+/**
+ * A class implement the Marble interface to indicate that it's a marble.
+ */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "@class")

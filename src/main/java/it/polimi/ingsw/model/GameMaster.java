@@ -164,7 +164,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         for (String user : playersTurn){
             PersonalBoard pb=playersPersonalBoard.get(user);
             victoryPoints=pb.getCardManager().getVictoryPointsCard()+
-                    pb.getFaithTrack().aLlVP() +
+                    pb.getFaithTrack().allVP() +
                     pb.getResourceManager().getVictoryPointsResource();
             points.put(victoryPoints, user);
         }
@@ -346,7 +346,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     public ArrayList<EffectData> toEffectDataBasePro(){
-        Development playerBaseProduction = null;
+        Development playerBaseProduction;
         try {
             playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
             return playerBaseProduction.toCardDevData().getEffects();

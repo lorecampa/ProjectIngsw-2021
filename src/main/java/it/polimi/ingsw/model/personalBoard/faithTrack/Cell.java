@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import it.polimi.ingsw.client.data.FaithTrackData;
 
+/**
+ * A class implement the Cell interface to indicate that it's a cell of the faith track.
+ */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "@class")
@@ -15,24 +18,27 @@ import it.polimi.ingsw.client.data.FaithTrackData;
 public interface Cell{
 
     /**
-     * Method implemented by all cells that will perform a different effect for each type
-     * @param faithTrack is the player faith track
+     * Perform a different effect on faith track based of the cell type.
+     * @param faithTrack the player faith track
      */
     void doAction(FaithTrack faithTrack);
 
     /**
-     * Method to get if the cell is in a particular Vatican Report space
-     * @param idVR is the id of the Vatican Report that I want to check if the cell is in
-     * @return is true if the cell is in that specific Vatican Report otherwise it return false
+     * Return true if the cell is in a particular Vatican Report space.
+     * @param idVR the id of the Vatican Report that I want to check if the cell is in.
+     * @return true if the cell is in that specific Vatican Report space.
      */
     boolean isInVaticanReport(int idVR);
 
     /**
-     * Method to get the vatican report id
-     * @return is the vatican report id
+     * Return the vatican report id.
+     * @return the vatican report id.
      */
     int getIdVaticanReport();
 
+    /**
+     * Return a FaithTrackData based on the cell.
+     * @return a FaithTrackData based on the cell.
+     */
     FaithTrackData toData();
-
 }

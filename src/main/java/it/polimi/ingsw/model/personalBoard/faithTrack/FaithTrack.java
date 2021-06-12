@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Class that manage the Faith Track of a player
+ * FaithTrack of a player
  */
 public class FaithTrack extends GameMasterObservable  implements Observable<FaithTrackObserver>{
     @JsonIgnore
@@ -29,6 +29,14 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
     @JsonIgnore
     private final ArrayList<Boolean> popeFavorAcquired = new ArrayList<>();
 
+    /**
+     * Construct a faith track in a state based on parameters.
+     * @param victoryPoints victory points acquired by the player due to victory cells.
+     * @param popeFavorVP victory points acquired by the player due to pope favors-
+     * @param currentPositionOnTrack current position of the player on the track
+     * @param popeFavor victory points of each pope favor.
+     * @param track cells of the track.
+     */
     @JsonCreator
     public FaithTrack(@JsonProperty("victoryPoints") int victoryPoints,
                       @JsonProperty("popeFavorVP") int popeFavorVP,
@@ -44,6 +52,9 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
         initializePopeFavorAcquired();
     }
 
+    /**
+     * Set all the pope favor acquired to false.
+     */
     private void initializePopeFavorAcquired(){
         for (int i = 0; i < popeFavor.size(); i++) {
             popeFavorAcquired.add(false);
@@ -51,40 +62,44 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
     }
 
     /**
-     * Method to get the number of victory points acquired from the track
-     * @return is the number of victory points
+     * Return the number of victory points acquired from victory cells.
+     * @return the number of victory points.
      */
     public int getVictoryPoints() {
         return victoryPoints;
     }
 
     /**
-     * Method to get the number of victory points acquired from pope favors
-     * @return is the number of victory points
+     * Return the number of victory points acquired from pope favors.
+     * @return the number of victory points.
      */
     public int getPopeFavorVP(){return popeFavorVP;}
 
-    public int aLlVP(){
+    /**
+     * Return the sum of all victory points acquired from victory cells and pope favor.
+     * @return the sum of all victory points.
+     */
+    public int allVP(){
         return  popeFavorVP+victoryPoints;
     }
 
     /**
-     * Method to set the victory points acquired from the track
-     * @param victoryPoints is the number of victory points to set
+     * Set the victory points acquired from victory cells.
+     * @param victoryPoints the number of victory points to set.
      */
     public void setVictoryPoints(int victoryPoints) {
         this.victoryPoints = victoryPoints;
     }
 
     /**
-     * Method to get the current position of the player
-     * @return is the current position of the player
+     * Return the current position of the player on the track.
+     * @return the current position of the player.
      */
     public int getCurrentPositionOnTrack() { return currentPositionOnTrack; }
 
     /**
-     * Method to move the player on the track and activate the effect of every cell
-     * @param positions is the number of moves on track of the player
+     * Move the player on the track and activate the effect of every cell.
+     * @param positions the number of moves on track of the player.
      */
     public void movePlayer(int positions){
         for (int i = 0; i < positions; i++) {
@@ -96,7 +111,7 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
     }
 
     /**
-     * Method to increase the player's position on track
+     * Increase the player's position on track.
      */
     public void increasePlayerPosition(){
         if (!hasReachedEnd()){
@@ -108,23 +123,26 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
         }
     }
 
+    /**
+     * Return true if the player has reached the end of the track.
+     * @return true if the player has reached the end of the track.
+     */
     private boolean hasReachedEnd(){
         return currentPositionOnTrack == track.size() - 1;
     }
 
     /**
-     * Method to activate the effect of the current cell
+     * Activate the effect of cell in the current position of the player.
      */
     public void doCurrentCellAction(){
         track.get(currentPositionOnTrack).doAction(this);
     }
 
     /**
-     * Method to increase the victory points of the player if it's in a Vatican Report
-     * @param idVaticanReport is the id of the Vatican Report activated
+     * Increase the victory points of the player if it's in a Vatican Report.
+     * @param idVaticanReport the id of the Vatican Report activated.
      */
     public void popeFavorActivated(int idVaticanReport){
-
         if(track.get(currentPositionOnTrack).isInVaticanReport(idVaticanReport)){
             popeFavorVP += popeFavor.get(idVaticanReport);
             popeFavorAcquired.set(idVaticanReport, true);
@@ -132,10 +150,12 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
         }else{
             notifyAllObservers(x -> x.popeFavorReached(idVaticanReport, true));
         }
-
     }
 
-
+    /**
+     * Return a ArrayList of FaithTrackData based on the current state of the faith track.
+     * @return a ArrayList of FaithTrackData based on the current state of the market.
+     */
     public ArrayList<FaithTrackData> toFaithTrackData(){
         ArrayList<FaithTrackData> faithTrackData = new ArrayList<>();
         int index = 0;

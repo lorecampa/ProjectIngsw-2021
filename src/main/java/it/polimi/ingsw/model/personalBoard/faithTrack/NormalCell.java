@@ -4,25 +4,30 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.FaithTrackData;
 
+/**
+ * Implementation of cell interface that represent the normal cell.
+ */
 public class NormalCell implements Cell{
 
     private final int idVaticanReport;
 
+    /**
+     * Construct a normal cell with a specific vatican report id.
+     * @param idVaticanReport the vatican report id.
+     */
     @JsonCreator
     public NormalCell(@JsonProperty("idVaticanReport") int idVaticanReport) {
         this.idVaticanReport = idVaticanReport;
     }
 
     /**
-     * Method that does nothing since a normal cell hasn't any effect
+     * Does nothing since a normal cell hasn't any effect
      */
     @Override
     public void doAction(FaithTrack faithTrack) {}
 
     /**
-     * Method to get if the cell is in a particular Vatican Report space
-     * @param idVR is the id of the Vatican Report that I want to check if the cell is in
-     * @return is true if the cell is in that specific Vatican Report otherwise it return false
+     * See {@link Cell#isInVaticanReport(int)}.
      */
     @Override
     public boolean isInVaticanReport(int idVR) {
@@ -30,14 +35,16 @@ public class NormalCell implements Cell{
     }
 
     /**
-     * Method to get the vatican report id
-     * @return is the vatican report id
+     * See {@link Cell#getIdVaticanReport()}.
      */
     @Override
     public int getIdVaticanReport() {
         return idVaticanReport;
     }
 
+    /**
+     * See {@link Cell#toData()}.
+     */
     @Override
     public FaithTrackData toData() {
         boolean vaticanRep = idVaticanReport != -1;
