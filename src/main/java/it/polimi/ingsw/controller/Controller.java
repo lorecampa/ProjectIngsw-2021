@@ -182,7 +182,7 @@ public class Controller {
                             .filter(Leader::isActive)
                             .forEach(x -> {
                                 try {
-                                    x.doEffects(getPlayerState());
+                                    x.doActivationEffects(getPlayerState());
                                 } catch (Exception ignored) {}
                             });
                 }catch (InvalidStateActionException e){

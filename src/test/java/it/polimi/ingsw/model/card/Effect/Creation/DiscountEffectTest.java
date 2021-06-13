@@ -111,9 +111,6 @@ class DiscountEffectTest {
     void discardEffect(){
         ArrayList<Resource> cost= resourceArray(0, 2,0,0,0,0);
         assertDoesNotThrow(()->rm.canIAfford(cost, true));
-        effect.discardEffect();
-        ArrayList<Resource> cost2= resourceArray(0, 2,1,0,0,0);
-        assertThrows(NotEnoughRequirementException.class, ()->rm.canIAfford(cost2,true));
     }
 
 }

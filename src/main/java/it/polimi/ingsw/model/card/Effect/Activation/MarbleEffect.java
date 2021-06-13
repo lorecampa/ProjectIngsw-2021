@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * MarbleEffect class defines the effect that concern marbles
+ * MarbleEffect class defines the effect that concern marbles.
  */
 public class MarbleEffect implements Effect {
     @JsonIgnore
@@ -28,8 +28,8 @@ public class MarbleEffect implements Effect {
     private final ArrayList<Resource> transformIn;
 
     /**
-     * Constructor MarbleEffect creates a new MarbleEffect instance
-     * @param transformIn of type ArrayList - the resources which we will transform each white marble drew
+     * Construct a marble effect with specific resources to transform each white marble.
+     * @param transformIn the resources that each white marble drew will be transform into.
      */
     @JsonCreator
     public MarbleEffect(@JsonProperty("transformIn") ArrayList<Resource> transformIn) {
@@ -37,9 +37,16 @@ public class MarbleEffect implements Effect {
     }
 
     /**
-     * Method doEffect is in charge of pass all the resources to
-     * the market based on how many white marble the user haw drawn
-     * @param playerState of type State - defines the state of the turn, in this case must be MARKET_STATE
+     * Return the resources that each white marble drew will be transform into.
+     * @return the resources that each white marble drew will be transform into.
+     */
+    public ArrayList<Resource> getTransformIn() {
+        return transformIn;
+    }
+
+    /**
+     * Pass all the resources to the market based on how many white marble the user haw drawn.
+     * @param playerState the state of the turn, in this case must be MARKET_STATE.
      */
     @Override
     public void doEffect(PlayerState playerState) {
@@ -51,14 +58,8 @@ public class MarbleEffect implements Effect {
         }
     }
 
-    @Override
-    public void discardEffect() {
-
-    }
-
     /**
-     * Method attachMarket attach the market
-     * @param market of type Market is the instance of the market of the game
+     * See {@link Effect#attachMarket(Market)}.
      */
     @Override
     public void attachMarket(Market market) {
@@ -66,17 +67,14 @@ public class MarbleEffect implements Effect {
     }
 
     /**
-     * Method attachResourceManager does nothing because MarbleEffect doesn't need
-     * any reference to it
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * See {@link Effect#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {}
 
-    public ArrayList<Resource> getTransformIn() {
-        return transformIn;
-    }
-
+    /**
+     * See {@link Effect#toEffectData()}.
+     */
     @Override
     public EffectData toEffectData() {
         String description = "Marble effect: ";
@@ -86,7 +84,4 @@ public class MarbleEffect implements Effect {
         ArrayList<ResourceData> transformInto = transformIn.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
         return new EffectData(EffectType.MARBLE,description,whiteMarble,transformInto);
     }
-
-
-
 }

@@ -80,8 +80,5 @@ class WarehouseEffectTest {
         WarehouseEffect myEffect= new WarehouseEffect(depot);
         myEffect.attachResourceManager(rm);
         assertDoesNotThrow(()->myEffect.doEffect(PlayerState.LEADER_MANAGE_BEFORE));
-        myEffect.discardEffect();
-        assertEquals(0,rm.getWarehouse().getDepotsLeader().size());
-
     }
 }

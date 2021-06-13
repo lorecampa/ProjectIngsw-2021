@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * Discount class defines represent all effect that concern a discount
+ * Discount class represent all effects that concern a discount.
  */
 public class DiscountEffect implements Effect {
     @JsonIgnore
@@ -26,8 +26,8 @@ public class DiscountEffect implements Effect {
     private final ArrayList<Resource> discounts;
 
     /**
-     * Constructor DiscountEffect creates a new DiscountEffect instance
-     * @param discounts of type ArrayList - the resources that will be discounted
+     * Construct a discount effect with a specific discount.
+     * @param discounts the resources that will be discounted.
      */
     @JsonCreator
     public DiscountEffect(@JsonProperty("discounts") ArrayList<Resource> discounts) {
@@ -35,8 +35,8 @@ public class DiscountEffect implements Effect {
     }
 
     /**
-     * Method doEffect is responsible to pass all the discounts to the resource manager
-     * @param playerState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
+     * Pass all the discounts to the resource manager.
+     * @param playerState the state of the turn, in this case must be of type CREATION_STATE.
      */
     @Override
     public void doEffect(PlayerState playerState) {
@@ -49,34 +49,30 @@ public class DiscountEffect implements Effect {
     }
 
     /**
-     * Used to discard the effect when a player have a leader active and decide to discard it, we remove the effect that those leades had*/
-    @Override
-    public void discardEffect() {
-        resourceManager.removeDiscount(discounts.stream()
-                .map(x->ResourceFactory.createResource(x.getType(), x.getValue()))
-                .collect(Collectors.toCollection(ArrayList::new)));
-    }
-
-    /**
-     * Method attachMarket does nothing because the production effect doesn't need it
-     * @param market of type Market is the instance of the market of the game
+     * See {@link Effect#attachMarket(Market)}.
      */
     @Override
     public void attachMarket(Market market) {}
 
     /**
-     * Method attachResourceManager attach the resource manager in order to use it
-     * @param resourceManager of type ResourceManager is an instance of the resource manager
+     * See {@link Effect#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
     }
 
+    /**
+     * Return the discounts of the effect.
+     * @return the discounts of the effect.
+     */
     public ArrayList<Resource> getDiscounts() {
         return discounts;
     }
 
+    /**
+     * See {@link Effect#toEffectData()}.
+     */
     @Override
     public EffectData toEffectData() {
         String description = "Discount effect: ";

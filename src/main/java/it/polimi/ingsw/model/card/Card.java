@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
- * Class Card is an abstract class that defines the model of a card
+ * Class Card is an abstract class that defines the model of a card.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "@class")
@@ -35,11 +35,11 @@ public  abstract class Card {
     private String owner = null;
 
     /**
-     * Constructor Card creates a new Card instance
-     * @param victoryPoints of type int - the card victory points
-     * @param requirements of type ArrayList - the card requirements
-     * @param onCreationEffect of type ArrayList - the card effects of type creation
-     * @param onActivationEffects of type ArrayList - the card effects of type activation
+     * Construct a Card with those specific attributes.
+     * @param victoryPoints the card victory points.
+     * @param requirements the card requirements.
+     * @param onCreationEffect the card effects of type creation.
+     * @param onActivationEffects the card effects of type activation.
      */
     public Card(int id,
                 int victoryPoints,
@@ -55,14 +55,16 @@ public  abstract class Card {
     }
 
     /**
-     * Method checkRequirements checks if all requirement of the card are satisfied
+     * Checks if all requirements of the card are satisfied, leaders discounts are considered in the counting.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy all requirements.
      */
     public abstract void checkRequirements() throws NotEnoughRequirementException;
 
 
     /**
-     * Method doCreationEffect does all effect one time use in onCreationEffect when you buy or activate
-     * the card for the first time
+     * Activate all Creation effects.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * all requirements of some effect.
      */
     public void  doCreationEffects() throws NotEnoughRequirementException {
         for(Effect effect: onCreationEffect) {
@@ -70,21 +72,24 @@ public  abstract class Card {
         }
     }
 
-    public void discardCreationEffects(){
-        onCreationEffect.forEach(Effect::discardEffect);
-    }
     /**
-     * Method doEffects does all the effect of type activation
+     * Activate all Activation effects.
+     * @param playerState the current state of the player.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * all requirements of some effect.
      */
-    public  void doEffects(PlayerState playerState) throws NotEnoughRequirementException {
+    public  void doActivationEffects(PlayerState playerState) throws NotEnoughRequirementException {
         for (Effect effect: onActivationEffects){
             effect.doEffect(playerState);
         }
     }
 
-
+    /**
+     * Attach all the player Managers and the Market so that the card will be able to perform its effects.
+     * @param personalBoard the player's Personal Board.
+     * @param market the game's Market.
+     */
     public void attachCardToUser(PersonalBoard personalBoard, Market market){
-
         this.setResourceManager(personalBoard.getResourceManager());
         this.setCardManager(personalBoard.getCardManager());
         this.setMarket(market);
@@ -92,8 +97,8 @@ public  abstract class Card {
     }
 
     /**
-     * Method setResourceManager attach the resource manager to all the activation effect
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * Attach the resource manager to all the activation effect.
+     * @param resourceManager the player's Resource Manager.
      */
     public void setResourceManager(ResourceManager resourceManager){
         onActivationEffects.forEach(x -> x.attachResourceManager(resourceManager));
@@ -101,13 +106,17 @@ public  abstract class Card {
         requirements.forEach(x -> x.attachResourceManager(resourceManager));
     }
 
+    /**
+     * Attach the card manager to all the requirements.
+     * @param cardManager the player's Card Manager.
+     */
     private void setCardManager(CardManager cardManager){
         requirements.forEach(x -> x.attachCardManager(cardManager));
     }
 
     /**
-     * Method setMarket attach the market to all the activation effect
-     * @param market of type Market is an instance of the market of the game
+     * Attach the market to all the activation effect
+     * @param market the game's Market.
      */
     private void setMarket(Market market){
         onActivationEffects.forEach(x -> x.attachMarket(market));
@@ -115,39 +124,55 @@ public  abstract class Card {
     }
 
     /**
-     * Method getVictoryPoints is a getter for the victory points of the card
-     * @return int - the victory point of the card
+     * Return the card's victory points.
+     * @return the card's victory points.
      */
     public int getVictoryPoints() {
         return victoryPoints;
     }
 
     /**
-     * Method getOwner is a getter for the owner of the card
-     * @return String - the owner of the card
+     * Return the username of the card's owner.
+     * @return the username of the card's owner.
      */
     public String getOwner() {
         return owner;
     }
 
     /**
-     * Method setOwner is a setter for the owner of the card
-     * @param username of type String is the owner to be set
+     * Set the username of the card's owner.
+     * @param username the username of the card's owner.
      */
     public void setOwner(String username) {this.owner = username; }
 
+    /**
+     * Return the card's id.
+     * @return the card's id.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Return an ArrayList with all the card's Activation Effects.
+     * @return an ArrayList with all the card's Activation Effects.
+     */
     public ArrayList<Effect> getOnActivationEffects() {
         return onActivationEffects;
     }
 
+    /**
+     * Return an ArrayList with all the card's Creation Effects.
+     * @return an ArrayList with all the card's Creation Effects.
+     */
     public ArrayList<Effect> getOnCreationEffect() {
         return onCreationEffect;
     }
 
+    /**
+     * Return an ArrayList of EffectData based on the card attributes.
+     * @return an ArrayList of EffectData based on the card attributes.
+     */
     public ArrayList<EffectData> effectToClient(){
         ArrayList<EffectData> effects = new ArrayList<>();
         if (onActivationEffects != null)

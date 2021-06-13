@@ -12,8 +12,8 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import java.util.ArrayList;
 
 /**
- * Class Requirement define an interface for all type of requirement a card could have in order to be
- * purchased(development card) or activated(leader card)
+ * Requirement define an interface for all type of requirement a card could have in order to be
+ * purchased(development card) or activated(leader card).
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "@class")
@@ -25,25 +25,34 @@ import java.util.ArrayList;
 public interface Requirement {
 
     /**
-     * Method checkRequirement control if the player can afford it
-     * @param discount of type boolean - if you want to consider the leader discount effect then it
-     *                 must be true, otherwise false
+     * Control if the player can afford it.
+     * @param discount true if you want to consider the leader discount effect.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * the requirement.
      */
     void checkRequirement(boolean discount) throws NotEnoughRequirementException;
 
     /**
-     * Method attachResourceManager attach the resource manager
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * Attach the resource manager of the player.
+     * @param resourceManager the resource manager of the player.
      */
     void attachResourceManager(ResourceManager resourceManager);
 
     /**
-     * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an instance of the card manager of the player
+     * Attach the card manager of the player.
+     * @param cardManager the card manager of the player.
      */
     void attachCardManager(CardManager cardManager);
 
+    /**
+     * Return an ArrayList of ResourceData based on the resources requirement.
+     * @return an ArrayList of ResourceData based on the resources requirement.
+     */
     ArrayList<ResourceData> toResourceData();
 
+    /**
+     * Return an ArrayList of CardDevData based on the cards requirement.
+     * @return an ArrayList of CardDevData based on the cards requirement.
+     */
     ArrayList<CardDevData> toCardDevData();
 }

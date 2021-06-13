@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Class CardReq represent a class for all kind of card requirement
+ * CardReq represent a class for all kind of card requirement.
  */
 public class CardReq implements Requirement {
     @JsonIgnore
@@ -25,10 +25,10 @@ public class CardReq implements Requirement {
     int numRequired;
 
     /**
-     * Constructor CardReq creates a new CardReq instance
-     * @param color of type Color - the requirement type of color
-     * @param level of type int - the requirement level of that color card
-     * @param numRequired of type int - the amount of card with that color and level
+     * Construct a Card Requirement of a specific card.
+     * @param color the required color of the card.
+     * @param level the requirement level of the card.
+     * @param numRequired the amount of card with that color and level.
      */
     @JsonCreator
     public CardReq(@JsonProperty("color") Color color,
@@ -40,8 +40,10 @@ public class CardReq implements Requirement {
     }
 
     /**
-     * Method checkRequirement control if the player has enough cards with a specific color
-     * @param discount of type boolean - doesn't matter if it is true or false
+     * Control if the player has enough cards with a specific color and level.
+     * @param discount doesn't matter if it is true or false.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * the requirement.
      */
     @Override
     public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
@@ -50,26 +52,30 @@ public class CardReq implements Requirement {
 
 
     /**
-     * Method attachResourceManager attach the resource manager
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * See {@link Requirement#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {}
 
     /**
-     * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an instance of the card manager of the player
+     * See {@link Requirement#attachCardManager(CardManager)}.
      */
     @Override
     public void attachCardManager(CardManager cardManager) {
         this.cardManager = cardManager;
     }
 
+    /**
+     * See {@link Requirement#toResourceData()}.
+     */
     @Override
     public ArrayList<ResourceData> toResourceData() {
         return null;
     }
 
+    /**
+     * See {@link Requirement#toCardDevData()}.
+     */
     @Override
     public ArrayList<CardDevData> toCardDevData() {
         return new ArrayList<>(Collections.nCopies(numRequired,new CardDevData(level,color.toColorData())));

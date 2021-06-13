@@ -24,8 +24,8 @@ public class ResourceReq implements Requirement {
     private final ArrayList<Resource> resourceReq;
 
     /**
-     * Constructor ResourceReq creates a new ResourceReq instance
-     * @param resourceReq of type ArrayList - the amount of resources required
+     * Construct a Resource Requirement of specific resources.
+     * @param resourceReq the resources required.
      */
     @JsonCreator
     public ResourceReq(@JsonProperty("resourceReq") ArrayList<Resource> resourceReq) {
@@ -33,9 +33,10 @@ public class ResourceReq implements Requirement {
     }
 
     /**
-     * Method checkRequirement control if the player has enough resources
-     * @param discount of type boolean - if you want to consider the leader discount effect then it
-     *                 must be true, otherwise false
+     * Control if the player has enough resources.
+     * @param discount true if you want to consider the leader discount effect.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * the requirement.
      */
     @Override
     public void checkRequirement(boolean discount) throws NotEnoughRequirementException {
@@ -46,8 +47,7 @@ public class ResourceReq implements Requirement {
     }
 
     /**
-     * Method attachResourceManager attach the resource manager
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * See {@link Requirement#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
@@ -55,20 +55,24 @@ public class ResourceReq implements Requirement {
     }
 
     /**
-     * Method attachCardManager attach the card manager
-     * @param cardManager of type CardManager is an instance of the card manager of the player
+     * See {@link Requirement#attachCardManager(CardManager)}.
      */
     @Override
     public void attachCardManager(CardManager cardManager) {}
 
+    /**
+     * See {@link Requirement#toResourceData()}.
+     */
     @Override
     public ArrayList<ResourceData> toResourceData() {
         return resourceReq.stream().map(Resource::toClient).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * See {@link Requirement#toCardDevData()}.
+     */
     @Override
     public ArrayList<CardDevData> toCardDevData() {
         return null;
     }
-
 }

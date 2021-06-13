@@ -11,17 +11,17 @@ import it.polimi.ingsw.model.card.requirement.Requirement;
 import java.util.ArrayList;
 
 /**
- * Class Leader defines a class for all card of type leader. It extends Card class adding the
- * effect of type creation
+ * Class Leader defines a class for all card of type leader. It extends Card class adding the effect of type creation.
  */
 public class Leader extends Card{
     private boolean active;
+
     /**
-     * Constructor Leader creates a new Leader instance
-     * @param victoryPoints of type int - the leader victory points
-     * @param requirements of type ArrayList - the leader requirements
-     * @param onCreationEffects of type ArrayList - the leader effects of type creation
-     * @param onActivationEffect of type ArrayList - the leader effects of type activation
+     * Construct a Leader with specific attributes.
+     * @param victoryPoints the leader victory points.
+     * @param requirements the leader requirements.
+     * @param onCreationEffects the leader effects of type creation.
+     * @param onActivationEffect the leader effects of type activation.
      */
     @JsonCreator
     public Leader(@JsonProperty("id") int id,
@@ -35,8 +35,7 @@ public class Leader extends Card{
     }
 
     /**
-     * Method checkRequirements checks if all requirement of the card are satisfied, leader
-     * discounts are not considered in the counting
+     * See {@link Card#checkRequirements()}.
      */
     public void checkRequirements() throws NotEnoughRequirementException {
         for(Requirement req: requirements) {
@@ -45,22 +44,24 @@ public class Leader extends Card{
     }
 
     /**
-     * Method isActive is a getter method for knowing is the leader card has been already activated
-     * by the player that owns it
-     * @return boolean - true if leader card is active, otherwise false
+     * Return true if the card is active.
+     * @return true if the card is active.
      */
     public boolean isActive() {
         return active;
     }
 
     /**
-     * Method setActive is a setter method  for setting the attribute active to true when the player
-     * decide to activate the leader card during the game
+     * Set active to true.
      */
     public void setActive() {
         this.active = true;
     }
 
+    /**
+     * Return a CardLeaderData based on the card's attributes.
+     * @return a CardLeaderData based on the card's attributes.
+     */
     public CardLeaderData toCardLeaderData(){
         ArrayList<ResourceData> resReq = new ArrayList<>();
         ArrayList<CardDevData> cardReq = new ArrayList<>();
@@ -72,5 +73,4 @@ public class Leader extends Card{
         }
         return new CardLeaderData(getId(), getVictoryPoints(),cardReq,resReq,effectToClient(), active);
     }
-
 }

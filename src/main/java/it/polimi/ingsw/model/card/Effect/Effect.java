@@ -13,7 +13,7 @@ import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 
 /**
- * Effect class defines an interface for all kind of effects
+ * Effect class defines an interface for all kind of effects.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         property = "@class")
@@ -24,28 +24,34 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
         @JsonSubTypes.Type(value = MarbleEffect.class, name = "MarbleEffect")
 })
 public interface Effect {
+
     /**
-     * Method doEffect is responsible of doing the effect itself
-     * @param playerState of type State - defines the state of the turn, it controls which effect are going to be
+     * Perform the effect's action.
+     * @param playerState defines the state of the turn, it controls which effect are going to be
      *              executed as mentioned below.
      *              (PRODUCTION_STATE -> ProductionEffect)
      *              (MARKET_STATE -> MarbleEffect)
      *              (CREATION_STATE -> DiscountEffect and WarehouseEffect)
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * all requirements of the effect.
      */
     void doEffect(PlayerState playerState) throws NotEnoughRequirementException;
 
-    void discardEffect();
     /**
-     * Method attachMarket attach the market
-     * @param market of type Market is the instance of the market of the game
+     * Attach the market.
+     * @param market the market of the game.
      */
     void attachMarket(Market market);
 
     /**
-     * Method attachResourceManager attach the resource manager
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * Attach the resource manager.
+     * @param resourceManager the resource manager of the player.
      */
     void attachResourceManager(ResourceManager resourceManager);
 
+    /**
+     * Return an EffectData based on the effect type and attributes.
+     * @return an EffectData based on the effect type and attributes.
+     */
     EffectData toEffectData();
 }

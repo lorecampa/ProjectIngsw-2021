@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Class Development is a class that represent all card of type development. It extends Card adding
- * all the possibility
+ * all the possibility.
  */
 public class Development extends  Card{
     private final int level;
@@ -20,12 +20,12 @@ public class Development extends  Card{
 
 
     /**
-     * Constructor Development creates a new Development instance
-     * @param victoryPoints of type int - the development card victory points
-     * @param requirements of type ArrayList - the development card requirements
-     * @param onActivationEffects of type ArrayList - the development card effects of type activation
-     * @param level of type int - the development card level
-     * @param color of type Color - the development card color
+     * Construct a Development Card with specific attributes.
+     * @param victoryPoints the development card victory points.
+     * @param requirements the development card requirements.
+     * @param onActivationEffects the development card effects of type activation.
+     * @param level the development card level.
+     * @param color the development card color.
      */
     @JsonCreator
     public Development(@JsonProperty("id") int id,
@@ -40,14 +40,26 @@ public class Development extends  Card{
         this.color = color;
     }
 
+    /**
+     * Return the card's level.
+     * @return the card's level.
+     */
     public int getLevel() {
         return level;
     }
 
+    /**
+     * Return the card color.
+     * @return the card color.
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Return a CardDevData based on the card's attributes.
+     * @return a CardDevData based on the card's attributes.
+     */
     public CardDevData toCardDevData(){
         ArrayList<ResourceData> resReq = new ArrayList<>();
         for (Requirement requirement: requirements){
@@ -57,9 +69,9 @@ public class Development extends  Card{
         return new CardDevData(getId(),level,getVictoryPoints(),color.toColorData(), resReq, effectToClient());
     }
 
+
     /**
-     * Method checkRequirements checks if all requirement of the card are satisfied, leaders discounts
-     * are considered in the counting
+     * See {@link Card#checkRequirements()}.
      */
     public void checkRequirements() throws NotEnoughRequirementException {
         for(Requirement req: requirements){
@@ -68,6 +80,10 @@ public class Development extends  Card{
 
     }
 
+    /**
+     * Return a String that describe the card.
+     * @return a String that describe the card.
+     */
     @Override
     public String toString() {
         String x = super.toString();

@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.card;
 import it.polimi.ingsw.client.data.ColorData;
 
 /**
- * Class Color is an enumeration containing all the card color
+ * Class Color is an enumeration containing all the card color.
  */
 public enum Color {
     GREEN("Green"),
@@ -15,21 +15,25 @@ public enum Color {
     private final String displayName;
 
     /**
-     * Constructor Color create a new Color instance
-     * @param displayName of type String is the name that will be displayed on screen
+     * Construct a Color with a specific display name.
+     * @param displayName the name that will be displayed on screen.
      */
     Color(String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     * Method getDisplayName is a getter for the display name
-     * @return String - the display name
+     * Return the display name.
+     * @return the display name.
      */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Return a ColorData based on the color.
+     * @return a ColorData based on the color.
+     */
     public ColorData toColorData(){
         switch(this){
             case YELLOW:
@@ -47,9 +51,9 @@ public enum Color {
 
 
     /**
-     * Method getColumnDeckDevelopment
-     * @return int - the column of the color in the matrix of development card, if the color has not
-     * a reference to the development matrix then it returns -1 (ANY)
+     * Return the column index in the deck development based on color, if the color has not a reference to the
+     * development matrix then it returns -1 (ANY).
+     * @return the column index in the deck development based on color.
      */
     public int getColumnDeckDevelopment(){
         switch (this){

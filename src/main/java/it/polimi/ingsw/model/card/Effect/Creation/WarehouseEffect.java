@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * Class WarehouseEffect defines a class for all effect that modify the warehouse structure
+ * WarehouseEffect class represent all effects that modify the warehouse structure.
  */
 public class WarehouseEffect  implements Effect {
     @JsonIgnore
@@ -26,8 +26,8 @@ public class WarehouseEffect  implements Effect {
     private final ArrayList<Resource> depots;
 
     /**
-     * Constructor WarehouseEffect creates a new WarehouseEffect instance
-     * @param depots of type ArrayList - the amount of resources that will be transformed in depot
+     * Construct a warehouse effect with specific resources.
+     * @param depots the amount of resources that will be transformed in depot.
      */
     @JsonCreator
     public WarehouseEffect(@JsonProperty("depots") ArrayList<Resource> depots) {
@@ -35,8 +35,16 @@ public class WarehouseEffect  implements Effect {
     }
 
     /**
-     * Method doEffect creates a new locked depot (lockDepot = true)  for all the resources in depots
-     * @param playerState of type State - defines the state of the turn, in this case must be of type CREATION_STATE
+     * Return the effect depot.
+     * @return the effect depot.
+     */
+    public ArrayList<Resource> getDepots() {
+        return depots;
+    }
+
+    /**
+     * Creates a new locked depot (lockDepot = true) for all the resources in depots.
+     * @param playerState the state of the turn, in this case must be of type CREATION_STATE.
      */
     @Override
     public void doEffect(PlayerState playerState) {
@@ -47,34 +55,24 @@ public class WarehouseEffect  implements Effect {
         }
     }
 
-    @Override
-    public void discardEffect() {
-        resourceManager.removeLeaderDepot(depots.stream()
-                .map(x->new Depot(ResourceFactory.createResource(x.getType(), 0), x.getValue()))
-                .collect(Collectors.toCollection(ArrayList::new)));
-    }
-
     /**
-     * Method attachMarket does nothing because the production effect doesn't need it
-     * @param market of type Market is the instance of the market of the game
+     * See {@link Effect#attachMarket(Market)}.
      */
     @Override
     public void attachMarket(Market market) {
     }
 
     /**
-     * Method attachResourceManager attach the resource manager
-     * @param resourceManager of type ResourceManager is an instance of the resource manager
+     * See {@link Effect#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
     }
 
-    public ArrayList<Resource> getDepots() {
-        return depots;
-    }
-
+    /**
+     * See {@link Effect#toEffectData()}.
+     */
     @Override
     public EffectData toEffectData() {
         String description = "Warehouse effect: ";

@@ -20,7 +20,6 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -168,14 +167,14 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         Leader leader = leaders.get(leaderIndex);
         if (leadersUsed.contains(leader))
             throw new CardAlreadyUsed("Leader already used");
-        leader.doEffects(playerState);
+        leader.doActivationEffects(playerState);
         leadersUsed.add(leader);
     }
 
     public void activateLeaderInfinite(int leaderIndex, PlayerState playerState) throws InvalidStateActionException, NotEnoughRequirementException {
         checkPlayerState(PlayerState.WHITE_MARBLE_CONVERSION);
         Leader leader = leaders.get(leaderIndex);
-        leader.doEffects(playerState);
+        leader.doActivationEffects(playerState);
     }
 
     /**
@@ -191,7 +190,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         if (devCardsUsed.contains(development))
             throw new CardAlreadyUsed("Card already used");
 
-        development.doEffects(PlayerState.PRODUCTION_ACTION);
+        development.doActivationEffects(PlayerState.PRODUCTION_ACTION);
         devCardsUsed.add(development);
 
 
@@ -207,7 +206,7 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         if (devCardsUsed.contains(baseProduction))
             throw new CardAlreadyUsed("Base Production already used");
 
-        baseProduction.doEffects(PlayerState.PRODUCTION_ACTION);
+        baseProduction.doActivationEffects(PlayerState.PRODUCTION_ACTION);
         devCardsUsed.add(baseProduction);
     }
 

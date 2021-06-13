@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * ProductionEffect class represent the effect of production
+ * ProductionEffect class represent the effect of production.
  */
 public class ProductionEffect implements Effect {
     @JsonIgnore
@@ -27,9 +27,9 @@ public class ProductionEffect implements Effect {
     private final ArrayList<Resource> resourceAcquired;
 
     /**
-     * Constructor ProductionEffect creates a new ProductionEffect instance
-     * @param resourceCost of type ArrayList - the resources required for the production
-     * @param resourceAcquired of type ArrayList - the resources that the player will gain
+     * Construct a production effect with a specific production.
+     * @param resourceCost the resources required for the production.
+     * @param resourceAcquired the resources that the player will gain.
      */
     @JsonCreator
     public ProductionEffect(@JsonProperty("resourceCost") ArrayList<Resource> resourceCost,
@@ -40,10 +40,12 @@ public class ProductionEffect implements Effect {
 
 
     /**
-     * Method doEffect checks if the player has enough resource for the production, if it does
+     * Checks if the player has enough resource for the production, if it does
      * then pass all the resource that he will gain to the resource manager and it will handle those
-     * putting them into the strongbox, otherwise throws CantMakeProductionException
-     * @param playerState of type State - defines the state of the turn, in this case must be of type PRODUCTION_STATE
+     * putting them into the strongbox, otherwise throws CantMakeProductionException.
+     * @param playerState the state of the turn, in this case must be of type PRODUCTION_STATE.
+     * @throws NotEnoughRequirementException if the player doesn't have enough card or resources to satisfy
+     * all requirements of the effect.
      */
     @Override
     public void doEffect(PlayerState playerState) throws NotEnoughRequirementException {
@@ -60,28 +62,23 @@ public class ProductionEffect implements Effect {
         }
     }
 
-    @Override
-    public void discardEffect() {
-
-    }
-
     /**
-     * Method attachMarket does nothing because the production effect doesn't need it
-     * @param market of type Market is the instance of the market of the game
+     * See {@link Effect#attachMarket(Market)}.
      */
     @Override
     public void attachMarket(Market market) {}
 
-
     /**
-     * Method attachResourceManager attach the resource manager in order to use it
-     * @param resourceManager of type ResourceManager is an instance of the resource manager of the player
+     * See {@link Effect#attachResourceManager(ResourceManager)}.
      */
     @Override
     public void attachResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
     }
 
+    /**
+     * See {@link Effect#toEffectData()}.
+     */
     @Override
     public EffectData toEffectData() {
         String description = "Production effect: ";
