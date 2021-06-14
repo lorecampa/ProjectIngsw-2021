@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
