@@ -22,13 +22,15 @@ import it.polimi.ingsw.observer.GameMasterObservable;
 import it.polimi.ingsw.observer.GameMasterObserver;
 import it.polimi.ingsw.observer.Observable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * Card Manager is a class that manage all the player's action with a card.
+ */
 public class CardManager extends GameMasterObservable implements Observable<CardManagerObserver> {
     @JsonIgnore
     List<CardManagerObserver> cardManagerObserverList = new ArrayList<>();
@@ -42,48 +44,63 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     private int rowDeckBuffer;
     private int colDeckBuffer;
 
+    /**
+     * Construct a Card Manager with a specific base production.
+     * @param baseProduction the base production of the board.
+     */
     @JsonCreator
-    public CardManager(@JsonProperty("baseProduction") Development baseProduction) throws IOException {
+    public CardManager(@JsonProperty("baseProduction") Development baseProduction){
         this.baseProduction = baseProduction;
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
         }
     }
 
+    /**
+     * Return the ArrayList that contains all the leader cards.
+     * @return the ArrayList that contains all the leader cards.
+     */
     public ArrayList<Leader> getLeaders() {
         return leaders;
     }
 
     /**
-     * Method to set up the card manager to be ready for the current turn
+     * Set up the card manager to be ready for the current turn.
      */
     public void restoreCM(){
         devCardsUsed.clear();
         leadersUsed.clear();
     }
 
-    public void restoreCardsManagerReference(PersonalBoard pb, Market mk){
-        baseProduction.attachCardToUser(pb, mk);
-        leaders.forEach(x -> x.attachCardToUser(pb, mk));
+    /**
+     * Restore the card manager based on parameters.
+     * @param personalBoard the player's personal board.
+     * @param market the game's market.
+     */
+    public void restoreCardsManagerReference(PersonalBoard personalBoard, Market market){
+        baseProduction.attachCardToUser(personalBoard, market);
+        leaders.forEach(x -> x.attachCardToUser(personalBoard, market));
         for (CardSlot cs: cardSlots){
             for (int i = 0; i < cs.getLvReached(); i++){
-                cs.getDevelopment(i).attachCardToUser(pb, mk);
+                cs.getDevelopment(i).attachCardToUser(personalBoard, market);
             }
         }
     }
 
     /**
-     * Method to add a leader to Card Manager
-     * @param leader is the leader to add
+     * Add a leader to Card Manager.
+     * @param leader the leader to add.
      */
     public void addLeader(Leader leader){
         leaders.add(leader);
     }
 
     /**
-     * Method to discard a leader
-     * @param leaderIndex is the index of the leader to discard
-     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
+     * Discard the leader at the given leader index.
+     * @param leaderIndex the index of the leader to discard.
+     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
+     * @throws LeaderCardAlreadyActivatedException if the leader is active.
      */
     public void discardLeader(int leaderIndex) throws IndexOutOfBoundsException, InvalidStateActionException, LeaderCardAlreadyActivatedException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER);
@@ -92,7 +109,6 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
         if (!leaderToDiscard.isActive()){
             leaders.remove(leaderIndex);
-            //leaderToDiscard.discardCreationEffects();
             notifyGameMaster(GameMasterObserver::discardLeader);
             notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
         }else{
@@ -100,15 +116,23 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         }
     }
 
+    /**
+     * Discard the leader at the given leader index during the sut up phase.
+     * @param leaderIndex the index of the leader to discard.
+     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex.
+     */
     public void discardLeaderSetUp(int leaderIndex) throws IndexOutOfBoundsException{
         leaders.remove(leaderIndex);
         notifyAllObservers(x -> x.leaderDiscard(leaderIndex));
     }
 
     /**
-     * Method to activate a leader card
-     * @param leaderIndex is the index of the leader to activate
-     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex
+     * Activate a leader card.
+     * @param leaderIndex the index of the leader to activate.
+     * @throws IndexOutOfBoundsException if there is no leader at the leaderIndex.
+     * @throws LeaderCardAlreadyActivatedException if the player has already activated the leader.
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
      */
     public void activateLeader(int leaderIndex) throws IndexOutOfBoundsException, LeaderCardAlreadyActivatedException, NotEnoughRequirementException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.LEADER_MANAGE_AFTER);
@@ -131,15 +155,15 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leader.setActive();
 
         notifyAllObservers(x -> x.leaderActivated(leaders));
-
     }
 
     /**
-     * Method to add a development card to a Card Slot
-     * @param development is the card to add
-     * @param indexCardSlot is the index of the card slot to add the card
-     * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to its level
-     * @throws IndexOutOfBoundsException if the card slot selected does not exist
+     * Add a development card to a Card Slot.
+     * @param development the card to add.
+     * @param indexCardSlot the index of the card slot to add the card.
+     * @throws CardWithHigherOrSameLevelAlreadyIn if can't add the card due to its level.
+     * @throws IndexOutOfBoundsException if the card slot selected does not exist.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
      */
     public void addDevCardTo(Development development, int indexCardSlot) throws CardWithHigherOrSameLevelAlreadyIn, IndexOutOfBoundsException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE);
@@ -149,11 +173,19 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
     }
 
+    /**
+     * Set the row and column of deck buffer.
+     * @param row the value of the row.
+     * @param col the value of the columns.
+     */
     public void setDeckBufferInfo(int row, int col){
         rowDeckBuffer = row;
         colDeckBuffer = col;
     }
 
+    /**
+     * Add a development card to card slot.
+     */
     public void emptyCardSlotBuffer(){
         cardSlots.get(indexCardSlotBuffer).emptyBuffer();
         notifyGameMaster(x -> x.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER));
@@ -165,11 +197,13 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     }
 
     /**
-     * Method to activate a leader effect
-     * @param leaderIndex is the index of the leader
-     * @param playerState is the current state of the turn
+     * Activate a leader effect.
+     * @param leaderIndex the index of the leader.
+     * @param playerState the current state of the turn.
      * @throws IndexOutOfBoundsException if the leader selected does not exist
      * @throws CardAlreadyUsed if the card has already been used in this turn
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
      */
     public void activateLeaderEffect(int leaderIndex, PlayerState playerState) throws IndexOutOfBoundsException, CardAlreadyUsed, NotEnoughRequirementException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE,
@@ -184,6 +218,13 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         leadersUsed.add(leader);
     }
 
+    /**
+     * Activate a leader effect without consume it's use.
+     * @param leaderIndex the index of the leader.
+     * @param playerState the current state of the turn.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
+     */
     public void activateLeaderInfinite(int leaderIndex, PlayerState playerState) throws InvalidStateActionException, NotEnoughRequirementException {
         checkPlayerState(PlayerState.WHITE_MARBLE_CONVERSION);
         Leader leader = leaders.get(leaderIndex);
@@ -191,10 +232,12 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     }
 
     /**
-     * Method to activate the production of a development card
-     * @param indexCardSlot is the card slot in which the card is in it
-     * @throws CardAlreadyUsed if the card has already been used in this turn
-     * @throws IndexOutOfBoundsException if the card slot selected does not exist
+     * Activate the production of a development card.
+     * @param indexCardSlot the card slot in which the card is in it.
+     * @throws CardAlreadyUsed if the card has already been used in this turn.
+     * @throws IndexOutOfBoundsException if the card slot selected does not exist.
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
+     * @throws  InvalidStateActionException if the player is in an invalid state for the action.
      */
     public void developmentProduce(int indexCardSlot) throws CardAlreadyUsed, IndexOutOfBoundsException, NotEnoughRequirementException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION);
@@ -205,13 +248,13 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
         development.doActivationEffects(PlayerState.PRODUCTION_ACTION);
         devCardsUsed.add(development);
-
-
     }
 
     /**
-     * Method to activate the base production of the player board
-     * @throws CardAlreadyUsed if the base production has already been used in this turn
+     * Activate the base production of the player board.
+     * @throws CardAlreadyUsed if the base production has already been used in this turn.
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
+     * @throws InvalidStateActionException if the player is in an invalid state for the action.
      */
     public void baseProductionProduce() throws CardAlreadyUsed, NotEnoughRequirementException, InvalidStateActionException {
         checkPlayerState(PlayerState.LEADER_MANAGE_BEFORE, PlayerState.PRODUCTION_ACTION);
@@ -225,11 +268,11 @@ public class CardManager extends GameMasterObservable implements Observable<Card
 
 
     /**
-     * Method doIHaveDev checks if we have in our cards slot a specific number of card with a
-     * defined color and level
-     * @param howMany of type int - number of card with this propriety
-     * @param color of type Color - color of those cards, ANY if not specified
-     * @param level of type int - level of those cards
+     * Checks if we have in our cards slot a specific number of card with a defined color and level.
+     * @param howMany the number of card with this propriety.
+     * @param color the color of those cards, ANY if not specified.
+     * @param level the level of those cards.
+     * @throws NotEnoughRequirementException if the player doesn't have enough resources/cards to satisfy the requirements.
      */
     public void doIHaveDev(int howMany, Color color, int level) throws NotEnoughRequirementException {
         int count = 0;
@@ -246,10 +289,18 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         throw new NotEnoughRequirementException("You don't have enough card requirement");
     }
 
+    /**
+     * Return how many card the player own.
+     * @return how many card the player own.
+     */
     private int howManyCardDoIOwn(){
         return cardSlots.stream().mapToInt(CardSlot::getLvReached).sum();
     }
 
+    /**
+     * Return the sum af all victory points of all the cards.
+     * @return the sum af all victory points of all the cards.
+     */
     public int getVictoryPointsCard(){
         int vp;
         vp=cardSlots.stream().mapToInt(CardSlot::getVictoryPoint).sum();
@@ -257,7 +308,11 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         return vp;
     }
 
-    public Map<Integer, ArrayList<ResourceData>> listOfMarbleEffect(){
+    /**
+     * Return a map that contains all the marble effects.
+     * @return a map that contains all the marble effects.
+     */
+    public Map<Integer, ArrayList<ResourceData>> mapOfMarbleEffect(){
         return leaders.stream()
                 .filter(Leader::isActive)
                 .filter(x -> x.getOnActivationEffects().stream().anyMatch(effect -> effect instanceof MarbleEffect))
@@ -270,7 +325,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                                 .collect(Collectors.toCollection(ArrayList::new))));
     }
 
-
+    /**
+     * Return the number of marble effects.
+     * @return the number of marble effects.
+     */
     public int howManyMarbleEffects(){
         return  leaders.stream()
                 .filter(Leader::isActive)
@@ -281,7 +339,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                 .sum();
     }
 
-
+    /**
+     * Return the number of production effects.
+     * @return the number of production effects.
+     */
     public int howManyProductionEffects(){
         return leaders.stream()
                 .filter(Leader::isActive)
@@ -292,6 +353,10 @@ public class CardManager extends GameMasterObservable implements Observable<Card
                 .sum();
     }
 
+    /**
+     * Return a matrix of CardDevData based on the card in card slots.
+     * @return a matrix of CardDevData based on the card in card slots.
+     */
     public ArrayList<ArrayList<CardDevData>> toCardSlotsData(){
         ArrayList<ArrayList<CardDevData>> cardSlotsData = new ArrayList<>();
         for (CardSlot cardSlot : cardSlots){
@@ -300,10 +365,13 @@ public class CardManager extends GameMasterObservable implements Observable<Card
         return cardSlotsData;
     }
 
+    /**
+     * Return an ArrayList of CardLeaderData based on the leaders.
+     * @return an ArrayList of CardLeaderData based on the leaders.
+     */
     public ArrayList<CardLeaderData> toLeadersData(){
         return leaders.stream().map(Leader::toCardLeaderData).collect(Collectors.toCollection(ArrayList::new));
     }
-
 
     @Override
     public void attachObserver(CardManagerObserver observer) {

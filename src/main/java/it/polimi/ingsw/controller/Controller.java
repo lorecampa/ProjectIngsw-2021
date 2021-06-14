@@ -201,7 +201,7 @@ public class Controller {
             market.reset();
         }else{
             match.sendSinglePlayer(getCurrentPlayer(),
-                    new WhiteMarbleConversionRequest(whiteMarbleDrew, cardManager.listOfMarbleEffect()));
+                    new WhiteMarbleConversionRequest(whiteMarbleDrew, cardManager.mapOfMarbleEffect()));
         }
     }
 
