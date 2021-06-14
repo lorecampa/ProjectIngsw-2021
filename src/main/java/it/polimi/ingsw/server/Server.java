@@ -83,6 +83,17 @@ public class Server {
     }
 
     private void loadServerData() throws IOException {
+        File serverDataDir = new File(SERVER_DATA_PATH);
+        if (!serverDataDir.exists()){
+            boolean result = serverDataDir.mkdirs();
+            if (!result){
+                throw new IOException("Can't create server data directory");
+            }
+            FileWriter serverInfoFile = new FileWriter(SERVER_DATA_PATH + "/serverInfo.txt");
+            serverInfoFile.write("0" + "\n");
+            serverInfoFile.write("0");
+            serverInfoFile.close();
+        }
         Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         nextMatchID = Integer.parseInt(lines.get(0));
@@ -93,6 +104,14 @@ public class Server {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        File serverMatchesDir = new File(MATCH_SAVING_PATH);
+        if (!serverMatchesDir.exists()){
+            boolean result = serverMatchesDir.mkdirs();
+            if (!result){
+                throw new IOException("Can't create matches saving directory");
+            }
+        }
 
         File[] matchFiles = new File(MATCH_SAVING_PATH).listFiles((dir, name) -> !name.equals(".DS_Store"));
 

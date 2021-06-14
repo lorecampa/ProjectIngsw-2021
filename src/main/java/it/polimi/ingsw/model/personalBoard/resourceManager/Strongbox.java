@@ -17,10 +17,11 @@ public class Strongbox{
 
     private ArrayList<Resource> resources;
 
-    @JsonCreator
+
     /**
      * Constructor of Strongbox, set up all the resources
      * */
+    @JsonCreator
     public Strongbox() {
         //resources=ResourceFactory.createAllConcreteResource();
         setUpForDebug();

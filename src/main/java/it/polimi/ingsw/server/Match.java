@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;
@@ -340,7 +341,9 @@ public class Match{
         try {
             String fileName = Server.MATCH_SAVING_PATH +"/"+ getMatchID()+ ".txt";
             File file = new File(fileName);
-            Files.deleteIfExists(file.toPath());
+            if(Files.deleteIfExists(file.toPath())){
+                System.out.println("Match data file deleted!");
+            }
         } catch (IOException e) {
             System.out.println("Match data file not deleted");
         }

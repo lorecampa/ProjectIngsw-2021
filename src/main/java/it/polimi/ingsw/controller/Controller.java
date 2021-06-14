@@ -519,18 +519,19 @@ public class Controller {
             try {
                 Files.createDirectories(Paths.get(Server.MATCH_SAVING_PATH));
             } catch (IOException e) {
+                System.out.println("Error creating match saving directory");
                 e.printStackTrace();
             }
         }
 
         String fileName = Server.MATCH_SAVING_PATH +"/"+ match.getMatchID()+ ".txt";
         try {
-            FileWriter file = new FileWriter(fileName);
             ObjectMapper mapper = new ObjectMapper();
             mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
             mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
             MatchData matchSave = new MatchData(match, gameMaster);
+
+            FileWriter file = new FileWriter(fileName);
             file.write(mapper.writeValueAsString(matchSave));
             file.close();
         } catch (IOException e) {
