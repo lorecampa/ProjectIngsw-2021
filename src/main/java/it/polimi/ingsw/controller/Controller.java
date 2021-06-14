@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.message.clientMessage.*;
@@ -15,15 +18,18 @@ import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.server.HandlerState;
-import it.polimi.ingsw.server.Match;
-import it.polimi.ingsw.server.VirtualClient;
+import it.polimi.ingsw.server.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Controller {
     private final GameMaster gameMaster;
     private final Match match;
+
 
     public Controller(GameMaster gameMaster, Match match) {
         this.gameMaster = gameMaster;
@@ -110,11 +116,13 @@ public class Controller {
         String currentPlayer = gameMaster.getCurrentPlayer();
         if (match.isReconnected(currentPlayer)){
             match.playerReturnInGame(currentPlayer);
-            match.sendSinglePlayer(currentPlayer, reconnectGameMessage());
+            match.sendSinglePlayer(currentPlayer, reconnectGameMessage(currentPlayer));
         }
 
         if(gameMaster.isGameEnded()){
             endGame();
+        }else{
+            saveMatchState();
         }
     }
 
@@ -123,7 +131,7 @@ public class Controller {
         match.removeMatchFromServer();
     }
 
-    private ReconnectGameMessage reconnectGameMessage(){
+    public ReconnectGameMessage reconnectGameMessage(String playerUsername){
         ArrayList<String> usernames = match.getUsernames();
         MarketData marketData = gameMaster.getMarket().toMarketData();
         DeckDevData deckDevData = gameMaster.toDeckDevData();
@@ -132,7 +140,7 @@ public class Controller {
         for (String username : usernames){
             models.add(modelData(username));
         }
-        return new ReconnectGameMessage(usernames,marketData,deckDevData,baseProdData,models);
+        return new ReconnectGameMessage(usernames,marketData,deckDevData,baseProdData,models, playerUsername);
     }
 
     private ModelData modelData(String username){
@@ -504,7 +512,30 @@ public class Controller {
 
     }
 
-    public GameMaster getGameMaster() {
-        return gameMaster;
+
+    //--SAVE GAME
+    public void saveMatchState(){
+        if (!Files.isDirectory(Paths.get(Server.MATCH_SAVING_PATH))) {
+            try {
+                Files.createDirectories(Paths.get(Server.MATCH_SAVING_PATH));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String fileName = Server.MATCH_SAVING_PATH +"/"+ match.getMatchID()+ ".txt";
+        try {
+            FileWriter file = new FileWriter(fileName);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+            MatchData matchSave = new MatchData(match, gameMaster);
+            file.write(mapper.writeValueAsString(matchSave));
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

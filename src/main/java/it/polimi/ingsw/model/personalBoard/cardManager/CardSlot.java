@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 public class CardSlot {
     private final ArrayList<Development> developments = new ArrayList<>();
     private Development buffer = null;
+
+
+
     /**
      * Method to get the higher lv present in this slot
      */

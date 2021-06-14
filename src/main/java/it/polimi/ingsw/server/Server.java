@@ -3,22 +3,21 @@ package it.polimi.ingsw.server;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.clientMessage.ErrorMessage;
 import it.polimi.ingsw.message.clientMessage.ErrorType;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,14 +28,15 @@ public class Server {
     private ServerSocket serverSocket;
     private int nextClientID;
     private int nextMatchID;
-
     private final ArrayList<ClientConnectionHandler> lobby;
-
     private final ArrayList<Match> matches;
     private final ArrayList<Match> matchesToFill;
-
     private final Object lockOpenMatch = new Object();
     private Match openMatch;
+
+    public static final String SERVER_DATA_PATH = "ServerData";
+    public static final String MATCH_SAVING_PATH = SERVER_DATA_PATH + "/MatchSaving";
+
 
 
     public  Server(String[] args){
@@ -63,21 +63,52 @@ public class Server {
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
         matchesToFill = new ArrayList<>();
-        nextClientID = 0;
-        nextMatchID = 0;
 
     }
 
     public void startServer(){
         try {
             serverSocket = new ServerSocket(port);
+            loadServerData();
+            loadMatches();
             System.out.println("Server ready");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        //FIXME is correct to start the match if failed?
+
         new Thread(new ServerInput(this)).start();
         acceptConnection();
+    }
+
+    private void loadServerData() throws IOException {
+        Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
+        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        nextMatchID = Integer.parseInt(lines.get(0));
+        nextClientID = Integer.parseInt(lines.get(1));
+    }
+
+    private void loadMatches() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        File[] matchFiles = new File(MATCH_SAVING_PATH).listFiles((dir, name) -> !name.equals(".DS_Store"));
+
+        if (matchFiles == null || matchFiles.length == 0){
+            System.out.println("No files to load");
+            return;
+        }
+        System.out.println(matchFiles.length + " matches to load found");
+
+        for (File file: matchFiles){
+            if (file.isFile()){
+                MatchData matchData = mapper.readValue(file, MatchData.class);
+                matches.add(matchData.createMatch(this));
+            }
+        }
+
     }
 
     public void closeOpenMatch(){
@@ -195,12 +226,31 @@ public class Server {
         }
     }
 
-    public synchronized int getNextClientID(){
-        return  nextClientID++;
+    public synchronized int getNextClientID() throws IOException {
+        Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
+        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        int lastClientID = Integer.parseInt(lines.get(1));
+        nextClientID = lastClientID + 1;
+        lines.set(1, Integer.toString(nextClientID));
+        Files.write(path, lines, StandardCharsets.UTF_8);
+        return  nextClientID;
     }
 
-    public synchronized int getNextMatchID(){
-        return nextMatchID++;
+    public synchronized int getNextMatchID() {
+        Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
+        List<String> lines;
+        //FIXME it should throw an exception because it is impossible to change the nextID value
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            int lastMatchID = Integer.parseInt(lines.get(0));
+            nextMatchID = lastMatchID + 1;
+            lines.set(0, Integer.toString(nextMatchID));
+            Files.write(path, lines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return  nextMatchID;
     }
 
     public void acceptConnection(){
@@ -210,7 +260,6 @@ public class Server {
                 //TODO reactivate
                 //socket.setSoTimeout(20000);
                 System.out.println("Server Socket has accepted a connection");
-
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);
             } catch(IOException e) {

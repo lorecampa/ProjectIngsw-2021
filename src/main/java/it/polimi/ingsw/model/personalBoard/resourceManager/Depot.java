@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.exception.TooMuchResourceDepotException;
@@ -31,7 +33,9 @@ public class Depot {
      * @param maxStorable integer representing the max value of local resource
      * @param resource  to initialize at
     */
-    public Depot(Resource resource, int maxStorable) {
+    @JsonCreator
+    public Depot(@JsonProperty("resource") Resource resource,
+                 @JsonProperty("maxStorable") int maxStorable) {
         this.resource = resource;
         this.maxStorable = maxStorable;
         this.lockDepot = true;

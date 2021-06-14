@@ -1,33 +1,45 @@
 package it.polimi.ingsw.server;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.GameMaster;
-import it.polimi.ingsw.model.personalBoard.PersonalBoard;
-import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
-import it.polimi.ingsw.model.personalBoard.resourceManager.Strongbox;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
-public class MatchData {
-    private final ArrayList<String> allPlayers;
-    private final ArrayList<String> activePlayers;
-    private final ArrayList<String> inactivePlayers;
-    private final ArrayList<String> logs;
-    private final int matchID;
-    private final int numOfPlayers;
-    private final GameMaster gameMaster;
 
-    public MatchData(Match match){
-        allPlayers = match.getAllPlayers().stream().map(VirtualClient::getUsername)
-                .collect(Collectors.toCollection(ArrayList::new));
-        activePlayers = match.getActivePlayers().stream().map(VirtualClient::getUsername)
-                .collect(Collectors.toCollection(ArrayList::new));
-        inactivePlayers = match.getInactivePlayers().stream().map(VirtualClient::getUsername)
-                .collect(Collectors.toCollection(ArrayList::new));
+public class MatchData {
+    private HashMap<String, Integer> allPlayers;
+    private ArrayList<String> logs;
+    private int matchID;
+    private int numOfPlayers;
+    private GameMaster gameMaster;
+
+    @JsonCreator
+    public MatchData() {
+        super();
+    }
+
+
+    public MatchData(Match match, GameMaster gameMaster){
+        allPlayers = new HashMap<>();
+        for (VirtualClient vc: match.getAllPlayers()){
+            allPlayers.put(vc.getUsername(), vc.getClientID());
+        }
+
         logs = match.getLogs();
         matchID = match.getMatchID();
         numOfPlayers = match.getNumOfPlayers();
 
-        gameMaster = match.getController().getGameMaster();
+        this.gameMaster = gameMaster;
+
+
     }
+
+
+    public Match createMatch(Server server){
+        return new Match(server, matchID, numOfPlayers, allPlayers, logs, gameMaster);
+
+    }
+
+
 }

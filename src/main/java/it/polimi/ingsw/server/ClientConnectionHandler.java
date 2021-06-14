@@ -34,13 +34,14 @@ public class ClientConnectionHandler implements Runnable {
 
     public ClientConnectionHandler(Socket socket, Server server, int clientID) throws IOException {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
         this.socket = socket;
         this.clientID = clientID;
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream());
         serverMessageHandler = new ServerMessageHandler(server,this);
     }
+
+
 
     private void startPinging(){
         Thread ping = new Thread(() -> {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.observer.*;
@@ -18,18 +19,16 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     private final Warehouse currWarehouse;
     private final Strongbox strongbox;
-
     private final ArrayList<Resource> resourcesBuffer = new ArrayList<>();
     private final ArrayList<Resource> discounts=new ArrayList<>();
     private final ArrayList<Resource> resourcesToProduce=new ArrayList<>();
-
     private int faithPoint=0;
     private int anyRequired =0;
     private int anyToProduce = 0;
-
     private final ArrayList<Resource> myResources = new ArrayList<>();
     private final ArrayList<Resource> myDiscounts = new ArrayList<>();
 
+    @JsonCreator
     public ResourceManager(){
         currWarehouse = new Warehouse();
         strongbox = new Strongbox();

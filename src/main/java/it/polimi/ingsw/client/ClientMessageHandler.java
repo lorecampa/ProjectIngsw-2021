@@ -63,6 +63,7 @@ public abstract class ClientMessageHandler {
         for (ModelData modelData : message.getModels()){
             client.setUpModel(modelData);
         }
+        client.setMyName(message.getPlayerUsername());
         client.setState(ClientState.IN_GAME);
     }
 

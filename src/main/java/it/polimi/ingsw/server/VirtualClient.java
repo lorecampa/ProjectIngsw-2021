@@ -30,6 +30,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     private final Match match;
     private boolean ready;
     private boolean reconnected = false;
+    private int clientID;
 
     public VirtualClient(String username,
                          ClientConnectionHandler clientConnectionHandler,
@@ -40,6 +41,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.match = match;
         this.client.setVirtualClient(this);
         this.ready = false;
+        this.clientID = client.getClientID();
     }
 
     public VirtualClient(String username, Match match) {
@@ -47,6 +49,14 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.match = match;
         this.ready = false;
     }
+    public VirtualClient(String username, Match match, int clientID){
+        this.username = username;
+        this.match = match;
+        this.ready = false;
+        this.clientID = clientID;
+
+    }
+
 
     public void addToLog(ServerMessage msg){
         SimpleDateFormat formatter=new SimpleDateFormat("HH:mm:ss");
@@ -62,7 +72,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
     public void setClient(ClientConnectionHandler client) { this.client = client; }
 
     public int getClientID() {
-        return client.getClientID();
+        return clientID;
     }
 
     public boolean isReconnected() {

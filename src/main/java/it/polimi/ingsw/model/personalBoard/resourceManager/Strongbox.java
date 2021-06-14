@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import it.polimi.ingsw.model.resource.Resource;
@@ -15,6 +16,7 @@ public class Strongbox{
 
     private ArrayList<Resource> resources;
 
+    @JsonCreator
     /**
      * Constructor of Strongbox, set up all the resources
      * */

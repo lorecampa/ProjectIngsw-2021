@@ -19,6 +19,8 @@ import java.util.function.Consumer;
 public class FaithTrack extends GameMasterObservable  implements Observable<FaithTrackObserver>{
     @JsonIgnore
     List<FaithTrackObserver> faithTrackObserverList = new ArrayList<>();
+    @JsonIgnore
+    private final ArrayList<Boolean> popeFavorAcquired = new ArrayList<>();
 
     private int victoryPoints;
     private int popeFavorVP;
@@ -26,8 +28,7 @@ public class FaithTrack extends GameMasterObservable  implements Observable<Fait
     private final ArrayList<Integer> popeFavor;
     private final ArrayList<Cell> track;
 
-    @JsonIgnore
-    private final ArrayList<Boolean> popeFavorAcquired = new ArrayList<>();
+
 
     /**
      * Construct a faith track in a state based on parameters.

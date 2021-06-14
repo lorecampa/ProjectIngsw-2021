@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.InvalidOrganizationWarehouseException;
 import it.polimi.ingsw.exception.NegativeResourceException;
@@ -15,6 +16,8 @@ public class Warehouse{
     private ArrayList<Depot> depots = new ArrayList<>();
     private ArrayList<Depot> depotsLeader = new ArrayList<>();
 
+
+    @JsonCreator
     /**
      * Main constructor of warehouse, create all his depots
      * */

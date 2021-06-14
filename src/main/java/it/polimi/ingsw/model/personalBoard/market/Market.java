@@ -36,6 +36,9 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
     private int numOfWhiteMarbleDrew = 0;
     private int whiteMarbleToTransform = 0;
     private final ArrayList<Resource> resourcesToSend = new ArrayList<>();
+    private final ArrayList<Marble> allMarbles;
+
+
 
     /**
      * Constructs a Market with the specified number of rows and columns and inserts the marbles contained in allMarbles,
@@ -54,6 +57,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
 
         this.numCol = numCol;
         this.numRow = numRow;
+        this.allMarbles = allMarbles;
 
         // check if it's possible to create the market
         if (numCol <= 0 || numRow <= 0)
@@ -79,7 +83,7 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         }
 
         // set the marble to insert with the last marble
-        this.marbleToInsert = allMarbles.get(numCol*numRow);
+        this.marbleToInsert = this.allMarbles.get(numCol*numRow);
     }
 
     /**
@@ -221,6 +225,10 @@ public class Market extends GameMasterObservable implements Observable<MarketObs
         ColorData marbleToInsertColor = marbleToInsert.getColorData();
 
         return new MarketData(marketTrayColor,marbleToInsertColor,numRow,numCol);
+    }
+
+    public ArrayList<Marble> getAllMarbles() {
+        return allMarbles;
     }
 
     @Override

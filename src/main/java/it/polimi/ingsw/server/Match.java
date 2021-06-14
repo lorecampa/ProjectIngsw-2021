@@ -1,8 +1,6 @@
 package it.polimi.ingsw.server;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;
@@ -14,13 +12,11 @@ import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.cardManager.CardManager;
-
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,21 +24,37 @@ public class Match{
     private final Server server;
     private Controller controller;
     private final int numOfPlayers;
-    private final ArrayList<VirtualClient> allPlayers;
-    private final ArrayList<VirtualClient> activePlayers;
-    private final ArrayList<VirtualClient> inactivePlayers;
-    private final ArrayList<String> logs =new ArrayList<>();
+    private final ArrayList<VirtualClient> allPlayers = new ArrayList<>();
+    private final ArrayList<VirtualClient> activePlayers = new ArrayList<>();
+    private final ArrayList<VirtualClient> inactivePlayers = new ArrayList<>();
+    private final ArrayList<String> logs;
     private final int matchID;
-    private final String MATCH_SAVING_PATH = "MatchSaving";
 
 
     public Match(int numOfPlayers, Server server, int matchID) {
         this.server = server;
         this.numOfPlayers = numOfPlayers;
-        this.allPlayers = new ArrayList<>();
-        this.activePlayers = new ArrayList<>();
-        this.inactivePlayers = new ArrayList<>();
         this.matchID = matchID;
+        this.logs = new ArrayList<>();
+    }
+
+    public Match(Server server, int matchID, int numOfPlayers,
+                 Map<String, Integer> allPlayers,
+                 ArrayList<String> logs,
+                 GameMaster gameMaster){
+
+        this.server = server;
+        this.matchID = matchID;
+        this.numOfPlayers = numOfPlayers;
+        this.logs = logs;
+
+        for (String username: allPlayers.keySet()){
+            VirtualClient vc = new VirtualClient(username, this, allPlayers.get(username));
+            this.allPlayers.add(vc);
+            this.inactivePlayers.add(vc);
+        }
+        gameMaster.restoreReferenceAfterServerQuit();
+        this.controller = new Controller(gameMaster, this);
     }
 
     public boolean isOpen(){
@@ -184,17 +196,24 @@ public class Match{
                 for (VirtualClient virtualClient : inactivePlayers){
                     if (virtualClient.getClientID() == clientID){
 
-                        newClientConnHandler.setServerMessageHandler(virtualClient.getClient().getServerMessageHandler());
-                        newClientConnHandler.getServerMessageHandler().setClient(newClientConnHandler);
-                        newClientConnHandler.setClientID(virtualClient.getClient().getClientID());
+                        ServerMessageHandler handler = new ServerMessageHandler(server, newClientConnHandler);
+                        handler.setController(getController());
+                        handler.setVirtualClient(virtualClient);
+                        handler.setServerPhase(HandlerState.IN_MATCH);
 
+                        newClientConnHandler.setServerMessageHandler(handler);
+                        newClientConnHandler.setClientID(clientID);
                         virtualClient.setClient(newClientConnHandler);
-
                         inactivePlayers.remove(virtualClient);
                         virtualClient.setReconnected(true);
-                        //activePlayers.add(virtualClient);
 
-                        virtualClient.getClient().writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,virtualClient.getUsername()));
+                        String username = virtualClient.getUsername();
+                        if (getController().getCurrentPlayer().equals(username)){
+                            playerReturnInGame(username);
+                            sendSinglePlayer(username, controller.reconnectGameMessage(username));
+                        }else{
+                            virtualClient.getClient().writeToStream(new ConnectionMessage(ConnectionType.RECONNECTION,virtualClient.getUsername()));
+                        }
 
                         return true;
                     }
@@ -228,7 +247,6 @@ public class Match{
 
     public void startMatch(){
         synchronized (allPlayers) {
-
             ArrayList<String> playersUsername = allPlayers.stream().map(VirtualClient::getUsername)
                     .collect(Collectors.toCollection(ArrayList::new));
 
@@ -319,6 +337,13 @@ public class Match{
     public void removeMatchFromServer(){
         allPlayers.forEach(x-> x.getClient().setState(HandlerState.FIRST_CONTACT));
         System.out.println("Match with index: "+this.matchID+" deleted!");
+        try {
+            String fileName = Server.MATCH_SAVING_PATH +"/"+ getMatchID()+ ".txt";
+            File file = new File(fileName);
+            Files.deleteIfExists(file.toPath());
+        } catch (IOException e) {
+            System.out.println("Match data file not deleted");
+        }
         server.matchEnd(this);
     }
 
@@ -339,33 +364,6 @@ public class Match{
         }
     }
 
-    public void saveMatchState(){
-        if (!Files.isDirectory(Paths.get(MATCH_SAVING_PATH))) {
-            try {
-                Files.createDirectories(Paths.get(MATCH_SAVING_PATH));
-            } catch (IOException e) {
-                //error saving match data
-                e.printStackTrace();
-            }
-        }
 
-        String fileName = MATCH_SAVING_PATH +"/"+ getMatchID()+ ".txt";
-        try {
-            FileWriter file = new FileWriter(fileName);
-            ObjectMapper mapper = new ObjectMapper();
-
-            mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
-
-            MatchData matchSave = new MatchData(this);
-            file.write(mapper.writeValueAsString(matchSave));
-
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 }

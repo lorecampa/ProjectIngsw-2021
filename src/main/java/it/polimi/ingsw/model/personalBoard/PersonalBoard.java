@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.personalBoard;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.PlayerState;
@@ -22,10 +24,11 @@ public class PersonalBoard {
     private final String username;
 
 
-    public PersonalBoard(String username,
-                         FaithTrack faithTrack,
-                         ResourceManager resourceManager,
-                         CardManager cardManager) throws IOException {
+    @JsonCreator
+    public PersonalBoard(@JsonProperty("username") String username,
+                         @JsonProperty("faithTrack")FaithTrack faithTrack,
+                         @JsonProperty("resourceManager")ResourceManager resourceManager,
+                         @JsonProperty("cardManager")CardManager cardManager) throws IOException {
 
         this.username = username;
         this.faithTrack = faithTrack;
@@ -58,6 +61,8 @@ public class PersonalBoard {
     public String getUsername() {
         return username;
     }
+
+
 
     public void attachGameMasterObserver(GameMaster gameMaster){
         faithTrack.attachGameMasterObserver(gameMaster);

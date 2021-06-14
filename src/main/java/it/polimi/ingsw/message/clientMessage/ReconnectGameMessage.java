@@ -15,18 +15,24 @@ public class ReconnectGameMessage implements ClientMessage{
     private final MarketData market;
     private final DeckDevData deckDev;
     private final ArrayList<EffectData> baseProd;
-
     private final ArrayList<ModelData> models;
+    //player username
+    private final String playerUsername;
+
 
     @JsonCreator
     public ReconnectGameMessage(@JsonProperty("usernames") ArrayList<String> usernames,
-                                @JsonProperty("market")MarketData market, @JsonProperty("deckDev")DeckDevData deckDev,
-                                @JsonProperty("baseProd")ArrayList<EffectData> baseProd, @JsonProperty("models")ArrayList<ModelData> models) {
+                                @JsonProperty("market")MarketData market,
+                                @JsonProperty("deckDev")DeckDevData deckDev,
+                                @JsonProperty("baseProd")ArrayList<EffectData> baseProd,
+                                @JsonProperty("models")ArrayList<ModelData> models,
+                                @JsonProperty("playerUsername") String playerUsername) {
         this.usernames = usernames;
         this.market = market;
         this.deckDev = deckDev;
         this.baseProd = baseProd;
         this.models = models;
+        this.playerUsername = playerUsername;
     }
 
     public ArrayList<String> getUsernames() {
@@ -47,6 +53,10 @@ public class ReconnectGameMessage implements ClientMessage{
 
     public ArrayList<ModelData> getModels() {
         return models;
+    }
+
+    public String getPlayerUsername() {
+        return playerUsername;
     }
 
     @Override

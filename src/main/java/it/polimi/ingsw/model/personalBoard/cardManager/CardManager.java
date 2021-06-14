@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.CardDevData;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.ResourceData;
@@ -12,6 +14,8 @@ import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.Effect.Activation.MarbleEffect;
 import it.polimi.ingsw.model.card.Effect.Activation.ProductionEffect;
 import it.polimi.ingsw.model.card.Leader;
+import it.polimi.ingsw.model.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.observer.CardManagerObserver;
 import it.polimi.ingsw.observer.GameMasterObservable;
@@ -34,13 +38,12 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     private final Development baseProduction;
     private final ArrayList<Development> devCardsUsed = new ArrayList<>();
     private final ArrayList<Leader> leadersUsed = new ArrayList<>();
-
     private int indexCardSlotBuffer;
     private int rowDeckBuffer;
     private int colDeckBuffer;
 
-
-    public CardManager(Development baseProduction) throws IOException {
+    @JsonCreator
+    public CardManager(@JsonProperty("baseProduction") Development baseProduction) throws IOException {
         this.baseProduction = baseProduction;
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new CardSlot());
@@ -57,6 +60,16 @@ public class CardManager extends GameMasterObservable implements Observable<Card
     public void restoreCM(){
         devCardsUsed.clear();
         leadersUsed.clear();
+    }
+
+    public void restoreCardsManagerReference(PersonalBoard pb, Market mk){
+        baseProduction.attachCardToUser(pb, mk);
+        leaders.forEach(x -> x.attachCardToUser(pb, mk));
+        for (CardSlot cs: cardSlots){
+            for (int i = 0; i < cs.getLvReached(); i++){
+                cs.getDevelopment(i).attachCardToUser(pb, mk);
+            }
+        }
     }
 
     /**

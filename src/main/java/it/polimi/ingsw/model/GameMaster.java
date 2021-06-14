@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ModelData;
@@ -35,30 +34,26 @@ import java.util.stream.Collectors;
 public class GameMaster implements GameMasterObserver,Observable<ModelObserver>, LorenzoIlMagnifico {
     @JsonIgnore
     List<ModelObserver> modelObserverList = new ArrayList<>();
-    @JsonIgnore
-    ObjectMapper mapper;
-
+    //-------------
+    private Market market;
+    private LinkedList<Token> deckToken;
+    private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
+    private LinkedList<Leader> deckLeader;
     private PlayerState playerState;
     private final static String NAME_LORENZO = "LorenzoIlMagnifico";
     private String currentPlayer = null;
     private int numberOfPlayer;
-    private final NavigableMap<String, PersonalBoard> playersPersonalBoard = new TreeMap<>();
     private final ArrayList<String> playersTurn = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<Development>>> deckDevelopment;
-    private LinkedList<Leader> deckLeader;
-    private Market market;
-    private LinkedList<Token> deckToken;
     private int vaticanReportReached = 0;
     private int leaderAtStart;
     private boolean isLastTurn = false;
     private boolean gameEnded = false;
-
     private String baseProductionSerialized;
     private String faithTrackSerialized;
 
-
-    public static String getNameLorenzo() {
-        return NAME_LORENZO;
+    @JsonCreator
+    public GameMaster() {
     }
 
     /**
@@ -70,9 +65,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public GameMaster(GameSetting gameSetting,
                       ArrayList<String> players) throws IOException{
-
-        mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         this.numberOfPlayer = players.size();
         //game loading
@@ -100,6 +92,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws JsonProcessingException if some error occurs in serialization
      */
     private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+
         baseProductionSerialized = mapper.writeValueAsString(gameSetting.getBaseProduction());
         faithTrackSerialized = mapper.writeValueAsString(gameSetting.getFaithTrack());
 
@@ -215,6 +211,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * @throws IOException when creating the personal board causes problem opening the Json files
      */
     public void addPlayer(String username) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
         FaithTrack playerFaithTrack = mapper.readValue(faithTrackSerialized, FaithTrack.class);
 
         ResourceManager playerResourceManager = new ResourceManager();
@@ -346,9 +345,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     public ArrayList<EffectData> toEffectDataBasePro(){
-        Development playerBaseProduction;
         try {
-            playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            Development playerBaseProduction = mapper.readValue(baseProductionSerialized, Development.class);
             return playerBaseProduction.toCardDevData().getEffects();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -449,6 +449,19 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             winningCondition();
         }
     }
+    public static String getNameLorenzo() {
+        return NAME_LORENZO;
+    }
+
+    public void restoreReferenceAfterServerQuit(){
+        market.attachGameMasterObserver(this);
+
+        playersPersonalBoard.values().forEach(x ->{
+            x.attachGameMasterObserver(this);
+            x.getCardManager().restoreCardsManagerReference(x, market);
+        });
+    }
+
 
     /**
      * Method shuffleToken shuffle the deck of Token for the single player mode

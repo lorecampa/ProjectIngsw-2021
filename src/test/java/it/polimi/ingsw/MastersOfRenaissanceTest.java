@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
-import it.polimi.ingsw.server.MatchData;
+import it.polimi.ingsw.server.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -44,30 +43,32 @@ public class MastersOfRenaissanceTest
 
     @Test
     void prova(){
-        if (!Files.isDirectory(Paths.get(MATCH_SAVING_PATH))) {
-            try {
-                Files.createDirectories(Paths.get(MATCH_SAVING_PATH));
-            } catch (IOException e) {
-                //error saving match data
-                e.printStackTrace();
-            }
-        }
 
-        String fileName = MATCH_SAVING_PATH +"/"+ 0 + ".txt";
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+
         try {
-            FileWriter file = new FileWriter(fileName);
-            ObjectMapper mapper = new ObjectMapper();
-
-            mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
-
-            //MatchData matchSave = new MatchData(this);
+            FileWriter file = new FileWriter(Server.MATCH_SAVING_PATH + "/10.txt");
             file.write(mapper.writeValueAsString(gm));
-
             file.close();
         } catch (IOException e) {
+            System.out.println("Error serialization");
             e.printStackTrace();
         }
+
+        File fileToRead = new File(Server.MATCH_SAVING_PATH + "/10.txt");
+        try {
+            GameMaster gm = mapper.readValue(fileToRead, GameMaster.class);
+            System.out.println(gm.getNumberOfPlayer());
+        } catch (IOException e) {
+            System.out.println("Error deserialization");
+            e.printStackTrace();
+        }
+
+
     }
 }

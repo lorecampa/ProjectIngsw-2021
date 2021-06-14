@@ -13,6 +13,8 @@ public class Debug implements ServerCommand{
 
     @Override
     public void doCommand() {
-        server.getMatches().get(0).saveMatchState();
+        if (server.getMatches()!=null){
+            server.getMatches().get(0).getController().saveMatchState();
+        }
     }
 }
