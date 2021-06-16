@@ -19,6 +19,9 @@ public class AnyCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME) && CommandsUtility.clientStateNot(client, ClientState.ENTERING_LOBBY)){
@@ -48,6 +51,9 @@ public class AnyCMD implements Command{
         client.writeToStream(new AnyResponse(resourceToSend));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -61,6 +67,9 @@ public class AnyCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to choose in which Resources you want to convert the ANY");

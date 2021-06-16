@@ -19,6 +19,9 @@ public class DiscardCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
 
@@ -55,6 +58,9 @@ public class DiscardCMD implements Command{
         client.writeToStream(new LeaderManage(leaderIndex,true));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -68,6 +74,9 @@ public class DiscardCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to discard a leader and the extra resources from market");

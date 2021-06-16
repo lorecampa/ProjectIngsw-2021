@@ -15,6 +15,9 @@ public class ActionCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
 
@@ -67,6 +70,9 @@ public class ActionCMD implements Command{
         }
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -89,11 +95,18 @@ public class ActionCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to activate an action at the begging of your turn");
     }
 
+    /**
+     * Manage the produce action
+     * @param split the param need to produce
+     * */
     public void produce(String[] split){
         switch(split[1]){
             case "cs":
@@ -132,6 +145,10 @@ public class ActionCMD implements Command{
         }
     }
 
+    /**
+     * Manage the developer action
+     * @param split the param need to developer
+     * */
     public void developer(String[] split){
         int level=CommandsUtility.stringToInt(split[1]);
 
@@ -157,6 +174,10 @@ public class ActionCMD implements Command{
         client.writeToStream(new DevelopmentAction(level, column,cardSlot));
     }
 
+    /**
+     * Manage the market action
+     * @param split the param need to market
+     * */
     public void market(String[] split){
         switch (split[1]){
             case "col":
@@ -182,6 +203,10 @@ public class ActionCMD implements Command{
         }
     }
 
+    /**
+     * Manage the leader action
+     * @param split the param need to leader
+     * */
     public void leader(String[] split){
         int leaderIndex=CommandsUtility.stringToInt(split[1]);
 

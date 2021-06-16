@@ -18,6 +18,9 @@ public class QuitCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if (client.getState() != ClientState.GAME_OVER){
@@ -30,6 +33,9 @@ public class QuitCMD implements Command{
 
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -39,6 +45,9 @@ public class QuitCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to quit the place you are in");

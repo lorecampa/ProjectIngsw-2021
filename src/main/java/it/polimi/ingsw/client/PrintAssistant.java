@@ -25,20 +25,47 @@ public class PrintAssistant {
 
     public static PrintAssistant instance = new PrintAssistant();
 
+    /**
+     * Print the text with the txColor and with the bkColor
+     * @param text to print
+     * @param txColor of text
+     * @param bkColor of text
+     * */
     public void printf(String text, String txColor, String bkColor){
         System.out.println(bkColor + txColor+text+ANSI_RESET+ANSI_BLACK+"|"+ANSI_RESET);
     }
+
+    /**
+     * Print the text with the txColor and with the bkColor
+     * @param text to print
+     * @param txColor of text
+     * */
     public void printf(String text, String txColor){
         System.out.println(txColor+text+ANSI_RESET);
     }
+
+    /**
+     * Print the text with the txColor and with the bkColor
+     * @param text to print
+     * */
     public void printf(String text){
         System.out.println(text);
     }
 
+    /**
+     * Print the text as error, with red background and the text color: black
+     * @param text i want to print
+     * */
     public void errorPrint(String text){
         System.out.println(ANSI_RED_BACKGROUND + ANSI_BLACK+text+ANSI_RESET);
     }
 
+    /**
+     * Print an ArrayList of String with txColor and bkColor
+     * @param texts to print
+     * @param txColor of text
+     * @param bkColor of text
+     * */
     public void printfMultipleString(ArrayList<String>texts, String txColor, String bkColor){
         int maxSize = findMaxLength(texts);
         for(String text : texts){
@@ -46,22 +73,31 @@ public class PrintAssistant {
         }
     }
 
+    /**
+     * Print an ArrayList of String with txColor and bkColor
+     * @param texts to print
+     * @param txColor of text
+     * */
     public void printfMultipleString(ArrayList<String>texts, String txColor){
         for(String text : texts){
             System.out.println(txColor+text+ANSI_RESET);
         }
     }
 
+    /**
+     * Print an ArrayList of String with txColor and bkColor
+     * @param texts to print
+     * */
     public void printfMultipleString(ArrayList<String>texts){
         for(String text : texts){
             System.out.println(text+ANSI_RESET);
         }
     }
 
-    public void clear(){
-
-    }
-
+    /**
+     * Return the max length in the array
+     * @param texts to check
+     * */
     private int findMaxLength(ArrayList<String> texts){
         int max=texts.get(0).length();
         for(String text : texts){
@@ -71,14 +107,34 @@ public class PrintAssistant {
         return max;
     }
 
+    /**
+     * Pad the string right of n spaces
+     * @param s string to pad
+     * @param n number of spaces
+     * */
     public String padRight(String s, int n) {
         return String.format("%-" + n + "s", s);
     }
 
+    /**
+     * Pad the string left of n spaces
+     * @param s string to pad
+     * @param n number of spaces
+     * @deprecated
+     * */
     public String padLeft(String s, int n) {
         return String.format("%" + n + "s", s);
     }
 
+    /**
+     * Return the string s centered between a string of numberOfCharTot char
+     * @param s string to center
+     * @param charToFill the character u want to use to fill it up
+     * @param numberOfCharTot integer
+     * @param startChar first char
+     * @param endChar last char
+     * @return the string s centered between a string of numberOfCharTot char
+     * */
     public String stringBetweenChar(String s, char charToFill, int numberOfCharTot, char startChar, char endChar){
         int numContained = howManyColorContain(s);
         int numReset = howManyResetContain(s);
@@ -90,6 +146,14 @@ public class PrintAssistant {
                 endChar;
     }
 
+    /**
+     * Return the string fit to width if possible
+     * @param originalString text to fit
+     * @param width number of char tot
+     * @param spacing char to use to fill up
+     * @param starChar first char
+     * @param endChar last char
+     * */
     public String fitToWidth(String originalString, int width, char spacing, char starChar, char endChar){
         String s=starChar+"";
         s+=originalString;
@@ -101,6 +165,11 @@ public class PrintAssistant {
         return s;
     }
 
+    /**
+     * Return the string fit to width if possible
+     * @param originalString text to fit
+     * @param width number of char tot
+     * */
     public String fitToWidth(String originalString, int width){
         String s="";
         s+=originalString;
@@ -111,12 +180,11 @@ public class PrintAssistant {
         return s;
     }
 
-    public static void main(String[] args) {
-        String s= ANSI_RED+"1234"+ANSI_RESET+"5678"+ ANSI_GREEN_BACKGROUND+"9"+ANSI_RESET;
-        System.out.println(s.length()+" Red:"+ANSI_RED.length()+" reset:"+ANSI_RESET.length());
-        instance.printf(instance.fitToWidth(s, 40, ' ', ' ', ' '));
-    }
-
+    /**
+     * Return the number of color contained in s
+     * @param s the string to check
+     * @return the number of color contained in s
+     * */
     private int howManyColorContain(String s){
         int num=0;
         num+= howManyXContain(ANSI_WHITE_BACKGROUND, s);
@@ -138,10 +206,21 @@ public class PrintAssistant {
         return num;
     }
 
+    /**
+     * Return the number of reset contained in s
+     * @param s the string to check
+     * @return the number of reset contained in s
+     * */
     private int howManyResetContain(String s){
         return howManyXContain(ANSI_RESET, s);
     }
 
+    /**
+     * Return the number of color contained in s
+     * @param s the string to check
+     * @param color we are searching for
+     * @return the number of color contained in s
+     * */
     private int howManyXContain(String color, String s){
         int num=0;
         Pattern p= Pattern.compile(color, Pattern.LITERAL);
@@ -154,6 +233,12 @@ public class PrintAssistant {
         return num;
     }
 
+    /**
+     * Return a string of c with length num
+     * @param c character to use
+     * @param num length of final string
+     * @return a string of c with length num
+     * */
     public String generateAStringOf(char c, int num){
         StringBuilder string= new StringBuilder();
         if(num<=0)
@@ -162,10 +247,17 @@ public class PrintAssistant {
         return string.toString();
     }
 
+    /**
+     * Print the invalid param command error
+     * */
     public void invalidParamCommand(String command){
         command = command.toUpperCase();
         errorPrint("Invalid param of "+command+", pls type help "+command+" to know the right one!");
     }
+
+    /**
+     * Print the invalid state command error
+     * */
     public void invalidStateCommand(String command){
         command = command.toUpperCase();
         errorPrint("You can't call the command "+command+" now, you haven't the permissions!");

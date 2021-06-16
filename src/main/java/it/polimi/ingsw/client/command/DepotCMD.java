@@ -18,7 +18,10 @@ public class DepotCMD implements Command{
         this.param = param;
         this.client = client;
     }
-    //depot co 1 from 1
+
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME)){
@@ -62,6 +65,9 @@ public class DepotCMD implements Command{
         client.writeToStream(new DepotModify(indexDepot, resource, normalDepot));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -74,6 +80,9 @@ public class DepotCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"manage the depot when u have to add or subtract resources");

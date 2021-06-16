@@ -19,6 +19,9 @@ public class NumOfPlayerCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(client.getState()!= ClientState.ENTERING_LOBBY){
@@ -46,6 +49,9 @@ public class NumOfPlayerCMD implements Command{
         client.writeToStream(new ConnectionMessage(ConnectionType.NUM_OF_PLAYER, num));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -55,6 +61,9 @@ public class NumOfPlayerCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to insert the number of player for a specific game when the client ask for it");

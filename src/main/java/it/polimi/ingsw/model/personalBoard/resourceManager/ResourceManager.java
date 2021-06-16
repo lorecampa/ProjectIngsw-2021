@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-
+/**ResourceManager is the class that manage all the action where a resource is used*/
 public class ResourceManager extends GameMasterObservable implements Observable<ResourceManagerObserver> {
     @JsonIgnore
     List<ResourceManagerObserver> resourceManagerObserverList = new ArrayList<>();
@@ -53,9 +53,11 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
-     * @param resourcesSent the original list I'll change
+     * @param resourcesSent the original list of resources
+     * @param countAnyProductionCost true if you want to count the any in production cost, false otherwise
+     * @param countAnyProductionProfit true if you want to count the any in production profit/earn, false otherwise
+     * @param countFaithPoints true if you want to count the faith, false otherwise
      */
-
     private void fromResourceToConcreteResource(ArrayList<Resource> resourcesSent, boolean countAnyProductionCost, boolean countAnyProductionProfit, boolean countFaithPoints){
 
         int any = resourcesSent.stream().filter(x -> x.getType() == ResourceType.ANY).mapToInt(Resource::getValue).sum();
@@ -69,15 +71,29 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     }
 
+    /**
+     * Return true if array of resources contain at least one faith point
+     * @param resources array to check
+     * @return true if array of resources contain at least one faith point, false otherwise
+     * */
     private boolean containsAnyOrFaith(ArrayList<Resource> resources) {
         return resources.stream()
                 .anyMatch(x -> x.getType() == ResourceType.ANY || x.getType() == ResourceType.FAITH);
     }
 
+    /**
+     * Sum all my resources and save it in myResources array
+     * */
     private void restoreMyResources(ArrayList<Resource> tempBuffer){
         tempBuffer.forEach(x -> myResources.get(myResources.indexOf(x)).addValue(x.getValue()));
     }
 
+    /**
+     * Convert any into resources from card requirement
+     * @param resources I want to own after conversion
+     * @param isFromBuyDevelopment true if the any request started from a buy development action
+     * @throws AnyConversionNotPossible if the conversion is not legal
+     * */
     public void convertAnyRequirement(ArrayList<Resource> resources, boolean isFromBuyDevelopment) throws AnyConversionNotPossible {
         if(containsAnyOrFaith(resources)){
             throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
@@ -130,6 +146,11 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
 
 
+    /**
+     * Convert any into resources from production
+     * @param resources I want to own after conversion
+     * @throws AnyConversionNotPossible if the conversion is not legal
+     * */
     public void convertAnyProductionProfit(ArrayList<Resource> resources) throws AnyConversionNotPossible {
         if(containsAnyOrFaith(resources)){
             throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
@@ -155,15 +176,17 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
+    /**
+     * Notify game master to increase faith points
+     * */
     public void applyFaithPoints(){
         notifyGameMaster(x -> x.increasePlayerFaithPoint(faithPoint));
     }
 
-
-
     /**
      * Store the resources i have to manage from the market in the buffer
-     * @param resourcesSent contain the array of the resources i got from market*/
+     * @param resourcesSent contain the array of the resources i got from market
+     * */
     public void resourceFromMarket(ArrayList<Resource> resourcesSent){
         fromResourceToConcreteResource(resourcesSent, false, false,
                 true);
@@ -180,6 +203,11 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         resourcesToProduce.forEach(this::addToStrongbox);
         notifyAllObservers(x -> x.strongboxUpdate(strongbox.getResources()));
     }
+
+    /**
+     * End production phase
+     * @throws InvalidStateActionException if u can't the production phase right now
+     * */
     public void stopProduction() throws InvalidStateActionException {
         checkPlayerState(PlayerState.PRODUCTION_ACTION);
         notifyAllObservers(x -> x.warehouseRemovingRequest(resourcesBuffer));
@@ -195,7 +223,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Subtract to the strongbox the resource
-     * @param resource i want to subtract */
+     * @param resource i want to subtract
+     * @throws NegativeResourceException if u try to subtract more than you own
+     * @throws InvalidStateActionException if u can't do it right now
+     * */
     public void subToStrongbox(Resource resource) throws NegativeResourceException, InvalidStateActionException {
         checkPlayerState(PlayerState.BUY_DEV_RESOURCE_REMOVING,
                 PlayerState.PRODUCTION_RESOURCE_REMOVING);
@@ -231,6 +262,15 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         sendBufferUpdate();
     }
 
+
+    /**
+     * Semi switch is called when u try to switch from a leader depot with some resources to a depot with the same resource
+     * @param fromDepot from where i want to move
+     * @param toDepot where i want to put the resources
+     * @param res resource to switch
+     * @throws TooMuchResourceDepotException if there is too many resources in one depot at the end
+     * @return true if possible, false otherwise
+     * */
     private boolean semiSwitch(Depot fromDepot,Depot toDepot, Resource res) throws TooMuchResourceDepotException {
         if (res.getType() == toDepot.getResourceType()){
             int available = toDepot.getMaxStorable() - toDepot.getResourceValue();
@@ -255,8 +295,13 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Switch the resource from fromDepot to toDepot
-     * @param fromIndex the first depot
-     * @param toIndex the second depot
+     * @param fromIndex from where i want to move
+     * @param isFromNormalDepot true if normal, false if leader
+     * @param toIndex where i want to put the resources
+     * @param isToNormalDepot true if normal, false if leader
+     * @throws TooMuchResourceDepotException if there is too many resources in one depot at the end
+     * @throws InvalidStateActionException if u can't do the switch, as turn phase
+     * @throws InvalidOrganizationWarehouseException if u can't do the switch u are asking for
      * */
     public void switchResourceFromDepotToDepot(int fromIndex, boolean isFromNormalDepot,
                                                int toIndex, boolean isToNormalDepot) throws TooMuchResourceDepotException, InvalidOrganizationWarehouseException, InvalidStateActionException {
@@ -308,12 +353,15 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         sendDepotUpdate(isToNormalDepot, toIndex);
     }
 
+    /**
+     * Send depot update to all observers, making sure all the player can see the update
+     * @param index of depot i want to update
+     * @param isNormalDepot true if normal, false if leader
+     * */
     private void sendDepotUpdate(boolean isNormalDepot, int index){
         Depot depot = currWarehouse.getDepot(index, isNormalDepot);
         notifyAllObservers(x -> x.depotUpdate(depot.getResource(),index, isNormalDepot));
     }
-
-
 
     /**
      * Used to add a resource value or the resource itself in the buffer
@@ -327,8 +375,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
             resourcesBuffer.add(res);
         }
     }
-
-
 
     /**
      * Used to remove a resource value from the buffer in resource manager
@@ -353,7 +399,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Used to add a resource value or the resource itself in the resource to produce
-     * @param resources I want to add */
+     * @param resources I want to add
+     * */
     public void addToResourcesToProduce(ArrayList<Resource> resources) {
         fromResourceToConcreteResource(resources, false, true,
                 true);
@@ -397,14 +444,12 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
-
-
     /**
      * Compute if u can afford some resources
      * @param resources i would like to be able to afford
      * @param checkDiscount if u want you resource to be discounted
+     * @throws NotEnoughRequirementException if u can't afford the resources
      * */
-
     public void canIAfford(ArrayList<Resource> resources, boolean checkDiscount) throws NotEnoughRequirementException {
         int extraRes = numberOfResource() - numberOfResourceInBuffer();
         fromResourceToConcreteResource(resources, true, false, false);
@@ -459,7 +504,8 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
     /**
-     * Store all the resource i own (strongbox + warehouse) in myResources arrayList*/
+     * Store all the resource i own (strongbox + warehouse) in myResources arrayList
+     * */
     private void allMyResources(){
         myResources.clear();
         ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
@@ -470,6 +516,9 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
+    /**
+     * Store all the discounts i own
+     * */
     private void allMyDiscounts(){
         myDiscounts.clear();
         for (Resource discount: discounts){
@@ -477,10 +526,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
-
     /**
-     * Calculate the value of resources I'm storing in my warehouse + strongbox
-     * @return the value of resources i own*/
+     * Return the value of resources I'm storing in my warehouse + strongbox
+     * @return the value of resources i own
+     * */
     private int numberOfResource(){
         int value=0;
         ArrayList<Resource> resources = ResourceFactory.createAllConcreteResource();
@@ -492,15 +541,16 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
     /**
-     * Calculate the value of resources I'm storing in the resourcesBuffer
-     * @return the value of resources i own in resourcesBuffer*/
+     * Return the value of resources I'm storing in the resourcesBuffer
+     * @return the value of resources i own in resourcesBuffer
+     * */
     private int numberOfResourceInBuffer(){
         return resourcesBuffer.stream().mapToInt(Resource::getValue).sum();
     }
 
-
     /**
-     * Discard resources  that you don't want to place*/
+     * Discard resources that you don't want to place
+     * */
     public void discardResourcesFromMarket() throws InvalidStateActionException {
         checkPlayerState(PlayerState.MARKET_RESOURCE_POSITIONING);
 
@@ -509,18 +559,24 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         sendBufferUpdate();
     }
 
+    /**
+     * Notify observes the update of the buffer
+     * */
     public void sendBufferUpdate(){
         notifyAllObservers(x -> x.bufferUpdate(resourcesBuffer));
     }
 
+    /**
+     * Return the number of VP from resources
+     * */
     public int getVictoryPointsResource(){
         int numRes = myResources.stream().mapToInt(Resource::getValue).sum();
         return Math.floorDiv(numRes, 5);
     }
 
-
     /**Add a depot as a leaderDepot in the warehouse
-     * @param depots i want to add*/
+     * @param depots i want to add
+     * */
     public void addLeaderDepot(ArrayList<Depot> depots){
         for(Depot dep : depots){
             currWarehouse.addDepotLeader(dep);
@@ -528,6 +584,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         notifyAllObservers(x -> x.updateLeaderDepot(depots, false));
     }
 
+    /**Sub a depot as a leaderDepot in the warehouse
+     * @param depots i want to sub
+     * @deprecated
+     * */
     public void removeLeaderDepot(ArrayList<Depot> depots){
         for(Depot dep: depots){
             currWarehouse.removeDepotLeader(dep);
@@ -535,11 +595,10 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         notifyAllObservers(x -> x.updateLeaderDepot(depots, true));
     }
 
-
-
     /**
      * Add resource to the list of discount i have
-     * @param cardDiscounts that i have "discount"*/
+     * @param cardDiscounts that i have "discount"
+     * */
     public void addDiscount(ArrayList<Resource> cardDiscounts) {
         for(Resource dis : cardDiscounts){
             if(discounts.contains(dis)){
@@ -551,6 +610,11 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
+    /**
+     * Sub resource to the list of discount i have
+     * @param cardDiscounts that i have "discount"
+     * @deprecated
+     * */
     public void removeDiscount(ArrayList<Resource> cardDiscounts){
         for(Resource dis: cardDiscounts){
             if (discounts.contains(dis)){
@@ -562,24 +626,40 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         }
     }
 
+    /**
+     * Return the number of faith point i'm managing
+     * @deprecated
+     * */
     public int getFaithPoint() {
         return faithPoint;
     }
 
+    /**
+     * Return the number of any required
+     * */
     public int getAnyRequired() {
         return anyRequired;
     }
 
-
-    public Strongbox getStrongbox() {
+    /**
+     * Return the strongbox of curr player
+     * @deprecated
+     * */
+    public Strongbox getStrongbox() { //usato solo nei test, per questo c'è il warning... forse va tolta ovunque o basta togliere il @deprecated
         return strongbox;
     }
 
+    /**
+     * See {@link Observable#attachObserver(Object)}.
+     */
     @Override
     public void attachObserver(ResourceManagerObserver observer) {
         resourceManagerObserverList.add(observer);
     }
 
+    /**
+     * See {@link Observable#notifyAllObservers(Consumer)}.
+     */
     @Override
     public void notifyAllObservers(Consumer<ResourceManagerObserver> consumer) {
         resourceManagerObserverList.forEach(consumer);

@@ -36,6 +36,9 @@ public class Help implements Command{
         }
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(param.isEmpty()||param.isBlank()){
@@ -67,11 +70,17 @@ public class Help implements Command{
         }
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         PrintAssistant.instance.printf("No help for the help command! :)");
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to have a list of all the commands available");

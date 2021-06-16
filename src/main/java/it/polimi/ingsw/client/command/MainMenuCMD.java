@@ -25,6 +25,9 @@ public class MainMenuCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(param.isEmpty() || param.isBlank()){                         //se uno dal game fa mainmenu come comando puo tornare al main menu o facciamo un disconnect command???
@@ -70,6 +73,9 @@ public class MainMenuCMD implements Command{
 
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -79,6 +85,9 @@ public class MainMenuCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"select the action you want to do from the Main Menu");

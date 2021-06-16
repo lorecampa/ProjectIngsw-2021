@@ -18,6 +18,9 @@ public class EndTurnCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME)){
@@ -31,6 +34,9 @@ public class EndTurnCMD implements Command{
         client.writeToStream(new EndTurn());
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -40,6 +46,9 @@ public class EndTurnCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to end your turn");

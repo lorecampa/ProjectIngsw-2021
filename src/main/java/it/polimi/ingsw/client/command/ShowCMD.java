@@ -17,6 +17,9 @@ public class ShowCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
 
@@ -76,6 +79,9 @@ public class ShowCMD implements Command{
         toCharToPrint(split, 1, split[0]);
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -95,11 +101,20 @@ public class ShowCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"show on console the Personal Board of a player");
     }
 
+    /**
+     * Return true if all the character are legal
+     * @param part the array of param to check
+     * @param startPoint index from where to start
+     * @return true if all the character are legal, false otherwise
+     * */
     public boolean containsAllPartToShow(String[] part, int startPoint){
         for(int i=startPoint; i<part.length; i++){                                                    //controllo che gli altri campi siano comandi conosciuti
             if(!part[i].equals("f") && !part[i].equals("r") && !part[i].equals("d") && !part[i].equals("l")){
@@ -109,6 +124,12 @@ public class ShowCMD implements Command{
         return true;
     }
 
+    /**
+     * Print the right part from the model of player
+     * @param part the array of param to print
+     * @param startPoint index from where to start
+     * @param username of player to print
+     * */
     public void toCharToPrint(String[] part, int startPoint, String username){
         for(int i=startPoint;i<part.length;i++){
             switch(part[i]){

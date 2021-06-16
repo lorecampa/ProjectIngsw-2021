@@ -19,6 +19,9 @@ public class StrongboxCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME)){
@@ -44,6 +47,9 @@ public class StrongboxCMD implements Command{
         client.writeToStream(new StrongboxModify(resource));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -54,6 +60,9 @@ public class StrongboxCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"manage the strongbox when u have to add or subtract resources");

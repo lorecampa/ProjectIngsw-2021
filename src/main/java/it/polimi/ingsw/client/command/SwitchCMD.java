@@ -18,6 +18,9 @@ public class SwitchCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(CommandsUtility.clientStateNot(client, ClientState.IN_GAME)){
@@ -77,6 +80,9 @@ public class SwitchCMD implements Command{
         client.writeToStream(new DepotSwitch(indexFrom,  !fromIsLeader, indexTo, !toIsLeader));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -88,6 +94,9 @@ public class SwitchCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to switch 2 depots resources");

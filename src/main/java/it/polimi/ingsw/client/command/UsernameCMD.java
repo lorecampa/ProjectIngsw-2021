@@ -19,6 +19,9 @@ public class UsernameCMD implements Command{
         this.client = client;
     }
 
+    /**
+     * See {@link Command#doCommand}
+     * */
     @Override
     public void doCommand() {
         if(param.isEmpty() || param.isBlank()){
@@ -39,6 +42,9 @@ public class UsernameCMD implements Command{
         client.writeToStream(new ConnectionMessage(ConnectionType.USERNAME, split[0]));
     }
 
+    /**
+     * See {@link Command#help}
+     * */
     @Override
     public void help() {
         ArrayList<String> rowHelp= new ArrayList<>();
@@ -48,6 +54,9 @@ public class UsernameCMD implements Command{
         PrintAssistant.instance.printfMultipleString(rowHelp);
     }
 
+    /**
+     * See {@link Command#description()}
+     * */
     @Override
     public void description() {
         PrintAssistant.instance.printf(PrintAssistant.instance.fitToWidth(cmd, ClientInput.MAX_CHAR_COMMAND)+"to insert your username when the client ask for it");
