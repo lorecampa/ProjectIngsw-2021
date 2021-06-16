@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,12 +36,12 @@ public class Server {
     private Match openMatch;
 
     public static final String SERVER_DATA_PATH = "ServerData";
+    public static final String SERVER_INFO_PATH = SERVER_DATA_PATH + "/serverInfo.txt";
     public static final String MATCH_SAVING_PATH = SERVER_DATA_PATH + "/MatchSaving";
 
 
 
     public  Server(String[] args){
-
         if(args.length==1){
             try{
                 port=Integer.parseInt(args[0]);
@@ -69,17 +70,44 @@ public class Server {
     public void startServer(){
         try {
             serverSocket = new ServerSocket(port);
+
             loadServerData();
             loadMatches();
+
             System.out.println("Server ready");
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
         //FIXME is correct to start the match if failed?
 
         new Thread(new ServerInput(this)).start();
         acceptConnection();
+    }
+
+    //TODO davide method from lorenzo to delete a folder recursively, call it before loading server
+    //deleteFolder(new File(SERVER_DATA_PATH));
+    private void deleteFolder(File file) throws IOException {
+        if (file.isDirectory()){
+            File[] files = file.listFiles();
+            if (files != null){
+                for (File subFile: files){
+                    deleteFolder(subFile);
+                }
+            }
+            //delete empty sub-folder
+            boolean result = file.delete();
+            if (!result){
+                throw new IOException("Can't delete folder");
+            }
+        }else if (file.isFile()){
+            boolean result = file.delete();
+            if (!result){
+                throw new IOException("Can't delete file");
+            }
+        }
+
     }
 
     private void loadServerData() throws IOException {
@@ -89,12 +117,19 @@ public class Server {
             if (!result){
                 throw new IOException("Can't create server data directory");
             }
-            FileWriter serverInfoFile = new FileWriter(SERVER_DATA_PATH + "/serverInfo.txt");
-            serverInfoFile.write("0" + "\n");
-            serverInfoFile.write("0");
+            FileWriter serverInfoFile = new FileWriter(SERVER_INFO_PATH);
+            serverInfoFile.write("0\n0");
             serverInfoFile.close();
         }
-        Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
+
+        //if directory exist but file was accidentally deleted
+        File serverInfoFile = new File(SERVER_INFO_PATH);
+        if (!serverInfoFile.exists()){
+            FileWriter file = new FileWriter(serverInfoFile);
+            file.write("0\n0");
+            file.close();
+        }
+        Path path = Paths.get(SERVER_INFO_PATH);
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         nextMatchID = Integer.parseInt(lines.get(0));
         nextClientID = Integer.parseInt(lines.get(1));

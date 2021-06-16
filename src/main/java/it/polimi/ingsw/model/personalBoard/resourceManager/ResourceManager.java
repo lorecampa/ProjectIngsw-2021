@@ -55,7 +55,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * Convert a list of resources to a list of concrete resources, remove ANY and FAITH
      * @param resourcesSent the original list I'll change
      */
-
     private void fromResourceToConcreteResource(ArrayList<Resource> resourcesSent, boolean countAnyProductionCost, boolean countAnyProductionProfit, boolean countFaithPoints){
 
         int any = resourcesSent.stream().filter(x -> x.getType() == ResourceType.ANY).mapToInt(Resource::getValue).sum();
