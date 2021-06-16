@@ -40,7 +40,9 @@ public class Client{
     private static final String GUIParam = "-gui";
 
 
-
+    /**
+     *Set up client with arguments
+     * */
     private void setUpClient(String[] args) throws IOException {
         if (args.length == 3) {
             try{
@@ -104,7 +106,9 @@ public class Client{
 
     }
 
-
+    /**
+     * Start client with CLI
+     * */
     public void startCLI(){
         System.out.println("Client Started!");
         clientMessageHandler = new CLIMessageHandler();
@@ -113,12 +117,17 @@ public class Client{
         startListening();
     }
 
+    /**
+     * Start client with GUI
+     * */
     public void startGUI(){
         clientMessageHandler = new GUIMessageHandler();
         startListening();
     }
 
-
+    /**
+     * Start listening messages from server
+     * */
     private void startListening() {
         while(state!=ClientState.QUIT){
             readFromStream();
@@ -126,7 +135,10 @@ public class Client{
         System.exit(0);
     }
 
-
+    /**
+     * Write to server the message
+     * @param message to send to server
+     * */
     public void writeToStream(ServerMessage message){
         synchronized (streamLock) {
             Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
@@ -135,7 +147,9 @@ public class Client{
             out.flush();
         }
     }
-
+    /**
+     * Read from stream the messages from server
+     * */
     public void readFromStream(){
         String serializedMessage = null;
         try{
@@ -151,6 +165,11 @@ public class Client{
         }
     }
 
+    /**
+     * Return ClientMessage after deserialization
+     * @param serializedMessage to deserialize
+     * @return message deserialized
+     * */
     public ClientMessage deserialize(String serializedMessage){
         ClientMessage message;
         try {
@@ -162,6 +181,11 @@ public class Client{
         return message;
     }
 
+    /**
+     * Return serialized message before send it to server
+     * @param message to serialize
+     * @return message serialized
+     * */
     public String serialize(ServerMessage message){
         String serializedMessage;
         try {
@@ -173,6 +197,9 @@ public class Client{
     }
 
     //"message" simulated from server to client
+    /**
+     * Simulated message from server to show mainmenu
+     * */
     public void messageToMainMenu(){
         ClientMessage mainMenu= new MainMenuMessage();
         mainMenu.process(clientMessageHandler);
@@ -191,6 +218,10 @@ public class Client{
         return models.stream().filter(x-> x.getUsername().equalsIgnoreCase(myName)).findFirst().orElse(null);
     }
 
+    /**
+     * Return true if exist a model with username as nickname
+     * @param username we are looking for
+     * */
     public boolean existAModelOf(String username){
         return models.stream().map(ModelClient::getUsername).anyMatch(x->x.equalsIgnoreCase(username));
     }
@@ -277,6 +308,9 @@ public class Client{
         }
     }
 
+    /**
+     * Cleat all the models stored in client
+     * */
     public void clearModels(){
         models.clear();
     }

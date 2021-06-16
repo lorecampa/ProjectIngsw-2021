@@ -4,8 +4,7 @@ import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
-import it.polimi.ingsw.model.card.Effect.Effect;
-import it.polimi.ingsw.model.personalBoard.market.Market;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -328,7 +327,6 @@ public class CLIMessageHandler extends ClientMessageHandler {
     /**
      * Print card slots of user
      * @param username of user
-     * @deprecated
      * */
     private void printCardSlots(String username){
         if(username.equals(client.getMyName()))
@@ -337,7 +335,6 @@ public class CLIMessageHandler extends ClientMessageHandler {
     /**
      * Print resources of user
      * @param username of user
-     * @deprecated
      * */
     private void printResources(String username){
         if(username.equals(client.getMyName()))
@@ -346,7 +343,6 @@ public class CLIMessageHandler extends ClientMessageHandler {
     /**
      * Print leader of user
      * @param username of user
-     * @deprecated
      * */
     private void printLeader(String username){
         if(username.equals(client.getMyName()))
@@ -355,7 +351,6 @@ public class CLIMessageHandler extends ClientMessageHandler {
     /**
      * Print buffer
      * @param resources to print
-     * @deprecated
      * */
     private void printBuffer(ArrayList<ResourceData> resources){
         StringBuilder resource= new StringBuilder("Buffer: ");

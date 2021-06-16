@@ -47,7 +47,7 @@ public class ClientInput implements Runnable{
             try{
                 command=stdIn.readLine();
                 command = command.toLowerCase();
-                command = command.trim().replaceAll(" +", " "); //togli i multipli spazi e ne mette solo 1
+                command = command.trim().replaceAll(" +", " "); //remove multiple spaces ' ' and replace them with only 1 space
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -56,6 +56,10 @@ public class ClientInput implements Runnable{
         }
     }
 
+    /**
+     * Manage input got from stream
+     * @param command just read
+     * */
     public void manageInput(String command){
         String[] commandPart = command.split(" ", 2);
         String keyCommand=commandPart[0];
