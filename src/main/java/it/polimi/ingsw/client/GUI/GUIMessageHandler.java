@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.controller.*;
-import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
@@ -17,27 +16,29 @@ public class GUIMessageHandler extends ClientMessageHandler {
     private final Client client = Client.getInstance();
     private final ControllerHandler controllerHandler = ControllerHandler.getInstance();
 
-
+    /**
+     * See {@link ClientMessageHandler#reconnect(ReconnectionMessage)}.
+     */
     @Override
     public void reconnect(ReconnectionMessage message){
         try {
             super.reconnect(message);
-            Platform.runLater(()->{
-                controllerHandler.getCurrentController().showCustomMessage("We saved your main data, making sure you can disconnect and reconnect during the game!");
-            });
+            Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage("We saved your main data, making sure you can disconnect and reconnect during the game!"));
         } catch (IOException e) {
-            Platform.runLater(()->{
-                controllerHandler.getCurrentController().showCustomMessage("Not able to save the file with your info to reconnect!");
-            });
+            Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage("Not able to save the file with your info to reconnect!"));
         }
     }
-
+    /**
+     * See {@link ClientMessageHandler#reconnectGameSetUp(ReconnectGameMessage)}.
+     */
     @Override
     public void reconnectGameSetUp(ReconnectGameMessage message) {
         super.reconnectGameSetUp(message);
         Platform.runLater(()-> controllerHandler.changeView(Views.PERSONAL_BOARD));
     }
-
+    /**
+     * See {@link ClientMessageHandler#validReconnect(ConnectionMessage)}.
+     */
     @Override
     public void validReconnect(ConnectionMessage message) {
         super.validReconnect(message);
@@ -47,7 +48,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controllerHandler.changeView(Views.WAITING);
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#strongboxUpdate(StrongboxUpdate)}.
+     */
     @Override
     public void strongboxUpdate(StrongboxUpdate message) {
         super.strongboxUpdate(message);
@@ -58,25 +61,27 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#handleError(ErrorMessage)}.
+     */
     @Override
     public void handleError(ErrorMessage message) {
         String error = (message.getErrorType() == null)?message.getCustomError():message.getErrorType().getMessage();
         if (Client.getInstance().getMyModel() != null)
             Client.getInstance().getMyModel().addErrorInLog(error);
-        Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage(error);
-        });
+        Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage(error));
     }
-
+    /**
+     * See {@link ClientMessageHandler#connectNewUser(ConnectionMessage)}.
+     */
     @Override
     public void connectNewUser(ConnectionMessage message) {
-        Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage(message.getMessage());
-        });
+        Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage(message.getMessage()));
     }
 
-
+    /**
+     * See {@link ClientMessageHandler#waitingPeople(ConnectionMessage)}.
+     */
     @Override
     public void waitingPeople(ConnectionMessage message) {
         Platform.runLater(()->{
@@ -85,7 +90,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controllerHandler.changeView(Views.WAITING);
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#username(ConnectionMessage)}.
+     */
     @Override
     public void username(ConnectionMessage message) {
         Platform.runLater(()->{
@@ -97,16 +104,18 @@ public class GUIMessageHandler extends ClientMessageHandler {
         });
 
     }
-
+    /**
+     * See {@link ClientMessageHandler#newTurn(StarTurn)}.
+     */
     @Override
     public void newTurn(StarTurn message) {
         super.newTurn(message);
         String msg = "Is "+ message.getUsername() + " turn";
-        Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage(msg);
-        });
+        Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage(msg));
     }
-
+    /**
+     * See {@link ClientMessageHandler#numberOfPlayer(ConnectionMessage)}.
+     */
     @Override
     public void numberOfPlayer(ConnectionMessage message) {
         Platform.runLater(()->{
@@ -115,16 +124,18 @@ public class GUIMessageHandler extends ClientMessageHandler {
             setupController.showNumOfPLayer();
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#connectInfo(ConnectionMessage)}.
+     */
     @Override
     public void connectInfo(ConnectionMessage message) {
-        Platform.runLater(()->{
-            controllerHandler.getCurrentController().showCustomMessage(message.getMessage());
-        });
+        Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage(message.getMessage()));
     }
 
 
-
+    /**
+     * See {@link ClientMessageHandler#leaderSetUp(LeaderSetUpMessage)}.
+     */
     @Override
     public void leaderSetUp(LeaderSetUpMessage message) {
         super.leaderSetUp(message);
@@ -134,12 +145,16 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controller.setUpLeaderImages(message.getLeaders());
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#mainMenu()}.
+     */
     @Override
     public void mainMenu() {
         Platform.runLater(()->controllerHandler.changeView(Views.MAIN_MENU));
     }
-
+    /**
+     * See {@link ClientMessageHandler#startGame()}.
+     */
     @Override
     public void startGame() {
         Platform.runLater(()->{
@@ -147,12 +162,16 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controllerHandler.changeView(Views.PERSONAL_BOARD);
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#gameSetUp(GameSetup)}.
+     */
     @Override
     public void gameSetUp(GameSetup message) {
         super.gameSetUp(message);
     }
-
+    /**
+     * See {@link ClientMessageHandler#gameOver(GameOver)}.
+     */
     @Override
     public void gameOver(GameOver message) {
         super.gameOver(message);
@@ -164,7 +183,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
     }
 
 
-
+    /**
+     * See {@link ClientMessageHandler#anyConversionRequest(AnyConversionRequest)}.
+     */
     @Override
     public void anyConversionRequest(AnyConversionRequest message) {
         if(client.getState() == ClientState.ENTERING_LOBBY){
@@ -187,7 +208,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             });
         }
     }
-
+    /**
+     * See {@link ClientMessageHandler#leaderDiscardUpdate(LeaderDiscard)}.
+     */
     @Override
     public void leaderDiscardUpdate(LeaderDiscard message) {
         super.leaderDiscardUpdate(message);
@@ -203,7 +226,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
     }
 
-
+    /**
+     * See {@link ClientMessageHandler#marketUpdate(MarketUpdate)}.
+     */
     @Override
     public void marketUpdate(MarketUpdate message) {
         super.marketUpdate(message);
@@ -212,7 +237,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
     }
 
 
-
+    /**
+     * See {@link ClientMessageHandler#bufferUpdate(BufferUpdate)}.
+     */
     @Override
     public void bufferUpdate(BufferUpdate message) {
         Platform.runLater(()->{
@@ -220,7 +247,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controller.bufferUpdate(message.getBufferUpdated());
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#handleDepotPositioningRequest(DepotPositioningRequest)}.
+     */
     @Override
     public void handleDepotPositioningRequest(DepotPositioningRequest message) {
         Platform.runLater(()->{
@@ -231,7 +260,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#handleWarehouseRemovingRequest(WarehouseRemovingRequest)}.
+     */
     @Override
     public void handleWarehouseRemovingRequest(WarehouseRemovingRequest message) {
         Platform.runLater(()->{
@@ -242,7 +273,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
 
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#whiteMarbleConversion(WhiteMarbleConversionRequest)}.
+     */
     @Override
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
         Platform.runLater(()-> {
@@ -252,7 +285,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             personalBoardController.setUpMarbleConv();
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#faithTrackPositionIncreased(FaithTrackIncrement)}.
+     */
     @Override
     public void faithTrackPositionIncreased(FaithTrackIncrement message) {
         super.faithTrackPositionIncreased(message);
@@ -264,7 +299,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#popeFavorActivation(PopeFavorActivated)}.
+     */
     @Override
     public void popeFavorActivation(PopeFavorActivated message) {
         super.popeFavorActivation(message);
@@ -276,7 +313,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#activeLeader(LeaderActivate)}.
+     */
     @Override
     public void activeLeader(LeaderActivate message) {
         super.activeLeader(message);
@@ -290,12 +329,16 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#handleDeckDevCardRemoving(RemoveDeckDevelopmentCard)}.
+     */
     @Override
     public void handleDeckDevCardRemoving(RemoveDeckDevelopmentCard message) {
         super.handleDeckDevCardRemoving(message);
     }
-
+    /**
+     * See {@link ClientMessageHandler#cardSlotUpdate(CardSlotUpdate)}.
+     */
     @Override
     public void cardSlotUpdate(CardSlotUpdate message) {
         super.cardSlotUpdate(message);
@@ -307,7 +350,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             }
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#depotUpdate(DepotUpdate)}.
+     */
     @Override
     public void depotUpdate(DepotUpdate message) {
         super.depotUpdate(message);
@@ -329,7 +374,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             });
         }
     }
-
+    /**
+     * See {@link ClientMessageHandler#depotLeaderUpdate(DepotLeaderUpdate)}.
+     */
     @Override
     public void depotLeaderUpdate(DepotLeaderUpdate message) {
         super.depotLeaderUpdate(message);
@@ -342,8 +389,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
         });
     }
 
-
-
+    /**
+     * See {@link ClientMessageHandler#winningCondition()}.
+     */
     @Override
     public void winningCondition() {
         Platform.runLater(()->{
@@ -353,7 +401,9 @@ public class GUIMessageHandler extends ClientMessageHandler {
             ControllerHandler.getInstance().getCurrentController().showCustomMessage(msg);
         });
     }
-
+    /**
+     * See {@link ClientMessageHandler#handleProductionSelectionCompleted()}.
+     */
     @Override
     public void handleProductionSelectionCompleted() {
         Platform.runLater(()->{

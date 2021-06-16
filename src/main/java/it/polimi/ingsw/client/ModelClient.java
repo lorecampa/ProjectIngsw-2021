@@ -3,8 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +42,9 @@ public class ModelClient {
         realSetUp();
     }
 
+    /**
+     * Set up to start a real client
+     * */
     private void realSetUp(){
         this.currentPosOnFaithTrack=0;
         for(int i=0;i<3;i++){
@@ -60,6 +61,10 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Set up to test and debug client side
+     * @deprecated
+     * */
     private void setUpForDebug(){
         this.currentPosOnFaithTrack=8;
         for(int i=0;i<3;i++){
@@ -140,11 +145,19 @@ public class ModelClient {
         leaderDepot.add(new ResourceData(ResourceType.COIN,2));
     }
 
-
+    /**
+     * Add a CardDev to index card slot
+     * @param index of card slot i want to insert into
+     * @param card i want to insert
+     * */
     public void addToCardSlot(int index, CardDevData card){
         cardSlots.get(index).add(card);
     }
 
+    /**
+     * Return username of curr client
+     * @return username of curr client
+     * */
     public String getUsername() {
         return username;
     }
@@ -157,14 +170,24 @@ public class ModelClient {
         this.currentPosOnFaithTrack = currentPosOnFaithTrack;
     }
 
+    /**
+     * Increase current position on faith track  by one
+     * */
     public void increaseCurrentPosOnFaithTrack(){currentPosOnFaithTrack++;}
 
+    /**
+     * Activate a vatican report
+     * @param idVaticanReport activated
+     * @param discard true if i have to discard it, false otherwise
+     * */
     public void popeFavorActivation(int idVaticanReport, boolean discard){
         int num = 0;
         if (!discard) {
             for (FaithTrackData cell : faithTrack) {
                 if (cell.isPopeFavor()) {
-                    if (num == idVaticanReport){ cell.setAcquired(true); return;}
+                    if (num == idVaticanReport){
+                        cell.setAcquired(true); return;
+                    }
                     num++;
                 }
             }
@@ -203,11 +226,20 @@ public class ModelClient {
         leaderDepot.set(index, newDepot);
     }
 
-
+    /**
+     * Add a leader depot to model data
+     * @param depotToAdd as resourceData
+     * */
     public void addLeaderDepot(ResourceData depotToAdd){
         leaderDepot.add(new ResourceData(depotToAdd.getType(), 0));
         maxStoreLeaderDepot.add(depotToAdd.getValue());
     }
+
+    /**
+     * Remove a leader depot to model data
+     * @param depotToRemove as ResourceData
+     * @deprecated
+     * */
     public void removeLeaderDepot(ResourceData depotToRemove){
         OptionalInt depotIndex =  leaderDepot.stream()
                 .filter(x -> x.getType() == depotToRemove.getType() &&
@@ -219,10 +251,18 @@ public class ModelClient {
 
     }
 
+    /**
+     * Add a discount
+     * @param discountToAdd as resourceData
+     * */
     public void addDiscount(ResourceData discountToAdd){
         discounts.add(discountToAdd);
     }
-
+    /**
+     * Remove a discount
+     * @param discountToRemove as resourceData
+     * @deprecated
+     * */
     public void removeDiscount(ResourceData discountToRemove){
         OptionalInt discountIndex = discounts.stream()
                 .filter(x -> x.getType() == discountToRemove.getType() &&
@@ -230,6 +270,11 @@ public class ModelClient {
         discountIndex.ifPresent(discounts::remove);
     }
 
+    /**
+     * Return true if exist a leader depot at index
+     * @param index i'm looking for
+     * @return true if exist a leader depot at index
+     * */
     public boolean isValidIndexDepotLeader(int index){
         return index>=0 && index<leaderDepot.size();
     }
@@ -242,27 +287,52 @@ public class ModelClient {
         this.leaders = leaders;
     }
 
+    /**
+     * Remove a leader card from your model
+     * @param index of leader to remove
+     * */
     public void removeLeaderAt(int index){
         leaders.remove(index);
     }
 
+    /**
+     * Set active leader at index
+     * @param index of leader to activate
+     * */
     public void setActiveLeaderAt(int index){
         leaders.get(index).setActive(true);
     }
 
-    public void putAsActiveInLeader(ArrayList<CardLeaderData> card){
+    /**
+     * Set list of current active leader in these model data
+     * @param cards leader i have active
+     * */
+    public void putAsActiveInLeader(ArrayList<CardLeaderData> cards){
         leaders.clear();
-        leaders.addAll(card.stream().filter(CardLeaderData::isActive).collect(Collectors.toCollection(ArrayList::new)));
+        leaders.addAll(cards.stream().filter(CardLeaderData::isActive).collect(Collectors.toCollection(ArrayList::new)));
     }
 
+    /**
+     * Return true if exist a leader at index
+     * @param index i'm looking for
+     * @return true if exist a leader at index
+     * */
     public boolean validIndexForLeader(int index){
         return (index>=0 && index< leaders.size());
     }
 
+    /**
+     * Add a value to faith track
+     * @param value to add to currPosition
+     * @deprecated
+     * */
     public void addToCurrPositionOnFaithTrack(int value){
         currentPosOnFaithTrack+=value;
     }
 
+    /**
+     * Print all the personal board of curr player
+     * */
     public void printAll() {
         printFaithTrack();
         if(!username.equalsIgnoreCase("lorenzoilmagnifico")){
@@ -275,6 +345,10 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Print the title in black with yellow background
+     * @param title to print
+     * */
     private void printTitle(String title){
         StringBuilder newTitle= new StringBuilder(title);
         if(inkwell){
@@ -284,6 +358,9 @@ public class ModelClient {
         PrintAssistant.instance.printf(titleToPrint, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
     }
 
+    /**
+     * Print faith track of curr player
+     * */
     public void printFaithTrack(){
         printTitle(username+"'s Faith Track");
 
@@ -343,6 +420,9 @@ public class ModelClient {
     }
 
     //METHODS FOR PRINT RESOURCE
+    /**
+     * Print the header of resources, name of container of resources
+     * */
     private void printResourceHeader(){
         String titleLeaderDepot="";
         if(!leaderDepot.isEmpty()){
@@ -359,10 +439,17 @@ public class ModelClient {
         PrintAssistant.instance.printf(title);
     }
 
+    /**
+     * Return the last line of resource box
+     * */
     private String resourceBoxEnd(){
         return PrintAssistant.instance.stringBetweenChar("END_", '_',widthColumn, '|','|');
     }
 
+    /**
+     * Add to rowsOfResources the strongbox in strings
+     * @param rowsOfResources where i add strings
+     * */
     private void strongboxToCli(ArrayList<String> rowsOfResources){
         String row;
         for(int i=0;i<strongbox.size();i++){
@@ -373,6 +460,10 @@ public class ModelClient {
         rowsOfResources.add(resourceBoxEnd());
     }
 
+    /**
+     * Add to rowsOfResources the standard depot in strings
+     * @param rowsOfResources where i add strings
+     * */
     private void standardDepotToCli(ArrayList<String> rowsOfResources){
         String row;
         int i;
@@ -389,6 +480,10 @@ public class ModelClient {
         rowsOfResources.set(i, rowsOfResources.get(i)+resourceBoxEnd());
     }
 
+    /**
+     * Add to rowsOfResources the leader depot in strings
+     * @param rowsOfResources where i add strings
+     * */
     private void leaderDepotToCli(ArrayList<String> rowsOfResources){
         String row;
         int i;
@@ -404,6 +499,9 @@ public class ModelClient {
         PrintAssistant.instance.printfMultipleString(rowsOfResources);
     }
 
+    /**
+     * Print resources of curr player
+     * */
     public void printResources(){
         printTitle(username+"'s Resources");
 
@@ -419,6 +517,9 @@ public class ModelClient {
     }
 
     // METHODS FOR CARD SLOT
+    /**
+     * Print the card slot legends, and the base production
+     * */
     private void printCardSlotLegend(){
         StringBuilder row;
         row = new StringBuilder("Legend resources:");
@@ -451,6 +552,9 @@ public class ModelClient {
 
     }
 
+    /**
+     * Print the header for card slots
+     * */
     private void printCardSlotHeader(){
         String title=PrintAssistant.instance.stringBetweenChar("CARD SLOT1", '_', widthColumn, ' ', ' ');
         title+=PrintAssistant.instance.stringBetweenChar("CARD SLOT2", '_', widthColumn, ' ', ' ');
@@ -458,22 +562,43 @@ public class ModelClient {
         PrintAssistant.instance.printf(title);
     }
 
+    /**
+     * Return sentence before the cost in each card
+     * @return sentence before the cost in each card
+     * */
     private String cardCostHeader(){
         return PrintAssistant.instance.fitToWidth("To buy you had to pay:", widthColumn, ' ', '|', '|');
     }
-
+    /**
+     * Return sentence before the production cost in developer cards
+     * @return sentence before the production cost in developer cards
+     * */
     private String cardProductionCostHeader(){
         return PrintAssistant.instance.fitToWidth("To make production you have to pay:", widthColumn, ' ', '|', '|');
     }
-
+    /**
+     * Return sentence before the production earn in developer cards
+     * @return sentence before the production earn in developer cards
+     * */
     private String cardProductionEarnHeader(){
         return PrintAssistant.instance.fitToWidth("You will earn from production:", widthColumn, ' ', '|', '|');
     }
 
+    /**
+     *Return the last row of a card
+     * @return the last row of a card
+     * */
     private String cardLastRow(){return PrintAssistant.instance.fitToWidth("", widthColumn, ' ', '|', '|');}
-
+    /**
+     *Return the last row of a card slot
+     * @return the last row of a card slot
+     * */
     private String cardEndRow(){return PrintAssistant.instance.stringBetweenChar("END*", '_', widthColumn, '|', '|');}
 
+    /**
+     * Add to rowOfCardSlots the empty card slot info
+     * @param rowOfCardSlots where i add strings
+     * */
     private void emptyCardSlot(ArrayList<String> rowOfCardSlots){
         StringBuilder row;
         int writtenRow = 0;
@@ -491,12 +616,25 @@ public class ModelClient {
         fillRestOfRows(rowOfCardSlots,writtenRow);
     }
 
+    /**
+     * Add to rowOfCardSlots the empty rows
+     * @param rowOfCardSlots where i add strings
+     * @param start num
+     * */
     private void fillRestOfRows(ArrayList<String> rowOfCardSlots, int start){
         for (int i = start; i < rowOfCardSlots.size(); i++) {
             rowOfCardSlots.set(i, rowOfCardSlots.get(i) + PrintAssistant.instance.generateAStringOf(' ', widthColumn));
         }
     }
 
+    /**
+     * Set up rowOfCardSlots for cards slot
+     * @param rowOfCardSlots array we use to contain the strings of cards slot
+     * @param indexOfCard number used to know in which card slot we are writing
+     * @param indexOfCardSlot number used to know which card we are writing
+     * @param size of rowOfCardSlots
+     * @param minimize true if u want to see the card slots minimized
+     * */
     private void setUpForCardSlot(ArrayList<String> rowOfCardSlots, int indexOfCardSlot, int indexOfCard, int size, boolean minimize){
         String row = PrintAssistant.instance.generateAStringOf(' ', widthColumn * indexOfCardSlot);
 
@@ -518,6 +656,13 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Start convert card slot to cli
+     * @param rowOfCardSlots used to write card slots
+     * @param indexOfCardSlot we are writing
+     * @param cardSlot we are writing
+     * @param minimize true if u want to see the card slots minimized
+     * */
     private void cardSlotToCli(ArrayList<String> rowOfCardSlots,int indexOfCardSlot, ArrayList<CardDevData> cardSlot, boolean minimize){
         int totalWrittenRow = 0;
         if(cardSlot.isEmpty()){
@@ -568,6 +713,9 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Print the card Slots
+     * */
     public void printCardSlots(boolean minimize){
         printTitle(username+"'s Developments");
 
@@ -587,6 +735,9 @@ public class ModelClient {
     }
 
     //METHODS FOR LEADER
+    /**
+     * Print leader legends
+     * */
     private void printLeaderLegend(){
         PrintAssistant.instance.printf(PrintAssistant.instance.stringBetweenChar("Legend leader:", ' ', lengthInChar, ' ', ' '));
         String row=PrintAssistant.ANSI_GREEN_BACKGROUND+" Active Leader "+PrintAssistant.ANSI_RESET+" "+PrintAssistant.ANSI_WHITE_BACKGROUND+" Not Active Leader "+PrintAssistant.ANSI_RESET+PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
@@ -594,14 +745,27 @@ public class ModelClient {
         PrintAssistant.instance.printf(row);
     }
 
+    /**
+     * Return the sentence before the leader cost
+     * @return the sentence before the leader cost
+     * */
     private String leaderCostHeader(){
         return PrintAssistant.instance.fitToWidth("To activate you have to own:", widthColumn, ' ', ' ', ' ');
     }
 
+    /**
+     * Return the sentence before effect in leader card
+     * @return the sentence before effect in leader card
+     * */
     private String leaderEffectHeader(){
         return PrintAssistant.instance.fitToWidth("Effects:", widthColumn, ' ', ' ', ' ');
     }
 
+    /**
+     * Set up rowOfLeader to be ready to write in the leader card
+     * @param rowsOfLeaders array used to store info
+     * @param leaderIndex we are writing
+     * */
     private void setUpForLeader(ArrayList<String> rowsOfLeaders, int leaderIndex){
         String row = PrintAssistant.instance.generateAStringOf(' ', (leaderIndex % 2 * widthColumn) - 1);
         int DIM_OF_LEADER = 7;
@@ -610,6 +774,12 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Put a leader in rowsOfLeader
+     * @param rowsOfLeaders array used to store info
+     * @param leaderIndex we are writing
+     * @param leadersSize we are writing
+     * */
     private void leaderToCli(ArrayList<String> rowsOfLeaders,int leaderIndex, int leadersSize){
         int writtenRow = 0;
         setUpForLeader(rowsOfLeaders,leaderIndex);
@@ -643,6 +813,9 @@ public class ModelClient {
         rowsOfLeaders.set(writtenRow, rowsOfLeaders.get(writtenRow)+leaders.get(leaderIndex).leaderEnd(widthColumn,leaderIndex,leadersSize));
     }
 
+    /**
+     * Print leaders
+     * */
     public void printLeaders(){
         if(leaders.isEmpty())
             return;
@@ -665,6 +838,9 @@ public class ModelClient {
         }
     }
 
+    /**
+     * Convert a modelClient to ModelData
+     * */
     public ModelData toModelData(){
         return new ModelData(username,faithTrack,currentPosOnFaithTrack,standardDepot,leaderDepot,maxStoreLeaderDepot,strongbox,cardSlots,leaders);
     }
@@ -673,6 +849,10 @@ public class ModelClient {
         return inkwell;
     }
 
+    /**
+     * add error in log of curr user
+     * @param error to add to logs
+     * */
     public void addErrorInLog(String error){
         String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
         errorMessagesLog.put(timeStamp, error);
