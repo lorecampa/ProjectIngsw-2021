@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ModelData;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * GameMaster class
+ * GameMaster class manage all the action during a game.
  */
 public class GameMaster implements GameMasterObserver,Observable<ModelObserver>, LorenzoIlMagnifico {
     @JsonIgnore
@@ -57,15 +56,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Constructor GameMaster creates a new game. It creates a new Market, deck of Leader and deck of Development card,
-     * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player
-     * @param gameSetting of type GameSetting - the class that represent the game customization made by
-     *                    the player
-     * @throws IOException when there are problems opening Json files when loading game information
+     * Construct a GameMaster for the match. It creates a new Market, deck of Leader and deck of Development card,
+     * moreover if it is a single player game instantiate LorenzoIlMagnifico as a Player.
+     * @param gameSetting the class that represent the game parameter.
+     * @throws IOException when there are problems opening Json files when loading game information.
      */
-    public GameMaster(GameSetting gameSetting,
-                      ArrayList<String> players) throws IOException{
-
+    public GameMaster(GameSetting gameSetting, ArrayList<String> players) throws IOException{
         this.numberOfPlayer = players.size();
         //game loading
         loadGameSetting(gameSetting);
@@ -83,13 +79,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         }
     }
 
-
-
-
     /**
-     * Method loadGameSetting is responsible to load the game data from the gameSetting
-     * @param gameSetting of type GameSetting - game data
-     * @throws JsonProcessingException if some error occurs in serialization
+     * Load the game data from the gameSetting.
+     * @param gameSetting the game data.
+     * @throws JsonProcessingException if some error occurs in serialization.
      */
     private void loadGameSetting(GameSetting gameSetting) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -118,7 +111,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
 
     /**
-     * Method nextPlayer change the current player in the game when a new turn starts
+     * Change the current player in the game when a new turn starts.
      */
     public void nextPlayer() throws InvalidStateActionException {
         //TODO change to LEADER_MANAGE_AFTER and handle next turn during player disconnection in a different state
@@ -153,6 +146,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         }
     }
 
+    /**
+     * Compute the game winner.
+     */
     private void gameOver(){
         this.gameEnded = true;
         Map<Integer, String> points= new HashMap<>();
@@ -167,48 +163,50 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         notifyAllObservers(x->x.weHaveAWinner(points));
     }
 
-
-    @Override
-    public void winningCondition() {
-        if(!isLastTurn){
-            notifyAllObservers(ModelObserver::winningCondition);
-            this.isLastTurn = true;
-        }
-    }
-
-
     /**
-     * Method getNumActivePlayers gives the number of players still active in game
-     * @return the numbers of player still on game
+     * Return the number of players still active in game.
+     * @return the number of players still active in game.
      */
     public int getNumActivePlayers(){
         return playersPersonalBoard.size();
     }
 
+    /**
+     * Set the gameEnded to a new value.
+     * @param gameEnded the value to set gameEnded.
+     */
     public void setGameEnded(boolean gameEnded) {
         this.gameEnded = gameEnded;
     }
 
+    /**
+     * Return the number of players.
+     * @return the number of players.
+     */
     public int getNumberOfPlayer() {
         return numberOfPlayer;
     }
 
+    /**
+     * Return the market.
+     * @return the market.
+     */
     public Market getMarket() {
         return market;
     }
 
     /**
-     * Method getCurrentPlayer
-     * @return String - the identifier of the current player in this turn
+     * Return the current player.
+     * @return the current player.
      */
     public String getCurrentPlayer(){
         return this.currentPlayer;
     }
 
     /**
-     * Method addPlayer add the player in the list of the active players and creates for him a new personal board
-     * @param username of type String - new player identifier
-     * @throws IOException when creating the personal board causes problem opening the Json files
+     * Add the player in the list of the active players and creates for him a new personal board.
+     * @param username the player username.
+     * @throws IOException if there's a problem with the opening of the json file.
      */
     public void addPlayer(String username) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -233,33 +231,51 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Method getPersonalBoard is a getter for the personal board associated with a certain username
-     * @param username of type String - player identifier
-     * @return PersonalBoard - personal board associated with username, null if username is not in game
+     * Return the personal board of a specific player.
+     * @param username the player username.
+     * @return PersonalBoard the player's personal board.
      */
     public PersonalBoard getPlayerPersonalBoard(String username){
         return playersPersonalBoard.get(username);
     }
 
+    /**
+     * Return the personal board of the current player.
+     * @return the personal board of the current player.
+     */
     public PersonalBoard getCurrentPlayerPersonalBoard(){
         return playersPersonalBoard.get(currentPlayer);
     }
 
+    /**
+     * Return the Model Data of a specific player.
+     * @param username the player username
+     * @return the Model Data of a specific player.
+     */
     public ModelData getPlayerModelData(String username){
         return playersPersonalBoard.get(username).toClient(username.equals(currentPlayer));
     }
 
+    /**
+     * Attach the Virtual Client to all the classes observable by the Virtual Client.
+     * @param virtualClient the Virtual Client to attach.
+     */
     public void attachPlayerVC(VirtualClient virtualClient){
         attachObserver(virtualClient);
         getMarket().attachObserver(virtualClient);
         playersPersonalBoard.get(virtualClient.getUsername()).attachVirtualClient(virtualClient);
     }
+
+    /**
+     * Attach the LorenzoIlMagnifico's Virtual Client to his faith track.
+     * @param lorenzoIlMagnificoVC the LorenzoIlMagnifico's Virtual Client.
+     */
     public void attachLorenzoIlMagnificoVC(VirtualClient lorenzoIlMagnificoVC){
         playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().attachObserver(lorenzoIlMagnificoVC);
     }
 
     /**
-     * Method deliverLeaderCards delivers all the initial four card to all the players in the game
+     * Delivers all the initial four card to all the players in the game.
      */
     public void deliverLeaderCards() {
         Optional<Leader> leader;
@@ -275,12 +291,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
 
     /**
-     * Method popDeckDevelopmentCard return the first development Development card in the block of card
-     * @param row of type int - row of the matrix
-     * @param column of type int - column of the matrix
-     * @return Development - the first card in the block associated with this coordinates (row, col)
-     * @throws DeckDevelopmentCardException if the block of cards selected is empty
-     * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
+     * Return the first development Development card in the block of card.
+     * @param row the row of the development deck.
+     * @param column the column of the development deck.
+     * @return the first card in the block associated with the coordinates.
+     * @throws DeckDevelopmentCardException if the block of cards selected is empty.
+     * @throws IndexOutOfBoundsException if the coordinates are out of the matrix bounds.
      */
     public Development getDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException {
         if(deckDevelopment.get(row).get(column).isEmpty()){
@@ -293,13 +309,11 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Method removeDeckDevelopmentCard does the same of podDeckDevelopmentCard but without returning
-     * the development card
-     * @param row of type int - row to select
-     * @param column of type int - column to select
-     * @throws DeckDevelopmentCardException if the block of cards selected is empty
-     * @throws IndexOutOfBoundsException if the coordinates are out of the matrix
-     * @see GameMaster#getDeckDevelopmentCard(int, int)
+     * Remove the development card in the specific position of the development deck.
+     * @param row the row selected.
+     * @param column the column selected.
+     * @throws DeckDevelopmentCardException if the block of cards selected is empty.
+     * @throws IndexOutOfBoundsException if the coordinates are out of the matrix bounds.
      */
     private void removeDeckDevelopmentCard(int row, int column) throws DeckDevelopmentCardException, IndexOutOfBoundsException{
         if(deckDevelopment.get(row).get(column).isEmpty()){
@@ -311,8 +325,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
 
     /**
-     * Method drawToken draws the token from the deckToken on the top,
-     * puts it back in the bottom and then  applies its effect
+     * Draws the token from the deckToken on the top, puts it back in the bottom and then  applies its effect.
      */
     private void drawToken(){
         Optional<Token> token = Optional.ofNullable(deckToken.poll());
@@ -320,20 +333,40 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         token.ifPresent(value -> value.doActionToken(this));
     }
 
+    /**
+     * Return true if gameEnded is true.
+     * @return true if gameEnded is true.
+     */
     public boolean isGameEnded() {
         return gameEnded;
     }
 
+    /**
+     * Return the size of the deck of leaders.
+     * @return the size of the deck of leaders.
+     */
     public int getSizeDeckLeader() {
         return deckLeader.size();
     }
 
+    /**
+     * Return the size of the deck of token if exist else it return 0.
+     * @return the size of the deck of token if exist else it return 0.
+     */
     public int getSizeDeckToken() {return (deckToken != null) ? deckToken.size() : 0;}
 
+    /**
+     * Return the deck of development cards.
+     * @return the deck of development cards.
+     */
     public ArrayList<ArrayList<ArrayList<Development>>> getDeckDevelopment() {
         return deckDevelopment;
     }
 
+    /**
+     * Return a GameDevData based on the deck of development cards.
+     * @return a GameDevData based on the deck of development cards.
+     */
     public DeckDevData toDeckDevData(){
         return new DeckDevData(deckDevelopment.stream()
                 .map(row -> row.stream()
@@ -344,6 +377,10 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
                 .collect(Collectors.toCollection(ArrayList::new)));
     }
 
+    /**
+     * Return an ArrayList of EffectData based on the base production.
+     * @return an ArrayList of EffectData based on the base production.
+     */
     public ArrayList<EffectData> toEffectDataBasePro(){
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -356,13 +393,73 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         return null;
     }
 
+    /**
+     * Return the player turn position.
+     * @param username the player username.
+     * @return the player turn position.
+     */
     public int getPlayerPosition(String username){
         return playersTurn.indexOf(username);
     }
 
     /**
-     * Method of FaithTrackObserver that manage the activation of a popeSpace from a player Faith Track
-     * @param idVR is the id of the popeSpace activated
+     * Return the username of LorenzoIlMagnifico.
+     * @return the username of LorenzoIlMagnifico.
+     */
+    public static String getNameLorenzo() {
+        return NAME_LORENZO;
+    }
+
+    /**
+     * Restore all the reference in a match when the server load its saved status.
+     */
+    public void restoreReferenceAfterServerQuit(){
+        market.attachGameMasterObserver(this);
+
+        playersPersonalBoard.values().forEach(x ->{
+            x.attachGameMasterObserver(this);
+            x.getCardManager().restoreCardsManagerReference(x, market);
+        });
+    }
+
+    /**
+     * Return true if there's a column empty in the deck of development cards.
+     * @return true if there's a column empty in the deck of development cards.
+     */
+    private boolean isDeckDevColEmpty(){
+        for (int i = 0; i < deckDevelopment.get(0).size(); i++){
+            boolean isColEmpty = true;
+            for (ArrayList<ArrayList<Development>> arrayLists : deckDevelopment) {
+                if (!arrayLists.get(i).isEmpty()) {
+                    isColEmpty = false;
+                    break;
+                }
+            }
+            if (isColEmpty){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return the player state.
+     * @return  the player state.
+     */
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    /**
+     * See {@link GameMasterObserver#discardLeader()}.
+     */
+    @Override
+    public void discardLeader() {
+        playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(1);
+    }
+
+    /**
+     * See {@link GameMasterObserver#vaticanReportReached(int)}.
      */
     @Override
     public void vaticanReportReached(int idVR) {
@@ -375,8 +472,7 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Method of ResourceManagerObserver that manage the advancement of player after the current player discarded resources
-     * @param numResources is the number of move each player must do
+     * See {@link GameMasterObserver#discardResources(int)}.
      */
     @Override
     public void discardResources(int numResources) {
@@ -395,39 +491,15 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Method of CardManagerObserver that manage to increase the
-     * current player faith position after a card leader discard
+     * See {@link GameMasterObserver#increasePlayerFaithPoint(int)}.
      */
-    public void discardLeader() {
-        playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(1);
-    }
-
     @Override
     public void increasePlayerFaithPoint(int faithPoints) {
         playersPersonalBoard.get(currentPlayer).getFaithTrack().movePlayer(faithPoints);
     }
 
-    private boolean isDeckDevColEmpty(){
-        for (int i = 0; i < deckDevelopment.get(0).size(); i++){
-            boolean isColEmpty = true;
-            for (ArrayList<ArrayList<Development>> arrayLists : deckDevelopment) {
-                if (!arrayLists.get(i).isEmpty()) {
-                    isColEmpty = false;
-                    break;
-                }
-            }
-            if (isColEmpty){
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
-     * Method discardDevelopment discard a specific number of card (num) of a certain color (color)
-     * in the development deck starting from the cards of level 1 to the cards of level 3
-     * @param color of type Color - target color
-     * @param num of type int - number of cards to delete
+     * See {@link LorenzoIlMagnifico#discardDevelopmentSinglePlayer(Color, int)}.
      */
     @Override
     public void discardDevelopmentSinglePlayer(Color color, int num) {
@@ -449,22 +521,9 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
             winningCondition();
         }
     }
-    public static String getNameLorenzo() {
-        return NAME_LORENZO;
-    }
-
-    public void restoreReferenceAfterServerQuit(){
-        market.attachGameMasterObserver(this);
-
-        playersPersonalBoard.values().forEach(x ->{
-            x.attachGameMasterObserver(this);
-            x.getCardManager().restoreCardsManagerReference(x, market);
-        });
-    }
-
 
     /**
-     * Method shuffleToken shuffle the deck of Token for the single player mode
+     * See {@link LorenzoIlMagnifico#shuffleToken()}.
      */
     @Override
     public void shuffleToken() {
@@ -472,15 +531,16 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
     }
 
     /**
-     * Method increaseFaithPosition increase the faith position of Lorenzo il Magnifico of a given number (pos)
-     * @param pos of type int - position to increase
+     * See {@link LorenzoIlMagnifico#increaseLorenzoFaithPosition(int)}.
      */
     @Override
     public void increaseLorenzoFaithPosition(int pos) {
         this.playersPersonalBoard.get(NAME_LORENZO).getFaithTrack().movePlayer(pos);
     }
 
-
+    /**
+     * See {@link GameMasterObserver#onDeckDevelopmentCardRemove(int, int)}.
+     */
     @Override
     public void onDeckDevelopmentCardRemove(int row, int col) {
         try {
@@ -489,28 +549,46 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
         }
     }
 
+    /**
+     * See {@link GameMasterObserver#onPlayerStateChange(PlayerState)}.
+     */
     @Override
     public void onPlayerStateChange(PlayerState playerState) {
         this.playerState = playerState;
     }
 
+    /**
+     * See {@link GameMasterObserver#isPlayerInState(PlayerState...)}.
+     */
     @Override
     public boolean isPlayerInState(PlayerState... states) {
         return Arrays.stream(states).anyMatch(x -> x == playerState);
     }
 
-    public PlayerState getPlayerState() {
-        return playerState;
-    }
-
+    /**
+     * See {@link Observable#attachObserver(Object)}.
+     */
     @Override
     public void attachObserver(ModelObserver observer) {
         modelObserverList.add(observer);
-
     }
 
+    /**
+     * See {@link Observable#notifyAllObservers(Consumer)}.
+     */
     @Override
     public void notifyAllObservers(Consumer<ModelObserver> consumer) {
         modelObserverList.forEach(consumer);
+    }
+
+    /**
+     * See {@link GameMasterObserver#winningCondition()}.
+     */
+    @Override
+    public void winningCondition() {
+        if(!isLastTurn){
+            notifyAllObservers(ModelObserver::winningCondition);
+            this.isLastTurn = true;
+        }
     }
 }

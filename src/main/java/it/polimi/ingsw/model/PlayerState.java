@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 /**
- * Class State is an enumeration
+ * Possible player state during his turn.
  */
 public enum PlayerState {
-    NOT_IN_TURN,
-
     LEADER_MANAGE_BEFORE,
 
     //MARKET

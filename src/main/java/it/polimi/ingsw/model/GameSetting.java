@@ -10,14 +10,10 @@ import it.polimi.ingsw.model.card.Leader;
 import it.polimi.ingsw.model.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.personalBoard.market.Market;
 import it.polimi.ingsw.model.token.Token;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 
 /**
  * Class GameSetting defines a class that represent the game data, it first read all custom game
@@ -36,14 +32,13 @@ public class GameSetting {
 
 
     /**
-     * Constructor GameSetting creates a new game setting instance. It first creates all the
-     * default class from json files meanwhile checking their authenticity and integrity
-     * @param numberOfPlayers of type int - the number of player of the game
-     * @throws IOException
-     * @throws JsonFileModificationError
+     * Construct a Game Setting that creates all the default class from json files
+     * meanwhile checking their authenticity and integrity.
+     * @param numberOfPlayers the number of player of the game.
+     * @throws IOException if there's some error during the reading of a json file.
+     * @throws JsonFileModificationError if a json file is not written correctly.
      */
-    public GameSetting(int numberOfPlayers) throws IOException, JsonFileModificationError, URISyntaxException {
-        //setting up mapper
+    public GameSetting(int numberOfPlayers) throws IOException, JsonFileModificationError{
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
@@ -58,23 +53,38 @@ public class GameSetting {
             createDeckToken();
     }
 
-
-
+    /**
+     * Creates the faith track from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     */
     private void createDefaultFaithTrack() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/json/FaithTrack.json");
         faithTrack = mapper.readValue(inputStream, FaithTrack.class);
     }
 
+    /**
+     * Creates the base production from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     */
     private void createDefaultBaseProduction() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/json/baseProduction.json");
         baseProduction = mapper.readValue(inputStream, Development.class);
     }
 
+    /**
+     * Creates the market from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     */
     private void createDefaultMarket() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/json/market.json");
         market = mapper.readValue(inputStream, Market.class);
     }
 
+    /**
+     * Creates the token's deck from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     * @throws JsonFileModificationError if a json file is not written correctly.
+     */
     private void createDeckToken() throws IOException, JsonFileModificationError{
         final int INITIAL_SIZE_TOKEN_DECK = 7;
         InputStream inputStream = getClass().getResourceAsStream("/json/token.json");
@@ -83,23 +93,30 @@ public class GameSetting {
         if (deckToken.size() != INITIAL_SIZE_TOKEN_DECK){
             throw new JsonFileModificationError("Deck token size wrong");
         }
-
-
     }
 
+    /**
+     * Creates the leader's deck from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     * @throws JsonFileModificationError if a json file is not written correctly.
+     */
     private void createDefaultDeckLeader() throws IOException, JsonFileModificationError {
         final int INITIAL_SIZE_LEADER_DECK = 16;
         InputStream inputStream = getClass().getResourceAsStream("/json/leader.json");
         deckLeader = mapper
                 .readValue(inputStream,
-                        new TypeReference<LinkedList<Leader>>() {});
+                        new TypeReference<>() {});
 
         if (deckLeader.size() != INITIAL_SIZE_LEADER_DECK){
             throw new JsonFileModificationError("Leader deck size wrong");
         }
-
     }
 
+    /**
+     * Creates the deck of the development cards from the json file.
+     * @throws IOException if there's some error during the reading of a json file.
+     * @throws JsonFileModificationError if a json file is not written correctly.
+     */
     private void createDefaultDeckDevelopment() throws IOException, JsonFileModificationError {
         final int INITIAL_ROW_DECK = 3;
         final int INITIAL_COLUMN_DECK = 4;
@@ -131,28 +148,66 @@ public class GameSetting {
         }
     }
 
-
+    /**
+     * Return the base production.
+     * @return the base production.
+     */
     public Development getBaseProduction() {
         return baseProduction;
     }
+
+    /**
+     * Return the deck of the development cards.
+     * @return the deck of the development cards.
+     */
     public ArrayList<ArrayList<ArrayList<Development>>> getDeckDevelopment() {
         return deckDevelopment;
     }
+
+    /**
+     * Return the leader's deck.
+     * @return the leader's deck.
+     */
     public LinkedList<Leader> getDeckLeader() {
         return deckLeader;
     }
+
+    /**
+     * Return the faith track.
+     * @return the faith track.
+     */
     public FaithTrack getFaithTrack() {
         return faithTrack;
     }
+
+    /**
+     * Return the market.
+     * @return the market.
+     */
     public Market getMarket() {
         return market;
     }
+
+    /**
+     * Return the deck of tokens.
+     * @return the deck of tokens.
+     */
     public LinkedList<Token> getDeckToken() {
         return deckToken;
     }
+
+    /**
+     * Return the number of leaders at the start of the game.
+     * @return the number of leaders at the start of the game.
+     */
     public int getLeaderAtStart(){
         return leaderAtStart;
     }
+
+    /**
+     * Return the number of players.
+     * @return the number of players.
+     */
     public int getNumberOfPlayer() {
         return numberOfPlayer;
     }
