@@ -77,9 +77,9 @@ public class Server {
             System.exit(0);
         }
 
-        if (argsMap.get("-load").equals("true"))
+        if (argsMap.get("-load").equals("true")){
             load = true;
-        else  if (argsMap.get("-load").equals("false"))
+        }else  if (argsMap.get("-load").equals("false"))
             load = false;
         else{
             System.out.println("Invalid param!");
@@ -97,13 +97,12 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
 
-            if (load) {
-                loadServerData();
-                loadMatches();
-            }
-            else
+            if (!load){
+                System.out.println("Server initializing...");
                 deleteFolder(new File(SERVER_DATA_PATH));
-
+            }
+            loadServerData();
+            loadMatches();
             System.out.println("Server ready");
         } catch (IOException e) {
             System.out.println("Error during server setUp: " + e.getMessage());
@@ -177,19 +176,16 @@ public class Server {
 
         File[] matchFiles = new File(MATCH_SAVING_PATH).listFiles((dir, name) -> !name.equals(".DS_Store"));
 
-        if (matchFiles == null || matchFiles.length == 0){
-            System.out.println("No files to load");
-            return;
-        }
-        System.out.println(matchFiles.length + " matches to load found");
+        if (matchFiles != null && matchFiles.length != 0){
+            System.out.println(matchFiles.length + " matches to load found");
 
-        for (File file: matchFiles){
-            if (file.isFile()){
-                MatchData matchData = mapper.readValue(file, MatchData.class);
-                matches.add(matchData.createMatch(this));
+            for (File file: matchFiles){
+                if (file.isFile()){
+                    MatchData matchData = mapper.readValue(file, MatchData.class);
+                    matches.add(matchData.createMatch(this));
+                }
             }
         }
-
     }
 
     public void closeOpenMatch(){
