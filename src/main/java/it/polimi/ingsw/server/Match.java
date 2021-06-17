@@ -1,7 +1,5 @@
 package it.polimi.ingsw.server;
 
-
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import it.polimi.ingsw.client.data.CardLeaderData;
 import it.polimi.ingsw.client.data.FaithTrackData;
 import it.polimi.ingsw.controller.Controller;

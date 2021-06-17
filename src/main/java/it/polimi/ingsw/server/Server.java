@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private int port;
+    private boolean load;
     private final ExecutorService executorService;
     private ServerSocket serverSocket;
     private int nextClientID;
@@ -35,31 +36,56 @@ public class Server {
     private final Object lockOpenMatch = new Object();
     private Match openMatch;
 
+    private final HashMap<String,String> argsMap = new HashMap<>();
+
     public static final String SERVER_DATA_PATH = "ServerData";
     public static final String SERVER_INFO_PATH = SERVER_DATA_PATH + "/serverInfo.txt";
     public static final String MATCH_SAVING_PATH = SERVER_DATA_PATH + "/MatchSaving";
 
 
+    private void setUpArgs(){
+        argsMap.put("-port", "2020");
+        argsMap.put("-load", "false");
+    }
 
     public  Server(String[] args){
-        if(args.length==1){
-            try{
-                port=Integer.parseInt(args[0]);
-                if(port<=1024){
-                    System.out.println("Invalid port number!");
+        setUpArgs();
+        for (int i = 0; i < args.length; i++) {
+            if (argsMap.containsKey(args[i])){
+                try {
+                    argsMap.replace(args[i], args[i + 1]);
+                    i++;
+                }catch (Exception e){
+                    System.out.println("Invalid param!");
                     System.exit(0);
                 }
+            }else{
+                System.out.println("Invalid param!");
+                System.exit(0);
             }
-            catch (Exception e){
+        }
+
+        try{
+            port=Integer.parseInt(argsMap.get("-port"));
+            if(port<=1024){
                 System.out.println("Invalid port number!");
                 System.exit(0);
             }
-        }else if(args.length!=0){
+        }
+        catch (Exception e){
+            System.out.println("Invalid port number!");
+            System.exit(0);
+        }
+
+        if (argsMap.get("-load").equals("true"))
+            load = true;
+        else  if (argsMap.get("-load").equals("false"))
+            load = false;
+        else{
             System.out.println("Invalid param!");
             System.exit(0);
-        }else{
-            port = 2020;
         }
+
         executorService = Executors.newCachedThreadPool();
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
@@ -71,23 +97,24 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
 
-            loadServerData();
-            loadMatches();
+            if (load) {
+                loadServerData();
+                loadMatches();
+            }
+            else
+                deleteFolder(new File(SERVER_DATA_PATH));
 
             System.out.println("Server ready");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error during server setUp: " + e.getMessage());
             System.exit(1);
         }
-
-        //FIXME is correct to start the match if failed?
 
         new Thread(new ServerInput(this)).start();
         acceptConnection();
     }
 
-    //TODO davide method from lorenzo to delete a folder recursively, call it before loading server
-    //deleteFolder(new File(SERVER_DATA_PATH));
+
     private void deleteFolder(File file) throws IOException {
         if (file.isDirectory()){
             File[] files = file.listFiles();

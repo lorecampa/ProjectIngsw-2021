@@ -3,13 +3,11 @@ package it.polimi.ingsw.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.client.GUI.ClientGUI;
-import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.GUIMessageHandler;
 import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
-import it.polimi.ingsw.server.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class Client{
@@ -36,42 +35,49 @@ public class Client{
     private final ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
-    private static final String CLIParam = "-cli";
-    private static final String GUIParam = "-gui";
 
+    private final HashMap<String,String> argsMap = new HashMap<>();
+
+    private void setUpArgs(){
+        argsMap.put("-interface", "cli");
+        argsMap.put("-address", "127.0.0.1");
+        argsMap.put("-port", "2020");
+    }
 
     /**
      *Set up client with arguments
      * */
     private void setUpClient(String[] args) throws IOException {
-        if (args.length == 3) {
-            try{
-                ipHost = args[1];
-                portNumber=Integer.parseInt(args[2]);
-            }catch (Exception e){
-                System.out.println("Invalid param to start client!");
+        setUpArgs();
+        for (int i = 0; i < args.length; i++) {
+            if (argsMap.containsKey(args[i])){
+                try {
+                    argsMap.replace(args[i], args[i + 1]);
+                    i++;
+                }catch (Exception e){
+                    System.out.println("Invalid param!");
+                    System.exit(0);
+                }
+            }else{
+                System.out.println("Invalid param!");
                 System.exit(0);
             }
         }
-        else if (args.length == 2){
-            try{
-                ipHost = args[0];
-                portNumber=Integer.parseInt(args[1]);
-            }catch (Exception e){
-                System.out.println("Invalid param to start client!");
-                System.exit(0);
-            }
-        }
-        else{
-            ipHost="127.0.0.1";
-            portNumber=2020;
+
+        ipHost = argsMap.get("-address");
+        try {
+            portNumber = Integer.parseInt(argsMap.get("-port"));
+        }catch (Exception e){
+            System.out.println("Invalid param to start client!");
+            System.exit(0);
         }
 
         try {
             clientSocket = new Socket(ipHost, portNumber);
             //clientSocket.setSoTimeout(20000);
         } catch (IOException e) {
-            //e.printStackTrace(); //non voglio che venga stamapato la stacktrace
+            System.out.println("Error during socket set up: " + e.getMessage());
+            System.exit(0);
         }
         state = ClientState.MAIN_MENU;
         nameFile="MasterOfRenaissance_dataLastGame.txt";
@@ -92,10 +98,12 @@ public class Client{
             PrintAssistant.instance.errorPrint("There's no server ready to answer you! Try again later! Bye :)");
             System.exit(0);
         }
-        if (args.length == 0 || args.length == 2){
+
+        String clientInterface = clientInstance.argsMap.get("-interface");
+        if (clientInterface.equals("cli")){
             clientInstance.startCLI();
         }
-        else if (args[0].equals(Client.GUIParam)) {
+        else if (clientInterface.equals("gui")) {
             new Thread(() -> ClientGUI.main(args)).start();
             clientInstance.startGUI();
         }

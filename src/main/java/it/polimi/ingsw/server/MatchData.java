@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.GameMaster;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 
 public class MatchData {

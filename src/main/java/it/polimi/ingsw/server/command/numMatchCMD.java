@@ -2,10 +2,13 @@ package it.polimi.ingsw.server.command;
 
 import it.polimi.ingsw.server.Server;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class numMatchCMD implements ServerCommand{
 
     private final Server server;
+    @SuppressWarnings("unused")
     private final String param;
+
     public numMatchCMD(String param, Server server){
         this.param=param;
         this.server=server;
