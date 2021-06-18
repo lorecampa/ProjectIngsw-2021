@@ -45,7 +45,7 @@ public class ClientInput implements Runnable{
         String command="";
         while(client.getState()!=ClientState.QUIT){
             try{
-                command=stdIn.readLine();
+                command = stdIn.readLine();
                 command = command.toLowerCase();
                 command = command.trim().replaceAll(" +", " "); //remove multiple spaces ' ' and replace them with only 1 space
             }

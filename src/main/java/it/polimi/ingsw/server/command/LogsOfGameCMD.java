@@ -3,14 +3,26 @@ package it.polimi.ingsw.server.command;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.Server;
 
+/**
+ * Command to print the logs of a match.
+ */
 public class LogsOfGameCMD implements ServerCommand{
     private final Server server;
     private final String param;
 
+    /**
+     * Construct a Logs of Game Command with specific parameters.
+     * @param param the parameters of the command.
+     * @param server the reference to the server instance.
+     */
     public LogsOfGameCMD(String param, Server server){
         this.param=param;
         this.server=server;
     }
+
+    /**
+     * Print the logs of a specific match.
+     */
     @Override
     public void doCommand() {
         String[] split=param.split(" ");

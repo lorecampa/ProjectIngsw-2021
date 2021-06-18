@@ -14,14 +14,12 @@ import java.util.Map;
 public class ServerInput implements Runnable{
     private final Server server;
     private final BufferedReader stdIn;
-    private boolean exit=false;
     private final Map<String, Class<? extends ServerCommand>> commands = new HashMap<>() {
         {
             put("numofmatch", numMatchCMD.class);
             put("quit", ExitServerCMD.class);
             put("listmatch", ListMatchCMD.class);
             put("logs", LogsOfGameCMD.class);
-
         }
     };
 
@@ -33,7 +31,7 @@ public class ServerInput implements Runnable{
     @Override
     public void run() {
         String command="";
-        while(!exit){
+        while(!server.isExit()){
             try{
                 command=stdIn.readLine();
                 command = command.toLowerCase();
@@ -44,7 +42,8 @@ public class ServerInput implements Runnable{
             }
             manageInput(command);
         }
-
+        System.out.println("Hope you enjoyed MastersOfRenaissance! See you soon!");
+        System.exit(0);
     }
 
     private void manageInput(String command){

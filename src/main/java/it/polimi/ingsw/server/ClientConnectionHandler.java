@@ -17,6 +17,9 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class that manage the interaction with the client.
+ */
 public class ClientConnectionHandler implements Runnable {
     private final Socket socket;
     private final Scanner in;
@@ -31,7 +34,13 @@ public class ClientConnectionHandler implements Runnable {
     private ServerMessageHandler serverMessageHandler;
     private int clientID;
 
-
+    /**
+     * Construct a Client Connection Handler of a specific client.
+     * @param socket the socket of the Server-Client connection.
+     * @param server the reference of the Server.
+     * @param clientID the id of the client.
+     * @throws IOException if an error occurs during creation
+     */
     public ClientConnectionHandler(Socket socket, Server server, int clientID) throws IOException {
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         this.socket = socket;
@@ -41,8 +50,9 @@ public class ClientConnectionHandler implements Runnable {
         serverMessageHandler = new ServerMessageHandler(server,this);
     }
 
-
-
+    /**
+     * Start a pinging thread to the client.
+     */
     private void startPinging(){
         Thread ping = new Thread(() -> {
             while (!exit) {
@@ -58,28 +68,64 @@ public class ClientConnectionHandler implements Runnable {
         ping.start();
     }
 
+    /**
+     * Set the value of exit.
+     * @param exit the new exit value.
+     */
     public void setExit(boolean exit) { this.exit = exit; }
 
+    /**
+     * Return the clientID.
+     * @return the clientID.
+     */
     public int getClientID() {
         return clientID;
     }
 
+    /**
+     * Set the HandlerState.
+     * @param state the new handlerState value.
+     */
     public void setState(HandlerState state){
         serverMessageHandler.setServerPhase(state);
     }
 
+    /**
+     * Return the HandlerState.
+     * @return the HandlerState.
+     */
     public HandlerState getState(){return serverMessageHandler.getServerPhase();}
 
+    /**
+     * Set the Virtual client.
+     * @param virtualClient the new Virtual Client.
+     */
     public void setVirtualClient(VirtualClient virtualClient){
         serverMessageHandler.setVirtualClient(virtualClient);
     }
 
+    /**
+     * Return the ServerMessageHandler.
+     * @return the ServerMessageHandler.
+     */
     public ServerMessageHandler getServerMessageHandler() { return serverMessageHandler; }
 
+    /**
+     * Set the ServerMessageHandler.
+     * @param serverMessageHandler the ServerMessageHandler.
+     */
     public void setServerMessageHandler(ServerMessageHandler serverMessageHandler) {  this.serverMessageHandler = serverMessageHandler; }
 
+    /**
+     * Set the Id of the client.
+     * @param clientID the new Id of the client.
+     */
     public void setClientID(int clientID) { this.clientID = clientID; }
 
+    /**
+     * Send a message to the client.
+     * @param message the message sent.
+     */
     public void writeToStream(ClientMessage message){
         synchronized (streamLock) {
             Optional<String> serializedMessage = Optional.ofNullable(serialize(message));
@@ -89,6 +135,9 @@ public class ClientConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Read the messages from the client.
+     */
     public void readFromStream(){
         String serializedMessage;
         try {
@@ -103,9 +152,13 @@ public class ClientConnectionHandler implements Runnable {
         }catch (Exception e){
             serverMessageHandler.handleDisconnection();
         }
-
     }
 
+    /**
+     * Deserialize the messages from the client.
+     * @param serializedMessage the message to deserialize.
+     * @return the deserialized message.
+     */
     public ServerMessage deserialize(String serializedMessage){
         ServerMessage message;
         if (serializedMessage == null) return null;
@@ -117,6 +170,11 @@ public class ClientConnectionHandler implements Runnable {
         return message;
     }
 
+    /**
+     * Serialize the message to the client.
+     * @param message the message to serialize.
+     * @return the serialized message.
+     */
     public String serialize(ClientMessage message){
         String serializedMessage;
         try {
@@ -128,6 +186,9 @@ public class ClientConnectionHandler implements Runnable {
     }
 
 
+    /**
+     * Read the messages from the client until the client is connected.
+     */
     @Override
     public void run() {
 

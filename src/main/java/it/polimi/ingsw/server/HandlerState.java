@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server;
 
+/**
+ * The possible state of the Client Connection Handler
+ */
 public enum HandlerState {
     FIRST_CONTACT,
     NUM_OF_PLAYER,

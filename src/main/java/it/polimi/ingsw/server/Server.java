@@ -35,6 +35,7 @@ public class Server {
     private final ArrayList<Match> matchesToFill;
     private final Object lockOpenMatch = new Object();
     private Match openMatch;
+    private boolean exit=false;
 
     private final HashMap<String,String> argsMap = new HashMap<>();
 
@@ -186,6 +187,14 @@ public class Server {
                 }
             }
         }
+    }
+
+    public boolean isExit() {
+        return exit;
+    }
+
+    public void setExit(boolean exit) {
+        this.exit = exit;
     }
 
     public void closeOpenMatch(){
@@ -366,5 +375,4 @@ public class Server {
         }
         return null;
     }
-
 }
