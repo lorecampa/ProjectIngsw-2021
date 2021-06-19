@@ -61,6 +61,10 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.ready = false;
     }
 
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
     /**
      * Construct a new Virtual Client based on specific param.
      * @param username the username of the client.
