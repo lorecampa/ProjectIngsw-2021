@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Manage all the components of the server like matches, players and connections.
+ */
 public class Server {
     private int port;
     private boolean load;
@@ -44,11 +46,18 @@ public class Server {
     public static final String MATCH_SAVING_PATH = SERVER_DATA_PATH + "/MatchSaving";
 
 
+    /**
+     * SetUp the argsMap fro command line parameters.
+     */
     private void setUpArgs(){
         argsMap.put("-port", "2020");
         argsMap.put("-load", "false");
     }
 
+    /**
+     * Construct a Server based on args.
+     * @param args the parameters from the command line.
+     */
     public  Server(String[] args){
         setUpArgs();
         for (int i = 0; i < args.length; i++) {
@@ -91,9 +100,11 @@ public class Server {
         lobby = new ArrayList<>();
         matches = new ArrayList<>();
         matchesToFill = new ArrayList<>();
-
     }
 
+    /**
+     * Start listening for connection on a port.
+     */
     public void startServer(){
         try {
             serverSocket = new ServerSocket(port);
@@ -115,6 +126,11 @@ public class Server {
     }
 
 
+    /**
+     * Delete the folders where the servers data are saved.
+     * @param file the file or directory.
+     * @throws IOException if an error occur during deletion.
+     */
     private void deleteFolder(File file) throws IOException {
         if (file.isDirectory()){
             File[] files = file.listFiles();
@@ -134,9 +150,12 @@ public class Server {
                 throw new IOException("Can't delete file");
             }
         }
-
     }
 
+    /**
+     * Load the saved server data.
+     * @throws IOException if an error occur during the reading of files.
+     */
     private void loadServerData() throws IOException {
         File serverDataDir = new File(SERVER_DATA_PATH);
         if (!serverDataDir.exists()){
@@ -162,6 +181,10 @@ public class Server {
         nextClientID = Integer.parseInt(lines.get(1));
     }
 
+    /**
+     * Load the saved matches data.
+     * @throws IOException if an error occur during the reading of files.
+     */
     private void loadMatches() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
@@ -189,14 +212,25 @@ public class Server {
         }
     }
 
+    /**
+     * Return true if exit is set to true.
+     * @return true if exit is set to true.
+     */
     public boolean isExit() {
         return exit;
     }
 
+    /**
+     * Set the value of exit.
+     * @param exit the new value of exit.
+     */
     public void setExit(boolean exit) {
         this.exit = exit;
     }
 
+    /**
+     * Close the open match when the room is filled.
+     */
     public void closeOpenMatch(){
         synchronized (lobby) {
             synchronized (lockOpenMatch) {
@@ -220,6 +254,12 @@ public class Server {
         }
     }
 
+    /**
+     * Create a new open match to fill.
+     * @param numOfPlayer the number of player of the match.
+     * @param player the player that created the match.
+     * @throws InvalidParameterException if the parameters of the match are invalid.
+     */
     public void createMatch(int numOfPlayer, ClientConnectionHandler player) throws InvalidParameterException{
 
         if (numOfPlayer<1 || numOfPlayer >4)
@@ -242,6 +282,10 @@ public class Server {
         }
     }
 
+    /**
+     * Put a client in lobby after the first contact with the server.
+     * @param client the client that's connected.
+     */
     public void putInLobby(ClientConnectionHandler client){
         synchronized (lobby){
             if (!lobby.contains(client)){
@@ -263,6 +307,10 @@ public class Server {
         }
     }
 
+    /**
+     * Create a new single player match.
+     * @param client the client that created the match.
+     */
     public void singlePlayer(ClientConnectionHandler client){
         Match newMatch = new Match(1, this, getNextMatchID());
         synchronized (matches) {
@@ -271,6 +319,10 @@ public class Server {
         newMatch.addForSinglePlayer(new VirtualClient("Quest_".concat(String.valueOf(newMatch.currentNumOfPlayer())), client, newMatch));
     }
 
+    /**
+     * Handle the disconnection of a client in the server.
+     * @param client the client that's disconnected.
+     */
     public void clientDisconnect(ClientConnectionHandler client){
         synchronized (lobby){
             client.setExit(true);
@@ -283,6 +335,12 @@ public class Server {
         }
     }
 
+    /**
+     * Handle the reconnection of a client.
+     * @param matchID the matchID of the client.
+     * @param clientID the old client id.
+     * @param client the client that's reconnecting.
+     */
     public void clientReconnection(int matchID, int clientID, ClientConnectionHandler client){
         synchronized (matches){
             boolean reconnected = false;
@@ -304,6 +362,10 @@ public class Server {
         }
     }
 
+    /**
+     * Put a match in the toFill array.
+     * @param matchToFill the match to put in the array.
+     */
     public void putInToFill(Match matchToFill){
         synchronized (matchesToFill) {
             if (matchToFill != openMatch) {
@@ -312,6 +374,11 @@ public class Server {
         }
     }
 
+    /**
+     * Return the next available client id.
+     * @return the next available client id.
+     * @throws IOException if an error occur during the reading of the file.
+     */
     public synchronized int getNextClientID() throws IOException {
         Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -322,10 +389,13 @@ public class Server {
         return  nextClientID;
     }
 
-    public synchronized int getNextMatchID() {
+    /**
+     * Return the next available match id.
+     * @return the next available match id.
+     */
+    public synchronized int getNextMatchID(){
         Path path = Paths.get(SERVER_DATA_PATH + "/serverInfo.txt");
         List<String> lines;
-        //FIXME it should throw an exception because it is impossible to change the nextID value
         try {
             lines = Files.readAllLines(path, StandardCharsets.UTF_8);
             int lastMatchID = Integer.parseInt(lines.get(0));
@@ -333,12 +403,15 @@ public class Server {
             lines.set(0, Integer.toString(nextMatchID));
             Files.write(path, lines, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Fatal error occurred while trying to read serverInfo!");
+            System.exit(0);
         }
-
         return  nextMatchID;
     }
 
+    /**
+     * Accept new connections on the port.
+     */
     public void acceptConnection(){
         while (true){
             try {
@@ -349,7 +422,8 @@ public class Server {
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);
             } catch(IOException e) {
-                break;
+                System.out.println("Fatal error during connection!");
+                System.exit(0);
             }
         }
     }
@@ -359,14 +433,27 @@ public class Server {
         server.startServer();
     }
 
+    /**
+     * Delete a finished match.
+     * @param match the match to delete.
+     */
     public void matchEnd(Match match){
         matches.remove(match);
     }
 
+    /**
+     * Return the current matches.
+     * @return the current matches.
+     */
     public ArrayList<Match> getMatches(){
         return matches;
     }
 
+    /**
+     * Return a match with the specific id.
+     * @param id the id of the match.
+     * @return a match with the specific id.
+     */
     public Match getMatchWithId(int id){
         for(Match match : matches){
             if(id==match.getMatchID()){
