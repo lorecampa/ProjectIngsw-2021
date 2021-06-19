@@ -652,8 +652,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
 
     /**
      * Return the strongbox of curr player
-     * @deprecated
-     * */
+     */
     public Strongbox getStrongbox() { //usato solo nei test, per questo c'è il warning... forse va tolta ovunque o basta togliere il @deprecated
         return strongbox;
     }

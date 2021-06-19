@@ -26,7 +26,6 @@ public class LeaderManage implements ServerMessage{
     @Override
     public void process(ServerMessageHandler handler) {
         handler.handleLeaderManage(this);
-
         handler.getVirtualClient().ifPresent(x->x.addToLog(this));
     }
 

@@ -29,7 +29,7 @@ public class ResourcesCMD implements ServerCommand{
             System.out.println("Invalid param!");
             return;
         }
-        int indexMatch=-1;
+        int indexMatch;
         try{
             indexMatch=Integer.parseInt(split[0]);
         }   catch(Exception e){

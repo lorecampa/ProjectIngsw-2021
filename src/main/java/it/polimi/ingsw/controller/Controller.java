@@ -554,9 +554,10 @@ public class Controller {
         res.add(ResourceFactory.createResource(ResourceType.COIN, 20));
         res.add(ResourceFactory.createResource(ResourceType.SERVANT, 20));
         for(PersonalBoard pb :gameMaster.getAllPersonalBoard()){
-            pb.getResourceManager().addToResourcesToProduce(res);
-            pb.getResourceManager().doProduction();
-            pb.getResourceManager().restoreRM();
+            ResourceManager rm = pb.getResourceManager();
+            res.forEach(rm::addToStrongbox);
+            rm.notifyAllObservers(x -> x.strongboxUpdate(rm.getStrongbox().getResources()));
+            rm.restoreRM();
         }
     }
 }

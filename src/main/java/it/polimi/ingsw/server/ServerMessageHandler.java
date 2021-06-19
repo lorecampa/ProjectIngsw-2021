@@ -180,7 +180,6 @@ public class ServerMessageHandler {
     public void handleLeaderManage(LeaderManage message){
         if(serverPhase == HandlerState.LEADER_SETUP){
             controller.discardLeaderSetUp(message.getIndex(), virtualClient.getUsername());
-
         }else if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
             controller.leaderManage(message.getIndex(), message.isDiscard());
         }
