@@ -31,7 +31,7 @@
 
 ## Setup
 
-- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client, once the jars run you can type  ```shell > help``` to get more info about the commands.
+- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client, once the jars run you can type  ``` > help``` to get more info about the commands.
 - The Server can be run with the following command, as default it runs on port 2020:
     ```shell
     > java -jar MORServer.jar
