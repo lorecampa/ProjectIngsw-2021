@@ -8,16 +8,16 @@
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | <img src="DoneClipArt.png" width="40"/> |
-| Complete rules | <img src="DoneClipArt.png" width="40"/> |
-| Socket | <img src="DoneClipArt.png" width="40"/> |
-| GUI | <img src="DoneClipArt.png" width="40"/> |
-| CLI | <img src="DoneClipArt.png" width="40"/> |
-| Multiple games | <img src="DoneClipArt.png" width="40"/> |
-| Custom Parameters | <img src="NotDoneClipArt.png" width="40"/> |
-| Server Persistence | <img src="DoneClipArt.png" width="40"/> |
-| Reconnect | <img src="DoneClipArt.png" width="40"/> |
-| Local Single Player | <img src="NotDoneClipArt.png" width="40"/> |
+| Basic rules | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Complete rules | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Socket | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| GUI | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| CLI | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Multiple games | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Custom Parameters | <img src="./deliverables/ImageReadme/NotDoneClipArt.png" width="40"/> |
+| Server Persistence | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Reconnect | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Local Single Player | <img src="./deliverables/ImageReadme/NotDoneClipArt.png" width="40"/> |
 
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
@@ -27,7 +27,7 @@
 
 # Master Of Renaissance
 
-![MOR Logo](logo.jpg)
+![MOR Logo](deliverables/ImageReadme/logo.jpg)
 
 ## Setup
 
