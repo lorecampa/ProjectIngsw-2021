@@ -102,7 +102,12 @@ public class Client{
             clientInstance.startCLI();
         }
         else if (clientInterface.equals("gui")) {
-            new Thread(() -> ClientGUI.main(args)).start();
+            try{
+                new Thread(() -> ClientGUI.main(args)).start();
+            }catch(Exception e){
+                System.out.println("BIG LOL");
+            }
+
             clientInstance.startGUI();
         }
         else{

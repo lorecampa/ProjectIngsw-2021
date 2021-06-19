@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.client.data.ModelData;
+import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.token.CardToken;
@@ -39,7 +40,6 @@ class GameMasterTest {
     }
 
 
-
     @Test
     void deliverLeaderCard() {
         assertEquals(16, gm.getSizeDeckLeader());
@@ -50,15 +50,22 @@ class GameMasterTest {
 
     @Test
     void nextPlayerTest(){
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+
 
         gm.winningCondition();
-
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
+        gm.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()->gm.nextPlayer());
 
     }
@@ -86,6 +93,7 @@ class GameMasterTest {
         int sizeDeckToken = gmSp.getSizeDeckToken();
         assertEquals(7, sizeDeckToken);
 
+        gmSp.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         assertDoesNotThrow(()-> gmSp.nextPlayer());
         assertEquals(sizeDeckToken, gmSp.getSizeDeckToken());
     }
