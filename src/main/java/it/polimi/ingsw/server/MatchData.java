@@ -5,7 +5,9 @@ import it.polimi.ingsw.model.GameMaster;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * Contains all the information to restore a match after a Server disconnection.
+ */
 public class MatchData {
     private HashMap<String, Integer> allPlayers;
     private ArrayList<String> logs;
@@ -17,6 +19,13 @@ public class MatchData {
     @JsonCreator
     public MatchData(){}
 
+
+
+    /**
+     * Construct a Match Data based on a match.
+     * @param match the match with the information.
+     * @param gameMaster the Game Master of the match.
+     */
     public MatchData(Match match, GameMaster gameMaster){
         allPlayers = new HashMap<>();
         for (VirtualClient vc: match.getAllPlayers()){
@@ -31,11 +40,12 @@ public class MatchData {
 
     }
 
-
+    /**
+     * Return a Match based on saved information.
+     * @param server the reference of the Server.
+     * @return a Match based on saved information.
+     */
     public Match createMatch(Server server){
         return new Match(server, matchID, numOfPlayers, allPlayers, logs, gameMaster);
-
     }
-
-
 }

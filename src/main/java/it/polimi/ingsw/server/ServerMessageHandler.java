@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * ServerMessageHandler class
+ * Manage all the messages that arrive at the Server.
  */
 public class ServerMessageHandler {
     private Controller controller;
@@ -24,7 +24,7 @@ public class ServerMessageHandler {
     private VirtualClient virtualClient;
     private HandlerState serverPhase;
     /**
-     * ServerMessageHandler constructor creates a new class instance
+     * Construct a ServerMessageHandler of a specific client.
      * @param server is the reference to the server
      * @param client is the handler of the client socket
      */
@@ -34,7 +34,11 @@ public class ServerMessageHandler {
         this.serverPhase = HandlerState.FIRST_CONTACT;
     }
 
-
+    /**
+     * Return true if the state of the handler is equal to state and not equal to IN_MATCH or is the turn of the player.
+     * @param state the state to check.
+     * @return true if the state of the handler is equal to state and not equal to IN_MATCH or is the turn of the player.
+     */
     private boolean isServerPhaseCorrect(HandlerState state){
         if(serverPhase != state){
             client.writeToStream(new ErrorMessage(ErrorType.INVALID_ACTION));
@@ -44,46 +48,86 @@ public class ServerMessageHandler {
         }
     }
 
-
+    /**
+     * Set the virtual client.
+     * @param virtualClient the new virtual client.
+     */
     public void setVirtualClient(VirtualClient virtualClient) {
         this.virtualClient = virtualClient;
     }
 
+    /**
+     * Return the virtual client.
+     * @return the virtual client.
+     */
     public Optional<VirtualClient> getVirtualClient() {
         return Optional.ofNullable(virtualClient);
     }
 
+    /**
+     * Set the client connection handler.
+     * @param client the new client connection handler.
+     */
     public void setClient(ClientConnectionHandler client) { this.client = client; }
 
+    /**
+     * Set the controller.
+     * @param controller the new controller.
+     */
     public void setController(Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Return the controller.
+     * @return the controller.
+     */
     public Optional<Controller> getController() {
         return Optional.ofNullable(controller);
     }
 
+    /**
+     * Set the handler state.
+     * @param serverPhase the new handler state.
+     */
     public void setServerPhase(HandlerState serverPhase){
         this.serverPhase = serverPhase;
     }
 
+    /**
+     * Return the handler state.
+     * @return the handler state.
+     */
     public HandlerState getServerPhase() { return serverPhase; }
 
+    /**
+     * Handle the Connection Message by printing his message.
+     * @param message the Connection Message to handle.
+     */
     public void handleConnectionMessage(ConnectionMessage message){
         System.out.println(message.getType() + ": " + message.getMessage());
     }
 
+    /**
+     * Handle the first contact between the client and the server.
+     */
     public void handleFirstContact(){
         if(!isServerPhaseCorrect(HandlerState.FIRST_CONTACT)) return;
         server.putInLobby(client);
     }
 
-
+    /**
+     * Handle the request for a single player match.
+     */
     public void handleSinglePlayer(){
         if(!isServerPhaseCorrect(HandlerState.FIRST_CONTACT)) return;
         server.singlePlayer(client);
     }
 
+    /**
+     * Handle the match creation request of a set number of player.
+     * @param message the Message with the number of player.
+     */
     public void handleMatchCreation(ConnectionMessage message){
         if (!isServerPhaseCorrect(HandlerState.NUM_OF_PLAYER)) return;
         try {server.createMatch(message.getNum(),client);}
@@ -92,53 +136,81 @@ public class ServerMessageHandler {
         }
     }
 
+    /**
+     * Handle the set of a player username request.
+     * @param message the message with the player username.
+     */
     public void handleUsernameInput(ConnectionMessage message){
         if (!isServerPhaseCorrect(HandlerState.USERNAME)) return;
         virtualClient.getMatch().setPlayerUsername(virtualClient, message.getMessage());
     }
 
+    /**
+     * Handle the disconnection of a player.
+     */
     public void handleDisconnection(){
         getVirtualClient().ifPresentOrElse(virtualClient -> virtualClient.getMatch().playerDisconnection(virtualClient),
                 ()->server.clientDisconnect(client));
     }
 
-    public void handleReconnection(ReconnectionMessage msg){
-        server.clientReconnection(msg.getMatchID(), msg.getClientID(), client);
+    /**
+     * Handle the reconnection of a player.
+     * @param message the reconnection message with all the information needed.
+     */
+    public void handleReconnection(ReconnectionMessage message){
+        server.clientReconnection(message.getMatchID(), message.getClientID(), client);
     }
 
-
-
     //UTIL
+
+    /**
+     * Handle the end of a turn
+     */
     public void handleEndTurn(){
         if(!isServerPhaseCorrect(HandlerState.IN_MATCH)) return;
         controller.nextTurn();
     }
 
-
-
     //LEADER MANAGE
-    public void handleLeaderManage(LeaderManage msg){
+
+    /**
+     * Handle the request of a leader discard or activation.
+     * @param message the message with the request information.
+     */
+    public void handleLeaderManage(LeaderManage message){
         if(serverPhase == HandlerState.LEADER_SETUP){
-            controller.discardLeaderSetUp(msg.getIndex(), virtualClient.getUsername());
+            controller.discardLeaderSetUp(message.getIndex(), virtualClient.getUsername());
 
         }else if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
-            controller.leaderManage(msg.getIndex(), msg.isDiscard());
+            controller.leaderManage(message.getIndex(), message.isDiscard());
         }
     }
 
     //MARKET
-    public void handleMarketAction(MarketAction msg){
+
+    /**
+     * Handle the request of a Market action.
+     * @param message the message with the action information.
+     */
+    public void handleMarketAction(MarketAction message){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
-            controller.marketAction(msg.getSelection(), msg.isRow());
+            controller.marketAction(message.getSelection(), message.isRow());
         }
     }
 
-    public void handleWhiteMarbleConversion(WhiteMarbleConversionResponse msg){
+    /**
+     * Handle the request of conversion of white marble by leaders.
+     * @param message the message with the conversion information.
+     */
+    public void handleWhiteMarbleConversion(WhiteMarbleConversionResponse message){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
-            controller.leaderWhiteMarbleConversion(msg.getLeaderIndex(), msg.getNumOfWhiteMarble());
+            controller.leaderWhiteMarbleConversion(message.getLeaderIndex(), message.getNumOfWhiteMarble());
         }
     }
 
+    /**
+     * Handle the request to discard the resources from from the market.
+     */
     public void handleDiscardResourcesFromMarket(){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
             controller.clearBufferFromMarket();
@@ -147,30 +219,34 @@ public class ServerMessageHandler {
 
     //BUY DEVELOPMENT
 
-    public void handleDevelopmentAction(DevelopmentAction msg){
+    /**
+     * Handle the request to buy a card.
+     * @param message the message with all the action information.
+     */
+    public void handleDevelopmentAction(DevelopmentAction message){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
-            controller.developmentAction(msg.getRow(), msg.getColumn(), msg.getLocateSlot());
+            controller.developmentAction(message.getRow(), message.getColumn(), message.getLocateSlot());
         }
     }
 
     //PRODUCTION
 
     /**
-     * handleProduction method handle the normal production action
-     * @param msg of type ProductionAction - the message that contains the information
+     * Handle the normal production action.
+     * @param message the message that contains the information.
      */
-    public void handleProduction(ProductionAction msg){
+    public void handleProduction(ProductionAction message){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
-            if (msg.isLeader()){
-                controller.leaderProductionAction(msg.getSlotsIndex());
+            if (message.isLeader()){
+                controller.leaderProductionAction(message.getSlotsIndex());
             }else {
-                controller.normalProductionAction(msg.getSlotsIndex());
+                controller.normalProductionAction(message.getSlotsIndex());
             }
         }
     }
 
     /**
-     * handleBaseProduction method handle the base production action
+     * Handle the base production action.
      */
     public void handleBaseProduction(){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
@@ -179,8 +255,7 @@ public class ServerMessageHandler {
     }
 
     /**
-     * handleEndCardSelection method handle the stop of production in order to continue with the
-     * resources positioning
+     * Handle the stop of production in order to continue with the resources positioning
      */
     public void handleEndCardSelection(){
         if(isServerPhaseCorrect(HandlerState.IN_MATCH)){
@@ -190,15 +265,15 @@ public class ServerMessageHandler {
 
     //ANY
     /**
-     * handleAnyResponse method handle the response of a specific any conversion request sent to the user
-     * @param msg of type AnyResponse - the message that contains the information
+     * Handle the response of a specific any conversion request sent to the user.
+     * @param message the message that contains the information.
      */
-    public void handleAnyResponse(AnyResponse msg){
-        if (msg.getResources() == null){
+    public void handleAnyResponse(AnyResponse message){
+        if (message.getResources() == null){
             client.writeToStream(new ErrorMessage(ErrorType.INVALID_ACTION));
             return;
         }
-        ArrayList<Resource> resources = msg.getResources().stream()
+        ArrayList<Resource> resources = message.getResources().stream()
                 .map(x -> ResourceFactory.createResource(x.getType(), x.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
@@ -213,36 +288,34 @@ public class ServerMessageHandler {
     //WAREHOUSE
 
     /**
-     * handleStrongboxModify method handle the strongbox resources removing
-     * @param msg of type StrongboxModify - the message that contains the information
+     * Handle the strongbox resources removing.
+     * @param message the message that contains the information.
      */
-    public void handleStrongboxModify(StrongboxModify msg){
-        if(!isServerPhaseCorrect(HandlerState.IN_MATCH) || msg.getResource() == null) return;
+    public void handleStrongboxModify(StrongboxModify message){
+        if(!isServerPhaseCorrect(HandlerState.IN_MATCH) || message.getResource() == null) return;
 
-        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
+        Resource resource = ResourceFactory.createResource(message.getResource().getType(), message.getResource().getValue());
         controller.subToStrongbox(resource);
     }
 
     /**
-     * handleDepotModify method handle the depot resources insertion and deletion
-     * @param msg of type DepotModify - the message that contains the information
+     * Handle the depot resources insertion and deletion.
+     * @param message the message that contains the information.
      */
-    public void handleDepotModify(DepotModify msg){
-        if(!isServerPhaseCorrect(HandlerState.IN_MATCH) || msg.getResource() == null) return;
+    public void handleDepotModify(DepotModify message){
+        if(!isServerPhaseCorrect(HandlerState.IN_MATCH) || message.getResource() == null) return;
 
-        Resource resource = ResourceFactory.createResource(msg.getResource().getType(), msg.getResource().getValue());
-        controller.depotModify(resource, msg.getDepotIndex(), msg.isNormalDepot());
+        Resource resource = ResourceFactory.createResource(message.getResource().getType(), message.getResource().getValue());
+        controller.depotModify(resource, message.getDepotIndex(), message.isNormalDepot());
     }
 
     /**
-     * handleSwitch method handle the depot switch
-     * @param msg of type DepotSwitch - the message that contains the information
+     * Handle the depot switch.
+     * @param message the message that contains the information.
      */
-    public void handleSwitch(DepotSwitch msg){
+    public void handleSwitch(DepotSwitch message){
         if(!isServerPhaseCorrect(HandlerState.IN_MATCH)) return;
 
-        controller.switchDepots(msg.getFrom(), msg.isFromNormal(), msg.getTo(), msg.isToNormal());
+        controller.switchDepots(message.getFrom(), message.isFromNormal(), message.getTo(), message.isToNormal());
     }
-
-
 }
