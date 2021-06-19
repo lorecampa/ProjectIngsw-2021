@@ -8,16 +8,16 @@
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | <img src="DoneClipArt.png" width="40"/> |
-| Complete rules | <img src="DoneClipArt.png" width="40"/> |
-| Socket | <img src="DoneClipArt.png" width="40"/> |
-| GUI | <img src="DoneClipArt.png" width="40"/> |
-| CLI | <img src="DoneClipArt.png" width="40"/> |
-| Multiple games | <img src="DoneClipArt.png" width="40"/> |
-| Custom Parameters | <img src="NotDoneClipArt.png" width="40"/> |
-| Server Persistence | <img src="DoneClipArt.png" width="40"/> |
-| Reconnect | <img src="DoneClipArt.png" width="40"/> |
-| Local Single Player | <img src="NotDoneClipArt.png" width="40"/> |
+| Basic rules | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Complete rules | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Socket | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| GUI | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| CLI | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Multiple games | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Custom Parameters | <img src="./deliverables/ImageReadme/NotDoneClipArt.png" width="40"/> |
+| Server Persistence | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Reconnect | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
+| Local Single Player | <img src="./deliverables/ImageReadme/NotDoneClipArt.png" width="40"/> |
 
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
@@ -27,27 +27,28 @@
 
 # Master Of Renaissance
 
-![MOR Logo](logo.jpg)
+![MOR Logo](deliverables/ImageReadme/logo.jpg)
 
 ## Setup
 
-- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client.
+- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client, once the jars run you can type  ``` > help``` to get more info about the commands.
 - The Server can be run with the following command, as default it runs on port 2020:
     ```shell
     > java -jar MORServer.jar
     ```
-  This command can be followed by these arguments:
-  - **-port**: followed by the desired port number as argument, must be >=1024;
+  This command can be followed by these arguments (deafult: -port 2020 -load false):
+  - **-port** followed by the desired port number as argument, must be >=1024;
+  - **-load** followed by true or false to reload the macthes active while closing the server last time.
 
   
 - The Client can be run with the following command:
     ```shell
     > java -jar MORClient.jar
     ```
-    This command can be followed by these arguments:
-  - **-gui**: it opens the game on Graphical User Interface(GUI);
-  - **-IPADDRESS** write the ip address u want to connect to;
-  - **-PORT** write the port u want to access to.
+    This command can be followed by these arguments (deafult: -interface cli -address 127.0.0.1 -port 2020):
+  - **-interface** followed by cli or gui based on which interface you want to play; 
+  - **-address** followed by the ip address u want to connect to;
+  - **-port** followed by the port you want to access to.
  
  ## Build
  Use maven to build jar files for both the Client and the Server by choosing the appropriate Maven Profile.  
