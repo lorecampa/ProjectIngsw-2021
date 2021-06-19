@@ -46,7 +46,7 @@
     ```
     This command can be followed by these arguments:
   - **-gui**: it opens the game on Graphical User Interface(GUI);
-  - **-IDADDRESS** write the ip address u want to connect to;
+  - **-IPADDRESS** write the ip address u want to connect to;
   - **-PORT** write the port u want to access to.
  
  ## Build
