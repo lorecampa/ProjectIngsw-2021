@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ControllerHandler {
     private MediaPlayer player;
     private boolean muted = false;
-    HashMap<Views, Controller> controllers = new HashMap<>();
+    private HashMap<Views, Controller> controllers = new HashMap<>();
     private Views currentView = null;
     private static ControllerHandler instance = new ControllerHandler();
 

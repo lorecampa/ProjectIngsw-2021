@@ -46,6 +46,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
         this.match = match;
         this.ready = false;
     }
+
     public VirtualClient(String username, Match match, int clientID){
         this.username = username;
         this.match = match;
@@ -54,6 +55,9 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
 
     }
 
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
 
     public void addToLog(ServerMessage msg){
         SimpleDateFormat formatter=new SimpleDateFormat("HH:mm:ss");

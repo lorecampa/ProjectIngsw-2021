@@ -1,59 +1,61 @@
 package it.polimi.ingsw.client.GUI.controller;
 
-import it.polimi.ingsw.client.GUI.Views;
+
 import javafx.animation.FadeTransition;
-import javafx.animation.SequentialTransition;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.View;
-import java.io.IOException;
-import java.util.Objects;
-
+/**
+ * Controller is an abstract class that defines the default behaviour of all classes
+ * that manage a FXML view
+ */
 public abstract class Controller {
     protected Stage stage;
     protected Scene scene;
 
+    /**
+     * setter for the stage and scene of the game
+     * @param scene the game scene
+     * @param stage the game stage
+     */
     public void setUp(@NotNull Scene scene,@NotNull Stage stage){
         this.stage = stage;
-        this.scene = scene; //Just create a new scene with predefined size
+        this.scene = scene;
     }
 
+    /**
+     * abstract method called before scene change
+     */
     public abstract void setUpAll();
 
+    /**
+     * set up the scene and change it
+     */
     public void activate(){
         stage.setIconified(false);
         setUpAll();
         stage.setScene(scene);
     }
 
-    public void showCustomMessage(String msg){
-    }
+    /**
+     * Method that display a custom message in scene, re-implemented by the controllers that
+     * need to display a message
+     * @param msg the message to be displayed
+     */
+    public void showCustomMessage(String msg){ }
 
-    public void showFadedErrorMessage(AnchorPane pane){
-        FadeTransition fader = createFader(pane);
+    /**
+     * Method that creates a faded transition to a node
+     * @param node the node to be processed
+     */
+    public void showFadedErrorMessage(Node node){
+        FadeTransition fader = new FadeTransition(Duration.seconds(5), node);
+        fader.setFromValue(1);
+        fader.setToValue(0);
         fader.play();
-    }
-
-    private FadeTransition createFader(Node node) {
-        FadeTransition fade = new FadeTransition(Duration.seconds(5), node);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-        return fade;
-    }
-
-    public String getResourcePath(String name){
-        return Objects.requireNonNull(getClass().getResource("/GUI/" + name)).toString();
     }
 
 }

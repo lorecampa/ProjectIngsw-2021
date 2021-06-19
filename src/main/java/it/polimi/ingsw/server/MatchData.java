@@ -13,11 +13,9 @@ public class MatchData {
     private int numOfPlayers;
     private GameMaster gameMaster;
 
-    @JsonCreator
-    public MatchData() {
-        super();
-    }
 
+    @JsonCreator
+    public MatchData(){}
 
     public MatchData(Match match, GameMaster gameMaster){
         allPlayers = new HashMap<>();
@@ -30,7 +28,6 @@ public class MatchData {
         numOfPlayers = match.getNumOfPlayers();
 
         this.gameMaster = gameMaster;
-
 
     }
 

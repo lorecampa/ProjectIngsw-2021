@@ -104,6 +104,12 @@ public class Controller {
     public void nextTurn() {
         do {
             try {
+                //in case of player disconnection during is turn before normal action
+                if (match.getActivePlayers().stream()
+                        .map(VirtualClient::getUsername)
+                        .noneMatch(x -> x.equals(gameMaster.getCurrentPlayer()))){
+                    gameMaster.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
+                }
                 gameMaster.nextPlayer();
             }catch (InvalidStateActionException e){
                 sendError(e.getMessage());

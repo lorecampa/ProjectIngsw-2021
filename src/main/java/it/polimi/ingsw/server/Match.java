@@ -235,6 +235,7 @@ public class Match{
                 }
                 else if(player.getClient().getState() == HandlerState.IN_MATCH && player.getUsername()
                         .equals(controller.getCurrentPlayer())){
+
                     controller.nextTurn();
                 }else if (player.getClient().getState() == HandlerState.LEADER_SETUP){
                     controller.autoDiscardLeaderSetUp(player.getUsername());
@@ -272,6 +273,7 @@ public class Match{
                     virtualClient.setClient(newClientConnHandler);
                     inactivePlayers.remove(virtualClient);
                     virtualClient.setReconnected(true);
+                    virtualClient.setReady(true);
 
                     String username = virtualClient.getUsername();
                     if (getController().getCurrentPlayer().equals(username)){
