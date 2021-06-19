@@ -517,6 +517,15 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
     /**
+     * Return the number of resources i own
+     * @return the number of resources i own
+     * */
+    public int howManyDoIHave(){
+        allMyResources();
+        return myResources.stream().mapToInt(Resource::getValue).sum();
+    }
+
+    /**
      * Store all the discounts i own
      * */
     private void allMyDiscounts(){

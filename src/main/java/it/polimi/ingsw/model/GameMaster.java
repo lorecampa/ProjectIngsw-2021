@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ModelData;
@@ -109,14 +110,12 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
 
     }
 
-
     /**
      * Change the current player in the game when a new turn starts.
      */
     public void nextPlayer() throws InvalidStateActionException {
         //TODO change to LEADER_MANAGE_AFTER and handle next turn during player disconnection in a different state
         //TODO uncheck comments
-
 
         if(currentPlayer != null && !isPlayerInState(PlayerState.LEADER_MANAGE_AFTER)) {
             throw new InvalidStateActionException();
@@ -150,17 +149,28 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     private void gameOver(){
         this.gameEnded = true;
-        Map<Integer, String> points= new HashMap<>();
-        int victoryPoints;
+        Map<Float, String> points= new HashMap<>();
+        //ArrayList<Integer> pointsAlreadyToken=new ArrayList<>();
+        float victoryPoints;
         for (String user : playersTurn){
             PersonalBoard pb=playersPersonalBoard.get(user);
-            victoryPoints=pb.getCardManager().getVictoryPointsCard()+
+            victoryPoints=(float)(pb.getCardManager().getVictoryPointsCard()+
                     pb.getFaithTrack().allVP() +
-                    pb.getResourceManager().getVictoryPointsResource();
+                    pb.getResourceManager().getVictoryPointsResource());
+            while(points.containsKey(victoryPoints)){
+                if(pb.getResourceManager().howManyDoIHave()>playersPersonalBoard.get(points.get(victoryPoints)).getResourceManager().howManyDoIHave()){
+                    victoryPoints+=0.1f;
+                }
+                else{
+                    victoryPoints-=0.1f;
+                }
+            }
             points.put(victoryPoints, user);
         }
+
         notifyAllObservers(x->x.weHaveAWinner(points));
     }
+
 
     /**
      * Return the number of players still active in game.
@@ -244,6 +254,19 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      */
     public PersonalBoard getCurrentPlayerPersonalBoard(){
         return playersPersonalBoard.get(currentPlayer);
+    }
+
+    /**
+     * Return an array of all the personal board
+     * @return an array of all the personal board
+     * */
+    public ArrayList<PersonalBoard> getAllPersonalBoard(){
+        Set<Map.Entry<String, PersonalBoard>> entries = playersPersonalBoard.entrySet();
+        ArrayList<PersonalBoard> boards=new ArrayList<>();
+        for(Map.Entry<String, PersonalBoard> entry : entries){
+            boards.add(entry.getValue());
+        }
+        return boards;
     }
 
     /**

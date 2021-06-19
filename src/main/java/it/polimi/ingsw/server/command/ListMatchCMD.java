@@ -33,7 +33,7 @@ public class ListMatchCMD implements ServerCommand{
             return;
         }
         for(Match match : server.getMatches()){
-            System.out.println("Id match: "+match.getMatchID()+", with "+ match.getNumOfPlayers()+" players. Connected: "+ match.currentNumOfPlayer());
+            System.out.println("Id match: "+match.getMatchID()+", with "+ match.getNumOfPlayers()+" players. Connected: "+ match.getActivePlayers().size());
         }
     }
 }

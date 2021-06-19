@@ -545,4 +545,18 @@ public class Controller {
         }
 
     }
+
+    //--cheat
+    public void cheat(){
+        ArrayList<Resource> res= new ArrayList<>();
+        res.add(ResourceFactory.createResource(ResourceType.SHIELD, 20));
+        res.add(ResourceFactory.createResource(ResourceType.STONE, 20));
+        res.add(ResourceFactory.createResource(ResourceType.COIN, 20));
+        res.add(ResourceFactory.createResource(ResourceType.SERVANT, 20));
+        for(PersonalBoard pb :gameMaster.getAllPersonalBoard()){
+            pb.getResourceManager().addToResourcesToProduce(res);
+            pb.getResourceManager().doProduction();
+            pb.getResourceManager().restoreRM();
+        }
+    }
 }

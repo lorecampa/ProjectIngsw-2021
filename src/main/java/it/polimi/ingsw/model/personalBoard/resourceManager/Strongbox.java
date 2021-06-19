@@ -23,12 +23,13 @@ public class Strongbox{
      * */
     @JsonCreator
     public Strongbox() {
-        //resources=ResourceFactory.createAllConcreteResource();
-        setUpForDebug();
+        resources=ResourceFactory.createAllConcreteResource();
+        //setUpForDebug();
     }
 
     /**
      * Set 20 as value of every resource in strongbox
+     * @deprecated
      * */
     private void setUpForDebug(){
         resources = new ArrayList<>();

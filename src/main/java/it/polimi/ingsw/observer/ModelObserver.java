@@ -24,7 +24,7 @@ public interface ModelObserver {
      * Get an update from the GameMaster when the game is finished and a winner is chosen.
      * @param matchRanking the leaderboard of the match.
      */
-    void weHaveAWinner(Map<Integer, String> matchRanking);
+    void weHaveAWinner(Map<Float, String> matchRanking);
 
     /**
      * Get an update from the GameMaster when the winning position is reached.

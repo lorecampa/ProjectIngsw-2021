@@ -50,11 +50,11 @@ public class ModelClient {
         for(int i=0;i<3;i++){
             standardDepot.add(new ResourceData(ResourceType.ANY, 0));
         }
-        //TODO change to standard values
-        strongbox.add(new ResourceData(ResourceType.COIN, 20));
-        strongbox.add(new ResourceData(ResourceType.SERVANT, 20));
-        strongbox.add(new ResourceData(ResourceType.STONE, 20));
-        strongbox.add(new ResourceData(ResourceType.SHIELD, 20));
+
+        strongbox.add(new ResourceData(ResourceType.COIN, 0));
+        strongbox.add(new ResourceData(ResourceType.SERVANT, 0));
+        strongbox.add(new ResourceData(ResourceType.STONE, 0));
+        strongbox.add(new ResourceData(ResourceType.SHIELD, 0));
 
         for (int i = 0; i < 3; i++) {
             cardSlots.add(new ArrayList<>());

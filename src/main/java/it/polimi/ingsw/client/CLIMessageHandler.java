@@ -282,11 +282,11 @@ public class CLIMessageHandler extends ClientMessageHandler {
     public void gameOver(GameOver message) {
         super.gameOver(message);
         PrintAssistant.instance.printf("GAME OVER");
-        TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Float, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
         matchRanking.putAll(message.getPlayers());
-        Set<Map.Entry<Integer, String>> entries = matchRanking.entrySet();
-        for(Map.Entry<Integer, String> entry : entries){
-            PrintAssistant.instance.printf(entry.getKey()+": "+entry.getValue());
+        Set<Map.Entry<Float, String>> entries = matchRanking.entrySet();
+        for(Map.Entry<Float, String> entry : entries){
+            PrintAssistant.instance.printf( Math.round(entry.getKey())+": "+entry.getValue());
         }
     }
     /**

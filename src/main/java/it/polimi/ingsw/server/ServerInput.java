@@ -19,6 +19,7 @@ public class ServerInput implements Runnable{
     private final BufferedReader stdIn;
     private final Map<String, Class<? extends ServerCommand>> commands = new HashMap<>() {
         {
+            put("resources", ResourcesCMD.class);
             put("numofmatch", numMatchCMD.class);
             put("quit", ExitServerCMD.class);
             put("listmatch", ListMatchCMD.class);
@@ -80,7 +81,7 @@ public class ServerInput implements Runnable{
             }
         }
         else{
-            PrintAssistant.instance.printf("Invalid Input!");
+            PrintAssistant.instance.printf("The command you write doesn't exist!");
         }
     }
 }

@@ -8,14 +8,14 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 import java.util.Map;
 
 public class GameOver implements ClientMessage{
-    private final Map<Integer, String> players;
+    private final Map<Float, String> players;
 
     @JsonCreator
-    public GameOver(@JsonProperty("players") Map<Integer, String> players) {
+    public GameOver(@JsonProperty("players") Map<Float, String> players) {
         this.players = players;
     }
 
-    public Map<Integer, String> getPlayers() {
+    public Map<Float, String> getPlayers() {
         return players;
     }
 

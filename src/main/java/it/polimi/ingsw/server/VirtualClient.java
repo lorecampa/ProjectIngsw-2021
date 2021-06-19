@@ -178,7 +178,7 @@ public class VirtualClient implements ModelObserver, ResourceManagerObserver,
      * @param matchRanking the leaderboard of the match.
      */
     @Override
-    public void weHaveAWinner(Map<Integer, String> matchRanking) {
+    public void weHaveAWinner(Map<Float, String> matchRanking) {
         match.sendSinglePlayer( username,new GameOver(matchRanking));
     }
 

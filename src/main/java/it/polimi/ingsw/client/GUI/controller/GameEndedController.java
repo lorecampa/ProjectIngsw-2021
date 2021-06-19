@@ -39,19 +39,19 @@ public class GameEndedController extends Controller{
         super.stage.setY(y);
     }
 
-    public void setUpRanking(Map<Integer, String> players){
+    public void setUpRanking(Map<Float, String> players){
         ObservableList<Node> children = matchRankingGrid.getChildren();
         children.forEach(x -> {
             Label label = (Label) x;
             label.setVisible(false);
         });
-        TreeMap<Integer, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Float, String> matchRanking = new TreeMap<>(Collections.reverseOrder());
         matchRanking.putAll(players);
-        Set<Map.Entry<Integer, String>> entries = matchRanking.entrySet();
+        Set<Map.Entry<Float, String>> entries = matchRanking.entrySet();
         int i = 0;
-        for(Map.Entry<Integer, String> entry : entries){
+        for(Map.Entry<Float, String> entry : entries){
             Label label = (Label) children.get(i);
-            label.setText(entry.getKey()+": "+entry.getValue());
+            label.setText(Math.round(entry.getKey())+": "+entry.getValue());
             label.setVisible(true);
             i++;
         }
