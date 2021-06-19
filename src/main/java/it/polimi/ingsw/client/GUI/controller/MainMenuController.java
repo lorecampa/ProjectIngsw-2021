@@ -1,12 +1,14 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientInput;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionType;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
+import it.polimi.ingsw.message.clientMessage.ErrorType;
 import it.polimi.ingsw.message.serverMessage.QuitGame;
 import it.polimi.ingsw.message.serverMessage.SinglePlayerMessage;
 import javafx.animation.FadeTransition;
@@ -30,6 +32,11 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class MainMenuController extends Controller{
@@ -137,7 +144,12 @@ public class MainMenuController extends Controller{
         int matchID;
         int clientID;
 
-        File file = new File(client.getNameFile());
+
+        File file = new File(Client.getInstance().DATA_LAST_GAME);
+        if(!file.exists()){
+            showCustomMessage("There is no game to reconnect yet!");
+            return;
+        }
         Scanner scanner= new Scanner(file);
         matchID=Integer.parseInt(scanner.nextLine());
         clientID=Integer.parseInt(scanner.nextLine());

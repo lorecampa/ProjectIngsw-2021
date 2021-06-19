@@ -8,6 +8,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.PingPongMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -66,26 +67,24 @@ public abstract class ClientMessageHandler {
      * */
     public abstract void connectInfo(ConnectionMessage message);
 
-    //Reconnect message handler
     /**
      * Save data to reconnect
      * @param message to handle
      * */
     public void reconnect(ReconnectionMessage message) throws IOException {
-        //TODO: riattivare l'if solo se siamo sicuri di avere i jar in cartelle diverse prima dell'esecuzione
-        /*
-            File myObj = new File(client.getNameFile());
-            if (myObj.createNewFile()) {
-            */
-        FileWriter myWriter = new FileWriter(client.getNameFile());
-        myWriter.write(message.getMatchID()+"\n");
-        myWriter.write(message.getClientID()+"");
-        myWriter.close();
-            /*
-            } else {
-                PrintAssistant.instance.errorPrint("Not able to save the file with your info to reconnect!");
+
+        File file = new File(Client.getInstance().DATA_LAST_GAME);
+        if (!file.exists()){
+            boolean result = file.createNewFile();
+            if (!result){
+                throw new IOException();
             }
-            */
+        }
+
+        FileWriter myWriter = new FileWriter(file);
+        myWriter.write(message.getMatchID() + "\n" + message.getClientID());
+        myWriter.close();
+
     }
 
     /**

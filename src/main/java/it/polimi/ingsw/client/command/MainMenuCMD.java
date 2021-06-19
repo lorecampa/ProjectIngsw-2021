@@ -58,7 +58,11 @@ public class MainMenuCMD implements Command{
                 int matchID=-1;
                 int clientID=-1;
                 try{
-                    File file = new File(client.getNameFile());
+                    File file = new File(Client.getInstance().DATA_LAST_GAME);
+                    if (!file.exists()){
+                        PrintAssistant.instance.errorPrint("There is no game to reconnect yet!");
+                        return;
+                    }
                     Scanner scanner= new Scanner(file);
                     matchID=Integer.parseInt(scanner.nextLine());
                     clientID=Integer.parseInt(scanner.nextLine());

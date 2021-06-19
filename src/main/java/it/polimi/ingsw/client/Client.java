@@ -22,7 +22,6 @@ public class Client{
     private String ipHost;
     private int portNumber;
     private Socket clientSocket;
-
     private PrintWriter out;
     private BufferedReader in ;
     private ClientMessageHandler clientMessageHandler;
@@ -30,11 +29,11 @@ public class Client{
     private final Object streamLock = new Object();
     private ClientState state;
     private static final Client clientInstance = new Client();
-    private String nameFile;
     private String myName;
     private final ArrayList<ModelClient> models = new ArrayList<>();
     private MarketData marketData;
     private DeckDevData deckDevData;
+    public final String DATA_LAST_GAME = "MasterOfRenaissance_dataLastGame.txt";
 
     private final HashMap<String,String> argsMap = new HashMap<>();
 
@@ -80,7 +79,6 @@ public class Client{
             System.exit(0);
         }
         state = ClientState.MAIN_MENU;
-        nameFile="MasterOfRenaissance_dataLastGame.txt";
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
@@ -276,9 +274,7 @@ public class Client{
         this.myName = myName;
     }
 
-    public String getNameFile(){
-        return nameFile;
-    }
+
 
     public MarketData getMarketData() {
         return marketData;
