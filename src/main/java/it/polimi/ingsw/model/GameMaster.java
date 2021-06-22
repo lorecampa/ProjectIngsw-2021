@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.client.data.DeckDevData;
 import it.polimi.ingsw.client.data.EffectData;
 import it.polimi.ingsw.client.data.ModelData;

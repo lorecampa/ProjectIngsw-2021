@@ -1,12 +1,15 @@
 package it.polimi.ingsw.model.personalBoard.resourceManager;
 
 import it.polimi.ingsw.exception.NegativeResourceException;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,5 +48,15 @@ class StrongboxTest {
     void howManyDoIHave() {
         s.addResource(ResourceFactory.createResource(ResourceType.SHIELD,  2));
         assertEquals(2, s.howManyDoIHave(ResourceType.SHIELD));
+    }
+
+    @Test
+    void getRes(){
+        ArrayList<Resource> res = s.getResources();
+        assertTrue(res.contains(ResourceFactory.createResource(ResourceType.STONE,1)));
+        assertTrue(res.contains(ResourceFactory.createResource(ResourceType.COIN,1)));
+        assertTrue(res.contains(ResourceFactory.createResource(ResourceType.SERVANT,1)));
+        assertTrue(res.contains(ResourceFactory.createResource(ResourceType.SHIELD,1)));
+
     }
 }

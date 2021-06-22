@@ -16,11 +16,10 @@ public class Warehouse{
     private ArrayList<Depot> depots = new ArrayList<>();
     private ArrayList<Depot> depotsLeader = new ArrayList<>();
 
-
-    @JsonCreator
     /**
      * Main constructor of warehouse, create all his depots
      * */
+    @JsonCreator
     public Warehouse() {
         for (int i = 0; i < 3; i++) {
             depots.add(new Depot(i+1));
@@ -34,7 +33,6 @@ public class Warehouse{
         this.depots=depots;
         this.depotsLeader=depotsLeader;
     }
-
 
     /**
      * Used to add a depot to the leader list when a WarehouseLeader is activated
@@ -54,7 +52,6 @@ public class Warehouse{
                 .filter(x -> x.getResourceType() == depotToRemove.getResourceType() &&
                         x.getMaxStorable() == depotToRemove.getMaxStorable())
                 .mapToInt(depotsLeader::indexOf).findFirst();
-
         index.ifPresent(depotsLeader::remove);
     }
 

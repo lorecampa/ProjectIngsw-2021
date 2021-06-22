@@ -11,19 +11,32 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 class WarehouseTest {
 
     Warehouse w = new Warehouse();
+    Warehouse testWarehouse;
     Resource resourceTooBig = ResourceFactory.createResource(ResourceType.COIN, 100);
     Resource resourceNegative = ResourceFactory.createResource(ResourceType.COIN, -50);
+
+    ArrayList<Depot> depots = new ArrayList<>(){{
+        add(new Depot(1));
+        add(new Depot(2));
+        add(new Depot(3));
+    }};
+
+    ArrayList<Depot> leaderDepots = new ArrayList<>(){{
+        add(new Depot(ResourceFactory.createResource(ResourceType.STONE,1),1));
+    }};
+
     @BeforeEach
     void init(){
-
+        assertDoesNotThrow( ()-> testWarehouse = new Warehouse(depots,leaderDepots));
         assertDoesNotThrow( ()->w.addDepotResourceAt(0, ResourceFactory.createResource(ResourceType.COIN, 1), true));
         assertDoesNotThrow( ()->w.addDepotResourceAt(1, ResourceFactory.createResource(ResourceType.SHIELD, 1), true));
         assertDoesNotThrow( ()->w.addDepotResourceAt(2, ResourceFactory.createResource(ResourceType.STONE, 1), true));
-
     }
 
     @Test
@@ -32,7 +45,17 @@ class WarehouseTest {
         assertEquals(1, w.getDepot(0, true).getResourceValue());
     }
 
+    @Test
+    void removeLeaderDepot(){
+        assertTrue(testWarehouse.getDepotsLeader().contains(leaderDepots.get(0)));
+        testWarehouse.removeDepotLeader(leaderDepots.get(0));
+        assertFalse(testWarehouse.getDepotsLeader().contains(new Depot(ResourceFactory.createResource(ResourceType.STONE,1),1)));
+    }
 
+    @Test
+    void addResource(){
+        assertThrows(InvalidOrganizationWarehouseException.class, ()->w.addDepotResourceAt(1,ResourceFactory.createResource(ResourceType.STONE,1),true));
+    }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
@@ -117,6 +140,8 @@ class WarehouseTest {
         Resource r = w.popResourceFromDepotAt(0, true);
         assertEquals(ResourceFactory.createResource(ResourceType.ANY, 1),  w.getDepot(0, true).getResource());
         assertEquals(ResourceFactory.createResource(ResourceType.COIN, 1), r);
+
+        assertDoesNotThrow(()-> testWarehouse.popResourceFromDepotAt(0,false));
     }
 
     @Test
@@ -124,6 +149,20 @@ class WarehouseTest {
         assertEquals(1, w.howManyDoIHave(ResourceType.SHIELD));
     }
 
+    @Test
+    void doIHave(){
+        assertFalse(w.doIHaveADepotWith(ResourceType.ANY));
+    }
 
+    @Test
+    void restoreResource(){
+        assertDoesNotThrow(()->w.restoreDepot(0,true));
+    }
+
+    @Test
+    void toData(){
+        assertDoesNotThrow(()->testWarehouse.toLeaderDepotData());
+        assertDoesNotThrow(()->testWarehouse.toLeaderDepotMax());
+    }
 
 }

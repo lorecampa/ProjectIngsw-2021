@@ -109,7 +109,6 @@ public class PersonalBoard {
         faithTrack.attachObserver(virtualClient);
         resourceManager.attachObserver(virtualClient);
         cardManager.attachObserver(virtualClient);
-
     }
 
     /**

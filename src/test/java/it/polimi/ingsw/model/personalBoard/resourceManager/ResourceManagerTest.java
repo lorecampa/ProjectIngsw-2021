@@ -20,9 +20,6 @@ class ResourceManagerTest {
 
     ResourceManager rs = new ResourceManager();
 
-
-
-
     @BeforeEach
     void Init(){
         rs.addToStrongbox(ResourceFactory.createResource(ResourceType.COIN,5));
@@ -32,9 +29,6 @@ class ResourceManagerTest {
         assertDoesNotThrow(() -> rs.addToWarehouse(true,0,ResourceFactory.createResource(ResourceType.COIN,1)));
         assertDoesNotThrow(() -> rs.addToWarehouse(true,1,ResourceFactory.createResource(ResourceType.SHIELD,1)));
     }
-
-
-
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
@@ -166,4 +160,11 @@ class ResourceManagerTest {
         assertDoesNotThrow(()->rs.switchResourceFromDepotToDepot(0,false,1, true));
     }
 
+    @Test
+    void convertAnyRequirement() {
+    }
+
+    @Test
+    void convertAnyProductionProfit() {
+    }
 }

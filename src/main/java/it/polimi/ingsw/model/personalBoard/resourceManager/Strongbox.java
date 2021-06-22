@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Strongbox{
 
 
-    private ArrayList<Resource> resources;
+    private final ArrayList<Resource> resources;
 
 
     /**
@@ -24,19 +24,6 @@ public class Strongbox{
     @JsonCreator
     public Strongbox() {
         resources=ResourceFactory.createAllConcreteResource();
-        //setUpForDebug();
-    }
-
-    /**
-     * Set 20 as value of every resource in strongbox
-     * @deprecated
-     * */
-    private void setUpForDebug(){
-        resources = new ArrayList<>();
-        resources.add(ResourceFactory.createResource(ResourceType.COIN, 20));
-        resources.add(ResourceFactory.createResource(ResourceType.SHIELD, 20));
-        resources.add(ResourceFactory.createResource(ResourceType.SERVANT, 20));
-        resources.add(ResourceFactory.createResource(ResourceType.STONE, 20));
     }
 
     /**

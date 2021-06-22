@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.client.data.ModelData;
-import it.polimi.ingsw.exception.InvalidStateActionException;
+import it.polimi.ingsw.exception.DeckDevelopmentCardException;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.token.CardToken;
 import it.polimi.ingsw.model.token.PositionToken;
 import it.polimi.ingsw.model.token.Token;
+import it.polimi.ingsw.server.Match;
+import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.server.VirtualClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class GameMasterTest {
 
@@ -72,7 +75,8 @@ class GameMasterTest {
 
     @Test
     void getAndSetTest(){
-        assertDoesNotThrow(()-> gm.setGameEnded(true));
+        assertDoesNotThrow(()-> gm.setGameEnded(false));
+        assertFalse(gm.isGameEnded());
         assertEquals(3,gm.getNumberOfPlayer());
         assertDoesNotThrow(() -> gm.getMarket());
         assertEquals("Lorenzo", gmSp.getCurrentPlayer());
@@ -84,6 +88,23 @@ class GameMasterTest {
         ModelData lorenzoModel = gmSp.getPlayerModelData("Lorenzo");
         assertEquals("Lorenzo", lorenzoModel.getUsername());
 
+        assertEquals(3,gm.getAllPersonalBoard().size());
+
+        assertDoesNotThrow(()->gm.getDeckDevelopmentCard(0,0));
+        assertThrows(IndexOutOfBoundsException.class, () -> gm.getDeckDevelopmentCard(-1,0));
+
+        assertNotNull(gm.toDeckDevData());
+        assertNotNull(gm.toEffectDataBasePro());
+
+        assertEquals(0, gmSp.getPlayerPosition("Lorenzo"));
+        assertEquals("LorenzoIlMagnifico", GameMaster.getNameLorenzo());
+
+        assertDoesNotThrow(()-> gm.restoreReferenceAfterServerQuit());
+
+        assertNotNull(gm.getPlayerState());
+
+        assertThrows(NullPointerException.class, ()->gm.attachPlayerVC(null));
+        assertThrows(NullPointerException.class, ()->gm.attachLorenzoIlMagnificoVC(null));
     }
 
     @Test
@@ -123,11 +144,30 @@ class GameMasterTest {
     void discardDevelopment() {
         gm.discardDevelopmentSinglePlayer(Color.GREEN, 4);
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
+        assertThrows(DeckDevelopmentCardException.class, () -> gm.getDeckDevelopmentCard(0,0));
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 3));
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
 
         assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 1));
         assertTrue(gm.getDeckDevelopment().get(0).get(0).isEmpty());
+
+        assertDoesNotThrow(()->gm.discardDevelopmentSinglePlayer(Color.GREEN, 4));
+
+    }
+
+    @Test
+    public void overrideTest(){
+        assertDoesNotThrow(() -> gmSp.discardLeader());
+        assertEquals(1, gmSp.getCurrentPlayerPersonalBoard().getFaithTrack().getCurrentPositionOnTrack());
+        assertDoesNotThrow(()->gmSp.vaticanReportReached(0));
+        assertDoesNotThrow(()->gmSp.discardResources(1));
+        assertEquals(1, gmSp.getPlayerPersonalBoard(GameMaster.getNameLorenzo()).getFaithTrack().getCurrentPositionOnTrack());
+        assertDoesNotThrow(()->gmSp.increasePlayerFaithPoint(1));
+        assertEquals(2, gmSp.getCurrentPlayerPersonalBoard().getFaithTrack().getCurrentPositionOnTrack());
+        assertDoesNotThrow(()->gmSp.onDeckDevelopmentCardRemove(1,1));
+        assertDoesNotThrow(()->gmSp.onDeckDevelopmentCardRemove(-1,1));
+        assertDoesNotThrow(()->gmSp.attachObserver(null));
+        assertDoesNotThrow(()->gmSp.shuffleToken());
     }
 }
