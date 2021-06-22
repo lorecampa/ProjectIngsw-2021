@@ -4,29 +4,30 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
-import it.polimi.ingsw.client.PrintAssistant;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 
+/**
+ * GameEndedController class is the class that manage the GUI view of the game ending
+ */
 public class GameEndedController extends Controller{
 
-    @FXML
-    AnchorPane background;
+    @FXML private AnchorPane background;
     @FXML private GridPane matchRankingGrid;
     @FXML private Button goToMainMenuBtn;
 
+
+    /**
+     * See {@link Controller#setUpAll()} ()}
+     */
     @Override
     public void setUpAll() {
         matchRankingGrid.setVisible(true);
@@ -39,6 +40,31 @@ public class GameEndedController extends Controller{
         super.stage.setY(y);
     }
 
+    /**
+     * Method attached to the "go to main menu" button, clear client models and
+     * switch the view to the main menu
+     */
+    @FXML
+    public void goToMainMenu(){
+        Client.getInstance().setState(ClientState.MAIN_MENU);
+        Client.getInstance().clearModels();
+        ControllerHandler.getInstance().changeView(Views.MAIN_MENU);
+    }
+
+    /**
+     * Method attached to the "go back" button, permit personal board observing after game ending
+     */
+    @FXML
+    public void back(){
+        PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
+        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
+        controller.setUpForEnd();
+    }
+
+    /**
+     * Method that display the final result of the game
+     * @param players the map with key the number of point reached and value the player username
+     */
     public void setUpRanking(Map<Float, String> players){
         ObservableList<Node> children = matchRankingGrid.getChildren();
         children.forEach(x -> {
@@ -55,20 +81,5 @@ public class GameEndedController extends Controller{
             label.setVisible(true);
             i++;
         }
-    }
-
-
-    @FXML
-    public void goToMainMenu(){
-        Client.getInstance().setState(ClientState.MAIN_MENU);
-        Client.getInstance().clearModels();
-        ControllerHandler.getInstance().changeView(Views.MAIN_MENU);
-    }
-
-    @FXML
-    public void back(){
-        PersonalBoardController controller = (PersonalBoardController) ControllerHandler.getInstance().getController(Views.PERSONAL_BOARD);
-        ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
-        controller.setUpForEnd();
     }
 }

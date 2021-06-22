@@ -5,27 +5,27 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-
 import java.util.LinkedHashMap;
 
+/**
+ * LogErrorController class is the class that manage the GUI view of error logs
+ */
 public class LogErrorController extends Controller{
 
     @FXML private ScrollPane scrollPane;
     @FXML private VBox containerVbox;
-    @FXML private Button backToPBBtn;
     @FXML private AnchorPane noErrorLogBox;
 
+    /**
+     * See {@link Controller#setUpAll()}
+     */
     @Override
     public void setUpAll() {
         LinkedHashMap<String , String> log = Client.getInstance().getMyModel().getErrorMessagesLog();
@@ -40,10 +40,13 @@ public class LogErrorController extends Controller{
         }
     }
 
-
+    /**
+     * Method that display the errors logs
+     * @param logError map with key the timestamp of the error and value the error message
+     */
     private void setUpErrorLog(LinkedHashMap<String, String> logError){
         for (String date: logError.keySet()){
-            HBox hbox = createHboxContainer();
+            HBox hbox = createHBoxContainer();
             hbox.getChildren().add(createDateLabel(date));
             hbox.getChildren().add(createErrorLabel(logError.get(date)));
 
@@ -52,7 +55,11 @@ public class LogErrorController extends Controller{
 
     }
 
-
+    /**
+     * Method that create a label representing a date
+     * @param date the date that will be assigned to the label
+     * @return the label with the date as text
+     */
     private Label createDateLabel(String date) {
         Label labelDate = new Label();
         labelDate.setWrapText(true);
@@ -67,6 +74,11 @@ public class LogErrorController extends Controller{
         return labelDate;
     }
 
+    /**
+     * Method that create a error label representing a custom error
+     * @param error the error that will be assigned to the label
+     * @return the lavel with the error message as text
+     */
     private Label createErrorLabel(String error) {
         Label labelError = new Label();
         labelError.setWrapText(true);
@@ -82,7 +94,11 @@ public class LogErrorController extends Controller{
         return labelError;
     }
 
-    private HBox createHboxContainer(){
+    /**
+     * Utility method that create a custom size HBox
+     * @return the HBox just created
+     */
+    private HBox createHBoxContainer(){
         HBox container = new HBox();
         container.setPrefWidth(315);
         container.setPrefHeight(70);
@@ -93,6 +109,10 @@ public class LogErrorController extends Controller{
         return container;
     }
 
+
+    /**
+     * Method attached to the "go back" button that change the current view to personal board
+     */
     @FXML
     public void goBack(){
         ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);

@@ -27,12 +27,12 @@ public abstract class Controller {
     }
 
     /**
-     * abstract method called before scene change
+     * Method called before view change, it reset the nodes visibility and values to their default states
      */
     public abstract void setUpAll();
 
     /**
-     * set up the scene and change it
+     * Set up the scene and change it
      */
     public void activate(){
         stage.setIconified(false);

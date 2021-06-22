@@ -37,9 +37,7 @@ public class DeckDevelopmentController extends Controller{
 
 
     /**
-     * Method called before view activation in order to reset the nodes visibility and values to their
-     * default states
-     * See {@link Controller#activate()}
+     * See {@link Controller#setUpAll()} ()}
      */
     @Override
     public void setUpAll() {
