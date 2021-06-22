@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.personalBoard.market;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,5 +80,15 @@ class MarbleTest {
         assertEquals(1, market.getResourceToSend().size());
         assertEquals(1, market.getResourceToSend().get(0).getValue());
         assertEquals(ResourceType.COIN, market.getResourceToSend().get(0).getType());
+    }
+
+    @Test
+    void getColorData(){
+        assertEquals(ColorData.PURPLE,purpleMarble.getColorData());
+        assertEquals(ColorData.YELLOW,yellowMarble.getColorData());
+        assertEquals(ColorData.BLUE,blueMarble.getColorData());
+        assertEquals(ColorData.GREY,greyMarble.getColorData());
+        assertEquals(ColorData.RED,redMarble.getColorData());
+        assertEquals(ColorData.WHITE,whiteMarble.getColorData());
     }
 }

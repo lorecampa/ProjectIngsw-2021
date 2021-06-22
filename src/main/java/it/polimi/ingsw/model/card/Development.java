@@ -77,7 +77,6 @@ public class Development extends  Card{
         for(Requirement req: requirements){
             req.checkRequirement(true);
         }
-
     }
 
     /**

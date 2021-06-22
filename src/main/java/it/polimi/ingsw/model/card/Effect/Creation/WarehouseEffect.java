@@ -35,14 +35,6 @@ public class WarehouseEffect  implements Effect {
     }
 
     /**
-     * Return the effect depot.
-     * @return the effect depot.
-     */
-    public ArrayList<Resource> getDepots() {
-        return depots;
-    }
-
-    /**
      * Creates a new locked depot (lockDepot = true) for all the resources in depots.
      * @param playerState the state of the turn, in this case must be of type CREATION_STATE.
      */
@@ -59,8 +51,7 @@ public class WarehouseEffect  implements Effect {
      * See {@link Effect#attachMarket(Market)}.
      */
     @Override
-    public void attachMarket(Market market) {
-    }
+    public void attachMarket(Market market) {}
 
     /**
      * See {@link Effect#attachResourceManager(ResourceManager)}.

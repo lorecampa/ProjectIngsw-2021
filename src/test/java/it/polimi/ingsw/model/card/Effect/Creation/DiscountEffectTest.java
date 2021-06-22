@@ -58,6 +58,7 @@ class DiscountEffectTest {
             rm.addToStrongbox(res);
         }
 
+        assertDoesNotThrow(()->effect.attachMarket(null));
         rm.restoreRM();
     }
 
@@ -112,5 +113,7 @@ class DiscountEffectTest {
         ArrayList<Resource> cost= resourceArray(0, 2,0,0,0,0);
         assertDoesNotThrow(()->rm.canIAfford(cost, true));
     }
+
+
 
 }

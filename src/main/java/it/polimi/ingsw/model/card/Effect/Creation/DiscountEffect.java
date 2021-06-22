@@ -63,14 +63,6 @@ public class DiscountEffect implements Effect {
     }
 
     /**
-     * Return the discounts of the effect.
-     * @return the discounts of the effect.
-     */
-    public ArrayList<Resource> getDiscounts() {
-        return discounts;
-    }
-
-    /**
      * See {@link Effect#toEffectData()}.
      */
     @Override

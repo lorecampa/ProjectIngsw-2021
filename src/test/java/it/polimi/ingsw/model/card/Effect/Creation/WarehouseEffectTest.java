@@ -52,7 +52,7 @@ class WarehouseEffectTest {
         assertDoesNotThrow(()->rm.subToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
         assertDoesNotThrow(()->rm.addToWarehouse(false, 0, ResourceFactory.createResource(ResourceType.COIN, 1)));
 
-
+        assertDoesNotThrow(()->effect.attachMarket(null));
     }
 
     private String effectSer;

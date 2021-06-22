@@ -66,6 +66,8 @@ class MarbleEffectTest {
         me3 = new MarbleEffect(trasformIn3);
         me3.attachMarket(market);
 
+        MarbleEffect marbleEffect = (MarbleEffect) me1;
+        assertEquals(trasformIn1,marbleEffect.getTransformIn());
     }
 
     @ParameterizedTest

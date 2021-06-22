@@ -14,4 +14,13 @@ class ColorTest {
         assertEquals(3, Color.YELLOW.getColumnDeckDevelopment());
         assertEquals(-1, Color.ANY.getColumnDeckDevelopment());
     }
+
+    @Test
+    void getName(){
+        assertEquals("Green", Color.GREEN.getDisplayName());
+        assertEquals("Purple", Color.PURPLE.getDisplayName());
+        assertEquals("Blue", Color.BLUE.getDisplayName());
+        assertEquals("Yellow", Color.YELLOW.getDisplayName());
+        assertEquals("Any", Color.ANY.getDisplayName());
+    }
 }

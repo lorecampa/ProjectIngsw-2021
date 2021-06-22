@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
  * Implementation of marble interface that represent the grey marble.
  */
 public class GreyMarble implements Marble{
-    private final ColorData color = ColorData.GRAY;
+    private final ColorData color = ColorData.GREY;
 
     /**
      * Add a stone in market's resourcesToSend array.

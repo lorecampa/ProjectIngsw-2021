@@ -96,7 +96,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
      * */
     public void convertAnyRequirement(ArrayList<Resource> resources, boolean isFromBuyDevelopment) throws AnyConversionNotPossible {
         if(containsAnyOrFaith(resources)){
-            throw new AnyConversionNotPossible("Your response contains  any or faith, please try again");
+            throw new AnyConversionNotPossible("Your response contains any or faith, please try again");
         }
         int numOfConversion = resources.stream().mapToInt(Resource::getValue).sum();
         if (numOfConversion != anyRequired) {

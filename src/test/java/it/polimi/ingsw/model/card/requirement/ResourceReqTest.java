@@ -102,7 +102,7 @@ class ResourceReqTest {
         resourceReq.add(ResourceFactory.createResource(ResourceType.SHIELD, 2));
         Requirement req = new ResourceReq(resourceReq);
         assertEquals(2, req.toResourceData().size());
-
+        assertNull(req.toCardDevData());
     }
 
 

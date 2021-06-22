@@ -27,6 +27,12 @@ class MarketTest {
     }
 
     @Test
+    void toData(){
+        assertDoesNotThrow(()->market.getAllMarbles());
+        assertDoesNotThrow(()->market.toMarketData());
+    }
+
+    @Test
     void testMarketCreation_WrongDim(){
         //wrong row
         assertThrows(WrongMarketDimensionException.class,() -> new Market(0,1,null));
@@ -34,7 +40,6 @@ class MarketTest {
         assertThrows(WrongMarketDimensionException.class,() -> new Market(0,0,null));
         //row wrong
         assertThrows(WrongMarketDimensionException.class,() -> new Market(1,0,null));
-
     }
 
     @Test
@@ -119,5 +124,4 @@ class MarketTest {
         assertEquals(0, market.getWhiteMarbleDrew());
         assertEquals(0, market.getResourceToSend().size());
     }
-
 }

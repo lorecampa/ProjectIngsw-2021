@@ -51,6 +51,7 @@ class CardManagerTest {
                 new CardManager(baseProduction)));
 
         cardManager = personalBoard.getCardManager();
+        assertDoesNotThrow(()-> cardManager.setDeckBufferInfo(0,0));
         personalBoard.getResourceManager().addToStrongbox(ResourceFactory.createResource(ResourceType.STONE,5));
         devLv1_1 = new Development(1,1,requirements,effects,effects,1,Color.BLUE);
         devLv1_2 = new Development(2,1,requirements,effects,effects,1,Color.BLUE);
@@ -227,4 +228,9 @@ class CardManagerTest {
         assertEquals(cardManager.getLeaders().size(), cardManager.toLeadersData().size());
     }
 
+    @Test
+    void leaderSetUp(){
+        cardManager.addLeader(new Leader(1,1,null,null,null));
+        assertDoesNotThrow(()->cardManager.discardLeaderSetUp(0));
+    }
 }

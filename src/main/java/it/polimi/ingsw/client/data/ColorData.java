@@ -5,7 +5,7 @@ import it.polimi.ingsw.client.PrintAssistant;
 import java.net.URL;
 
 public enum ColorData {
-    GRAY("GRAY"),
+    GREY("GREY"),
     PURPLE("PURPLE"),
     RED("RED"),
     BLUE("BLUE"),
@@ -28,7 +28,7 @@ public enum ColorData {
     public String toColor(){
         String s="";
         switch(this){
-            case GRAY:
+            case GREY:
                 s= PrintAssistant.ANSI_CYAN_BACKGROUND;
                 break;
             case YELLOW:
@@ -53,7 +53,7 @@ public enum ColorData {
     public String toMarbleResource(){
         URL s = null;
         switch(this){
-            case GRAY:
+            case GREY:
                 s = this.getClass().getResource(greyMarble);
                 break;
             case YELLOW:

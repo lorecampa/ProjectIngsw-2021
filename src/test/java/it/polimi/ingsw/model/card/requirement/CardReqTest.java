@@ -21,7 +21,7 @@ class CardReqTest {
     static GameSetting gs;
     static CardManager cm;
     @BeforeAll
-    static void  init() throws IOException, CardWithHigherOrSameLevelAlreadyIn {
+    static void  init() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
@@ -53,8 +53,6 @@ class CardReqTest {
 
         assertDoesNotThrow(()-> cm.addDevCardTo(developmentsJson[33], 2));
         cm.emptyCardSlotBuffer();
-
-
     }
 
     @Test
@@ -71,7 +69,6 @@ class CardReqTest {
         req1.attachCardManager(cm);
         req2.attachCardManager(cm);
         req3.attachCardManager(cm);
-
 
         assertThrows(NotEnoughRequirementException.class, ()->req1.checkRequirement(false));
         assertDoesNotThrow(()->req2.checkRequirement(false));
@@ -101,5 +98,6 @@ class CardReqTest {
         assertEquals(1, req.toCardDevData().size());
         Requirement req1 = new CardReq(Color.BLUE, 2, 3);
         assertEquals(3, req1.toCardDevData().size());
+        assertNull(req1.toResourceData());
     }
 }
