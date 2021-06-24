@@ -1,4 +1,5 @@
 package it.polimi.ingsw.client.GUI.controller;
+
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientState;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
@@ -9,7 +10,6 @@ import it.polimi.ingsw.message.serverMessage.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -22,10 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Screen;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -134,27 +130,18 @@ public class PersonalBoardController extends Controller{
     @FXML private Button decreaseResBuffer3;
 
     @FXML private ImageView logError;
-
-
     @FXML private ImageView imageBuffer4;
     @FXML private Label labelBuffer4;
     @FXML private Label bufferTop4;
     @FXML private Button decreaseResBuffer4;
-
     @FXML private Button btn_endTurn;
-
     @FXML private ImageView inkwell_image;
     @FXML private Label playerName_label;
 
-    //from market res
     private ImageView startImage;
     private ImageView destImage;
-
-
     private enum ProdState {NOT_IN_PROD,INITIAL,ALREADY_PROD}
     private ProdState prodState;
-
-
     private String currentShowed;
     private final ArrayList<ImageView> track = new ArrayList<>();
     private final ArrayList<ImageView> popeFavorsDiscard = new ArrayList<>();
@@ -170,13 +157,11 @@ public class PersonalBoardController extends Controller{
     private final ArrayList<Button> selectCardSlotButtons = new ArrayList<>();
     private final ArrayList<ImageView> leadersEffect = new ArrayList<>();
     private final ArrayList<Button> discardButton = new ArrayList<>();
-
     private final HashMap<ResourceType, ImageView> resourceBufferImages = new HashMap<>();
     private final HashMap<ResourceType, Label> resourceBufferLabelsMap = new HashMap<>();
     private final HashMap<ResourceType, Label> resourceBufferTopLabelsMap = new HashMap<>();
     private final HashMap<ResourceType, Button> resourceBufferDecreaseBtnMap = new HashMap<>();
     private int numOfAnyToConvert;
-
     private final HashMap<ResourceType, Integer> anyConverted = new HashMap<>() {{
         put(ResourceType.COIN,0);
         put(ResourceType.SERVANT, 0);
@@ -185,31 +170,14 @@ public class PersonalBoardController extends Controller{
     }};
 
 
-    private final double MAX_TEXT_WIDTH = 400;
-    private final double defaultFontSize = 46;
-    private final Font defaultFont = Font.font(defaultFontSize);
 
-
+    /**
+     * Method that prepare all the marbles and buttons in the scene
+     */
     @FXML
     public void initialize(){
         prodState = ProdState.NOT_IN_PROD;
-
-        Label label = (Label) customMessageBox.getChildren().get(0);
-        label.setFont(defaultFont);
-        label.textProperty().addListener((observable, oldValue, newValue) -> {
-            Text tmpText = new Text(newValue);
-            tmpText.setFont(defaultFont);
-
-            double textWidth = tmpText.getLayoutBounds().getWidth();
-
-            if (textWidth <= MAX_TEXT_WIDTH) {
-                label.setFont(defaultFont);
-            } else {
-                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
-                label.setFont(Font.font(defaultFont.getFamily(), newFontSize));
-            }
-        });
-
+        setUpCustomMessageBox(customMessageBox);
         setUpTrack();
         setUpPopeFavor();
         setUpDepots();
@@ -222,33 +190,60 @@ public class PersonalBoardController extends Controller{
         setUpSelectCardSlotButton();
     }
 
+    /**
+     * See {@link Controller#setUpAll()}
+     */
+    @Override
+    public void setUpAll(){
+        resetBoard();
+        ModelData model = Client.getInstance().getMyModel().toModelData();
+        loadBoard(model);
+        btn_back.setVisible(false);
+        setStandardBoard();
+        currentShowed = Client.getInstance().getMyName();
+        playerName_label.setText(currentShowed);
+        setUpBackground(background);
+    }
+
+    /**
+     * See {@link Controller#showCustomMessage(String)}
+     * @param msg the message to be displayed
+     */
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
-
         TextField  tf = new TextField(msg);
-
         label.textProperty().bind(tf.textProperty());
-
-
         label.setTextFill(Paint.valueOf("Red"));
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);
     }
 
+    /**
+     * Getter for the username of the current player that is displayed
+     * @return
+     */
     public String getCurrentShowed() {
         return currentShowed;
     }
 
+
     //------------------------
     // SET UP VARIABLES
     //------------------------
+
+    /**
+     * Method that setup the GUI elements of the faith track
+     */
     private void setUpTrack(){
         track.addAll(Arrays.asList(pos0,pos1,pos2,pos3,pos4,pos5,pos6,pos7,pos8,pos9,pos10,pos11,pos12,pos13,pos14,
                 pos15,pos16,pos17,pos18,pos19,pos20,pos21,pos22,pos23,pos24));
         track.forEach(image -> image.setVisible(false));
     }
 
+    /**
+     * Method that setup the GUI elements of the card slot buttons
+     */
     private void setUpSelectCardSlotButton(){
         selectCardSlotButtons.add(selectSlot1Btn);
         selectCardSlotButtons.add(selectSlot2Btn);
@@ -256,11 +251,17 @@ public class PersonalBoardController extends Controller{
         selectCardSlotButtons.forEach(x -> x.setVisible(false));
     }
 
+    /**
+     * Method that setup the GUI elements of the discard button
+     */
     private void setUpDiscard(){
         discardButton.add(btn_discard1);
         discardButton.add(btn_discard2);
     }
 
+    /**
+     * Method that setup the GUI elements of the leader cards
+     */
     private void setUpLeaders(){
         leaders.add(leader1);
         leaders.add(leader2);
@@ -277,6 +278,9 @@ public class PersonalBoardController extends Controller{
         leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
     }
 
+    /**
+     * Method that setup the GUI elements of the leaders production
+     */
     private void setUpLeadersProd(){
         leadersEffect.add(effectLeader1);
         leadersEffect.add(effectLeader2);
@@ -284,19 +288,21 @@ public class PersonalBoardController extends Controller{
         leadersEffect.forEach(imageView -> imageView.setVisible(false));
     }
 
+    /**
+     * Method that setup the GUI elements of the the depots
+     */
     private void setUpDepots(){
         ArrayList<ImageView> row0 = new ArrayList<>();
         row0.add(dep11);
-        //row0.forEach(imageView -> imageView.setVisible(false));
+
         ArrayList<ImageView> row1 = new ArrayList<>();
         row1.add(dep21);
         row1.add(dep22);
-        //row1.forEach(imageView -> imageView.setVisible(false));
+
         ArrayList<ImageView> row2 = new ArrayList<>();
         row2.add(dep31);
         row2.add(dep32);
         row2.add(dep33);
-        //row2.forEach(imageView -> imageView.setVisible(false));
 
         depots.add(row0);
         depots.add(row1);
@@ -304,6 +310,9 @@ public class PersonalBoardController extends Controller{
 
     }
 
+    /**
+     * Method that setup the GUI elements of the strongbox
+     */
     private void setUpStrongbox(){
         strongboxLabelMap.put(ResourceType.COIN,strong_coin);
         strongboxLabelMap.put(ResourceType.SERVANT,strong_serv);
@@ -316,6 +325,9 @@ public class PersonalBoardController extends Controller{
         strongboxImageMap.put(ResourceType.STONE, imageStoneStrong);
     }
 
+    /**
+     * Method that setup the GUI elements of the card slot
+     */
     private void setUpCardSlots(){
         ArrayList<ImageView> slot1 = new ArrayList<>();
         slot1.add(card11);
@@ -338,6 +350,9 @@ public class PersonalBoardController extends Controller{
         cardSlots.add(slot3);
     }
 
+    /**
+     * Method that setup the GUI elements of the pope favor
+     */
     public void setUpPopeFavor(){
         popeFavorsDiscard.add(popeFavor1_Discard);
         popeFavorsDiscard.add(popeFavor2_Discard);
@@ -350,6 +365,9 @@ public class PersonalBoardController extends Controller{
         popeFavorsAcquired.forEach(image -> image.setVisible(false));
     }
 
+    /**
+     * Method that setup the GUI elements of the all buffer
+     */
     private void setUpBuffer(){
         resourceBufferImages.put(ResourceType.COIN, imageBuffer1);
         resourceBufferLabelsMap.put(ResourceType.COIN, labelBuffer1);
@@ -377,8 +395,12 @@ public class PersonalBoardController extends Controller{
     //-------------------------------
     // LOADING FROM MODEL PART TO GUI
     //-------------------------------
+
+    /**
+     * Methods that load and display the faith track from the model
+     * @param model the model of the player
+     */
     public void loadFaithTrack(ModelData model){
-        //FAITH TRACK
         ArrayList<FaithTrackData> faithTrackData = model.getFaithTrack();
         track.get(model.getCurrentPosOnFaithTrack()).setVisible(true);
         ArrayList<FaithTrackData> popeFavor = faithTrackData.stream().filter(FaithTrackData::isPopeFavor).collect(Collectors.toCollection(ArrayList::new));
@@ -390,16 +412,21 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Methods that load and display the standard depots from the model
+     * @param model the model of the player
+     */
     public void loadStandardDepots(ModelData model){
-        //DEPOTS
         ArrayList<ResourceData> standardDepots = model.getStandardDepot();
         for (int i = 0; i < standardDepots.size(); i++) {
             updateDepot(i, standardDepots.get(i), true);
         }
     }
-
+    /**
+     * Methods that load and display the leader depots from the model
+     * @param model the model of the player
+     */
     public void loadLeaderDepots(ModelData model){
-        //LEADER DEPOTS
         ArrayList<ResourceData> le_depots = model.getLeaderDepot();
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
 
@@ -420,8 +447,11 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Methods that load and display the leaders from the model
+     * @param model the model of the player
+     */
     public void loadLeader(ModelData model){
-        //LEADERS
         ArrayList<CardLeaderData> leadersData = model.getLeaders();
         boolean owned = Client.getInstance().getMyName().equals(model.getUsername());
 
@@ -441,16 +471,22 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Methods that load and display the strongbox from the model
+     * @param model the model of the player
+     */
     public void loadStrongBox(ModelData model){
-        //STRONGBOX
         ArrayList<ResourceData> strongBoxData = model.getStrongbox();
         for (ResourceData resourceData : strongBoxData){
             strongboxLabelMap.get(resourceData.getType()).setText(String.valueOf(resourceData.getValue()));
         }
     }
 
+    /**
+     * Methods that load and display the card slot from the model
+     * @param model the model of the player
+     */
     public void loadCardSlots(ModelData model){
-        //CARD SLOTS
         ArrayList<ArrayList<CardDevData>>cardSlotsData = model.getCardSlots();
         for (int i = 0; i < cardSlotsData.size(); i++) {
             for (int j = 0; j < cardSlotsData.get(i).size(); j++) {
@@ -460,6 +496,9 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method that load all names in the selection box "other players"
+     */
     private void loadChoiceBox(){
         choice_username.getItems().clear();
         ArrayList<String> usernames = Client.getInstance().getModels()
@@ -471,6 +510,10 @@ public class PersonalBoardController extends Controller{
     //----------------
     // UTILITIES
     //----------------
+
+    /**
+     * Method that makes visible the personal board in standard mode
+     */
     public void setStandardBoard(){
         // LEADER & LEADER DISCARD
         ArrayList<CardLeaderData> leadersData = Client.getInstance().getMyModel().toModelData().getLeaders();
@@ -544,6 +587,9 @@ public class PersonalBoardController extends Controller{
         btn_deck.setOnAction(event -> showDeckDev());
     }
 
+    /**
+     * Method that makes visible the personal board for buying card
+     */
     private void setBoardForBuy(){
         //disable leader
         disableLeader();
@@ -565,6 +611,9 @@ public class PersonalBoardController extends Controller{
         btn_deck.setOnAction(event -> setStandardBoard());
     }
 
+    /**
+     * Method that makes visible the personal board for paying
+     */
     private void setBoardForPay(){
         //DEPOTS
         depots.forEach(depot -> depot.forEach(x -> {
@@ -586,12 +635,9 @@ public class PersonalBoardController extends Controller{
         disableLeaderAndButtons();
     }
 
-    public void setBoardNotTurn(){
-        disableLeader();
-        btn_prod.setVisible(false);
-        btn_endTurn.setVisible(false);
-    }
-
+    /**
+     * Method that makes visible the personal board for resource positioning and sets all the listener
+     */
     private void setBoardForPos(){
         //DEPOTS
         depots.forEach(imageViews -> imageViews.forEach(
@@ -617,15 +663,17 @@ public class PersonalBoardController extends Controller{
 
     }
 
+    /**
+     * Method that disable all the leaders
+     */
     private void disableLeader(){
         leaders.forEach(imageView -> imageView.setDisable(true));
         discardButton.forEach(button -> button.setDisable(true));
     }
 
-    public void enableProd(){
-        btn_prod.setVisible(true);
-    }
-
+    /**
+     * Method that disable all the leaders and the button
+     */
     private void disableLeaderAndButtons(){
         //disable leader
         disableLeader();
@@ -638,6 +686,9 @@ public class PersonalBoardController extends Controller{
         btn_endTurn.setVisible(false);
     }
 
+    /**
+     * Method that makes visible the personal board for production
+     */
     private void setBoardForProd(){
         //disable leader
         disableLeader();
@@ -675,11 +726,17 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method that makes visible the personal board for any conversion
+     */
     private void setBoardForAnyConv(){
         logError.setVisible(false);
         disableLeaderAndButtons();
     }
 
+    /**
+     * Method that makes visible the personal board for marble conversion
+     */
     private void setBoardForMarbleConv(){
         disableLeaderAndButtons();
         logError.setVisible(false);
@@ -693,6 +750,9 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method that makes visible the personal board for game ending
+     */
     private void setBoardForEndGame(){
         logError.setVisible(false);
         disableLeaderAndButtons();
@@ -700,8 +760,10 @@ public class PersonalBoardController extends Controller{
 
     //-------------------------
     // RESET
-    //---
-
+    //-------------------------
+    /**
+     * Method that set the reset the values and the visibility of all the GUI elements
+     */
     private void resetBoard(){
         btn_back.setVisible(false);
         bufferBox.setVisible(false);
@@ -712,28 +774,42 @@ public class PersonalBoardController extends Controller{
         resetCardSlots();
     }
 
-
+    /**
+     * Method that reset the card slots
+     */
     public void resetCardSlots() {
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
         cardSlots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setDisable(true)));
         baseProd.setDisable(true);
     }
 
+    /**
+     * Method that reset the leader card
+     */
     public void resetLeader() {
         leaders.forEach(imageView -> imageView.setDisable(true));
         discardButton.forEach(button -> button.setVisible(false));
         leaders.forEach(imageView -> imageView.setImage(new Image("/GUI/back/leader_back.png")));
     }
 
+    /**
+     * Method that reset the standard depots
+     */
     public void resetStandardDepots() {
         depots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setImage(null)));
     }
 
+    /**
+     *Method that reset the leader depots
+     */
     public void resetLeaderDepots(){
         leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setVisible(false)));
         leadersDepots.forEach(imageViews -> imageViews.forEach(imageView -> imageView.setImage(null)));
     }
 
+    /**
+     * Method that reset the faith track
+     */
     public void resetFaithTrack() {
         track.forEach(imageView -> imageView.setVisible(false));
         popeFavorsAcquired.forEach(imageView -> imageView.setVisible(false));
@@ -745,26 +821,10 @@ public class PersonalBoardController extends Controller{
     // LOAD WHOLE MODEL TO GUI
     //-------------------------
 
-    @Override
-    public void setUpAll(){
-        resetBoard();
-
-        ModelData model = Client.getInstance().getMyModel().toModelData();
-        loadBoard(model);
-
-        btn_back.setVisible(false);
-        setStandardBoard();
-
-        currentShowed = Client.getInstance().getMyName();
-        playerName_label.setText(currentShowed);
-
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
-        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
-        super.stage.setX(x);
-        super.stage.setY(y);
-    }
-
+    /**
+     * Method that set up the personal board for view the state of another player
+     * @param username the username of the player to be displayed
+     */
     public void setUpOtherPlayer(String username){
         resetBoard();
 
@@ -785,6 +845,10 @@ public class PersonalBoardController extends Controller{
         playerName_label.setText(currentShowed);
     }
 
+    /**
+     * Method that loads a specific model board
+     * @param model the model with the board to be displayed
+     */
     private void loadBoard(ModelData model){
         loadFaithTrack(model);
         loadStandardDepots(model);

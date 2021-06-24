@@ -2,8 +2,15 @@ package it.polimi.ingsw.client.GUI.controller;
 
 
 import javafx.animation.FadeTransition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
@@ -57,5 +64,47 @@ public abstract class Controller {
         fader.setToValue(0);
         fader.play();
     }
+
+
+    /**
+     * Method that prepare the background in the center position
+     * @param background the pane to be set
+     */
+    public void setUpBackground(Pane background){
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
+        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
+        stage.setX(x);
+        stage.setY(y);
+    }
+
+
+    /**
+     * Method that prepare the resize property of the custom message box
+     * @param customMessageBox the custom message box pane to be set
+     */
+    public void setUpCustomMessageBox(Pane customMessageBox){
+        double defaultMessageFontSize = 46;
+        Font font = Font.font(defaultMessageFontSize);
+        double MAX_TEXT_WIDTH = 400;
+
+        customMessageBox.setVisible(false);
+        Label label = (Label) customMessageBox.getChildren().get(0);
+        label.setFont(font);
+        label.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text tmpText = new Text(newValue);
+            tmpText.setFont(font);
+
+            double textWidth = tmpText.getLayoutBounds().getWidth();
+
+            if (textWidth <= MAX_TEXT_WIDTH) {
+                label.setFont(font);
+            } else {
+                double newFontSize = defaultMessageFontSize * MAX_TEXT_WIDTH / textWidth;
+                label.setFont(Font.font(font.getFamily(), newFontSize));
+            }
+        });
+    }
+
 
 }

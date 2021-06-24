@@ -1,4 +1,5 @@
 package it.polimi.ingsw.client.GUI.controller;
+
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
@@ -6,57 +7,71 @@ import it.polimi.ingsw.client.data.ColorData;
 import it.polimi.ingsw.client.data.MarketData;
 import it.polimi.ingsw.message.serverMessage.MarketAction;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 public class MarketController extends Controller{
 
-    @FXML
-    VBox background;
-    @FXML Button btn_row0;
-    @FXML Button btn_row1;
-    @FXML Button btn_row2;
+    @FXML private VBox background;
+    @FXML private Button btn_row0;
+    @FXML private Button btn_row1;
+    @FXML private Button btn_row2;
 
-    @FXML Button btn_col0;
-    @FXML Button btn_col1;
-    @FXML Button btn_col2;
-    @FXML Button btn_col3;
+    @FXML private Button btn_col0;
+    @FXML private Button btn_col1;
+    @FXML private Button btn_col2;
+    @FXML private Button btn_col3;
 
-    @FXML ImageView marble_ins;
-    @FXML ImageView marble_00;
-    @FXML ImageView marble_01;
-    @FXML ImageView marble_02;
-    @FXML ImageView marble_03;
-    @FXML ImageView marble_10;
-    @FXML ImageView marble_11;
-    @FXML ImageView marble_12;
-    @FXML ImageView marble_13;
-    @FXML ImageView marble_20;
-    @FXML ImageView marble_21;
-    @FXML ImageView marble_22;
-    @FXML ImageView marble_23;
-
+    @FXML private ImageView marble_ins;
+    @FXML private ImageView marble_00;
+    @FXML private ImageView marble_01;
+    @FXML private ImageView marble_02;
+    @FXML private ImageView marble_03;
+    @FXML private ImageView marble_10;
+    @FXML private ImageView marble_11;
+    @FXML private ImageView marble_12;
+    @FXML private ImageView marble_13;
+    @FXML private ImageView marble_20;
+    @FXML private ImageView marble_21;
+    @FXML private ImageView marble_22;
+    @FXML private ImageView marble_23;
 
     private ArrayList<ArrayList<ImageView>> marbles;
 
+    /**
+     * Method that prepare all the marbles and buttons in the scene
+     */
     @FXML
     public void initialize(){
         setUpMarbles();
-        setUpBtns();
     }
 
+    /**
+     * See {@link Controller#setUpAll()}
+     */
+    @Override
+    public void setUpAll(){
+        MarketData marketData = Client.getInstance().getMarketData();
+        marble_ins.setImage(new Image(marketData.getExtraMarble().toMarbleResource()));
+        ArrayList<ArrayList<ColorData>> marketTray = marketData.getMarketTray();
+        for (int i = 0; i < marketTray.size(); i++) {
+            for (int j = 0; j < marketTray.get(i).size(); j++) {
+                marbles.get(i).get(j).setImage(new Image(marketTray.get(i).get(j).toMarbleResource()));
+            }
+        }
+
+        setUpBackground(background);
+
+    }
+
+    /**
+     * Method that creates a matrix of marbles
+     */
     private void setUpMarbles(){
         marbles = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -85,30 +100,10 @@ public class MarketController extends Controller{
         }
     }
 
-    private void setUpBtns(){
-        ArrayList<Button> btns = new ArrayList<>();
-        btns.add(btn_col0);
-        btns.add(btn_col1);
-        btns.add(btn_col2);
-        btns.add(btn_col3);
-        btns.add(btn_row0);
-        btns.add(btn_row1);
-        btns.add(btn_row2);
-        btns.forEach(this::setUpBtn);
-
-    }
-
-    private void setUpBtn(Button btn){
-        /*
-        btn.setStyle("-fx-background-color:transparent;");
-
-        btn.setOnMouseEntered(t -> btn.setStyle("-fx-border-color:blue;-fx-background-color:transparent;"));
-
-        btn.setOnMouseExited(t -> btn.setStyle("-fx-background-color:transparent;"));
-         */
-    }
-
-
+    /**
+     * Method that handle a insert marble in row event
+     * @param event the event to be handled
+     */
     @FXML
     public void insertInRow(ActionEvent event){
         if (event.getSource().equals(btn_row0))
@@ -119,6 +114,10 @@ public class MarketController extends Controller{
             Client.getInstance().writeToStream(new MarketAction(2,true));
     }
 
+    /**
+     * Method that handle a insert marble in column event
+     * @param event the event to be handled
+     */
     @FXML
     public void insertInCol(ActionEvent event){
         if (event.getSource().equals(btn_col0))
@@ -131,78 +130,81 @@ public class MarketController extends Controller{
             Client.getInstance().writeToStream(new MarketAction(3,false));
     }
 
+    /**
+     * Method attached to the "go back" button
+     */
     @FXML
     public void back(){
         ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
     }
 
-    @Override
-    public void setUpAll(){
-        MarketData marketData = Client.getInstance().getMarketData();
-        marble_ins.setImage(new Image(marketData.getExtraMarble().toMarbleResource()));
-        ArrayList<ArrayList<ColorData>> marketTray = marketData.getMarketTray();
-        for (int i = 0; i < marketTray.size(); i++) {
-            for (int j = 0; j < marketTray.get(i).size(); j++) {
-                marbles.get(i).get(j).setImage(new Image(marketTray.get(i).get(j).toMarbleResource()));
-            }
-        }
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
-        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
-        super.stage.setX(x);
-        super.stage.setY(y);
-    }
-
+    /**
+     * Method that handle insertion buttons hover effects
+     * @param event the event to be handled
+     */
     public void hoverButton(MouseEvent event){
         if (event.getSource().equals(btn_row0)){
             setCSS(true, true, 0);
-        }
-        if (event.getSource().equals(btn_row1)){
+
+        }else if (event.getSource().equals(btn_row1)){
             setCSS(true, true, 1);
-        }
-        if (event.getSource().equals(btn_row2)){
+
+        }else if (event.getSource().equals(btn_row2)){
             setCSS(true, true, 2);
-        }
-        if (event.getSource().equals(btn_col0)){
+
+        }else if (event.getSource().equals(btn_col0)){
             setCSS(false, true, 0);
-        }
-        if (event.getSource().equals(btn_col1)) {
+
+        }else if (event.getSource().equals(btn_col1)) {
             setCSS(false, true, 1);
-        }
-        if (event.getSource().equals(btn_col2)){
+
+        }else if (event.getSource().equals(btn_col2)){
             setCSS(false, true, 2);
-        }
-        if (event.getSource().equals(btn_col3)){
+
+        }else if (event.getSource().equals(btn_col3)){
             setCSS(false, true, 3);
+
         }
 
     }
+
+    /**
+     * Method that handle insertion buttons hover exit
+     * @param event the event to be handled
+     */
     public void hoverButtonExit(MouseEvent event){
         if (event.getSource().equals(btn_row0)){
             setCSS(true, false, 0);
-        }
-        if (event.getSource().equals(btn_row1)){
+
+        }else if (event.getSource().equals(btn_row1)){
             setCSS(true, false, 1);
-        }
-        if (event.getSource().equals(btn_row2)){
+
+        }else if (event.getSource().equals(btn_row2)){
             setCSS(true, false, 2);
-        }
-        if (event.getSource().equals(btn_col0)){
+
+        }else if (event.getSource().equals(btn_col0)){
             setCSS(false, false, 0);
-        }
-        if (event.getSource().equals(btn_col1)) {
+
+        }else if (event.getSource().equals(btn_col1)) {
             setCSS(false, false, 1);
-        }
-        if (event.getSource().equals(btn_col2)){
+
+        }else if (event.getSource().equals(btn_col2)){
             setCSS(false, false, 2);
-        }
-        if (event.getSource().equals(btn_col3)){
+
+        }else if (event.getSource().equals(btn_col3)){
             setCSS(false, false, 3);
+
         }
     }
 
-    public void setCSS(boolean isRow, boolean isSet, int num){
+    /**
+     * Method used to change the  css style of a specific button
+     * @param isRow true if it is a button in the row side, false otherwise
+     * @param isSet
+     * @param num
+     */
+    private void setCSS(boolean isRow, boolean isSet, int num){
         if(isRow) {
             ArrayList<ImageView> myRow=marbles.get(num);
             myRow.forEach(x->{

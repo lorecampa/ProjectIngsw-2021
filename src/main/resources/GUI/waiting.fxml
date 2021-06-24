@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="background" fx:id="background" prefHeight="400.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.WaitingController">
+<AnchorPane id="background" fx:id="background" prefHeight="400.0" prefWidth="600.0" stylesheets="@css/mainMenu.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.WaitingController">
    <children>
-      <AnchorPane layoutY="174.0" prefHeight="53.0" prefWidth="600.0">
+      <AnchorPane fx:id="customMessageBox" layoutY="174.0" prefHeight="53.0" prefWidth="600.0">
          <children>
             <Label fx:id="message" alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="600.0" text="message" textAlignment="CENTER" textFill="WHITE">
                <font>

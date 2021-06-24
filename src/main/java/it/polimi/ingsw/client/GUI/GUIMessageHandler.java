@@ -8,7 +8,6 @@ import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 import javafx.application.Platform;
-
 import java.io.IOException;
 
 
@@ -110,7 +109,12 @@ public class GUIMessageHandler extends ClientMessageHandler {
     @Override
     public void newTurn(StarTurn message) {
         super.newTurn(message);
-        String msg = "Is "+ message.getUsername() + " turn";
+        String msg;
+        if (Client.getInstance().getMyName().equals(message.getUsername())){
+            msg = "Your turn";
+        }else{
+            msg = message.getUsername() + " turn";
+        }
         Platform.runLater(()-> controllerHandler.getCurrentController().showCustomMessage(msg));
     }
     /**

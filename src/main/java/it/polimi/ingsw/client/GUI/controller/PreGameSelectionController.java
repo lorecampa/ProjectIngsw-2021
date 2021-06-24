@@ -10,8 +10,6 @@ import it.polimi.ingsw.message.serverMessage.LeaderManage;
 import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -20,94 +18,106 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 
 public class PreGameSelectionController extends Controller {
+    @FXML private AnchorPane background;
+    @FXML private ImageView musicImage;
+    @FXML private AnchorPane customMessageBox;
+    @FXML private AnchorPane chooseResourcesBox;
+    @FXML private Label howManyResLabel;
+    @FXML private ImageView coin;
+    @FXML private Button decreaseCoin;
+    @FXML private Label coinNum;
+    @FXML private ImageView shield;
+    @FXML private Button decreaseShield;
+    @FXML private Label shieldNum;
+    @FXML private ImageView servant;
+    @FXML private Button decreaseServant;
+    @FXML private Label servantNum;
+    @FXML private ImageView stone;
+    @FXML private Button decreaseStone;
+    @FXML private Label stoneNum;
+    @FXML private Button sendResBtn;
+    @FXML private AnchorPane leaderBox;
+    @FXML private ImageView leader1;
+    @FXML private ImageView leader2;
+    @FXML private ImageView leader3;
+    @FXML private ImageView leader4;
+    @FXML private Button btn1;
+    @FXML private Button btn2;
+    @FXML private Button btn3;
+    @FXML private Button btn4;
+    @FXML private Slider musicVolume;
+
     private final Client client = Client.getInstance();
     private final ArrayList<ImageView> leaders = new ArrayList<>();
-    private int startIndexDiscarded = 0;
     private final HashMap<Button, ImageView> leaderButtonMap = new HashMap<>();
-
-
-    private ArrayList<Button> decreaseResourcesBtn = new ArrayList<>();
-    private ArrayList<Label> numResourcesLabel = new ArrayList<>();
+    private final ArrayList<Button> decreaseResourcesBtn = new ArrayList<>();
+    private final ArrayList<Label> numResourcesLabel = new ArrayList<>();
     private int howManyRes = 0;
     private boolean isSelectionOver = false;
-    private HashMap<ResourceType, Integer> resNumMap = new HashMap<>() {{
+    private final HashMap<ResourceType, Integer> resNumMap = new HashMap<>() {{
         put(ResourceType.COIN,0);
         put(ResourceType.SERVANT, 0);
         put(ResourceType.SHIELD,0);
         put(ResourceType.STONE, 0);
     }};
 
-    @FXML AnchorPane background;
-    @FXML ImageView musicImage;
-
-    @FXML AnchorPane customMessageBox;
-    @FXML Label customMessageLabel;
-
-    //resource box
-    @FXML AnchorPane chooseResourcesBox;
-    @FXML Label howManyResLabel;
-
-    @FXML ImageView coin;
-    @FXML ImageView coin1;
-    @FXML Button decreaseCoin;
-    @FXML Label coinNum;
-
-    @FXML ImageView shield;
-    @FXML ImageView shield1;
-    @FXML Button decreaseShield;
-    @FXML Label shieldNum;
-
-    @FXML ImageView servant;
-    @FXML ImageView servant1;
-    @FXML Button decreaseServant;
-    @FXML Label servantNum;
-
-    @FXML ImageView stone;
-    @FXML ImageView stone1;
-    @FXML Button decreaseStone;
-    @FXML Label stoneNum;
-
-    @FXML Button sendResBtn;
-
-    //leader box
-    @FXML AnchorPane leaderBox;
-    @FXML ImageView leader1;
-    @FXML ImageView leader2;
-    @FXML ImageView leader3;
-    @FXML ImageView leader4;
-
-    @FXML AnchorPane box1;
-    @FXML AnchorPane box2;
-    @FXML AnchorPane box3;
-    @FXML AnchorPane box4;
-
-    @FXML Button btn1;
-    @FXML Button btn2;
-    @FXML Button btn3;
-    @FXML Button btn4;
-
+    /**
+     * Method that prepare the scene
+     */
     @FXML
-    Slider musicVolume;
+    public void initialize(){
+        leaderButtonMap.put(btn1, leader1);
+        leaders.add(leader1);
 
-    private final double MAX_TEXT_WIDTH = 400;
-    private final double defaultFontSize = 46;
-    private final Font defaultFont = Font.font(defaultFontSize);
+        leaderButtonMap.put(btn2, leader2);
+        leaders.add(leader2);
 
+        leaderButtonMap.put(btn3, leader3);
+        leaders.add(leader3);
 
+        leaderButtonMap.put(btn4, leader4);
+        leaders.add(leader4);
 
+        decreaseResourcesBtn.add(decreaseStone);
+        decreaseResourcesBtn.add(decreaseCoin);
+        decreaseResourcesBtn.add(decreaseServant);
+        decreaseResourcesBtn.add(decreaseShield);
+
+        numResourcesLabel.add(stoneNum);
+        numResourcesLabel.add(coinNum);
+        numResourcesLabel.add(servantNum);
+        numResourcesLabel.add(shieldNum);
+
+        showLeaderBox();
+
+        musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
+            double volume = new_val.doubleValue()/100;
+            ControllerHandler.getInstance().setVolume(volume);});
+
+        setUpCustomMessageBox(customMessageBox);
+    }
+
+    /**
+     * See {@link Controller#setUpAll()} ()}
+     */
+    @Override
+    public void setUpAll() {
+        ControllerHandler.getInstance().setMusicImage(musicImage);
+        showLeaderBox();
+        musicVolume.setValue(ControllerHandler.getInstance().getVolume()*100);
+        setUpBackground(background);
+    }
+
+    /**
+     * See {@link Controller#showCustomMessage(String)}
+     * @param msg the message to be displayed
+     */
     @Override
     public void showCustomMessage(String msg) {
         Label label = (Label) customMessageBox.getChildren().get(0);
@@ -115,13 +125,15 @@ public class PreGameSelectionController extends Controller {
 
         label.textProperty().bind(tf.textProperty());
 
-
         customMessageBox.setVisible(true);
         showFadedErrorMessage(customMessageBox);
     }
 
 
-
+    /**
+     * Method attache to the "play" button, it sends the resources and wait the match
+     * to start
+     */
     @FXML
     public void sendResources(){
         ArrayList<ResourceData> resources = resNumMap.keySet()
@@ -136,6 +148,11 @@ public class PreGameSelectionController extends Controller {
         client.writeToStream(new AnyResponse(resources));
 
     }
+
+    /**
+     * Method that handle the deselection of a resource
+     * @param event the event to be handled
+     */
     @FXML
     public void decreaseRes(ActionEvent event){
         ResourceType res;
@@ -179,6 +196,10 @@ public class PreGameSelectionController extends Controller {
         }
     }
 
+    /**
+     * Method that handle the resource selection
+     * @param event the event to be handled
+     */
     @FXML
     public void increaseRes(MouseEvent event){
         if (isSelectionOver) return;
@@ -227,6 +248,10 @@ public class PreGameSelectionController extends Controller {
 
     }
 
+    /**
+     * Method that handle the leader discard
+     * @param event the event to be handled
+     */
     @FXML
     public void discardLeader(ActionEvent event){
         Button btn = (Button) event.getSource();
@@ -242,84 +267,31 @@ public class PreGameSelectionController extends Controller {
         Client.getInstance().writeToStream(new LeaderManage(index, true));
     }
 
-    //---------------------
-    //EXTERNAL METHODS
-    //--------------------
+
+    /**
+     * Method that setup the leaders images
+     * @param cards the leaders to be displayed
+     */
     public void setUpLeaderImages(ArrayList<CardLeaderData> cards){
         for (int i = 0; i < leaders.size(); i++){
             leaders.get(i).setImage(new Image(cards.get(i).toResourcePath(true)));
         }
     }
 
-    @Override
-    public void setUpAll() {
-        ControllerHandler.getInstance().setMusicImage(musicImage);
-        startIndexDiscarded = 0;
-        showLeaderBox();
 
-        musicVolume.setValue(ControllerHandler.getInstance().getVolume()*100);
-
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
-        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
-        super.stage.setX(x);
-        super.stage.setY(y);
-    }
-
+    /**
+     * Method attached to the sound image, it stops the music if it is playing, otherwise it will start it
+     */
     @FXML
     public void changeMusic(){
         ControllerHandler.getInstance().changeMusic();
         ControllerHandler.getInstance().setMusicImage(musicImage);
     }
 
-    @FXML
-    public void initialize(){
-        leaderButtonMap.put(btn1, leader1);
-        leaders.add(leader1);
 
-        leaderButtonMap.put(btn2, leader2);
-        leaders.add(leader2);
-
-        leaderButtonMap.put(btn3, leader3);
-        leaders.add(leader3);
-
-        leaderButtonMap.put(btn4, leader4);
-        leaders.add(leader4);
-
-        decreaseResourcesBtn.add(decreaseStone);
-        decreaseResourcesBtn.add(decreaseCoin);
-        decreaseResourcesBtn.add(decreaseServant);
-        decreaseResourcesBtn.add(decreaseShield);
-
-        numResourcesLabel.add(stoneNum);
-        numResourcesLabel.add(coinNum);
-        numResourcesLabel.add(servantNum);
-        numResourcesLabel.add(shieldNum);
-
-        showLeaderBox();
-
-        musicVolume.valueProperty().addListener((ov, old_val, new_val) -> {
-            double volume = new_val.doubleValue()/100;
-            ControllerHandler.getInstance().setVolume(volume);});
-
-
-        Label label = (Label) customMessageBox.getChildren().get(0);
-        label.setFont(defaultFont);
-        label.textProperty().addListener((observable, oldValue, newValue) -> {
-            Text tmpText = new Text(newValue);
-            tmpText.setFont(defaultFont);
-
-            double textWidth = tmpText.getLayoutBounds().getWidth();
-
-            if (textWidth <= MAX_TEXT_WIDTH) {
-                label.setFont(defaultFont);
-            } else {
-                double newFontSize = defaultFontSize * MAX_TEXT_WIDTH / textWidth;
-                label.setFont(Font.font(defaultFont.getFamily(), newFontSize));
-            }
-        });
-    }
-
+    /**
+     * Method that makes visible the box that permit the resource choosing
+     */
     public void showChooseResourcesBox(){
         reset();
         howManyResLabel.setText("You have "+ howManyRes + " to choose");
@@ -327,16 +299,27 @@ public class PreGameSelectionController extends Controller {
         decreaseResourcesBtn.forEach(x -> x.setVisible(false));
         chooseResourcesBox.setVisible(true);
     }
+
+    /**
+     * Method that makes visible the box that permit the leader choosing
+     */
     public void showLeaderBox(){
         reset();
         leaders.forEach(x -> x.getParent().setVisible(true));
         leaderBox.setVisible(true);
     }
 
+    /**
+     * Setters for the amount of resources to choose
+     * @param howManyRes the number of resources to choose
+     */
     public void setHowManyRes(int howManyRes) {
         this.howManyRes = howManyRes;
     }
 
+    /**
+     * Method that resets the panes visibility
+     */
     private void reset(){
         customMessageBox.setVisible(false);
         leaderBox.setVisible(false);

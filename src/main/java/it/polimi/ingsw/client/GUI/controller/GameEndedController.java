@@ -6,13 +6,11 @@ import it.polimi.ingsw.client.GUI.ControllerHandler;
 import it.polimi.ingsw.client.GUI.Views;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
 import java.util.*;
 
 /**
@@ -32,12 +30,8 @@ public class GameEndedController extends Controller{
     public void setUpAll() {
         matchRankingGrid.setVisible(true);
         goToMainMenuBtn.setVisible(true);
+        setUpBackground(background);
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        double x = bounds.getMinX() + (bounds.getWidth() - background.getPrefWidth()) * 0.5;
-        double y = bounds.getMinY() + (bounds.getHeight() - background.getPrefHeight()) * 0.5;
-        super.stage.setX(x);
-        super.stage.setY(y);
     }
 
     /**
