@@ -124,5 +124,10 @@ class MarketControllerTest {
 
     }
 
+    @Test
+    void marketClear(){
+        assertDoesNotThrow(()-> controller.clearBufferFromMarket());
+    }
+
 
 }

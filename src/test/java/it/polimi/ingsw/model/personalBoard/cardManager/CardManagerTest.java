@@ -233,4 +233,15 @@ class CardManagerTest {
         cardManager.addLeader(new Leader(1,1,null,null,null));
         assertDoesNotThrow(()->cardManager.discardLeaderSetUp(0));
     }
+
+    @Test
+    void mapEffect(){
+        assertDoesNotThrow(()->cardManager.mapOfMarbleEffect());
+    }
+
+    @Test
+    void leaderInfinite(){
+        cardManager.addLeader(leader1);
+        assertDoesNotThrow(()->cardManager.activateLeaderInfinite(0,PlayerState.PRODUCTION_ACTION));
+    }
 }

@@ -40,7 +40,6 @@ public class Controller {
         }
     }
 
-
     public int getNumberOfPlayer(){
         return gameMaster.getNumberOfPlayer();
     }
@@ -49,15 +48,14 @@ public class Controller {
         match.sendSinglePlayer(username, new ErrorMessage(customMessage));
 
     }
+
     private void sendError(String customMessage){
         match.sendSinglePlayer(getCurrentPlayer(), new ErrorMessage(customMessage));
     }
 
-
     public PlayerState getPlayerState(){
         return gameMaster.getPlayerState();
     }
-
 
     public String getCurrentPlayer(){
         return gameMaster.getCurrentPlayer();
@@ -80,12 +78,15 @@ public class Controller {
     private PersonalBoard getPlayerPB() {
         return gameMaster.getCurrentPlayerPersonalBoard();
     }
+
     private CardManager getPlayerCM() {
         return getPlayerPB().getCardManager();
     }
+
     private ResourceManager getPlayerRM() {
         return getPlayerPB().getResourceManager();
     }
+
     private Market getMarket(){
         return gameMaster.getMarket();
     }
@@ -97,7 +98,6 @@ public class Controller {
         }
         return true;
     }
-
 
     //UTIL
 
@@ -131,7 +131,6 @@ public class Controller {
             saveMatchState();
         }
     }
-
 
     public void endGame(){
         match.removeMatchFromServer();
@@ -167,9 +166,7 @@ public class Controller {
         }
     }
 
-
     //MARKET ACTION
-
     public void marketAction(int selection, boolean isRow){
         Market market = getMarket();
         CardManager cardManager = getPlayerCM();
@@ -211,7 +208,6 @@ public class Controller {
         }
     }
 
-
     public void leaderWhiteMarbleConversion(int leaderIndex, int numOfWhiteMarble){
         CardManager cardManager = getPlayerCM();
         Market market = getMarket();
@@ -231,8 +227,6 @@ public class Controller {
         }catch (Exception e){
             sendError(e.getMessage());
         }
-
-
     }
 
     public void clearBufferFromMarket(){
@@ -243,8 +237,6 @@ public class Controller {
             sendError(e.getMessage());
         }
     }
-
-
 
     //BUY DEVELOPMENT CARD
     public void developmentAction(int row, int col, int locateSlot){
@@ -262,9 +254,7 @@ public class Controller {
         controlBufferStatus();
     }
 
-
     //PRODUCTION ACTION
-
     public void normalProductionAction(int cardSlot){
         try {
             getPlayerCM().developmentProduce(cardSlot);
@@ -280,7 +270,6 @@ public class Controller {
             sendError(e.getMessage());
         }
     }
-
 
     public void leaderProductionAction(int leaderIndex){
         CardManager cardManager = getPlayerCM();
@@ -322,7 +311,6 @@ public class Controller {
         }
     }
 
-
     //WAREHOUSE
     private void controlBufferStatus(){
         ResourceManager resourceManager = getPlayerRM();
@@ -346,8 +334,6 @@ public class Controller {
             gameMaster.onPlayerStateChange(PlayerState.LEADER_MANAGE_AFTER);
         }
     }
-
-
 
     public void subToStrongbox(Resource resource){
         ResourceManager resourceManager = getPlayerRM();
@@ -403,9 +389,7 @@ public class Controller {
         }
     }
 
-
     //SETUP
-
     private boolean hasFinishedLeaderSetUp(String username){
         CardManager cardManager = gameMaster.getPlayerPersonalBoard(username).getCardManager();
         return cardManager.getLeaders().size() == 2;
@@ -454,7 +438,6 @@ public class Controller {
         }catch (Exception e) {
             sendErrorTo(e.getMessage(), username);
         }
-
     }
 
     private boolean isFinishedSetup(){
@@ -515,9 +498,7 @@ public class Controller {
         }catch (Exception e){
             sendErrorTo(e.getMessage(), username);
         }
-
     }
-
 
     //--SAVE GAME
     public void saveMatchState(){
@@ -543,7 +524,6 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     //--cheat

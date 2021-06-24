@@ -155,6 +155,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     /**
      * See {@link ClientMessageHandler#startGame()}.
      */
+
     @Override
     public void startGame() {
         Platform.runLater(()->{

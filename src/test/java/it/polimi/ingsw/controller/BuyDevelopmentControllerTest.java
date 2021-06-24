@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.exception.JsonFileModificationError;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.model.GameMaster;
 import it.polimi.ingsw.model.GameSetting;
@@ -20,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -75,15 +73,9 @@ class BuyDevelopmentControllerTest {
     }
 
     public static class ControllerStub extends Controller{
-        public ControllerStub(GameMasterStub gm) throws IOException, JsonFileModificationError {
+        public ControllerStub(GameMasterStub gm){
             super(gm, new MatchStub());
             nextTurn();
-        }
-    }
-
-    public static class ResourceManagerStub extends ResourceManager{
-        public ResourceManagerStub() {
-            super();
         }
     }
 
@@ -117,12 +109,7 @@ class BuyDevelopmentControllerTest {
 
     @Test
     void normalBuyDev(){
-            /*
-        assertEquals(controller.getTurnState(), TurnState.BUY_DEV_RESOURCE_REMOVING);
-        controller.developmentAction(0, 0, 0);
-        assertEquals(controller.getTurnState(), TurnState.BUY_DEV_RESOURCE_REMOVING);
-*/
-
+        assertDoesNotThrow(()->controller.developmentAction(0,0,0));
     }
 
 

@@ -78,16 +78,4 @@ public class Development extends  Card{
             req.checkRequirement(true);
         }
     }
-
-    /**
-     * Return a String that describe the card.
-     * @return a String that describe the card.
-     */
-    @Override
-    public String toString() {
-        String x = super.toString();
-        x += "level= " + level;
-        x+= "\ncolor= " + color.getDisplayName()+ "\n";
-        return x;
-    }
 }
