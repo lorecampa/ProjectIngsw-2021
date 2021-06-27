@@ -8,7 +8,6 @@ import it.polimi.ingsw.client.data.*;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;
 import it.polimi.ingsw.message.clientMessage.MainMenuMessage;
 import it.polimi.ingsw.message.serverMessage.ServerMessage;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -162,16 +161,14 @@ public class Client{
      * Read from stream the messages from server
      * */
     public void readFromStream(){
-        String serializedMessage = null;
+        String serializedMessage;
         try{
             serializedMessage = in.readLine();
             ClientMessage message = deserialize(serializedMessage);
             message.process(clientMessageHandler);
-        } catch (IOException e) {
-            PrintAssistant.instance.errorPrint("Server disconnected, even Google sometimes went down! Wait until the host re-set up the server please!");
-            System.exit(0);
-        }catch (Exception exception){
-            PrintAssistant.instance.printf("Client closing...");
+        } catch (Exception e) {
+            PrintAssistant.instance.errorPrint("Server disconnected, " +
+                    "even Google sometimes went down! Wait until the host re-set up the server please!");
             System.exit(0);
         }
     }

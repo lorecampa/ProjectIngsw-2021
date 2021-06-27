@@ -3,11 +3,13 @@ package it.polimi.ingsw.observer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.exception.InvalidStateActionException;
 import it.polimi.ingsw.model.PlayerState;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * GameMasterObservable class
+ */
 public abstract class GameMasterObservable {
     @JsonIgnore
     List<GameMasterObserver> gameMasterObserverList = new ArrayList<>();

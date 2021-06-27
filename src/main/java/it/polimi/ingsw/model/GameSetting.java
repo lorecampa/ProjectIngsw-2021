@@ -28,7 +28,8 @@ public class GameSetting {
     private FaithTrack faithTrack;
     private Market market;
     private LinkedList<Token> deckToken = new LinkedList<>();
-    private final int leaderAtStart = 4;
+    private int leaderAtStart;
+    private int initialSizeLeaderDeck;
 
 
     /**
@@ -41,17 +42,37 @@ public class GameSetting {
     public GameSetting(int numberOfPlayers) throws IOException, JsonFileModificationError{
         mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        this.numberOfPlayer = numberOfPlayers;
 
+        createGameInfo();
         createDefaultBaseProduction();
         createDefaultFaithTrack();
         createDefaultMarket();
         createDefaultDeckDevelopment();
         createDefaultDeckLeader();
 
-        this.numberOfPlayer = numberOfPlayers;
         if (numberOfPlayers == 1)
             createDeckToken();
     }
+
+    /**
+     * Creates the gameInfo from json file
+     * @throws IOException if there's some error during the reading of a json file.
+     * @throws JsonFileModificationError if a json file is not written correctly.
+     */
+    private void createGameInfo() throws IOException, JsonFileModificationError {
+        InputStream inputStream = getClass().getResourceAsStream("/json/gameInfo.json");
+        int[] gameInfo = mapper.readValue(inputStream, int[].class);
+        leaderAtStart = gameInfo[0];
+        initialSizeLeaderDeck = gameInfo[1];
+
+        if (leaderAtStart * numberOfPlayer > initialSizeLeaderDeck){
+            throw new JsonFileModificationError("Wrong game info!");
+        }
+
+
+    }
+
 
     /**
      * Creates the faith track from the json file.
@@ -101,13 +122,12 @@ public class GameSetting {
      * @throws JsonFileModificationError if a json file is not written correctly.
      */
     private void createDefaultDeckLeader() throws IOException, JsonFileModificationError {
-        final int INITIAL_SIZE_LEADER_DECK = 16;
         InputStream inputStream = getClass().getResourceAsStream("/json/leader.json");
         deckLeader = mapper
                 .readValue(inputStream,
                         new TypeReference<>() {});
 
-        if (deckLeader.size() != INITIAL_SIZE_LEADER_DECK){
+        if (deckLeader.size() != initialSizeLeaderDeck){
             throw new JsonFileModificationError("Leader deck size wrong");
         }
     }

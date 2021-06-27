@@ -359,4 +359,5 @@ public class CLIMessageHandler extends ClientMessageHandler {
         }
         PrintAssistant.instance.printf(resource.toString());
     }
+
 }

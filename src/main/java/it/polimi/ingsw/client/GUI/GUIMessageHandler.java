@@ -8,7 +8,11 @@ import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
 import java.io.IOException;
+import java.util.Optional;
 
 
 public class GUIMessageHandler extends ClientMessageHandler {
@@ -417,4 +421,5 @@ public class GUIMessageHandler extends ClientMessageHandler {
             controller.endLocalProduction();
         });
     }
+
 }

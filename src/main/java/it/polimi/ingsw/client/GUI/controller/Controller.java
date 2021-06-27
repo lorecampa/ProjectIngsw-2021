@@ -2,11 +2,13 @@ package it.polimi.ingsw.client.GUI.controller;
 
 
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -14,6 +16,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Controller is an abstract class that defines the default behaviour of all classes

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.resource;
 
+
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.exception.NegativeResourceException;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,4 +61,6 @@ class ResourceTest {
         assertNotEquals(resourceCoin, new Object());
         assertEquals(resourceCoin,resourceCoin);
     }
+
+
 }

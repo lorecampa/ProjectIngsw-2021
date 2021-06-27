@@ -59,8 +59,6 @@ public class DeckDevelopmentController extends Controller{
         try {
             imageSelected = (ImageView) source;
         }catch (Exception e){
-            //TODO delete  lol ez :(
-            System.out.println("lol ez");
             return;
         }
         currCard.setImage(imageSelected.getImage());

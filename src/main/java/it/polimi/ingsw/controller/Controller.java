@@ -19,7 +19,6 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.server.*;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;

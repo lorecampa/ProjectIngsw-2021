@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,4 +29,6 @@ class GameSettingTest {
         assertDoesNotThrow(()-> gs = new GameSetting(1));
         assertEquals(7, gs.getDeckToken().size());
     }
+
+
 }
