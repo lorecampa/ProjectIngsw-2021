@@ -864,32 +864,41 @@ public class PersonalBoardController extends Controller{
     // GUI ACTIONS
     //-----------------
 
+    /**
+     * Method attached to the "market" button
+     */
     @FXML
     public void marketButton(){
         ControllerHandler.getInstance().changeView(Views.MARKET);
     }
 
+    /**
+     * Method that handle the click on a leader image
+     */
     @FXML
     public void leaderClicked(MouseEvent event){
-        System.out.println("leader clicked");
         if (event.getSource().equals(leader1))
             Client.getInstance().writeToStream(new LeaderManage(0, false));
         else
             Client.getInstance().writeToStream(new LeaderManage(1, false));
     }
 
+    /**
+     * Method that handle the marble leader click
+     */
     @FXML
     public void leaderMarbleClicked(MouseEvent actionEvent){
-        System.out.println("leader marble");
         if (actionEvent.getSource().equals(effectLeader1))
             Client.getInstance().writeToStream(new WhiteMarbleConversionResponse(0, 1));
         else
             Client.getInstance().writeToStream(new WhiteMarbleConversionResponse(1, 1));
     }
 
+    /**
+     * Method that handle the production leader click
+     */
     @FXML
     public void leaderProdClicked(MouseEvent actionEvent){
-        System.out.println("leader prod");
         prodState = ProdState.ALREADY_PROD;
         if (actionEvent.getSource().equals(effectLeader1))
            Client.getInstance().writeToStream(new ProductionAction(0, true));
@@ -897,6 +906,11 @@ public class PersonalBoardController extends Controller{
            Client.getInstance().writeToStream(new ProductionAction(1, true));
     }
 
+
+    /**
+     * Method that handle the discard leader button
+     * @param actionEvent the event to be handled
+     */
     @FXML
     public void leaderDiscard(ActionEvent actionEvent){
         if (actionEvent.getSource().equals(btn_discard1))
@@ -905,15 +919,20 @@ public class PersonalBoardController extends Controller{
             Client.getInstance().writeToStream(new LeaderManage(1, true));
     }
 
+    /**
+     * Method attached to the "other player" button
+     */
     @FXML
     public void otherPlayerClicker(){
         if (Client.getInstance().existAModelOf(choice_username.getValue()))
             setUpOtherPlayer(choice_username.getValue());
     }
 
+    /**
+     * Method that handle the click on development card during production
+     */
     @FXML
     public void cardProdClicked(MouseEvent event){
-        System.out.println("card dev clicked");
         prodState = ProdState.ALREADY_PROD;
         if (event.getSource().equals(baseProd))
             Client.getInstance().writeToStream(new BaseProduction());
@@ -925,6 +944,9 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method attached to the "production" button
+     */
     @FXML
     public void productionClicked(){
         switch (prodState) {
@@ -945,27 +967,45 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method attached to the "exitProd" button
+     */
     private void exitProd(){
         setStandardBoard();
         Client.getInstance().writeToStream(new EndProductionSelection());
     }
 
+    /**
+     * Method attached to the "back" button
+     */
     @FXML
     public void back(){
         setUpAll();
     }
 
+    /**
+     * Method attached to the "deck development" button
+     */
     @FXML
     public void showDeckDev(){
         ControllerHandler.getInstance().changeView(Views.DECK_DEV);
     }
 
+    /**
+     * Method that handle the card slot choice
+     * @param rowDevCard the row of the card in the deck development
+     * @param colDevCard the column of the card in the deck development
+     */
     public void askCardSlotSelection(int rowDevCard, int colDevCard){
         this.rowDevCard = rowDevCard;
         this.colDevCard = colDevCard;
         setBoardForBuy();
     }
 
+    /**
+     * Method attached  to the click of one of the cards slot during selection
+     * @param event the event to be handled
+     */
     @FXML
     public void selectCardSlot(ActionEvent event){
         Button btn = (Button) event.getSource();
@@ -973,7 +1013,12 @@ public class PersonalBoardController extends Controller{
         Client.getInstance().writeToStream(new DevelopmentAction(rowDevCard, colDevCard, slot));
     }
 
-    //warehouse resource insertion
+    /**
+     * Method that handle the depot modify
+     * @param index the depot index
+     * @param depot the depot updated
+     * @param isNormalDepot true if it is normal depot, false otherwise
+     */
     public void updateDepot(int index, ResourceData depot, boolean isNormalDepot){
         if (isNormalDepot){
             for (int i = 0; i < depot.getValue(); i++){
@@ -982,27 +1027,34 @@ public class PersonalBoardController extends Controller{
         }
     }
 
-    //ANY CONVERSION REQUEST
 
+    /**
+     * Method that handle end of production
+     */
     public void endLocalProduction(){
         if (prodState != ProdState.NOT_IN_PROD)
             setBoardForProd();
         bufferBox.setVisible(false);
     }
 
+    /**
+     * Method that set up the marble conversion
+     */
     public void setUpMarbleConv(){
         setBoardForMarbleConv();
         bufferGrid.setVisible(false);
         bufferBox.setVisible(true);
     }
 
+    /**
+     * Method that setup the any conversion phase
+     * @param conversion the resource that are possible to be converted
+     * @param num the num of resources to convert
+     */
     public void setUpAnyConversion(ArrayList<ResourceData> conversion, int num){
         resetBuffer();
-
         setBoardForAnyConv();
-
         bufferGrid.setVisible(true);
-
         resourceBufferImages.values().forEach(x -> x.setDisable(false));
         resourceBufferDecreaseBtnMap.values().forEach(x -> x.setOnAction(this::decreaseAnySelected));
         anyConverted.keySet().forEach(x -> anyConverted.put(x, 0));
@@ -1021,6 +1073,10 @@ public class PersonalBoardController extends Controller{
         bufferBox.setVisible(true);
     }
 
+    /**
+     * Method that handle resource click in conversion phase
+     * @param event the event to be handled
+     */
     private void selectAnyToConvert(MouseEvent event){
         ImageView source = (ImageView) event.getSource();
         ResourceType type = getResTypeFromImage(resourceBufferImages, source);
@@ -1048,7 +1104,6 @@ public class PersonalBoardController extends Controller{
 
         anyConverted.put(type, anyConverted.get(type) + 1);
         if (anyConverted.values().stream().mapToInt(x -> x).sum() == numOfAnyToConvert){
-            System.out.println("Any response sent now!");
             ArrayList<ResourceData> response = anyConverted.keySet()
                     .stream().map(x -> new ResourceData(x, anyConverted.get(x)))
                     .collect(Collectors.toCollection(ArrayList::new));
@@ -1057,6 +1112,10 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method that handle the resource decrease in any conversion
+     * @param event the event to be handled
+     */
     public void decreaseAnySelected(ActionEvent event){
         Button source = (Button) event.getSource();
         ResourceType typeSource = null;
@@ -1081,6 +1140,10 @@ public class PersonalBoardController extends Controller{
     }
 
     //END GAME
+
+    /**
+     * Method that handle the game ending
+     */
     public void setUpForEnd(){
         setBoardForEndGame();
         btn_back.setText("MAIN MENU");
@@ -1093,6 +1156,10 @@ public class PersonalBoardController extends Controller{
     }
 
     //RESOURCE FORM MARKET METHODS
+
+    /**
+     * Method that reset the buffer of resources
+     */
     private void resetBuffer(){
         resourceBufferLabelsMap.values().forEach(x -> {
             x.setVisible(false);
@@ -1114,6 +1181,10 @@ public class PersonalBoardController extends Controller{
         });
     }
 
+    /**
+     * Method that setup the warehouse for resource removing
+     * @param resources the resources to remove
+     */
     public void setUpWarehouseResourceRemoving(ArrayList<ResourceData> resources){
         resetBuffer();
         setBoardForPay();
@@ -1127,6 +1198,10 @@ public class PersonalBoardController extends Controller{
 
     }
 
+    /**
+     * Method handle the click on a strongbox resource during removing phase
+     * @param event the event to be handled
+     */
     public void removeStrongboxRes(MouseEvent event){
         ImageView source = (ImageView) event.getSource();
         ResourceType type = getResTypeFromImage(strongboxImageMap, source);
@@ -1137,6 +1212,11 @@ public class PersonalBoardController extends Controller{
         }
 
     }
+
+    /**
+     * Method handle the click on a depot resource during removing phase
+     * @param event the event to be handled
+     */
     public void removeDepotRes(MouseEvent event) {
         ImageView source = (ImageView) event.getSource();
         ResourceType type;
@@ -1160,6 +1240,12 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Utility method that returns the type of a specific image
+     * @param map the map with the association image - type
+     * @param image the target
+     * @return the image type
+     */
     private ResourceType getResTypeFromImage(Map<ResourceType, ImageView> map, ImageView image){
         ResourceType typeSource = null;
         for (ResourceType type: map.keySet()){
@@ -1171,6 +1257,10 @@ public class PersonalBoardController extends Controller{
         return typeSource;
     }
 
+    /**
+     * Method that prepare the board for resources allocation
+     * @param resources the resources that need to be allocated
+     */
     public void setUpResourceFromMarket(ArrayList<ResourceData> resources) {
         resetBuffer();
         bufferGrid.setVisible(true);
@@ -1185,16 +1275,22 @@ public class PersonalBoardController extends Controller{
         }
 
         setBoardForPos();
-
         bufferBox.setVisible(true);
     }
 
+    /**
+     * Method that handle the resources from market discard
+     */
     public void discardMarketResources(){
         bufferBox.setVisible(false);
         resetBuffer();
         Client.getInstance().writeToStream(new DiscardResourcesFromMarket());
     }
 
+    /**
+     * Method that handle drag detection
+     * @param event the event to be handled
+     */
     public void dragDetected(MouseEvent event){
         Node source = event.getPickResult().getIntersectedNode();
         ImageView imageView;
@@ -1210,6 +1306,10 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+    /**
+     * Method that handle drag over
+     * @param event the event to be handled
+     */
     public void dragOver(DragEvent event){
         if (event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.ANY);
@@ -1218,6 +1318,12 @@ public class PersonalBoardController extends Controller{
         event.consume();
     }
 
+    /**
+     * Utility method that gets the depot index of a specific image
+     * @param depots the depots
+     * @param imageView the target
+     * @return the index
+     */
     private int getImageDepotIndex(ArrayList<ArrayList<ImageView>> depots, ImageView imageView){
         for (int i = 0; i < depots.size(); i++) {
             if (depots.get(i).stream().anyMatch(x -> x.equals(imageView))){
@@ -1227,10 +1333,20 @@ public class PersonalBoardController extends Controller{
         return -1;
     }
 
+    /**
+     * Method return true if the image is in the normal depots
+     * @param imageView the target
+     * @return return true if the image is in the normal depots, false otherwise
+     */
     private boolean isNormalDepot(ImageView imageView){
         return depots.stream().anyMatch(x -> x.contains(imageView));
     }
 
+    /**
+     * Method finds the index normal or leader depot index
+     * @param imageView the target
+     * @return the index
+     */
     private int computeIndex(ImageView imageView){
         int index;
         if (depots.stream().anyMatch(x -> x.contains(imageView))){
@@ -1252,6 +1368,9 @@ public class PersonalBoardController extends Controller{
         return index;
     }
 
+    /**
+     * Method that insert image dragged in depot
+     */
     private void insertInDepot(){
         ResourceType type = null;
         for(ResourceType resType: resourceBufferImages.keySet()){
@@ -1262,13 +1381,14 @@ public class PersonalBoardController extends Controller{
         }
         boolean isNormalDepot = isNormalDepot(destImage);
         int indexDest = computeIndex(destImage);
-        System.out.println("Depot insertion:\nDepotIndex: " + indexDest + " isNormal: "
-                + isNormalDepot + " ResType: " + type);
 
         Client.getInstance().writeToStream(new DepotModify(indexDest,
                 new ResourceData(type, 1), isNormalDepot));
     }
 
+    /**
+     * Method that handle image dragged switch
+     */
     private void switchDepots(){
         boolean isFromNormalDepot = isNormalDepot(startImage);
         int startIndex = computeIndex(startImage);
@@ -1276,13 +1396,14 @@ public class PersonalBoardController extends Controller{
         boolean isToNormalDepot = isNormalDepot(destImage);
         int destIndex = computeIndex(destImage);
 
-        System.out.println("Switch:\nFromDepot: " + startIndex + " isNormal: " + isFromNormalDepot);
-        System.out.println("ToDepot: " + destIndex + " isNormal: " + isToNormalDepot);
         Client.getInstance().writeToStream(new DepotSwitch(startIndex, isFromNormalDepot, destIndex, isToNormalDepot));
 
     }
 
-
+    /**
+     * Method that handle drag drop
+     * @param event
+     */
     public void dragDropped(DragEvent event){
         Dragboard db = event.getDragboard();
         boolean success = false;
@@ -1300,6 +1421,10 @@ public class PersonalBoardController extends Controller{
     }
 
 
+    /**
+     * Method that handle buffer update
+     * @param bufferUpdated the new buffer updated
+     */
     public void bufferUpdate(ArrayList<ResourceData> bufferUpdated){
         bufferBox.setVisible(true);
         selectCardSlotButtons.forEach(x -> x.setVisible(false));
@@ -1320,18 +1445,23 @@ public class PersonalBoardController extends Controller{
         }
     }
 
+
     public void setBufferLabel(String msg){
         bufferCustomLabel.setText(msg);
     }
 
-
+    /**
+     * Method attached to "end turn" button
+     */
     @FXML
     public void endTurn(){
         Client.getInstance().writeToStream(new EndTurn());
     }
 
 
-
+    /**
+     * Method attached to the "show log error" button
+     */
     @FXML
     public void showLogError(){
         ControllerHandler.getInstance().changeView(Views.LOG_ERROR);
