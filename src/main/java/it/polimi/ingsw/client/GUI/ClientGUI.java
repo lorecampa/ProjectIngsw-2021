@@ -35,6 +35,7 @@ public class ClientGUI extends Application {
 
     }
 
+
     private void closeWindowEvent(WindowEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.getButtonTypes().remove(ButtonType.OK);
