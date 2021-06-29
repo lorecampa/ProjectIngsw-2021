@@ -75,7 +75,7 @@ public class CardLeaderData {
     }
 
     public String leaderHeader(int width,int index,int size){
-        String row = PrintAssistant.instance.stringBetweenChar((index+1)+") LEADER" +" +" + victoryPoint +"VP", ' ', width - 2, ' ', ' ');
+        String row = PrintAssistant.instance.stringBetweenChar((index+1)+") LEADER" +" +" + victoryPoint +"VP", '_', width - 2, ' ', '_');
         row = (active? PrintAssistant.ANSI_GREEN_BACKGROUND:PrintAssistant.ANSI_WHITE_BACKGROUND)+PrintAssistant.ANSI_BLACK + row +" "+ PrintAssistant.ANSI_RESET+" " ;
         if(index == 1 || index == size-1){
             row = row.concat(PrintAssistant.ANSI_BLACK + "|" + PrintAssistant.ANSI_RESET);
@@ -84,7 +84,7 @@ public class CardLeaderData {
     }
 
     public String leaderEnd(int width,int index,int size){
-        StringBuilder row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", ' ', width - 2, ' ', ' '));
+        StringBuilder row = new StringBuilder(PrintAssistant.instance.stringBetweenChar("END CARD", '_', width - 2, ' ', '_'));
         row = new StringBuilder((active ? PrintAssistant.ANSI_GREEN_BACKGROUND : PrintAssistant.ANSI_WHITE_BACKGROUND) + PrintAssistant.ANSI_BLACK + row + " " + PrintAssistant.ANSI_RESET + " ");
         if(index == 1 || index == size-1){
             row.append(PrintAssistant.ANSI_BLACK + "|" + PrintAssistant.ANSI_RESET);

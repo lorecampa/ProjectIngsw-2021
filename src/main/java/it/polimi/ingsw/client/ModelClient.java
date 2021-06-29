@@ -62,90 +62,6 @@ public class ModelClient {
     }
 
     /**
-     * Set up to test and debug client side
-     * @deprecated
-     * */
-    private void setUpForDebug(){
-        this.currentPosOnFaithTrack=8;
-        for(int i=0;i<3;i++){
-            standardDepot.add(new ResourceData(ResourceType.STONE, i));
-        }
-
-        for(int i=0; i<25; i++){
-            faithTrack.add(new FaithTrackData(i+1, (i%3==0? i: -1), i == 3 || i == 4 || i == 5 || i == 15 || i == 16 || i == 17, i == 5 || i == 17, i,false));
-        }
-        strongbox.add(new ResourceData(ResourceType.COIN, 12));
-        strongbox.add(new ResourceData(ResourceType.SERVANT, 2));
-        strongbox.add(new ResourceData(ResourceType.STONE, 1));
-        strongbox.add(new ResourceData(ResourceType.SHIELD, 50));
-        ArrayList<ResourceData> resourceReq=new ArrayList<>();
-
-        maxStoreLeaderDepot.add(2);
-        maxStoreLeaderDepot.add(2);
-        maxStoreLeaderDepot.add(2);
-
-        ArrayList<ResourceData> cost=new ArrayList<>();
-        ArrayList<ResourceData> earn=new ArrayList<>();
-        ArrayList<ResourceData> cost1=new ArrayList<>();
-        ArrayList<ResourceData> cost2=new ArrayList<>();
-        ArrayList<ResourceData> earn1=new ArrayList<>();
-        resourceReq.add(new ResourceData(ResourceType.COIN, 2));
-        resourceReq.add(new ResourceData(ResourceType.STONE, 2));
-
-        cost.add(new ResourceData(ResourceType.SERVANT, 1));
-        cost.add(new ResourceData(ResourceType.ANY, 2));
-        cost.add(new ResourceData(ResourceType.SHIELD, 3));
-
-        earn.add(new ResourceData(ResourceType.FAITH, 4));
-        earn.add(new ResourceData(ResourceType.SHIELD, 2));
-
-        cost1.add(new ResourceData(ResourceType.ANY,  1));
-        earn1.add(new ResourceData(ResourceType.COIN,  2));
-
-        cost2.add(new ResourceData(ResourceType.COIN,  2));
-
-
-        EffectData effData = new EffectData(EffectType.PRODUCTION,"Prod", cost, earn);
-        EffectData effData2 = new EffectData(EffectType.DISCOUNT,"Discount", cost, null);
-        EffectData effData3 = new EffectData(EffectType.MARBLE,"Market", cost1, earn1);
-        EffectData effData4 = new EffectData(EffectType.WAREHOUSE,"Warehouse", cost2, null);
-        ArrayList<EffectData> effectsD= new ArrayList<>();
-        effectsD.add(effData);
-
-        baseProduction = new ArrayList<>();
-        baseProduction.add(effData);
-
-        for (int i = 0; i < 3; i++) {
-            cardSlots.add(new ArrayList<>());
-        }
-
-        CardDevData cdd=new CardDevData(1,1, 2, ColorData.BLUE, resourceReq, effectsD);
-        CardDevData cdd1=new CardDevData(2,2, 5, ColorData.PURPLE, resourceReq, effectsD);
-        cardSlots.get(0).add(cdd);
-        cardSlots.get(0).add(cdd1);
-        cardSlots.get(1).add(cdd);
-        cardSlots.get(1).add(cdd1);
-        cardSlots.get(2).add(cdd);
-        cardSlots.get(2).add(cdd1);
-
-        ArrayList<EffectData> effectsL= new ArrayList<>();
-        effectsL.add(effData);
-
-        ArrayList<EffectData> effectsL2= new ArrayList<>();
-        effectsL2.add(effData);
-
-
-        CardLeaderData cl=new CardLeaderData(57,4, cardSlots.get(0), cost, effectsL,false);
-        CardLeaderData cl2=new CardLeaderData(58, 4, cardSlots.get(0), cost, effectsL2,true);
-        leaders.add(cl);
-        leaders.add(cl2);
-        //leaders.add(cl);
-        //leaders.add(cl);
-
-        leaderDepot.add(new ResourceData(ResourceType.COIN,2));
-    }
-
-    /**
      * Add a CardDev to index card slot
      * @param index of card slot i want to insert into
      * @param card i want to insert
@@ -354,7 +270,7 @@ public class ModelClient {
         if(inkwell){
             newTitle.insert(0, "Inkwell | ");
         }
-        String titleToPrint =PrintAssistant.instance.stringBetweenChar(newTitle.toString(), ' ', lengthInChar, ' ', ' ');
+        String titleToPrint =PrintAssistant.instance.stringBetweenChar(newTitle.toString(), '_', lengthInChar, ' ', '_');
         PrintAssistant.instance.printf(titleToPrint, PrintAssistant.ANSI_BLACK, PrintAssistant.ANSI_YELLOW_BACKGROUND);
     }
 
@@ -740,7 +656,7 @@ public class ModelClient {
      * */
     private void printLeaderLegend(){
         PrintAssistant.instance.printf(PrintAssistant.instance.stringBetweenChar("Legend leader:", ' ', lengthInChar, ' ', ' '));
-        String row=PrintAssistant.ANSI_GREEN_BACKGROUND+" Active Leader "+PrintAssistant.ANSI_RESET+" "+PrintAssistant.ANSI_WHITE_BACKGROUND+" Not Active Leader "+PrintAssistant.ANSI_RESET+PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
+        String row=PrintAssistant.ANSI_GREEN_BACKGROUND+PrintAssistant.ANSI_BLACK+" Active Leader "+PrintAssistant.ANSI_RESET+" "+PrintAssistant.ANSI_WHITE_BACKGROUND+PrintAssistant.ANSI_BLACK+" Not Active Leader "+PrintAssistant.ANSI_RESET+PrintAssistant.ANSI_BLACK+"|"+PrintAssistant.ANSI_RESET;
         row = PrintAssistant.instance.stringBetweenChar(row, ' ', lengthInChar, ' ', ' ');
         PrintAssistant.instance.printf(row);
     }
