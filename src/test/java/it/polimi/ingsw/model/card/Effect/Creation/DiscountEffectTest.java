@@ -22,22 +22,13 @@ class DiscountEffectTest {
     ArrayList<Resource> costBuyDevelopment;
     ArrayList<Resource> discounts;
     Effect effect;
-    private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int faith, int any){
+    private ArrayList<Resource> resourceArray(int coin, int shield, int any){
         ArrayList<Resource> production = new ArrayList<>();
         if (coin > 0){
             production.add(ResourceFactory.createResource(ResourceType.COIN, coin));
         }
         if (shield > 0){
             production.add(ResourceFactory.createResource(ResourceType.SHIELD, shield));
-        }
-        if (servant > 0){
-            production.add(ResourceFactory.createResource(ResourceType.SERVANT, servant));
-        }
-        if (stone > 0){
-            production.add(ResourceFactory.createResource(ResourceType.STONE, stone));
-        }
-        if (faith > 0){
-            production.add(ResourceFactory.createResource(ResourceType.FAITH, faith));
         }
         if (any > 0){
             production.add(ResourceFactory.createResource(ResourceType.ANY, any));
@@ -48,12 +39,12 @@ class DiscountEffectTest {
     @BeforeEach
     void init(){
         //creates a discounts
-        discounts = resourceArray(3,2,0,0,0,0);
+        discounts = resourceArray(3,2, 0);
         effect = new DiscountEffect(discounts);
         effect.attachResourceManager(rm);
         assertDoesNotThrow(()->effect.doEffect(PlayerState.LEADER_MANAGE_BEFORE));
 
-        ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0,0,0,0);
+        ArrayList<Resource> resStrongbox = resourceArray(2, 0, 0);
         for (Resource res: resStrongbox){
             rm.addToStrongbox(res);
         }
@@ -68,7 +59,7 @@ class DiscountEffectTest {
         //strongbox (2 coin, 0 shield, 0 stone, 0 servant)
         //discounts (3 coin, 2 shield, 0 stone, 0 servant)
 
-        costBuyDevelopment = resourceArray(4,1,0,0,0,2);
+        costBuyDevelopment = resourceArray(4,1, 2);
         assertDoesNotThrow(()->rm.canIAfford(costBuyDevelopment, true));
 
     }
@@ -81,15 +72,15 @@ class DiscountEffectTest {
         //discounts (3 coin, 2 shield, 0 stone, 0 servant)
         switch (index){
             case 0:
-                costBuyDevelopment = resourceArray(5,0,0,0,0,3);
+                costBuyDevelopment = resourceArray(5,0, 3);
                 assertThrows(NotEnoughRequirementException.class, () ->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 1:
-                costBuyDevelopment = resourceArray(6,0,0,0,0,0);
+                costBuyDevelopment = resourceArray(6,0, 0);
                 assertThrows(NotEnoughRequirementException.class, () ->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 2:
-                costBuyDevelopment = resourceArray(2,1,0,0,0,4);
+                costBuyDevelopment = resourceArray(2,1, 4);
                 assertDoesNotThrow(()->rm.canIAfford(costBuyDevelopment, true));
                 break;
             case 3:
@@ -101,7 +92,7 @@ class DiscountEffectTest {
 
     @Test
     void toDataTest(){
-        ArrayList<Resource> cost = resourceArray(2, 0, 0, 0, 0, 0);
+        ArrayList<Resource> cost = resourceArray(2, 0, 0);
         DiscountEffect myEffect= new DiscountEffect(cost);
         EffectData effectData= myEffect.toEffectData();
 
@@ -110,7 +101,7 @@ class DiscountEffectTest {
 
     @Test
     void discardEffect(){
-        ArrayList<Resource> cost= resourceArray(0, 2,0,0,0,0);
+        ArrayList<Resource> cost= resourceArray(0, 2, 0);
         assertDoesNotThrow(()->rm.canIAfford(cost, true));
     }
 

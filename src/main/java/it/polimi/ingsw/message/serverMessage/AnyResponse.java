@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.client.data.ResourceData;
 import it.polimi.ingsw.server.ServerMessageHandler;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AnyResponse implements ServerMessage{

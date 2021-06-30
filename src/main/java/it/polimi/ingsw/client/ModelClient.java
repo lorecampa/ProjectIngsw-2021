@@ -233,8 +233,8 @@ public class ModelClient {
      * @param index i'm looking for
      * @return true if exist a leader at index
      * */
-    public boolean validIndexForLeader(int index){
-        return (index>=0 && index< leaders.size());
+    public boolean notValidIndexForLeader(int index){
+        return (index < 0 || index >= leaders.size());
     }
 
     /**

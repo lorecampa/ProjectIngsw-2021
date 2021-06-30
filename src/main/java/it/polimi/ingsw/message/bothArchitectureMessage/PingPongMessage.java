@@ -1,7 +1,6 @@
 package it.polimi.ingsw.message.bothArchitectureMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import it.polimi.ingsw.client.CLIMessageHandler;
 import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.server.ServerMessageHandler;
 import it.polimi.ingsw.message.clientMessage.ClientMessage;

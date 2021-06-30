@@ -201,8 +201,8 @@ public class MarketController extends Controller{
     /**
      * Method used to change the  css style of a specific button
      * @param isRow true if it is a button in the row side, false otherwise
-     * @param isSet
-     * @param num
+     * @param isSet already set
+     * @param num to set
      */
     private void setCSS(boolean isRow, boolean isSet, int num){
         if(isRow) {

@@ -36,16 +36,16 @@
     ```shell
     > java -jar MORServer.jar
     ```
-  This command can be followed by these arguments (deafult: -port 2020 -load false):
+  This command can be followed by these arguments (default: -port 2020 -load false):
   - **-port** followed by the desired port number as argument, must be >=1024;
-  - **-load** followed by true or false to reload the macthes active while closing the server last time.
+  - **-load** followed by true or false to reload the matches active while closing the server last time.
 
   
 - The Client can be run with the following command:
     ```shell
     > java -jar MORClient.jar
     ```
-    This command can be followed by these arguments (deafult: -interface cli -address 127.0.0.1 -port 2020):
+    This command can be followed by these arguments (default: -interface cli -address 127.0.0.1 -port 2020):
   - **-interface** followed by cli or gui based on which interface you want to play; 
   - **-address** followed by the ip address u want to connect to;
   - **-port** followed by the port you want to access to.

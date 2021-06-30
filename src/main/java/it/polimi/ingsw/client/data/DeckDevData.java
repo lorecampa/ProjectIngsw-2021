@@ -35,6 +35,8 @@ public class DeckDevData {
         deck.get(row).get(col).remove(0);
     }
 
+    /**
+     * @deprecated */
     public void reInsertCard(CardDevData card, int row, int col) {
         deck.get(row).get(col).add(0, card);
     }

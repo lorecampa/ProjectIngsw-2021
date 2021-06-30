@@ -7,9 +7,10 @@ import it.polimi.ingsw.client.PrintAssistant;
 import it.polimi.ingsw.message.serverMessage.QuitGame;
 
 import java.util.ArrayList;
-
+@SuppressWarnings("FieldCanBeLocal")
 public class QuitCMD implements Command{
     private final String cmd="QUIT";
+    @SuppressWarnings("unused")
     private final String param;
     private final Client client;
 

@@ -145,7 +145,6 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     }
 
 
-
     /**
      * Convert any into resources from production
      * @param resources I want to own after conversion
@@ -312,11 +311,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
         boolean semiSwitchDone = false;
         if (!isFromNormalDepot){
             Resource res = currWarehouse.getDepot(fromIndex, false).getResource();
-            if(isToNormalDepot){
-                semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, false), currWarehouse.getDepot(toIndex, true), res);
-            }else{
-                semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, false),currWarehouse.getDepot(toIndex, true),res);
-            }
+            semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, false), currWarehouse.getDepot(toIndex, true), res);
         }else if (!isToNormalDepot){
             Resource res = currWarehouse.getDepot(fromIndex, true).getResource();
             semiSwitchDone = semiSwitch(currWarehouse.getDepot(fromIndex, true), currWarehouse.getDepot(toIndex, false), res);
@@ -653,7 +648,7 @@ public class ResourceManager extends GameMasterObservable implements Observable<
     /**
      * Return the strongbox of curr player
      */
-    public Strongbox getStrongbox() { //usato solo nei test, per questo c'è il warning... forse va tolta ovunque o basta togliere il @deprecated
+    public Strongbox getStrongbox() {
         return strongbox;
     }
 

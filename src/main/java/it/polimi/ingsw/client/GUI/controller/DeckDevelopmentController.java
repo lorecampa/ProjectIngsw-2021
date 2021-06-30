@@ -105,7 +105,6 @@ public class DeckDevelopmentController extends Controller{
                 if (!deckDev.getDeck().get(i).get(j).isEmpty()){
                     imageView.setImage(new Image(deckDev.getDeck().get(i).get(j).get(0).toResourcePath()));
                 }else{
-                    //TODO change to a normal value not hardcoded, conti doesn't like it
                     int backId = 16*i + j + 1;
                     URL url = this.getClass().getResource("/GUI/back/"+backId+".png");
                     assert url != null;

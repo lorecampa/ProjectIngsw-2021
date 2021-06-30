@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class Client{
-    private String ipHost;
     private int portNumber;
     private Socket clientSocket;
     private PrintWriter out;
@@ -62,7 +61,7 @@ public class Client{
             }
         }
 
-        ipHost = argsMap.get("-address");
+        String ipHost = argsMap.get("-address");
         try {
             portNumber = Integer.parseInt(argsMap.get("-port"));
         }catch (Exception e){
@@ -206,7 +205,7 @@ public class Client{
 
     //"message" simulated from server to client
     /**
-     * Simulated message from server to show mainmenu
+     * Simulated message from server to show main menu
      * */
     public void messageToMainMenu(){
         ClientMessage mainMenu= new MainMenuMessage();

@@ -77,7 +77,7 @@ public class LogErrorController extends Controller{
     /**
      * Method that create a error label representing a custom error
      * @param error the error that will be assigned to the label
-     * @return the lavel with the error message as text
+     * @return the label with the error message as text
      */
     private Label createErrorLabel(String error) {
         Label labelError = new Label();

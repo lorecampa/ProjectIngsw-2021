@@ -98,7 +98,8 @@ class LeaderTest {
         assertEquals(16, leaders.size());
 
         ArrayList<Development> developmentsJson =
-                mapper.readValue(new File("src/main/resources/json/development.json"), new TypeReference<ArrayList<Development>>() {});
+                mapper.readValue(new File("src/main/resources/json/development.json"), new TypeReference<>() {
+                });
 
         //(slot 1) -> 1: green 2: blue
         assertDoesNotThrow(()->cm.addDevCardTo(developmentsJson.get(0), 0));

@@ -13,9 +13,9 @@ import java.util.Objects;
 public class ControllerHandler {
     private MediaPlayer player;
     private boolean muted = false;
-    private HashMap<Views, Controller> controllers = new HashMap<>();
+    private final HashMap<Views, Controller> controllers = new HashMap<>();
     private Views currentView = null;
-    private static ControllerHandler instance = new ControllerHandler();
+    private static final ControllerHandler instance = new ControllerHandler();
 
     public static ControllerHandler getInstance(){
         return instance;
@@ -67,9 +67,6 @@ public class ControllerHandler {
         return player.getVolume();
     }
 
-    public boolean isMuted() {
-        return muted;
-    }
 
     public void changeMusic(){
         if (muted){

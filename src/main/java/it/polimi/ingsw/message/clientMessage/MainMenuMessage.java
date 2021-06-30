@@ -1,6 +1,5 @@
 package it.polimi.ingsw.message.clientMessage;
 
-import it.polimi.ingsw.client.CLIMessageHandler;
 import it.polimi.ingsw.client.ClientMessageHandler;
 
 //Not a real message, just a clone used to call the main menu in the client

@@ -129,7 +129,7 @@ public class ActionCMD implements Command{
                 }
                 int leaderIndex=CommandsUtility.stringToInt(split[2]);
                 leaderIndex--;
-                if(!CommandsUtility.isALeaderIndex(client, leaderIndex)){
+                if(CommandsUtility.isNotALeaderIndex(client, leaderIndex)){
                     PrintAssistant.instance.invalidParamCommand(cmd);
                     return;
                 }
@@ -159,7 +159,7 @@ public class ActionCMD implements Command{
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        if(!CommandsUtility.isADepotIndex(cardSlot)){
+        if(CommandsUtility.isNotADepotIndex(cardSlot)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
@@ -211,7 +211,7 @@ public class ActionCMD implements Command{
         int leaderIndex=CommandsUtility.stringToInt(split[1]);
 
         leaderIndex--;
-        if(!CommandsUtility.isALeaderIndex(client, leaderIndex)){
+        if(CommandsUtility.isNotALeaderIndex(client, leaderIndex)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

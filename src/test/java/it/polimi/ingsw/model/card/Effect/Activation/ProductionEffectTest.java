@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductionEffectTest {
 
     static ResourceManager rm = new ResourceManager();
-    private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int faith, int any){
+    private ArrayList<Resource> resourceArray(int coin, int shield, int servant, int stone, int any){
         ArrayList<Resource> production = new ArrayList<>();
         if (coin > 0){
             production.add(ResourceFactory.createResource(ResourceType.COIN, coin));
@@ -31,9 +31,6 @@ class ProductionEffectTest {
         }
         if (stone > 0){
             production.add(ResourceFactory.createResource(ResourceType.STONE, stone));
-        }
-        if (faith > 0){
-            production.add(ResourceFactory.createResource(ResourceType.FAITH, faith));
         }
         if (any > 0){
             production.add(ResourceFactory.createResource(ResourceType.ANY, any));
@@ -63,8 +60,8 @@ class ProductionEffectTest {
         //now those are the resources
         //strongbox (Coin 6) (Shield 1) (Servant 2) (Stone 2)
         //warehouse (0 -> ) (1 -> ) (2 -> 2 servant)
-        ArrayList<Resource> productionCost = resourceArray(0, 1, 0, 2, 0, 1);
-        ArrayList<Resource> productionAcquired = resourceArray(2, 0, 2, 0, 0, 0);
+        ArrayList<Resource> productionCost = resourceArray(0, 1, 0, 2, 1);
+        ArrayList<Resource> productionAcquired = resourceArray(2, 0, 2, 0, 0);
 
 
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
@@ -92,8 +89,8 @@ class ProductionEffectTest {
         //now those are the resources
         //strongbox (Coin 8) (Shield 0) (Servant 2) (Stone 0)
         //warehouse (0 -> ) (1 -> ) (2 -> 1 servant)
-        ArrayList<Resource> productionCost = resourceArray(8, 0, 1, 0, 0, 2);
-        ArrayList<Resource> productionAcquired = resourceArray(2, 5, 0, 10, 0, 0);
+        ArrayList<Resource> productionCost = resourceArray(8, 0, 1, 0, 2);
+        ArrayList<Resource> productionAcquired = resourceArray(2, 5, 0, 10, 0);
 
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
@@ -121,8 +118,8 @@ class ProductionEffectTest {
         //now those are the resources
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
         //warehouse (0 -> ) (1 -> ) (2 ->)
-        ArrayList<Resource> productionCost = resourceArray(2, 5, 0, 9, 0, 2);
-        ArrayList<Resource> productionAcquired = resourceArray(0, 0, 1, 0, 0, 0);
+        ArrayList<Resource> productionCost = resourceArray(2, 5, 0, 9, 2);
+        ArrayList<Resource> productionAcquired = resourceArray(0, 0, 1, 0, 0);
 
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
@@ -161,8 +158,8 @@ class ProductionEffectTest {
         //strongbox (Coin 2) (Shield 5) (Servant 0) (Stone 10)
         //warehouse (0 -> ) (1 -> ) (2 -> )
         //leaderDepot (2 Coin)
-        ArrayList<Resource> productionCost = resourceArray(2, 5, 0, 10, 0, 2);
-        ArrayList<Resource> productionAcquired = resourceArray(0, 0, 1, 0, 0, 0);
+        ArrayList<Resource> productionCost = resourceArray(2, 5, 0, 10, 2);
+        ArrayList<Resource> productionAcquired = resourceArray(0, 0, 1, 0, 0);
 
         Effect effect = new ProductionEffect(productionCost, productionAcquired);
         effect.attachResourceManager(rm);
@@ -173,8 +170,8 @@ class ProductionEffectTest {
 
     @Test
     void toDataTest(){
-        ArrayList<Resource> cost = resourceArray(2, 0, 0, 0, 0, 0);
-        ArrayList<Resource> earn = resourceArray(0, 2, 0, 0, 0, 0);
+        ArrayList<Resource> cost = resourceArray(2, 0, 0, 0, 0);
+        ArrayList<Resource> earn = resourceArray(0, 2, 0, 0, 0);
 
         ProductionEffect myEffect= new ProductionEffect(cost, earn);
         EffectData effectData= myEffect.toEffectData();

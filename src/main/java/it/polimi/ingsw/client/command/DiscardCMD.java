@@ -51,7 +51,7 @@ public class DiscardCMD implements Command{
             return;
         }
         leaderIndex--;
-        if(!client.getModelOf(client.getMyName()).validIndexForLeader(leaderIndex)){
+        if(client.getModelOf(client.getMyName()).notValidIndexForLeader(leaderIndex)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

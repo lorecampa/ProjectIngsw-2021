@@ -160,7 +160,7 @@ public abstract class ClientMessageHandler {
      * */
     public abstract void anyConversionRequest(AnyConversionRequest message);
 
-    //DepotUpdate maessage handler
+    //DepotUpdate message handler
     /**
      * Update depots in model data
      * @param message to handle

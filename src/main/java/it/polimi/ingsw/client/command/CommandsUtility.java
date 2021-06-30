@@ -77,12 +77,12 @@ public class CommandsUtility {
     }
 
     /**
-     * Return true if num is a normal depot index
+     * Return true if num is not a normal depot index
      * @param num represent the index checking
-     * @return true if num is a normal depot index
+     * @return true if num is not a normal depot index
      * */
-    public static boolean isADepotIndex(int num){
-        return num==1 || num==2 || num==3;
+    public static boolean isNotADepotIndex(int num){
+        return num != 1 && num != 2 && num != 3;
     }
 
     /**
@@ -95,13 +95,13 @@ public class CommandsUtility {
     }
 
     /**
-     * Return true if client has a leader at num index
+     * Return true if client has not a leader at num index
      * @param client is checking for
      * @param num represent the index
-     * @return true if client has a leader at num index
+     * @return true if client has not a leader at num index
      * */
-    public static boolean isALeaderIndex(Client client, int num){
-        return client.getModelOf(client.getMyName()).validIndexForLeader(num);
+    public static boolean isNotALeaderIndex(Client client, int num){
+        return client.getModelOf(client.getMyName()).notValidIndexForLeader(num);
     }
 
     /**
@@ -116,12 +116,12 @@ public class CommandsUtility {
     }
 
     /**
-     * Return true if num is a leader depot index
+     * Return true if num is not a leader depot index
      * @param index checking
-     * @return true if num is a leader depot index
+     * @return true if num is not a leader depot index
      * */
-    public static boolean isValidIndexDepotLeader(Client client, int index){
-        return client.getModelOf(client.getMyName()).isValidIndexDepotLeader(index);
+    public static boolean isNotValidIndexDepotLeader(Client client, int index){
+        return !client.getModelOf(client.getMyName()).isValidIndexDepotLeader(index);
     }
 
     /**

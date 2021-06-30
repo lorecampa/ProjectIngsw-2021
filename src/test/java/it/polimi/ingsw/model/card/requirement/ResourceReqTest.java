@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.card.requirement;
 
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
-import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;

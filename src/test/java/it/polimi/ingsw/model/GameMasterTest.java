@@ -7,9 +7,6 @@ import it.polimi.ingsw.model.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.token.CardToken;
 import it.polimi.ingsw.model.token.PositionToken;
 import it.polimi.ingsw.model.token.Token;
-import it.polimi.ingsw.server.Match;
-import it.polimi.ingsw.server.Server;
-import it.polimi.ingsw.server.VirtualClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class GameMasterTest {
 

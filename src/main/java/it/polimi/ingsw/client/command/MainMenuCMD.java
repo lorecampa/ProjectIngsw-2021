@@ -30,7 +30,7 @@ public class MainMenuCMD implements Command{
      * */
     @Override
     public void doCommand() {
-        if(param.isEmpty() || param.isBlank()){                         //se uno dal game fa mainmenu come comando puo tornare al main menu o facciamo un disconnect command???
+        if(param.isEmpty() || param.isBlank()){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

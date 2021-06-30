@@ -3,7 +3,7 @@ package it.polimi.ingsw.client.data;
 import it.polimi.ingsw.client.PrintAssistant;
 
 import java.net.URL;
-
+@SuppressWarnings("FieldCanBeLocal")
 public enum ColorData {
     GREY("GREY"),
     PURPLE("PURPLE"),
@@ -13,13 +13,8 @@ public enum ColorData {
     GREEN("GREEN"),
     WHITE("WHITE");
 
+    @SuppressWarnings("unused")
     private final String displayName;
-    private final String greyMarble = "/GUI/punchboard/grey_marble.png";
-    private final String yellowMarble = "/GUI/punchboard/yellow_marble.png";
-    private final String blueMarble = "/GUI/punchboard/blue_marble.png";
-    private final String redMarble = "/GUI/punchboard/red_marble.png";
-    private final String purpleMarble = "/GUI/punchboard/purple_marble.png";
-    private final String whiteMarble = "/GUI/punchboard/white_marble.png";
 
     ColorData(String displayName) {
         this.displayName = displayName;
@@ -52,6 +47,12 @@ public enum ColorData {
 
     public String toMarbleResource(){
         URL s = null;
+        String greyMarble = "/GUI/punchboard/grey_marble.png";
+        String yellowMarble = "/GUI/punchboard/yellow_marble.png";
+        String blueMarble = "/GUI/punchboard/blue_marble.png";
+        String redMarble = "/GUI/punchboard/red_marble.png";
+        String purpleMarble = "/GUI/punchboard/purple_marble.png";
+        String whiteMarble = "/GUI/punchboard/white_marble.png";
         switch(this){
             case GREY:
                 s = this.getClass().getResource(greyMarble);

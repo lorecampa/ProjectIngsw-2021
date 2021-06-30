@@ -47,7 +47,7 @@ public class DepotCMD implements Command{
         }
 
         int indexDepot=CommandsUtility.stringToInt(split[2]);
-        if(!CommandsUtility.isADepotIndex(indexDepot)){
+        if(CommandsUtility.isNotADepotIndex(indexDepot)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }

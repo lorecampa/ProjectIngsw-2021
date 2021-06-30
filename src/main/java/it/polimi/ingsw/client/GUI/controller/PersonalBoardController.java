@@ -219,10 +219,6 @@ public class PersonalBoardController extends Controller{
         showFadedErrorMessage(customMessageBox);
     }
 
-    /**
-     * Getter for the username of the current player that is displayed
-     * @return
-     */
     public String getCurrentShowed() {
         return currentShowed;
     }

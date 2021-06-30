@@ -4,7 +4,6 @@ package it.polimi.ingsw.model.card.requirement;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
 import it.polimi.ingsw.exception.NotEnoughRequirementException;
 import it.polimi.ingsw.model.GameSetting;
 import it.polimi.ingsw.model.card.Color;

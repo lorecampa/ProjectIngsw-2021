@@ -1,16 +1,12 @@
 package it.polimi.ingsw.model.personalBoard.cardManager;
 
 import it.polimi.ingsw.exception.CardWithHigherOrSameLevelAlreadyIn;
-import it.polimi.ingsw.exception.NegativeResourceException;
-import it.polimi.ingsw.model.card.Card;
 import it.polimi.ingsw.model.card.Color;
 import it.polimi.ingsw.model.card.Development;
 import it.polimi.ingsw.model.card.requirement.Requirement;
 import it.polimi.ingsw.model.card.requirement.ResourceReq;
-import it.polimi.ingsw.model.personalBoard.resourceManager.ResourceManager;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceFactory;
-import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

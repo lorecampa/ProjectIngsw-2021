@@ -51,18 +51,18 @@ public class ShowCMD implements Command{
                 PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
-        //System.out.println("Stampo il nome:"+split[0]);
-        if(!client.existAModelOf(split[0])){                    //se non esite user scritto mi fermo
-            //System.out.println("dal primo lancio l'errore");
+
+        if(!client.existAModelOf(split[0])){
+
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         }
 
-        if(split.length==1){ //ha scritto solo il nome dell'user, stampo tutto
+        if(split.length==1){
             client.getModelOf(split[0]).printAll();
             return;
         }
-        for(int i=1; i<split.length; i++){                              //controllo che gli altri campi siano comandi conosciuti
+        for(int i=1; i<split.length; i++){
             if(!split[i].equals("f") && !split[i].equals("r") && !split[i].equals("d") && !split[i].equals("l")){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
@@ -116,7 +116,7 @@ public class ShowCMD implements Command{
      * @return true if all the character are legal, false otherwise
      * */
     public boolean containsAllPartToShow(String[] part, int startPoint){
-        for(int i=startPoint; i<part.length; i++){                                                    //controllo che gli altri campi siano comandi conosciuti
+        for(int i=startPoint; i<part.length; i++){
             if(!part[i].equals("f") && !part[i].equals("r") && !part[i].equals("d") && !part[i].equals("l")){
                 return false;
             }

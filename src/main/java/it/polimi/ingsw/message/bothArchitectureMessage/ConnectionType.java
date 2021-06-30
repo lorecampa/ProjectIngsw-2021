@@ -7,5 +7,5 @@ public enum ConnectionType {
     WAIT_PLAYERS,
     RECONNECTION,
     CONNECT,
-    SEMI_PRODUCTION_ACK;
+    SEMI_PRODUCTION_ACK
 }

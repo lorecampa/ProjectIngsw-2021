@@ -49,13 +49,13 @@ public class SwitchCMD implements Command{
         int indexTo=CommandsUtility.stringToInt(split[currIndexUsed]);
         currIndexUsed++;
         boolean toIsLeader= split.length == currIndexUsed + 1 && split[currIndexUsed].equals("leader");
-        if(!fromIsLeader && !CommandsUtility.isADepotIndex(indexFrom)){
+        if(!fromIsLeader && CommandsUtility.isNotADepotIndex(indexFrom)){
            PrintAssistant.instance.invalidParamCommand(cmd);
            return;
         }else {
             indexFrom--;
         }
-        if(!toIsLeader && !CommandsUtility.isADepotIndex(indexTo)){
+        if(!toIsLeader && CommandsUtility.isNotADepotIndex(indexTo)){
             PrintAssistant.instance.invalidParamCommand(cmd);
             return;
         } else {
@@ -64,14 +64,14 @@ public class SwitchCMD implements Command{
 
         if(fromIsLeader){
             //indexFrom--;
-            if(!CommandsUtility.isValidIndexDepotLeader(client, indexFrom)){
+            if(CommandsUtility.isNotValidIndexDepotLeader(client, indexFrom)){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }
         }
         if(toIsLeader){
             //indexTo--;
-            if(!CommandsUtility.isValidIndexDepotLeader(client, indexTo)){
+            if(CommandsUtility.isNotValidIndexDepotLeader(client, indexTo)){
                 PrintAssistant.instance.invalidParamCommand(cmd);
                 return;
             }

@@ -8,10 +8,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-
+@SuppressWarnings("FieldCanBeLocal")
 public class Help implements Command{
     private final String cmd="HELP";
     private final String param;
+    @SuppressWarnings("unused")
     private final Client client;
 
     public Help(String param, Client client) {
@@ -21,8 +22,7 @@ public class Help implements Command{
 
     private void onlyHelp(){
 
-        PrintAssistant.instance.printf("To know more about a single command type help NAMECOMMAND");
-        //helpLines.add(PrintAssistant.instance.fitToWidth("MAINMENU", ClientInput.MAX_CHAR_COMMAND)+"Used to select an option in the main menu");
+        PrintAssistant.instance.printf("To know more about a single command type help NAME_COMMAND");
         TreeMap<String, Class<? extends Command>> ordered = new TreeMap<>(ClientInput.getCommandsMap());
         for(Map.Entry<String, Class<? extends Command>> obj : ordered.entrySet()){
             try{
@@ -47,7 +47,7 @@ public class Help implements Command{
         }
         String[] commandPart = param.split(" ", 2);
         String keyCommand=commandPart[0];
-        //String argumentsCommand;
+
         if(commandPart.length>1) {
             if(!(commandPart[1].isBlank() || commandPart[1].isEmpty())){
                 PrintAssistant.instance.invalidParamCommand(cmd);
