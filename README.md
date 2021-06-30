@@ -19,11 +19,7 @@
 | Reconnect | <img src="./deliverables/ImageReadme/DoneClipArt.png" width="40"/> |
 | Local Single Player | <img src="./deliverables/ImageReadme/NotDoneClipArt.png" width="40"/> |
 
-<!--
-[![RED](https://placehold.it/15/f03c15/f03c15)](#)
-[![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
-[![GREEN](https://placehold.it/15/44bb44/44bb44)](#)
--->
+
 
 # Master Of Renaissance
 
@@ -31,46 +27,26 @@
 
 ## Setup
 
-- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client, once the jars run you can type  ``` > help``` to get more info about the commands.
+- In the [shade](shade) folder there are two multi-platform jar files, one to set the Server up and the other one to start the Client, java version required must be >=13.
 - The Server can be run with the following command, as default it runs on port 2020:
     ```shell
     > java -jar MORServer.jar
     ```
-  This command can be followed by these arguments (default: -port 2020 -load false):
+  This command can be followed by these arguments (deafult: -port 2020 -load false):
   - **-port** followed by the desired port number as argument, must be >=1024;
-  - **-load** followed by true or false to reload the matches active while closing the server last time.
+  - **-load** followed by true or false to reload the macthes active while closing the server last time.
 
   
 - The Client can be run with the following command:
     ```shell
     > java -jar MORClient.jar
     ```
-    This command can be followed by these arguments (default: -interface cli -address 127.0.0.1 -port 2020):
+    Client must be run on Linux OS.
+    This command can be followed by these arguments (deafult: -interface cli -address 127.0.0.1 -port 2020):
   - **-interface** followed by cli or gui based on which interface you want to play; 
   - **-address** followed by the ip address u want to connect to;
   - **-port** followed by the port you want to access to.
  
- ## Build
- Use maven to build jar files for both the Client and the Server by choosing the appropriate Maven Profile.  
- 
- To build the Server, issue:  
-    ```
-       > mvn clean    
-    ```  
-    ```
-      > mvn package -P Server    
-    ```  
- <br>
- To build the Client, issue:  
-    ```
-        > mvn clean    
-    ```  
-    ```
-       > mvn package -P Client    
-    ```    
-  
-  After these processes both jars can be found in the shade folder.
- ## Extra
  
  ## Tools
  
