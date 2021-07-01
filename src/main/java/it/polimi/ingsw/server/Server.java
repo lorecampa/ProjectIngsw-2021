@@ -416,8 +416,7 @@ public class Server {
         while (true){
             try {
                 Socket socket = serverSocket.accept();
-                //TODO reactivate
-                //socket.setSoTimeout(20000);
+                socket.setSoTimeout(20000);
                 System.out.println("Server Socket has accepted a connection");
                 ClientConnectionHandler client = new ClientConnectionHandler(socket, this, getNextClientID());
                 executorService.submit(client);

@@ -71,7 +71,7 @@ public class Client{
 
         try {
             clientSocket = new Socket(ipHost, portNumber);
-            //clientSocket.setSoTimeout(20000);
+            clientSocket.setSoTimeout(20000);
         } catch (IOException e) {
             System.out.println("Error during socket set up: " + e.getMessage());
             System.exit(0);

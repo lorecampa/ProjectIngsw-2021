@@ -113,9 +113,6 @@ public class GameMaster implements GameMasterObserver,Observable<ModelObserver>,
      * Change the current player in the game when a new turn starts.
      */
     public void nextPlayer() throws InvalidStateActionException {
-        //TODO change to LEADER_MANAGE_AFTER and handle next turn during player disconnection in a different state
-        //TODO uncheck comments
-
         if(currentPlayer != null && !isPlayerInState(PlayerState.LEADER_MANAGE_AFTER)) {
             throw new InvalidStateActionException();
         }
