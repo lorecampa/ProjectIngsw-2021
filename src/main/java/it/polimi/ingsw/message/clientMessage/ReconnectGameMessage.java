@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ClientMessageHandler;
 import it.polimi.ingsw.client.data.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class ReconnectGameMessage implements ClientMessage{
 
@@ -57,6 +58,7 @@ public class ReconnectGameMessage implements ClientMessage{
     public String getPlayerUsername() {
         return playerUsername;
     }
+
 
     @Override
     public void process(ClientMessageHandler handler) {

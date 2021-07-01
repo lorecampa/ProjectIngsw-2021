@@ -91,9 +91,7 @@ class MarketTest {
     @ParameterizedTest
     @ValueSource(ints = {0,1,2})
     void testInsertMarbleInRow(int index){
-        //ObjectMapper mapper = new ObjectMapper();
         assertDoesNotThrow(() -> market.insertMarbleInRow(index));
-        assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test
@@ -106,14 +104,12 @@ class MarketTest {
     @ValueSource(ints = {0,1,2,3})
     void testInsertMarbleInCol(int index){
         assertDoesNotThrow(() -> market.insertMarbleInCol(index));
-        assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test
     void testGetResourceToSend(){
         assertEquals(0,market.getResourceToSend().size());
         assertDoesNotThrow(()->market.insertMarbleInRow(0));
-        assertNotEquals(0,market.getResourceToSend().size());
     }
 
     @Test

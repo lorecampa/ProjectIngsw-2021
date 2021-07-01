@@ -8,11 +8,7 @@ import it.polimi.ingsw.message.bothArchitectureMessage.ConnectionMessage;
 import it.polimi.ingsw.message.bothArchitectureMessage.ReconnectionMessage;
 import it.polimi.ingsw.message.clientMessage.*;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-
 import java.io.IOException;
-import java.util.Optional;
 
 
 public class GUIMessageHandler extends ClientMessageHandler {
@@ -212,7 +208,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
         }else{
             Platform.runLater(()->{
                 PersonalBoardController controller = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-                controller.setBufferLabel("You have to convert " + message.getNumOfAny() + " into concrete resources");
+                controller.setBufferLabel("Convert " + message.getNumOfAny() + " into resources");
                 controller.setUpAnyConversion(message.getOptionConversion(), message.getNumOfAny());
             });
         }
@@ -289,7 +285,7 @@ public class GUIMessageHandler extends ClientMessageHandler {
     public void whiteMarbleConversion(WhiteMarbleConversionRequest message){
         Platform.runLater(()-> {
             PersonalBoardController personalBoardController = (PersonalBoardController) controllerHandler.getController(Views.PERSONAL_BOARD);
-            personalBoardController.setBufferLabel("You have to convert " + message.getNumOfWhiteMarbleDrew() + " white marbles into concrete resources");
+            personalBoardController.setBufferLabel("Convert " + message.getNumOfWhiteMarbleDrew() + " marbles into resources");
             ControllerHandler.getInstance().changeView(Views.PERSONAL_BOARD);
             personalBoardController.setUpMarbleConv();
         });
