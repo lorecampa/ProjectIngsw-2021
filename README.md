@@ -47,6 +47,14 @@
   - **-address** followed by the ip address u want to connect to;
   - **-port** followed by the port you want to access to.
  
+ ## Server commands
+    In server terminal you can type this commands in order to get some information:
+    
+    - numofmatch: print the number of active matches;
+    - listmatch: print the info of all the active matches;
+    - logs: followed by match id will print all the logs of that match;
+    - resources: followed by match id will send 20 of each concrete resources to all players of the match;
+    - quit: close the server.
  
  ## Tools
  
@@ -54,6 +62,7 @@
  * [Maven](https://maven.apache.org/) - Dependency Management
  * [IntelliJ](https://www.jetbrains.com/idea/) - IDE
  * [JavaFX](https://openjfx.io) - Graphical Framework
+ * [Azure](https://azure.microsoft.com/en-us/) - Virtual Machine
  
  ## License
  
