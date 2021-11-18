@@ -1,7 +1,7 @@
 # Project Software Engineering 2021
 
-> ` [Video Gameplay](https://youtu.be/28zv7HVfERM) `
-
+>  It is available a Youtube [video](https://youtu.be/28zv7HVfERM) that demonstrate the gameplay
+ 
 - ###  Campana Lorenzo ([@lorecampa](https://github.com/lorecampa))<br>lorenzo.campana@mail.polimi.it
 - ###  Canali Davide ([@CanaliDavide](https://github.com/CanaliDavide))<br>davide1.canali@mail.polimi.it
 - ###  Cordioli Matteo ([@MatteoCordioli](https://github.com/MatteoCordioli))<br>matteo.cordioli@mail.polimi.it
