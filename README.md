@@ -50,11 +50,13 @@
  ## Server commands
  In server terminal you can type this commands in order to get some information:
  
-   - numofmatch: print the number of active matches;
-   - listmatch: print the info of all the active matches;
-   - logs: followed by match id will print all the logs of that match;
-   - resources: followed by match id will send 20 of each concrete resources to all players of the match;
-   - quit: close the server.
+| Command | Usage | Description |
+| --------|-------- |-------- |
+| `numofmatch` | `numofmatch`| Print the number of active matches|
+| `listmatch` |`listmatch` | Print the info of all active matches|
+| `logs` | `logs (matchId)`| Print the logs of a specific match id |
+| `resources` | `resources (matchId)`| It sends 20 of each concrete resource to all players of the match|
+| `quit` | `quit`| Close the Server|
  
  ## Tools
  
